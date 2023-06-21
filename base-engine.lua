@@ -1,0 +1,895 @@
+-- constants
+ROUND_TAGGERS_WIN = 3
+ROUND_RUNNERS_WIN = 4
+ROUND_WAIT_PLAYERS = 0
+ROUND_ACTIVE = 1
+ROUND_WAIT = 2
+
+RUNNER = 0
+TAGGER = 1
+ELIMINATED_OR_FROZEN = 2
+SPECTATOR = 3
+
+MIN_GAMEMODE = 1
+TAG = 1
+FREEZE_TAG = 2
+INFECTION = 3
+MAX_GAMEMODE = 3
+
+PLAYERS_NEEDED = 2
+
+MODIFIER_NONE = 0
+MODIFIER_MIN = 1
+MODIFIER_BOMBS = 1
+MODIFIER_LOW_GRAVITY = 2
+MODIFIER_SWAP = 3
+MODIFIER_NO_RADAR = 4
+MODIFIER_NO_BOOST = 5
+MODIFIER_ONE_TAGGER = 6
+MODIFIER_FLY = 7
+MODIFIER_SPEED = 8
+MODIFIER_MAX = 8
+
+-- globals and sync tables
+gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+gGlobalSyncTable.modifier = MODIFIER_NONE
+gGlobalSyncTable.doModifiers = true
+gGlobalSyncTable.randomGamemode = true
+gGlobalSyncTable.gamemode = TAG
+gGlobalSyncTable.bljs = false
+gGlobalSyncTable.doCaps = false
+gGlobalSyncTable.cannons = false
+gGlobalSyncTable.antiCamp = true
+gGlobalSyncTable.water = false
+gGlobalSyncTable.swapTimer = 1
+gGlobalSyncTable.displayTimer = 1
+gGlobalSyncTable.selectedLevel = 1
+gGlobalSyncTable.amountOfTime = 120 * 30
+gGlobalSyncTable.antiCampTimer = 10 * 30
+gGlobalSyncTable.becameTaggerIndex = -1 -- -1 is not an index
+gGlobalSyncTable.becameRunnerIndex = -1 -- -1 is not an index
+for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init
+    if network_is_server() then
+        gPlayerSyncTable[i].state = RUNNER
+        gPlayerSyncTable[i].invincTimer = 0
+        gPlayerSyncTable[i].amountOfTags = 0
+        gPlayerSyncTable[i].amountOfTimeAsRunner = 0
+    end
+end
+
+-- server settings
+gServerSettings.playerInteractions = PLAYER_INTERACTIONS_SOLID -- force player attacks to be on
+gServerSettings.bubbleDeath = 0
+
+-- variables
+timer = 0 -- dont make this local so it can be used in other files
+flashingIndex = 0 -- dont make this local so it can be used in other files
+isRomhack = false -- dont make this local so it can be used in other files
+blacklistedLevels = {} -- dont make this local so it can be used in other files
+winnerIndexes = {} -- dont make this local so it can be used in other files
+defaultLevels = {} -- dont make this local so it can be used in other files
+joinTimer = 6 * 30 -- dont make this local so it can be used in other files
+prevLevel = 1 -- make it the same as the selected level so it selects a new level
+local serverLaunched = true
+local speedBoostTimer = 0
+local badLevels = {}
+
+-- tables
+levels = {
+    {name = "cg", level = LEVEL_CASTLE_GROUNDS, act = 0, area = 1, pipes = true, pipe1Pos = {x = -5979, y = 378, z = -1371}, pipe2Pos = {x = 1043, y = 3174, z = -5546}},
+    {name = "bob", level = LEVEL_BOB, act = 6, area = 1, pipes = true, pipe1Pos = {x = -4694, y = 0, z = 6699}, pipe2Pos = {x = 5079, y = 3072, z = 655}},
+    {name = "wf", level = LEVEL_WF, act = 6, area = 1, pipes = false},
+    {name = "ccm", level = LEVEL_CCM, act = 6, area = 1, pipes = true, pipe1Pos = {x = -1352, y = 2560, z = -1824}, pipe2Pos = {x = 5628, y = -4607, z = -28}},
+    {name = "lll", level = LEVEL_LLL, act = 6, area = 1, pipes = false},
+    {name = "ssl", level = LEVEL_SSL, act = 1, area = 1, pipes = false},
+    {name = "issl", level = LEVEL_SSL, act = 1, area = 2, pipes = true, pipe1Pos = {x = -460, y = 0, z = 4247}, pipe2Pos = {x = 997, y = 3942, z = 1234}},
+    {name = "bitfs", level = LEVEL_BITFS, act = 6, area = 1, pipes = true, pipe1Pos = {x = -154, y = -2866, z = -102}, pipe2Pos = {x = 1205, y = 5478, z = 58}},
+    {name = "ttm", level = LEVEL_TTM, act = 6, area = 1, pipes = true, pipe1Pos = {x = -1080, y = -4634, z = 4176}, pipe2Pos = {x = 1031, y = 2306, z = -198}},
+    {name = "thi", level = LEVEL_THI, act = 6, area = 1, pipes = false},
+    {name = "sl", level = LEVEL_SL, act = 6, area = 1, pipes = false},
+    {name = "ttc", level = LEVEL_TTC, act = 6, area = 1, pipes = true, pipe1Pos = {x = 1361, y = -4822, z = 176}, pipe2Pos = {x = 1594, y = 5284, z = 1565}},
+    {name = "jrb", level = LEVEL_JRB, act = 1, area = 1, pipes = true, pipe1Pos = {x = 3000, y = -5119, z = 2688}, pipe2Pos = {x = -6398, y = 1126, z = 191}},
+    {name = "rr", level = LEVEL_RR, act = 1, area = 1, pipes = true, pipe1Pos = {x = -4221, y = 6451, z = -5885}, pipe2Pos = {x = 2125, y = -1833, z = 2079}},
+}
+
+local function server_update()
+
+    if serverLaunched then
+        show_rules(true, true)
+
+        serverLaunched = false
+    end
+
+    for i = 0, MAX_PLAYERS - 1 do
+        if not gNetworkPlayers[i].connected then
+            gPlayerSyncTable[i].state = -1
+            gPlayerSyncTable[i].amountOfTimeAsRunner = 0
+            gPlayerSyncTable[i].amountOfTags = 0
+        end
+    end
+
+    local numPlayers = 0
+
+    for i = 0, MAX_PLAYERS - 1 do
+        if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state ~= SPECTATOR then
+            numPlayers = numPlayers + 1
+        end
+    end
+
+    if numPlayers < PLAYERS_NEEDED then
+        gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS -- set round state to waiting for players
+
+        if gGlobalSyncTable.randomGamemode and PLAYERS_NEEDED > 2 then
+            -- set gamemode to tag so the game keeps going
+            gGlobalSyncTable.gamemode = TAG
+
+            -- default tag timer
+            if gGlobalSyncTable.amountOfTime == (180 * 30) then
+                gGlobalSyncTable.amountOfTime = 120 * 30
+            end
+
+            PLAYERS_NEEDED = 2
+
+            print("Tag: Attempted to keep tag going by setting the gamemode to tag")
+        end
+    elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
+        timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+        math.randomseed(random_f32_around_zero(10000), random_f32_around_zero(10000)) -- set a random seed based off of the random generator provided in super mario 64, since lua's is not very good
+        ---@diagnostic disable-next-line: param-type-mismatch
+        while ((table.contains(defaultLevels, string.upper(get_level_name(level_to_course(gGlobalSyncTable.selectedLevel), gGlobalSyncTable.selectedLevel, 1))) or table.contains(blacklistedLevels, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel <= 0 do
+            if isRomhack then
+                gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
+            else
+                gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+
+                if levels[gGlobalSyncTable.selectedLevel].level == LEVEL_TTC then
+                    set_ttc_speed_setting(math.random(0, 3))
+                end
+            end
+        end
+
+        prevLevel = gGlobalSyncTable.selectedLevel
+        gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+        print("Tag: Round State is now ROUND_WAIT")
+    end
+
+    if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
+        for i = 0, MAX_PLAYERS - 1 do
+            if gPlayerSyncTable[i].state ~= SPECTATOR then
+                gPlayerSyncTable[i].state = RUNNER -- set everyone's state to runner
+            end
+        end
+    elseif gGlobalSyncTable.roundState == ROUND_WAIT then
+        -- select a modifier and gamemode if timer is at its highest point
+        if timer == 16 * 30 then
+            if gGlobalSyncTable.doModifiers then
+                -- see if we should enable modifiers or not
+                local selectModifier = math.random(1, 3) -- 33% chance
+
+                if selectModifier == 3 then
+                    -- select a random modifier
+                    gGlobalSyncTable.modifier = MODIFIER_NONE -- switch to none to always show chat message
+                    gGlobalSyncTable.modifier = math.random(MODIFIER_MIN, MODIFIER_MAX) -- select random modifier
+                else
+                    gGlobalSyncTable.modifier = -1 -- switch to -1 to always show chat message
+                    gGlobalSyncTable.modifier = MODIFIER_NONE -- set the modifier to none
+                end
+
+                    -- if we select a random gamemode, select that random gamemode now
+                if gGlobalSyncTable.randomGamemode then
+                    if numPlayers >= 3 then -- 3 because in order for this to work we cant have it select freeze tag without enough players
+                        gGlobalSyncTable.gamemode = -1 -- force popup to show
+                        gGlobalSyncTable.gamemode = math.random(MIN_GAMEMODE, MAX_GAMEMODE)
+                    else
+                        gGlobalSyncTable.gamemode = TAG -- set to tag explicitly
+                    end
+
+                    if gGlobalSyncTable.gamemode == FREEZE_TAG then
+                        -- default freeze tag timer
+                        if gGlobalSyncTable.amountOfTime == (120 * 30) then
+                            gGlobalSyncTable.amountOfTime = 180 * 30
+                        end
+
+                        PLAYERS_NEEDED = 3
+                    elseif gGlobalSyncTable.gamemode == TAG then
+                        -- default tag timer, dont check imfection timer since their the same
+                        if gGlobalSyncTable.amountOfTime == (180 * 30) then
+                            gGlobalSyncTable.amountOfTime = 120 * 30
+                        end
+
+                        PLAYERS_NEEDED = 2
+                    elseif gGlobalSyncTable.gamemode == INFECTION then
+                         -- default infection timer, dont check tag timer since their the same
+                         if gGlobalSyncTable.amountOfTime == (180 * 30) then
+                            gGlobalSyncTable.amountOfTime = 120 * 30
+                        end
+
+                        PLAYERS_NEEDED = 3
+                    end
+                end
+            else
+                gGlobalSyncTable.modifier = MODIFIER_NONE
+            end
+
+            print("Tag: Set modifier, and gamemode")
+        end
+
+        timer = timer - 1 -- subtract timer by one
+        gGlobalSyncTable.displayTimer = timer -- set display timer to timer
+
+        for i = 0, MAX_PLAYERS - 1 do
+            if gPlayerSyncTable[i].state ~= SPECTATOR then
+                gPlayerSyncTable[i].state = RUNNER -- set everyone's state to runner
+            end
+
+            gPlayerSyncTable[i].amountOfTags = 0 -- reset amount of tags
+            gPlayerSyncTable[i].amountOfTimeAsRunner = 0 -- reset amount of time as runner
+        end
+
+        if timer <= 0 then
+            timer = gGlobalSyncTable.amountOfTime -- set timer to amount of time in a round
+            local amountOfTaggersNeeded = math.floor(network_player_connected_count() / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
+            if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
+                amountOfTaggersNeeded = 1 -- set amount of taggers to one if the modifier is one tagger
+            end
+
+            print("Tag: Assigning Players")
+
+            local amountOfTaggers = 0
+
+            while amountOfTaggers < amountOfTaggersNeeded do
+                -- select taggers
+                local randomIndex = math.random(0, MAX_PLAYERS - 1) -- select random index
+
+                if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gNetworkPlayers[randomIndex].connected then
+                    gPlayerSyncTable[randomIndex].state = TAGGER
+
+                    print("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
+
+                    amountOfTaggers = amountOfTaggers + 1
+                end
+            end
+
+            gGlobalSyncTable.roundState = ROUND_ACTIVE -- begin round
+
+            print("Tag: Started the game")
+        end
+    elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        timer = timer - 1 -- subtract timer by one
+        gGlobalSyncTable.displayTimer = timer -- set display timer to timer
+
+        for i = 0, MAX_PLAYERS - 1 do
+            if gPlayerSyncTable[i].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+                gPlayerSyncTable[i].amountOfTimeAsRunner = gPlayerSyncTable[i].amountOfTimeAsRunner + 1 -- increase amount of time as runner
+            end
+        end
+
+        if timer <= 0 then
+            timer = 15 * 30-- 15 seconds
+
+            gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN -- end round
+
+            print("Tag: Runners Won")
+
+            return
+        end
+
+        check_round_status() -- check current runner and tagger status
+    elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
+        timer = timer - 1
+
+        if timer <= 0 then
+            gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+            print("Tag: Starting a new round...")
+        end
+    end
+end
+
+local function update()
+    if network_is_server() then server_update() end
+
+    if joinTimer <= 0 then -- check this so the user has time to sync up
+        if gPlayerSyncTable[0].invincTimer > 0 then
+            gPlayerSyncTable[0].invincTimer = gPlayerSyncTable[0].invincTimer - 1
+        end
+    end
+
+    -- handle speed boost
+    if speedBoostTimer < 20 * 30 and gPlayerSyncTable[0].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST then
+        speedBoostTimer = speedBoostTimer + 1
+    elseif gPlayerSyncTable[0].state ~= TAGGER or gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
+        speedBoostTimer = 5 * 30 -- 5 seconds
+    end
+
+    if gPlayerSyncTable[0].state == SPECTATOR then
+        gPlayerSyncTable[0].amountOfTimeAsRunner = 0
+        gPlayerSyncTable[0].amountOfTags = 0
+    end
+
+    if joinTimer > 0 then
+        joinTimer = joinTimer - 1 -- this is done to ensure that all globals sync beforehand
+    end
+
+    -- set network descriptions
+    for i = 0, MAX_PLAYERS - 1 do
+        if gPlayerSyncTable[i].state == SPECTATOR then
+            network_player_set_description(gNetworkPlayers[i], "Spectator", 100, 100, 100, 255)
+        elseif gPlayerSyncTable[i].state == -1 then
+            network_player_set_description(gNetworkPlayers[i], "None", 50, 50, 50, 255)
+        end
+    end
+end
+
+---@param m MarioState
+local function mario_update(m)
+    if not gGlobalSyncTable.water then
+        for i = 1, 6 do
+            set_environment_region(i, -10000)
+        end
+    end
+
+    if not gGlobalSyncTable.bljs and m.forwardVel <= -55 and m.action == ACT_LONG_JUMP then
+        m.forwardVel = -55
+    end
+
+    m.peakHeight = m.pos.y
+
+    if not gGlobalSyncTable.doCaps and gPlayerSyncTable[m.playerIndex].state ~= SPECTATOR and gGlobalSyncTable.modifier ~= MODIFIER_FLY then
+        m.flags = m.flags & ~MARIO_WING_CAP
+        m.flags = m.flags & ~MARIO_METAL_CAP
+        m.flags = m.flags & ~MARIO_VANISH_CAP
+    elseif gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
+        m.flags = m.flags | MARIO_WING_CAP
+        m.flags = m.flags & ~MARIO_METAL_CAP
+        m.flags = m.flags | MARIO_VANISH_CAP
+    elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
+        m.flags = m.flags | MARIO_WING_CAP
+        m.flags = m.flags & ~MARIO_METAL_CAP
+        m.flags = m.flags & ~MARIO_VANISH_CAP
+    end
+
+    -- flight physics
+    if m.action == ACT_FLYING then
+        if m.forwardVel < 45 then m.forwardVel = 45 end
+        if m.forwardVel > 100 then m.forwardVel = 100 end
+        if m.pos.y > 15000 then m.forwardVel = 1 end
+    end
+
+    -- set model state according to state
+    if gPlayerSyncTable[m.playerIndex].state == TAGGER then
+        m.marioBodyState.modelState = MODEL_STATE_METAL
+    elseif gPlayerSyncTable[m.playerIndex].state == RUNNER then
+        m.marioBodyState.modelState = 0
+    end
+
+    if gPlayerSyncTable[m.playerIndex].invincTimer ~= nil then -- check to allow sync
+        m.invincTimer = gPlayerSyncTable[m.playerIndex].invincTimer
+    end
+
+    if m.playerIndex == 0 then
+        ---@type NetworkPlayer
+        local np = gNetworkPlayers[0]
+        local selectedLevel = levels[gGlobalSyncTable.selectedLevel] -- get currently selected level
+
+        -- check if mario is in the proper level, act, and area, if not, rewarp mario
+        if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_WAIT then
+            if not isRomhack then
+                if np.currLevelNum ~= selectedLevel.level or np.currActNum ~= selectedLevel.act or np.currAreaIndex ~= selectedLevel.area then
+                    ---@diagnostic disable-next-line: param-type-mismatch
+                    warp_to_level(selectedLevel.level, selectedLevel.area, selectedLevel.act)
+                end
+            else
+                if np.currLevelNum ~= gGlobalSyncTable.selectedLevel or np.currActNum ~= 6 or np.currAreaIndex ~= 1 then
+
+                    local warpSuccesful = warp_to_level(gGlobalSyncTable.selectedLevel, 1, 6)
+
+                    if not warpSuccesful and network_is_server() then
+
+                        -- try a common one
+                        if warp_to_warpnode(gGlobalSyncTable.selectedLevel, 1, 6, 10) then
+                            return
+                        end
+
+                        -- try randomly
+                        for i = 1, 100 do
+                            if warp_to_warpnode(gGlobalSyncTable.selectedLevel, 1, 6, i) then
+                                return
+                            end
+                        end
+
+                        table.insert(badLevels, gGlobalSyncTable.selectedLevel)
+
+                        ---@diagnostic disable-next-line: param-type-mismatch
+                        while ((table.contains(defaultLevels, string.upper(get_level_name(level_to_course(gGlobalSyncTable.selectedLevel), gGlobalSyncTable.selectedLevel, 1))) or table.contains(blacklistedLevels, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel < 0 do
+                            gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_MAX)) -- select a random level
+                        end
+
+                        prevLevel = gGlobalSyncTable.selectedLevel
+                    elseif not warpSuccesful then
+                        -- try a common one
+                        if warp_to_warpnode(gGlobalSyncTable.selectedLevel, 1, 6, 10) then
+                            return
+                        end
+
+                        -- try randomly
+                        for i = 1, 100 do
+                            if warp_to_warpnode(gGlobalSyncTable.selectedLevel, 1, 6, i) then
+                                return
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        -- spawn pipes
+        if not isRomhack then
+            if selectedLevel.pipes == true and find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)) == nil then
+                spawn_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe1Pos.x, selectedLevel.pipe1Pos.y, selectedLevel.pipe1Pos.z, function (o)
+                    o.oBehParams = 1
+                end)
+
+                spawn_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe2Pos.x, selectedLevel.pipe2Pos.y, selectedLevel.pipe2Pos.z, function (o)
+                    o.oBehParams = 2
+                end)
+            end
+        end
+
+        -- delete unwanted pipes
+        if gNetworkPlayers[0].currLevelNum == LEVEL_THI and find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhv1Up)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhv1Up)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvBubba)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBubba)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvOneCoin)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvOneCoin)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvRedCoin)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvRedCoin)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvRedCoinStarMarker)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvRedCoinStarMarker)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHo)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHo)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHoThrowMario)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHoThrowMario)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvWhompKingBoss)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvWhompKingBoss)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvSmallWhomp)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvSmallWhomp)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvMoneybag)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvMoneybag)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvMoneybagHidden)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvMoneybagHidden)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvSpindrift)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvSpindrift)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvYoshi)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvYoshi)))
+        end
+
+        if find_object_with_behavior(get_behavior_from_id(id_bhvBulletBill)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBulletBill)))
+        end
+
+        if not isRomhack then
+            if find_object_with_behavior(get_behavior_from_id(id_bhvActivatedBackAndForthPlatform)) ~= nil then
+                obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvActivatedBackAndForthPlatform)))
+            end
+
+            if find_object_with_behavior(get_behavior_from_id(id_bhvExclamationBox)) ~= nil then
+                obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvExclamationBox)))
+            end
+        else
+            if find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)) ~= nil then
+                obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)))
+            end
+        end
+
+        -- handle speed boost
+        if m.controller.buttonPressed & Y_BUTTON ~= 0 and speedBoostTimer >= 20 * 30 and gPlayerSyncTable[0].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST then
+            speedBoostTimer = 0
+        end
+
+        -- handle if just join
+        if joinTimer == 2 * 30 then
+            if (gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_WAIT) then
+                show_modifiers()
+            end
+
+            if gGlobalSyncTable.roundState == ROUND_ACTIVE then
+                if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION then
+                    gPlayerSyncTable[0].state = ELIMINATED_OR_FROZEN
+                else
+                    gPlayerSyncTable[0].state = TAGGER
+                end
+            else
+                gPlayerSyncTable[0].state = RUNNER
+            end
+
+            show_rules(true, true)
+
+            m.freeze = 1
+        elseif network_is_server() then
+            joinTimer = 0
+        elseif joinTimer > 0 then
+            m.freeze = 1
+        end
+
+        -- handle desync timer
+        if desyncTimer <= 0 then
+            m.freeze = 1
+        end
+
+        -- handle leaderboard and desync timer
+        if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
+            m.freeze = 1
+        elseif (joinTimer <= 0 --[[and desyncTimer > 0--]]) or network_is_server() then
+            m.freeze = 0
+        end
+    end
+
+    -- handle camp detection
+    camping_detection(m)
+end
+
+local function before_set_mario_action(m, action)
+    if m.playerIndex == 0 then
+        if action == ACT_WAITING_FOR_DIALOG or action == ACT_READING_SIGN or action == ACT_READING_AUTOMATIC_DIALOG or action == ACT_READING_NPC_DIALOG or action == ACT_JUMBO_STAR_CUTSCENE or action == ACT_LAVA_BOOST or action == ACT_QUICKSAND_DEATH or action == ACT_BURNING_FALL or action == ACT_BURNING_JUMP then
+            return 1
+        end
+    end
+end
+
+---@param m MarioState
+local function before_phys(m)
+    -- handle speed boost
+    if speedBoostTimer < 5 * 30 and m.playerIndex == 0 and gPlayerSyncTable[0].state == TAGGER then -- this allows for 5 seconds of speedboost
+        if m.action ~= ACT_BACKWARD_AIR_KB and m.action ~= ACT_FORWARD_AIR_KB then
+            m.vel.x = m.vel.x * 1.25
+            m.vel.z = m.vel.z * 1.25
+        else
+            m.vel.x = m.vel.x * 1.05
+            m.vel.z = m.vel.z * 1.05
+        end
+    end
+end
+
+local function hud_round_status()
+
+    local text = ""
+
+    -- set text
+    if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
+        text = "Waiting for Players"
+    elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        text = "Time Remaining: " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+    elseif gGlobalSyncTable.roundState == ROUND_WAIT then
+        text = "Starting in " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+    elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.state == ROUND_TAGGERS_WIN then
+        text = "Starting new round"
+    else
+        return
+    end
+
+    local scale = 0.5
+
+    -- get width of screen and text
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(text) * scale
+
+    local x = (screenWidth - width) / 2.0
+    local y = 0
+
+    -- render rect
+    djui_hud_set_color(0, 0, 0, 128);
+    djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale));
+
+    -- render text
+    djui_hud_set_color(255, 255, 255, 255);
+    djui_hud_print_text(text, x, y, scale);
+end
+
+local function hud_gamemode()
+    local text = get_gamemode_without_hex()
+    local scale = 0.37
+
+    -- get width of screen and text
+    local width = djui_hud_measure_text(text) * scale
+
+    local x = 12 * scale
+    local y = 0
+
+    local r, g, b = get_gamemode_rgb_color()
+
+    -- render rect
+    djui_hud_set_color(0, 0, 0, 128);
+    djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale));
+
+    -- render text
+    djui_hud_set_color(r, g, b, 255);
+    djui_hud_print_text(text, x, y, scale);
+end
+
+local function hud_modifier()
+    local text = get_modifier_text_without_hex()
+    local scale = 0.37
+
+    -- get width of screen and text
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(text) * scale
+
+    local x = screenWidth - width - (12 * scale)
+    local y = 0
+
+    local r, g, b = get_modifier_rgb()
+
+    -- render rect
+    djui_hud_set_color(0, 0, 0, 128);
+    djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale));
+
+    -- render text
+    djui_hud_set_color(r, g, b, 255);
+    djui_hud_print_text(text, x, y, scale);
+end
+
+local function hud_boost()
+
+    if gPlayerSyncTable[0].state ~= TAGGER then return end
+    if gGlobalSyncTable.modifier == MODIFIER_NO_BOOST or gGlobalSyncTable.modifier == MODIFIER_FLY or gGlobalSyncTable.modifier == MODIFIER_SPEED then return end
+
+    local screenWidth  = djui_hud_get_screen_width()
+    local screenHeight = djui_hud_get_screen_height()
+
+    local scale = 1
+    local width = 128 * scale
+    local height = 16 * scale
+    local x = math.floor((screenWidth - width) / 2)
+    local y = math.floor(screenHeight - height - 4 * scale)
+
+    djui_hud_set_color(0, 0, 0, 128)
+    djui_hud_render_rect(x, y, width, height)
+
+    x = x + 2 * scale
+    y = y + 2 * scale
+    width = width - 4 * scale
+    height = height - 4 * scale
+    boostTime = speedBoostTimer / 30 / 20
+    width = math.floor(width * boostTime)
+    djui_hud_set_color(0, 137, 237, 128)
+    djui_hud_render_rect(x, y, width, height)
+
+    if speedBoostTimer < 5 * 30 then
+        text = "Boosting"
+    elseif speedBoostTimer >= 5 * 30 and speedBoostTimer < 20 * 30 then
+        text = "Recharging"
+    else
+        text = "Ready"
+    end
+
+    scale = 0.25
+    width = djui_hud_measure_text(text) * scale
+    height = 32 * scale
+    x = (screenWidth - width) / 2
+    y = screenHeight - 28
+
+    djui_hud_set_color(0, 0, 0, 128)
+    djui_hud_render_rect(x - 6, y, width + 12, height)
+
+    djui_hud_set_color(0, 162, 255, 128)
+    djui_hud_print_text(text, x, y, scale)
+end
+
+local function hud_render()
+    -- set djui font and resolution
+    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_resolution(RESOLUTION_N64)
+
+    -- render hud
+    hud_round_status()
+    hud_gamemode()
+    hud_modifier()
+    hud_boost()
+
+    -- hide hud
+    hud_hide()
+
+    flashingIndex = flashingIndex + 1
+end
+
+---@param a MarioState
+---@param v MarioState
+local function allow_pvp(a, v)
+    -- check if 2 runners are trying to attack eachother
+    if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == RUNNER then return false end
+    -- check if 2 taggers are trying to attack eachother
+    if gPlayerSyncTable[v.playerIndex].state == TAGGER and gPlayerSyncTable[a.playerIndex].state == TAGGER then return false end
+end
+
+---@param m MarioState
+---@param o Object
+---@param intee InteractionType
+local function allow_interact(m, o, intee)
+
+    -- check if intee is unwanted
+    if intee == INTERACT_STAR_OR_KEY or intee == INTERACT_KOOPA_SHELL or intee == INTERACT_WARP_DOOR then
+        return false
+    end
+
+    if intee == INTERACT_CANNON_BASE and not gGlobalSyncTable.cannons then
+        return false
+    end
+
+    if intee == INTERACT_WARP and o.behavior == get_behavior_from_id(id_bhvWarpPipe) and not isRomhack then
+        if (gGlobalSyncTable.gamemode == FREEZE_TAG and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) or gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION then
+            local o2 = obj_get_first_with_behavior_id(id_bhvWarpPipe)
+            while o2 ~= nil do
+                if o2 == o then
+                    o2 = obj_get_next_with_same_behavior_id(o2)
+                else
+                    m.pos.x = o2.oPosX
+                    m.pos.y = o2.oPosY + 200
+                    m.pos.z = o2.oPosZ
+
+                    set_mario_action(m, ACT_JUMP, 0)
+
+                    m.vel.y = 60
+                    m.forwardVel = 15
+
+                    if m.invincTimer <= 0 then
+                        gPlayerSyncTable[m.playerIndex].invincTimer = 2 * 30 -- 2 seconds
+                    end
+
+                    reset_camera(m.area.camera) -- reset camera
+
+                    play_sound(SOUND_MENU_EXIT_PIPE, m.pos) -- play pipe sounds
+
+                    break
+                end
+            end
+        end
+
+        return false
+    elseif intee == INTERACT_WARP then
+        return false
+    end
+
+    -- dont allow spectator to interact with objects
+    if gPlayerSyncTable[m.playerIndex].state == SPECTATOR then return false end
+end
+
+function check_if_romhack_enabled()
+    -- set default levels
+    table.insert(defaultLevels, "BOB-OMB BATTLEFIELD")
+    table.insert(defaultLevels, "WHOMP'S FORTRESS")
+    table.insert(defaultLevels, "JOLLY ROGER BAY")
+    table.insert(defaultLevels, "COOL, COOL MOUNTAIN")
+    table.insert(defaultLevels, "BIG BOO'S HAUNT")
+    table.insert(defaultLevels, "HAZY MAZE CAVE")
+    table.insert(defaultLevels, "LETHAL LAVA LAND")
+    table.insert(defaultLevels, "SHIFTING SAND LAND")
+    table.insert(defaultLevels, "DIRE, DIRE DOCKS")
+    table.insert(defaultLevels, "SNOWMAN'S LAND")
+    table.insert(defaultLevels, "WET-DRY WORLD")
+    table.insert(defaultLevels, "TALL, TALL MOUNTAIN")
+    table.insert(defaultLevels, "TINY-HUGE ISLAND")
+    table.insert(defaultLevels, "TICK TOCK CLOCK")
+    table.insert(defaultLevels, "RAINBOW RIDE")
+    table.insert(defaultLevels, "BOWSER IN THE DARK WORLD")
+    table.insert(defaultLevels, "BOWSER IN THE FIRE SEA")
+    table.insert(defaultLevels, "BOWSER IN THE SKY")
+    table.insert(defaultLevels, "THE PRINCESS'S SECRET SLIDE")
+    table.insert(defaultLevels, "CAVERN OF THE METAL CAP")
+    table.insert(defaultLevels, "TOWER OF THE WING CAP")
+    table.insert(defaultLevels, "VANISH CAP UNDER THE MOAT")
+    table.insert(defaultLevels, "WING MARIO OVER THE RAINBOW")
+    table.insert(defaultLevels, "THE SECRET AQUARIUM")
+    table.insert(defaultLevels, "PEACH'S CASTLE")
+
+    for i=0,50 do
+        if gActiveMods[i] ~= nil then
+            if gActiveMods[i].incompatible ~= nil then
+                if string.match(gActiveMods[i].incompatible, 'romhack') then
+                    isRomhack = true
+
+                    gGlobalSyncTable.water = true
+
+                    return
+                end
+            end
+        end
+    end
+end
+
+hook_on_sync_table_change(gGlobalSyncTable, 'modifier', gGlobalSyncTable.modifier, function (tag, oldVal, newVal)
+    if oldVal ~= newVal and gGlobalSyncTable.modifier ~= -1 then
+        show_modifiers()
+    end
+end)
+
+hook_on_sync_table_change(gGlobalSyncTable, 'gamemode', gGlobalSyncTable.gamemode, function (tag, oldVal, newVal)
+    if oldVal ~= newVal and gGlobalSyncTable.gamemode ~= -1 then
+        local text = get_gamemode()
+
+        djui_popup_create("Selected gamemode is " .. text, 2)
+        djui_chat_message_create("Selected gamemode is " .. text)
+    end
+end)
+
+hook_on_sync_table_change(gGlobalSyncTable, 'randomGamemode', gGlobalSyncTable.randomGamemode, function (tag, oldVal, newVal)
+    if oldVal ~= newVal then
+        local text = ""
+
+        if gGlobalSyncTable.randomGamemode then text = "random" end
+        if not gGlobalSyncTable.randomGamemode then text = "not random" end
+
+        if text ~= "" then
+            djui_popup_create("Gamemode is " .. text, 2)
+        end
+    end
+end)
+
+hook_on_sync_table_change(gGlobalSyncTable, 'becameTaggerIndex', nil, function (tag, oldVal, newVal)
+    if oldVal ~= newVal and gGlobalSyncTable.becameTaggerIndex >= 0 then
+        local localBecameTaggerIndex = network_local_index_from_global(gGlobalSyncTable.becameTaggerIndex)
+
+        djui_popup_create(network_get_player_text_color_string(localBecameTaggerIndex) .. gNetworkPlayers[localBecameTaggerIndex].name .. " \\#FFFFFF\\is now\na \\#E82E2E\\Tagger", 3)
+
+        if network_is_server() then gGlobalSyncTable.becameTaggerIndex = -1 end
+    end
+end)
+
+hook_on_sync_table_change(gGlobalSyncTable, 'becameRunnerIndex', nil, function (tag, oldVal, newVal)
+    if oldVal ~= newVal and gGlobalSyncTable.becameRunnerIndex >= 0 then
+        local localBecameRunnerIndex = network_local_index_from_global(gGlobalSyncTable.becameRunnerIndex)
+
+        djui_popup_create(network_get_player_text_color_string(localBecameRunnerIndex) .. gNetworkPlayers[localBecameRunnerIndex].name .. " \\#FFFFFF\\is now\na \\#316BE8\\Runner", 3)
+
+        if network_is_server() then gGlobalSyncTable.becameRunnerIndex = -1 end
+    end
+end)
+
+hook_event(HOOK_UPDATE, update)
+hook_event(HOOK_ON_HUD_RENDER, hud_render)
+hook_event(HOOK_MARIO_UPDATE, mario_update)
+hook_event(HOOK_BEFORE_PHYS_STEP, before_phys)
+hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
+hook_event(HOOK_ALLOW_INTERACT, allow_interact)
+hook_event(HOOK_BEFORE_SET_MARIO_ACTION, before_set_mario_action)
+hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
+hook_event(HOOK_USE_ACT_SELECT, function() return false end)
+hook_event(HOOK_ALLOW_HAZARD_SURFACE, function () return false end)
+
+check_if_romhack_enabled()
+
+-- fix hoot behavior
+---@diagnostic disable: param-type-mismatch
+hook_behavior(id_bhvHoot, OBJ_LIST_POLELIKE, false, nil, function (o)
+    if o.oHootAvailability == HOOT_AVAIL_WANTS_TO_TALK then
+        o.oHootAvailability = HOOT_AVAIL_READY_TO_FLY
+    end
+end, nil)
