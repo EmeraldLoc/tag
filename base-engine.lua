@@ -810,10 +810,13 @@ function check_if_romhack_enabled()
     table.insert(defaultLevels, "THE SECRET AQUARIUM")
     table.insert(defaultLevels, "PEACH'S CASTLE")
 
+    -- check thru 50 mods (if you have more than 50 mods enabled your crazy)
     for i=0,50 do
         if gActiveMods[i] ~= nil then
             if gActiveMods[i].incompatible ~= nil then
+                -- check if it is a romhack by checking the incompatible tag
                 if string.match(gActiveMods[i].incompatible, 'romhack') then
+                    -- set romhack to true and water by default to true
                     isRomhack = true
 
                     gGlobalSyncTable.water = true
@@ -880,10 +883,14 @@ hook_event(HOOK_BEFORE_PHYS_STEP, before_phys)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 hook_event(HOOK_BEFORE_SET_MARIO_ACTION, before_set_mario_action)
+-- make sure the user can never pause exit
 hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
+-- this is for romhacks
 hook_event(HOOK_USE_ACT_SELECT, function() return false end)
+-- this hook allows us to walk on lava and quicksand
 hook_event(HOOK_ALLOW_HAZARD_SURFACE, function () return false end)
 
+-- check if romhack is enabled
 check_if_romhack_enabled()
 
 -- fix hoot behavior

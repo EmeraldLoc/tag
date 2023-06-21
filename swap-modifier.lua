@@ -11,6 +11,7 @@ local function update()
         swapTimer = swapTimer - 1
         gGlobalSyncTable.swapTimer = swapTimer
     else
+        -- reset swap timer for when the swap modifier is enabled
         swapTimer = math.random(15 * 30, 30 * 30)
         gGlobalSyncTable.swapTimer = 30
     end
