@@ -73,6 +73,7 @@ prevLevel = 1 -- make it the same as the selected level so it selects a new leve
 local serverLaunched = true
 local speedBoostTimer = 0
 local badLevels = {}
+local flyHeight = 0
 
 -- tables
 levels = {
@@ -349,10 +350,16 @@ local function mario_update(m)
     end
 
     -- flight physics
-    if m.action == ACT_FLYING then
+    if m.action == ACT_FLYING and m.playerIndex == 0 then
         if m.forwardVel < 45 then m.forwardVel = 45 end
         if m.forwardVel > 100 then m.forwardVel = 100 end
-        if m.pos.y > 15000 then m.forwardVel = 1 end
+        if m.pos.y > flyHeight then m.forwardVel = 1 end
+    elseif m.action == ACT_FLYING_TRIPLE_JUMP and m.playerIndex == 0 then
+        flyHeight = m.pos.y + 5000
+
+        if gPlayerSyncTable[0].state == SPECTATOR or gPlayerSyncTable[0].state == ELIMINATED_OR_FROZEN then
+            flyHeight = 1000000
+        end
     end
 
     -- set model state according to state
