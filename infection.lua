@@ -123,12 +123,10 @@ local function on_pvp(a, v)
     if gGlobalSyncTable.gamemode ~= INFECTION then return end
 
     -- check if tagger tagged runner
-    if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+    if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE  and v.playerIndex == 0 then
         gPlayerSyncTable[v.playerIndex].state = TAGGER
 
-        gGlobalSyncTable.taggedIndex.runner = network_global_index_from_local(v.playerIndex)
-        gGlobalSyncTable.taggedIndex.tagger = network_global_index_from_local(a.playerIndex)
-        gGlobalSyncTable.taggedIndexChanged = 1
+        tagged_popup(a.playerIndex, v.playerIndex)
         gPlayerSyncTable[a.playerIndex].amountOfTags = gPlayerSyncTable[a.playerIndex].amountOfTags + 1
         gPlayerSyncTable[a.playerIndex].invincTimer = 1 * 30
     end
@@ -151,10 +149,6 @@ local function allow_interact(m, o, intee)
                 end
             end
         end
-    end
-
-    if intee == INTERACT_HOOT and gPlayerSyncTable[m.playerIndex].state == ELIMINATED then
-        return false
     end
 end
 

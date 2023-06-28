@@ -411,7 +411,7 @@ function on_gamemode_command(msg)
 				gGlobalSyncTable.gamemode = TAG
 
 				-- default tag timer
-				if gGlobalSyncTable.amountOfTime == (180 * 30) then
+				if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
 					gGlobalSyncTable.amountOfTime = 120 * 30
 				end
 
@@ -438,7 +438,7 @@ function on_gamemode_command(msg)
 				gGlobalSyncTable.gamemode = FREEZE_TAG
 
 				-- default freeze tag timer
-				if gGlobalSyncTable.amountOfTime == (120 * 30) then
+				if gGlobalSyncTable.amountOfTime == (120 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
 					gGlobalSyncTable.amountOfTime = 180 * 30
 				end
 
@@ -465,7 +465,7 @@ function on_gamemode_command(msg)
 				gGlobalSyncTable.gamemode = INFECTION
 
 				-- default infection timer
-				if gGlobalSyncTable.amountOfTime == (180 * 30) then
+				if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
 					gGlobalSyncTable.amountOfTime = 120 * 30
 				end
 
@@ -481,6 +481,33 @@ function on_gamemode_command(msg)
 				return true
 			else
 				djui_chat_message_create("Gamemode is already set to Infection")
+
+				return true
+			end
+		elseif msg:lower() == "hot potato" or msg:lower() == "hot" then
+			if gGlobalSyncTable.gamemode ~= HOT_POTATO or gGlobalSyncTable.randomGamemode then
+				-- set gamemode
+				djui_chat_message_create("Set gamemode to Hot Potato")
+				gGlobalSyncTable.gamemode = -1 -- force popup to show
+				gGlobalSyncTable.gamemode = HOT_POTATO
+
+				-- default hot potato timer
+				if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == 120 * 30 then
+					gGlobalSyncTable.amountOfTime = 60 * 30
+				end
+
+				-- set players needed
+				PLAYERS_NEEDED = 3
+
+				-- disable random gamemode
+				gGlobalSyncTable.randomGamemode = false
+
+				-- restart round
+				gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+
+				return true
+			else
+				djui_chat_message_create("Gamemode is already set to Hot Potato")
 
 				return true
 			end
@@ -641,13 +668,7 @@ if network_is_server() or network_is_moderator() then
 end
 
 hook_chat_command("tp", "[name|index] Teleports to a player if your eliminated, only works in the tag gamemode", on_tp_command)
-hook_chat_command("gamemode", "[tag|freeze tag|infection|random] Get or set gamemode to freeze tag or tag", on_gamemode_command)
+hook_chat_command("gamemode", "[tag|freeze tag|infection|hot potato|random] Get or set gamemode to freeze tag or tag", on_gamemode_command)
 hook_chat_command("modifiers", "[on|off ] Get current modifier or enable or disable modifiers", on_modifier_command)
 hook_chat_command("spectate", "[on|off] Be a spectator", spectator_command)
-hook_chat_command("rules", "Get the rules for the gamemode", function (msg)
-	show_rules(false, true)
-
-	---@diagnostic disable-next-line: redundant-return-value
-	return true
-end)
 hook_chat_command("version", "Get current version of \\#316BE8\\Tag", on_version_command)

@@ -1,9 +1,10 @@
 -- constants
-ROUND_TAGGERS_WIN = 3
-ROUND_RUNNERS_WIN = 4
 ROUND_WAIT_PLAYERS = 0
 ROUND_ACTIVE = 1
 ROUND_WAIT = 2
+ROUND_TAGGERS_WIN = 3
+ROUND_RUNNERS_WIN = 4
+ROUND_HOT_POTATO_INTERMISSION = 5
 
 RUNNER = 0
 TAGGER = 1
@@ -14,7 +15,8 @@ MIN_GAMEMODE = 1
 TAG = 1
 FREEZE_TAG = 2
 INFECTION = 3
-MAX_GAMEMODE = 3
+HOT_POTATO = 4
+MAX_GAMEMODE = 4
 
 PLAYERS_NEEDED = 2
 
@@ -46,8 +48,6 @@ gGlobalSyncTable.displayTimer = 1
 gGlobalSyncTable.selectedLevel = 1
 gGlobalSyncTable.amountOfTime = 120 * 30
 gGlobalSyncTable.antiCampTimer = 10 * 30
-gGlobalSyncTable.becameTaggerIndex = -1 -- -1 is not an index
-gGlobalSyncTable.becameRunnerIndex = -1 -- -1 is not an index
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init
     if network_is_server() then
         gPlayerSyncTable[i].state = RUNNER
@@ -70,9 +70,8 @@ winnerIndexes = {} -- dont make this local so it can be used in other files
 defaultLevels = {} -- dont make this local so it can be used in other files
 joinTimer = 6 * 30 -- dont make this local so it can be used in other files
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
-local serverLaunched = true
+badLevels = {}
 local speedBoostTimer = 0
-local badLevels = {}
 local flyHeight = 0
 
 -- tables
@@ -94,13 +93,6 @@ levels = {
 }
 
 local function server_update()
-
-    if serverLaunched then
-        show_rules(true, true)
-
-        serverLaunched = false
-    end
-
     for i = 0, MAX_PLAYERS - 1 do
         if not gNetworkPlayers[i].connected then
             gPlayerSyncTable[i].state = -1
@@ -176,6 +168,8 @@ local function server_update()
                     gGlobalSyncTable.modifier = MODIFIER_NONE -- set the modifier to none
                 end
 
+                show_modifiers()
+
                     -- if we select a random gamemode, select that random gamemode now
                 if gGlobalSyncTable.randomGamemode then
                     if numPlayers >= 3 then -- 3 because in order for this to work we cant have it select freeze tag without enough players
@@ -187,22 +181,28 @@ local function server_update()
 
                     if gGlobalSyncTable.gamemode == FREEZE_TAG then
                         -- default freeze tag timer
-                        if gGlobalSyncTable.amountOfTime == (120 * 30) then
+                        if gGlobalSyncTable.amountOfTime == (120 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
                             gGlobalSyncTable.amountOfTime = 180 * 30
                         end
 
                         PLAYERS_NEEDED = 3
                     elseif gGlobalSyncTable.gamemode == TAG then
                         -- default tag timer, dont check imfection timer since their the same
-                        if gGlobalSyncTable.amountOfTime == (180 * 30) then
+                        if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
                             gGlobalSyncTable.amountOfTime = 120 * 30
                         end
 
                         PLAYERS_NEEDED = 2
                     elseif gGlobalSyncTable.gamemode == INFECTION then
                          -- default infection timer, dont check tag timer since their the same
-                         if gGlobalSyncTable.amountOfTime == (180 * 30) then
+                         if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
                             gGlobalSyncTable.amountOfTime = 120 * 30
+                        end
+
+                        PLAYERS_NEEDED = 3
+                    elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+                        if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == (120 * 30) then
+                            gGlobalSyncTable.amountOfTime = 60 * 30
                         end
 
                         PLAYERS_NEEDED = 3
@@ -212,7 +212,7 @@ local function server_update()
                 gGlobalSyncTable.modifier = MODIFIER_NONE
             end
 
-            print("Tag: Set modifier, and gamemode")
+            print("Tag: Modifier is set to " .. get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex())
         end
 
         timer = timer - 1 -- subtract timer by one
@@ -229,7 +229,7 @@ local function server_update()
 
         if timer <= 0 then
             timer = gGlobalSyncTable.amountOfTime -- set timer to amount of time in a round
-            local amountOfTaggersNeeded = math.floor(network_player_connected_count() / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
+            local amountOfTaggersNeeded = math.floor(numPlayers / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
             if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
                 amountOfTaggersNeeded = 1 -- set amount of taggers to one if the modifier is one tagger
             end
@@ -256,8 +256,10 @@ local function server_update()
             print("Tag: Started the game")
         end
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        timer = timer - 1 -- subtract timer by one
-        gGlobalSyncTable.displayTimer = timer -- set display timer to timer
+        if timer > 0 then
+            timer = timer - 1 -- subtract timer by one
+            gGlobalSyncTable.displayTimer = timer -- set display timer to timer
+        end
 
         for i = 0, MAX_PLAYERS - 1 do
             if gPlayerSyncTable[i].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
@@ -266,13 +268,26 @@ local function server_update()
         end
 
         if timer <= 0 then
-            timer = 15 * 30-- 15 seconds
+            if gGlobalSyncTable.gamemode ~= HOT_POTATO then
+                timer = 15 * 30-- 15 seconds
 
-            gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN -- end round
+                gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN -- end round
 
-            print("Tag: Runners Won")
+                print("Tag: Runners Won")
 
-            return
+                return
+            else
+                for i = 0, MAX_PLAYERS - 1 do
+                    if gNetworkPlayers[i].connected then
+                        if gPlayerSyncTable[i].state == TAGGER then
+                            gMarioStates[i].health = 0
+                            spawn_sync_object(id_bhvExplosion, E_MODEL_EXPLOSION, gMarioStates[i].pos.x, gMarioStates[i].pos.y, gMarioStates[i].pos.z, nil)
+                            gPlayerSyncTable[i].state = ELIMINATED_OR_FROZEN
+                            explosion_popup(i)
+                        end
+                    end
+                end
+            end
         end
 
         check_round_status() -- check current runner and tagger status
@@ -282,6 +297,49 @@ local function server_update()
         if timer <= 0 then
             gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
             print("Tag: Starting a new round...")
+        end
+    elseif gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
+        timer = timer - 1
+        gGlobalSyncTable.displayTimer = timer
+
+        if timer <= 0 then
+
+            local currentConnectedCount = 0
+
+            for i = 0, MAX_PLAYERS - 1 do
+                if gNetworkPlayers[i].connected then
+                    if gPlayerSyncTable[i].state ~= SPECTATOR and gPlayerSyncTable[i].state ~= ELIMINATED_OR_FROZEN then
+                        currentConnectedCount = currentConnectedCount + 1
+                    end
+                end
+            end
+
+            local amountOfTaggersNeeded = math.floor(currentConnectedCount / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
+            if amountOfTaggersNeeded < 1 then amountOfTaggersNeeded = 1 end
+            if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
+                amountOfTaggersNeeded = 1 -- set amount of taggers to one if the modifier is one tagger
+            end
+
+            timer = 60 * 30
+
+            print("Tag: Assigning Players")
+
+            local amountOfTaggers = 0
+
+            while amountOfTaggers < amountOfTaggersNeeded do
+                -- select taggers
+                local randomIndex = math.random(0, MAX_PLAYERS - 1) -- select random index
+
+                if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= ELIMINATED_OR_FROZEN and gNetworkPlayers[randomIndex].connected then
+                    gPlayerSyncTable[randomIndex].state = TAGGER
+
+                    print("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
+
+                    amountOfTaggers = amountOfTaggers + 1
+                end
+            end
+
+            gGlobalSyncTable.roundState = ROUND_ACTIVE
         end
     end
 end
@@ -329,8 +387,8 @@ local function mario_update(m)
         end
     end
 
-    if not gGlobalSyncTable.bljs and m.forwardVel <= -55 and m.action == ACT_LONG_JUMP then
-        m.forwardVel = -55
+    if not gGlobalSyncTable.bljs and m.forwardVel <= -48 and (m.action == ACT_LONG_JUMP or m.action == ACT_LONG_JUMP_LAND or m.action == ACT_LONG_JUMP_LAND_STOP) then
+        m.forwardVel = -48 -- this is the dive speed
     end
 
     m.peakHeight = m.pos.y
@@ -351,9 +409,15 @@ local function mario_update(m)
 
     -- flight physics
     if m.action == ACT_FLYING and m.playerIndex == 0 then
-        if m.forwardVel < 45 then m.forwardVel = 45 end
-        if m.forwardVel > 100 then m.forwardVel = 100 end
-        if m.pos.y > flyHeight then m.forwardVel = 1 end
+        if m.forwardVel < 45 and m.pos.y < flyHeight then
+            m.forwardVel = m.forwardVel + 2
+
+            if m.forwardVel > 45 then m.forwardVel = 45 end
+        end
+        if m.forwardVel > 150 and m.pos.y < flyHeight then m.forwardVel = 150 end
+        if m.pos.y > flyHeight then
+            m.forwardVel = m.forwardVel - 0.5
+        end
     elseif m.action == ACT_FLYING_TRIPLE_JUMP and m.playerIndex == 0 then
         flyHeight = m.pos.y + 5000
 
@@ -379,7 +443,7 @@ local function mario_update(m)
         local selectedLevel = levels[gGlobalSyncTable.selectedLevel] -- get currently selected level
 
         -- check if mario is in the proper level, act, and area, if not, rewarp mario
-        if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_WAIT then
+        if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_WAIT or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
             if not isRomhack then
                 if np.currLevelNum ~= selectedLevel.level or np.currActNum ~= selectedLevel.act or np.currAreaIndex ~= selectedLevel.area then
                     ---@diagnostic disable-next-line: param-type-mismatch
@@ -503,6 +567,10 @@ local function mario_update(m)
             obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBulletBill)))
         end
 
+        if find_object_with_behavior(get_behavior_from_id(id_bhvHoot)) ~= nil then
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHoot)))
+        end
+
         if not isRomhack then
             if find_object_with_behavior(get_behavior_from_id(id_bhvActivatedBackAndForthPlatform)) ~= nil then
                 obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvActivatedBackAndForthPlatform)))
@@ -524,12 +592,12 @@ local function mario_update(m)
 
         -- handle if just join
         if joinTimer == 2 * 30 then
-            if (gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_WAIT) then
+            if (gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_WAIT or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION) then
                 show_modifiers()
             end
 
-            if gGlobalSyncTable.roundState == ROUND_ACTIVE then
-                if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION then
+            if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
+                if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION or gGlobalSyncTable.gamemode == HOT_POTATO then
                     gPlayerSyncTable[0].state = ELIMINATED_OR_FROZEN
                 else
                     gPlayerSyncTable[0].state = TAGGER
@@ -537,8 +605,6 @@ local function mario_update(m)
             else
                 gPlayerSyncTable[0].state = RUNNER
             end
-
-            show_rules(true, true)
 
             m.freeze = 1
         elseif network_is_server() then
@@ -555,7 +621,7 @@ local function mario_update(m)
         -- handle leaderboard and desync timer
         if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
             m.freeze = 1
-        elseif (joinTimer <= 0 --[[and desyncTimer > 0--]]) or network_is_server() then
+        elseif (joinTimer <= 0 and desyncTimer > 0) or network_is_server() then
             m.freeze = 0
         end
     end
@@ -599,6 +665,8 @@ local function hud_round_status()
         text = "Starting in " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
     elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.state == ROUND_TAGGERS_WIN then
         text = "Starting new round"
+    elseif gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
+        text = "Intermission: " .. math.floor(gGlobalSyncTable.displayTimer / 30)
     else
         return
     end
@@ -752,7 +820,7 @@ local function allow_interact(m, o, intee)
     end
 
     if intee == INTERACT_WARP and o.behavior == get_behavior_from_id(id_bhvWarpPipe) and not isRomhack then
-        if (gGlobalSyncTable.gamemode == FREEZE_TAG and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) or gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION then
+        if (gGlobalSyncTable.gamemode == FREEZE_TAG and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) or gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION or gGlobalSyncTable.gamemode == HOT_POTATO then
             local o2 = obj_get_first_with_behavior_id(id_bhvWarpPipe)
             while o2 ~= nil do
                 if o2 == o then
@@ -859,27 +927,8 @@ hook_on_sync_table_change(gGlobalSyncTable, 'randomGamemode', gGlobalSyncTable.r
 
         if text ~= "" then
             djui_popup_create("Gamemode is " .. text, 2)
+            djui_chat_message_create("Gamemode is " .. text)
         end
-    end
-end)
-
-hook_on_sync_table_change(gGlobalSyncTable, 'becameTaggerIndex', nil, function (tag, oldVal, newVal)
-    if oldVal ~= newVal and gGlobalSyncTable.becameTaggerIndex >= 0 then
-        local localBecameTaggerIndex = network_local_index_from_global(gGlobalSyncTable.becameTaggerIndex)
-
-        djui_popup_create(network_get_player_text_color_string(localBecameTaggerIndex) .. gNetworkPlayers[localBecameTaggerIndex].name .. " \\#FFFFFF\\is now\na \\#E82E2E\\Tagger", 3)
-
-        if network_is_server() then gGlobalSyncTable.becameTaggerIndex = -1 end
-    end
-end)
-
-hook_on_sync_table_change(gGlobalSyncTable, 'becameRunnerIndex', nil, function (tag, oldVal, newVal)
-    if oldVal ~= newVal and gGlobalSyncTable.becameRunnerIndex >= 0 then
-        local localBecameRunnerIndex = network_local_index_from_global(gGlobalSyncTable.becameRunnerIndex)
-
-        djui_popup_create(network_get_player_text_color_string(localBecameRunnerIndex) .. gNetworkPlayers[localBecameRunnerIndex].name .. " \\#FFFFFF\\is now\na \\#316BE8\\Runner", 3)
-
-        if network_is_server() then gGlobalSyncTable.becameRunnerIndex = -1 end
     end
 end)
 
@@ -899,11 +948,3 @@ hook_event(HOOK_ALLOW_HAZARD_SURFACE, function () return false end)
 
 -- check if romhack is enabled
 check_if_romhack_enabled()
-
--- fix hoot behavior
----@diagnostic disable: param-type-mismatch
-hook_behavior(id_bhvHoot, OBJ_LIST_POLELIKE, false, nil, function (o)
-    if o.oHootAvailability == HOOT_AVAIL_WANTS_TO_TALK then
-        o.oHootAvailability = HOOT_AVAIL_READY_TO_FLY
-    end
-end, nil)

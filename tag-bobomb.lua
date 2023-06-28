@@ -115,19 +115,21 @@ function bhv_tag_bobomb_expode(obj)
                 if gGlobalSyncTable.gamemode == TAG then
                     gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].state = RUNNER
                     gPlayerSyncTable[m.playerIndex].state = TAGGER
-                    gGlobalSyncTable.taggedIndex.runner = network_global_index_from_local(m.playerIndex)
-                    gGlobalSyncTable.taggedIndex.tagger = obj.oTagBobombGlobalOwner
-                    gGlobalSyncTable.taggedIndexChanged = 1
+                    tagged_popup(network_local_index_from_global(obj.oTagBobombGlobalOwner), m.playerIndex)
                     gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags + 1
                 elseif gGlobalSyncTable.gamemode == FREEZE_TAG then
                     gPlayerSyncTable[m.playerIndex].state = ELIMINATED_OR_FROZEN
                     gGlobalSyncTable.frozenIndex = network_global_index_from_local(m.playerIndex)
+                    freezed_popup(network_local_index_from_global(obj.oTagBobombGlobalOwner), m.playerIndex)
                     gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags + 1
                 elseif gGlobalSyncTable.gamemode == INFECTION then
                     gPlayerSyncTable[m.playerIndex].state = TAGGER
-                    gGlobalSyncTable.taggedIndex.runner = network_global_index_from_local(m.playerIndex)
-                    gGlobalSyncTable.taggedIndex.tagger = obj.oTagBobombGlobalOwner
-                    gGlobalSyncTable.taggedIndexChanged = 1
+                    tagged_popup(network_local_index_from_global(obj.oTagBobombGlobalOwner), m.playerIndex)
+                    gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags + 1
+                elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+                    gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].state = RUNNER
+                    gPlayerSyncTable[m.playerIndex].state = TAGGER
+                    tagged_popup(network_local_index_from_global(obj.oTagBobombGlobalOwner), m.playerIndex)
                     gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags + 1
                 end
             end

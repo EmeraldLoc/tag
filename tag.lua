@@ -4,14 +4,6 @@ local ELIMINATED = 2
 -- variables
 local eliminatedTimer = 0
 
--- global variables
-gGlobalSyncTable.becameEliminatedIndex = -1 -- -1 is not an index
--- infection borrows these variables
-gGlobalSyncTable.taggedIndex = {}
-gGlobalSyncTable.taggedIndex.runner = -1
-gGlobalSyncTable.taggedIndex.tagger = -1
-gGlobalSyncTable.taggedIndexChanged = -1 -- use this in hook on sync table change because technically your not supposed to do what im doing for some reason :}
-
 local function update()
 
     if gGlobalSyncTable.gamemode ~= TAG then return end
@@ -142,7 +134,7 @@ local function on_death(m)
         if m.playerIndex == 0 then
             if gPlayerSyncTable[0].state == RUNNER then
                 gPlayerSyncTable[0].state = ELIMINATED
-                gGlobalSyncTable.becameEliminatedIndex = network_global_index_from_local(m.playerIndex)
+                eliminated_popup(0)
 
                 eliminatedTimer = 8 * 30 -- 8 seconds
             end
@@ -166,13 +158,11 @@ local function on_pvp(a, v)
     if gGlobalSyncTable.gamemode ~= TAG then return end
 
     -- check if tagger tagged runner
-    if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+    if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE and v.playerIndex == 0 then
         gPlayerSyncTable[v.playerIndex].state = TAGGER
         gPlayerSyncTable[a.playerIndex].state = RUNNER
 
-        gGlobalSyncTable.taggedIndex.runner = network_global_index_from_local(v.playerIndex)
-        gGlobalSyncTable.taggedIndex.tagger = network_global_index_from_local(a.playerIndex)
-        gGlobalSyncTable.taggedIndexChanged = 1
+        tagged_popup(a.playerIndex, v.playerIndex)
         gPlayerSyncTable[a.playerIndex].amountOfTags = gPlayerSyncTable[a.playerIndex].amountOfTags + 1
         gPlayerSyncTable[a.playerIndex].invincTimer = 1 * 30
     end
@@ -196,42 +186,7 @@ local function allow_interact(m, o, intee)
             end
         end
     end
-
-    -- don't allow eliminated to interact with hoot
-    if intee == INTERACT_HOOT and gPlayerSyncTable[m.playerIndex].state == ELIMINATED then
-        return false
-    end
 end
-
-hook_on_sync_table_change(gGlobalSyncTable, 'becameEliminatedIndex', nil, function (tag, oldVal, newVal)
-    if oldVal ~= newVal and gGlobalSyncTable.becameEliminatedIndex >= 0 then
-        local localBecameEliminatedIndex = network_local_index_from_global(gGlobalSyncTable.becameEliminatedIndex)
-
-        djui_popup_create(network_get_player_text_color_string(localBecameEliminatedIndex) .. gNetworkPlayers[localBecameEliminatedIndex].name .. " \\#FFFFFF\\is now\n \\#BF3636\\Eliminated", 3)
-
-        if network_is_server() then gGlobalSyncTable.becameEliminatedIndex = -1 end
-    end
-end)
-
--- this code is also used in infection
-hook_on_sync_table_change(gGlobalSyncTable, 'taggedIndexChanged', nil, function (tag, oldVal, newVal)
-    if oldVal ~= newVal and gGlobalSyncTable.taggedIndexChanged >= 0 then
-        local localRunnerIndex = network_local_index_from_global(gGlobalSyncTable.taggedIndex.runner)
-        local localTaggerIndex = network_local_index_from_global(gGlobalSyncTable.taggedIndex.tagger)
-
-        if gGlobalSyncTable.gamemode == TAG then
-            djui_popup_create(network_get_player_text_color_string(localTaggerIndex) .. gNetworkPlayers[localTaggerIndex].name .. " \\#E82E2E\\Tagged\n" .. network_get_player_text_color_string(localRunnerIndex) .. gNetworkPlayers[localRunnerIndex].name, 3)
-        elseif gGlobalSyncTable.gamemode == INFECTION then
-            djui_popup_create(network_get_player_text_color_string(localTaggerIndex) .. gNetworkPlayers[localTaggerIndex].name .. " \\#24D636\\Infected\n" .. network_get_player_text_color_string(localRunnerIndex) .. gNetworkPlayers[localRunnerIndex].name, 3)
-        end
-
-        if network_is_server() then
-            gGlobalSyncTable.taggedIndex.runner = -1
-            gGlobalSyncTable.taggedIndex.tagger = -1
-            gGlobalSyncTable.taggedIndexChanged = -1
-        end
-    end
-end)
 
 hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_MARIO_UPDATE, mario_update)

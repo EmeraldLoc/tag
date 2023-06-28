@@ -3,7 +3,6 @@
 local FROZEN = 2
 
 -- global vars
-gGlobalSyncTable.frozenIndex = -1 -- -1 is not an index
 gGlobalSyncTable.freezeHealthDrain = 2.5
 
 local function update()
@@ -187,13 +186,13 @@ local function on_death(m)
             if gPlayerSyncTable[0].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
                 gPlayerSyncTable[0].state = TAGGER
 
-                gGlobalSyncTable.becameTaggerIndex = network_global_index_from_local(m.playerIndex)
+                tagger_popup(0)
             end
 
             if gPlayerSyncTable[0].state == FROZEN and gGlobalSyncTable.roundState == ROUND_ACTIVE then
                 gPlayerSyncTable[m.playerIndex].state = TAGGER
 
-                gGlobalSyncTable.becameTaggerIndex = network_global_index_from_local(m.playerIndex)
+                tagger_popup(0)
             end
         end
     end
@@ -236,29 +235,20 @@ local function on_pvp(a, v)
     if gGlobalSyncTable.gamemode ~= FREEZE_TAG then return end
 
     -- check if tagger tagged runner
-    if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+    if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE and v.playerIndex == 0 then
         gPlayerSyncTable[a.playerIndex].amountOfTags = gPlayerSyncTable[a.playerIndex].amountOfTags + 1
         gPlayerSyncTable[v.playerIndex].state = FROZEN
-        gGlobalSyncTable.frozenIndex = network_global_index_from_local(v.playerIndex)
+        freezed_popup(a.playerIndex, v.playerIndex)
     end
 
     -- check if runner attacked frozen
-    if gPlayerSyncTable[v.playerIndex].state == FROZEN and gPlayerSyncTable[a.playerIndex].state == RUNNER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+    if gPlayerSyncTable[v.playerIndex].state == FROZEN and gPlayerSyncTable[a.playerIndex].state == RUNNER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE and v.playerIndex == 0 then
         gPlayerSyncTable[v.playerIndex].state = RUNNER
         gPlayerSyncTable[v.playerIndex].invincTimer = 2 * 30
         set_mario_action(gMarioStates[v.playerIndex], ACT_IDLE, 0)
+        unfreezed_popup(a.playerIndex, v.playerIndex)
     end
 end
-
-hook_on_sync_table_change(gGlobalSyncTable, 'frozenIndex', nil, function (tag, oldVal, newVal)
-    if oldVal ~= newVal and gGlobalSyncTable.frozenIndex >= 0 then
-        local localFrozenIndex = network_local_index_from_global(gGlobalSyncTable.frozenIndex)
-
-        djui_popup_create(network_get_player_text_color_string(localFrozenIndex) .. gNetworkPlayers[localFrozenIndex].name .. " \\#FFFFFF\\is now\n\\#7ec0ee\\Frozen", 3)
-
-        if network_is_server() then gGlobalSyncTable.frozenIndex = -1 end
-    end
-end)
 
 hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_ON_DEATH, on_death)

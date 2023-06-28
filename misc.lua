@@ -63,23 +63,37 @@ function check_round_status()
 	-- check if we have the avalible players
 	local hasTagger = false
 	local hasRunner = false
+	local runnerCount = 0
+	local taggerCount = 0
 
 	for i = 0, MAX_PLAYERS - 1 do
         if gNetworkPlayers[i].connected then
 			if gPlayerSyncTable[i].state == RUNNER then
 				-- we have a runner, so set hasRunner to true
 				hasRunner = true
+				runnerCount = runnerCount + 1
 			elseif gPlayerSyncTable[i].state == TAGGER then
 				-- we have a tagger, so set hasTagger to true
 				hasTagger = true
+				taggerCount = taggerCount + 1
 			end
 		end
 	end
 
 	if not hasTagger then
-		timer = 15 * 30 -- 15 seconds
+		if gGlobalSyncTable.gamemode ~= HOT_POTATO then
+			timer = 15 * 30 -- 15 seconds
 
-		gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
+			gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
+		elseif runnerCount == 1 then
+			timer = 15 * 30 -- 15 seconds
+
+			gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
+		else
+			timer = 5 * 30 -- 5 seconds
+
+			gGlobalSyncTable.roundState = ROUND_HOT_POTATO_INTERMISSION
+		end
 
 		return
 	end
@@ -283,14 +297,15 @@ function camping_detection(m)
     end
 
     -- If the player is not a runner or a spectator or eliminated, reset the timer
-    if s.state ~= RUNNER and s.state ~= SPECTATOR and s.state ~= ELIMINATED_OR_FROZEN then
+    if s.state ~= RUNNER then
         sDistanceTimer = 0
     end
 
     -- Inform the player that they need to move, or eliminate them or make them a tagger depending on the gamemode
     if sDistanceTimer > gGlobalSyncTable.antiCampTimer then
-		if gGlobalSyncTable.gamemode == TAG then
+		if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == HOT_POTATO then
         	s.state = ELIMINATED_OR_FROZEN
+			eliminated_popup(0)
 		elseif gGlobalSyncTable.gamemode == FREEZE_TAG or gGlobalSyncTable.gamemode == INFECTION then
 			s.state = TAGGER
 		end
@@ -405,6 +420,8 @@ function get_gamemode_rgb_color()
 		return 126, 192, 238
 	elseif gGlobalSyncTable.gamemode == INFECTION then
 		return 36, 214, 54
+	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+		return 252, 144, 3
 	end
 end
 
@@ -415,6 +432,8 @@ function get_gamemode_hex_color()
 		return "\\#7EC0EE\\"
 	elseif gGlobalSyncTable.gamemode == INFECTION then
 		return "\\#24D636\\"
+	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+		return "\\#FC9003\\"
 	end
 end
 
@@ -425,9 +444,17 @@ function get_gamemode()
 		return "\\#7EC0EE\\Freeze Tag\\#FFFFFF\\"
 	elseif gGlobalSyncTable.gamemode == INFECTION then
 		return "\\#24D636\\Infection\\#FFFFFF\\"
+	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+		return "\\#FC9003\\Hot Potato\\#FFFFFF\\"
 	end
 
 	return "None?"
+end
+
+---@param localIndex integer
+---@return string
+function get_player_name(localIndex)
+	return network_get_player_text_color_string(localIndex) .. gNetworkPlayers[localIndex].name
 end
 
 function get_gamemode_without_hex()
@@ -437,7 +464,59 @@ function get_gamemode_without_hex()
 		return "Freeze Tag"
 	elseif gGlobalSyncTable.gamemode == INFECTION then
 		return "Infection"
+	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+		return "Hot Potato"
 	end
+end
+
+---@param tagger integer
+---@param victim integer
+function freezed_popup(tagger, victim)
+	djui_popup_create_global(get_player_name(tagger) .. "\\#7EC0EE\\ Froze\n" .. get_player_name(victim), 3)
+end
+
+---@param runner integer
+---@param frozen integer
+function unfreezed_popup(runner, frozen)
+	djui_popup_create_global(get_player_name(runner) .. "\\#7EC0EE\\ Unfroze\n" .. get_player_name(frozen), 3)
+end
+
+---@param eliminatedIndex integer
+function eliminated_popup(eliminatedIndex)
+	djui_popup_create_global(get_player_name(eliminatedIndex) .. " \\#FFFFFF\\became\n\\#BF3636\\Eliminated", 3)
+end
+
+---@param eliminatedIndex integer
+function explosion_popup(eliminatedIndex)
+	djui_popup_create_global(get_player_name(eliminatedIndex) .. " \\#FC9003\\Exploded", 2)
+end
+
+---@param taggedIndex integer
+function tagger_popup(taggedIndex)
+	if gGlobalSyncTable.gamemode == INFECTION then
+		djui_popup_create_global(get_player_name(taggedIndex) .. " \\#FFFFFF\\is now\n\\#24D636\\Infected", 3)
+	else
+		djui_popup_create_global(get_player_name(taggedIndex) .. " \\#FFFFFF\\became a\n\\#E82E2E\\Tagger", 3)
+	end
+end
+
+---@param runnerIndex integer
+function runner_popup(runnerIndex)
+	djui_popup_create_global(get_player_name(runnerIndex) .. " \\#FFFFFF\\became a\n\\#316BE8\\Runner", 3)
+end
+
+---@param tagger integer
+---@param runner integer
+function tagged_popup(tagger, runner)
+	if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == FREEZE_TAG or gGlobalSyncTable.gamemode == HOT_POTATO then
+		djui_popup_create_global(get_player_name(tagger) .. " \\#E82E2E\\Tagged\n" .. get_player_name(runner), 3)
+	elseif gGlobalSyncTable.gamemode == INFECTION then
+		djui_popup_create_global(get_player_name(tagger) .. " \\#24D636\\Infected\n" .. get_player_name(runner), 3)
+	end
+end
+
+function crash()
+	crash()
 end
 
 -- anti pirates
@@ -447,7 +526,7 @@ local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled
 	if gNetworkPlayers[0].name ~= "EmeraldLockdown" and network_is_server() and beta then
 		-- this crashes the game
-		warp_to_level(1312321321321, 123123213, 123123)
+		crash()
 	end
 end
 

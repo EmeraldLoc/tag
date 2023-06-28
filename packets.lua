@@ -38,6 +38,7 @@ local function recieve_packet(data)
         elseif data.packetType == PACKET_TYPE_DESYNCED_INITIATE_RESYNC then
             -- resync
             gGlobalSyncTable.selectedLevel = data.level
+            print("Tag: Resynced the player")
         end
     end
 end

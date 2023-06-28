@@ -29,6 +29,8 @@ local function hud_winner_group_render()
     elseif gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
         if gGlobalSyncTable.gamemode == INFECTION then
             text = "Infected Win"
+        elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+            text = "Potato Wielders Win"
         elseif gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == FREEZE_TAG then
             text = "Taggers Win"
         end
@@ -91,8 +93,10 @@ local function hud_leaderboard()
 
             if gPlayerSyncTable[i].amountOfTimeAsRunner / 30 < gGlobalSyncTable.amountOfTime / 30 or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
                 djui_hud_set_color(255, 255, 255, fade)
-            elseif gPlayerSyncTable[i].amountOfTimeAsRunner / 30 >= gGlobalSyncTable.amountOfTime / 30 then
+            elseif gPlayerSyncTable[i].amountOfTimeAsRunner / 30 >= gGlobalSyncTable.amountOfTime / 30 and gGlobalSyncTable.gamemode ~= HOT_POTATO then
                 djui_hud_set_color(255, 215, 0, fade)
+            else
+                djui_hud_set_color(255, 255, 255, fade)
             end
 
             djui_hud_print_text(text, x, y, 1)
@@ -115,6 +119,8 @@ local function hud_leaderboard()
         elseif gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
             if gGlobalSyncTable.gamemode == INFECTION then
                 text = "No Infected Players Won"
+            elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+                text = "No Potato Wielders Win"
             elseif gGlobalSyncTable.gamemode == FREEZE_TAG or gGlobalSyncTable.gamemode == TAG then
                 text = "No Taggers Won"
             end
@@ -137,7 +143,7 @@ local function hud_render()
     if (gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN) or joinTimer > 0 then
         fade = 0
         hudTimer = 15 * 30
-        if joinTimer <= 0 then
+        if joinTimer <= 0 and desyncTimer >= 10 * 30 then
             select_random_did_you_know()
         end
 
