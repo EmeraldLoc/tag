@@ -167,20 +167,6 @@ function bljs_command(msg)
 end
 
 ---@param msg string
-function on_time_command(msg)
-    if tonumber(msg) ~= nil then
-    	djui_chat_message_create("Set amount of time to " .. msg .. " seconds")
-
-		-- convert from frames to seconds by multiplying by 30
-		gGlobalSyncTable.amountOfTime = tonumber(msg) * 30
-    else
-        djui_chat_message_create("Current time is " .. gGlobalSyncTable.amountOfTime .. " seconds")
-    end
-
-	return true
-end
-
----@param msg string
 function on_tp_command(msg)
 
 	if gGlobalSyncTable.gamemode ~= TAG and gPlayerSyncTable[0].state ~= SPECTATOR then
@@ -410,10 +396,8 @@ function on_gamemode_command(msg)
 				gGlobalSyncTable.gamemode = -1 -- force popup to show
 				gGlobalSyncTable.gamemode = TAG
 
-				-- default tag timer
-				if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
-					gGlobalSyncTable.amountOfTime = 120 * 30
-				end
+				-- set tag timer
+				gGlobalSyncTable.amountOfTime = 120 * 30
 
 				-- set players needed
 				PLAYERS_NEEDED = 2
@@ -437,10 +421,8 @@ function on_gamemode_command(msg)
 				gGlobalSyncTable.gamemode = -1 -- force popup to show
 				gGlobalSyncTable.gamemode = FREEZE_TAG
 
-				-- default freeze tag timer
-				if gGlobalSyncTable.amountOfTime == (120 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
-					gGlobalSyncTable.amountOfTime = 180 * 30
-				end
+				-- set freeze tag timer
+				gGlobalSyncTable.amountOfTime = 180 * 30
 
 				-- set players needed
 				PLAYERS_NEEDED = 3
@@ -464,10 +446,8 @@ function on_gamemode_command(msg)
 				gGlobalSyncTable.gamemode = -1 -- force popup to show
 				gGlobalSyncTable.gamemode = INFECTION
 
-				-- default infection timer
-				if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
-					gGlobalSyncTable.amountOfTime = 120 * 30
-				end
+				-- set infection timer
+				gGlobalSyncTable.amountOfTime = 120 * 30
 
 				-- set players needed
 				PLAYERS_NEEDED = 3
@@ -491,10 +471,8 @@ function on_gamemode_command(msg)
 				gGlobalSyncTable.gamemode = -1 -- force popup to show
 				gGlobalSyncTable.gamemode = HOT_POTATO
 
-				-- default hot potato timer
-				if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == 120 * 30 then
-					gGlobalSyncTable.amountOfTime = 60 * 30
-				end
+				-- set hot potato timer
+				gGlobalSyncTable.amountOfTime = 60 * 30
 
 				-- set players needed
 				PLAYERS_NEEDED = 3
@@ -659,7 +637,6 @@ if network_is_server() or network_is_moderator() then
 	hook_chat_command("start", "[name|index] Starts round in a random or specific level", start_command)
 	hook_chat_command("do-caps", "[yes|no] Enable or disable caps, default: \\#FF0000\\off", do_caps_command)
 	hook_chat_command("cannons", "[on|off]Enable or disable cannons", cannons_command)
-	hook_chat_command("time", "[number] Amount of time per round in seconds, default: 120s", on_time_command)
 	hook_chat_command("anticamp", "Anti Camp Settings", anti_camp_command)
 	hook_chat_command("bljs", "[on|off] Enable or disable bljs, default: \\#FF0000\\off", bljs_command)
 	hook_chat_command("blacklist", "Blacklist a course or level", blacklist_course_command)

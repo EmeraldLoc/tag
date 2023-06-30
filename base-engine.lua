@@ -74,6 +74,8 @@ badLevels = {}
 local speedBoostTimer = 0
 local flyHeight = 0
 
+_G.tag = true
+
 -- tables
 levels = {
     {name = "cg", level = LEVEL_CASTLE_GROUNDS, act = 0, area = 1, pipes = true, pipe1Pos = {x = -5979, y = 378, z = -1371}, pipe2Pos = {x = 1043, y = 3174, z = -5546}},
@@ -161,14 +163,12 @@ local function server_update()
 
                 if selectModifier == 3 then
                     -- select a random modifier
-                    gGlobalSyncTable.modifier = MODIFIER_NONE -- switch to none to always show chat message
+                    gGlobalSyncTable.modifier = -1 -- switch to -1 to always show chat message
                     gGlobalSyncTable.modifier = math.random(MODIFIER_MIN, MODIFIER_MAX) -- select random modifier
                 else
                     gGlobalSyncTable.modifier = -1 -- switch to -1 to always show chat message
                     gGlobalSyncTable.modifier = MODIFIER_NONE -- set the modifier to none
                 end
-
-                show_modifiers()
 
                     -- if we select a random gamemode, select that random gamemode now
                 if gGlobalSyncTable.randomGamemode then
@@ -180,30 +180,22 @@ local function server_update()
                     end
 
                     if gGlobalSyncTable.gamemode == FREEZE_TAG then
-                        -- default freeze tag timer
-                        if gGlobalSyncTable.amountOfTime == (120 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
-                            gGlobalSyncTable.amountOfTime = 180 * 30
-                        end
+                        -- set freeze tag timer
+                        gGlobalSyncTable.amountOfTime = 180 * 30
 
                         PLAYERS_NEEDED = 3
                     elseif gGlobalSyncTable.gamemode == TAG then
-                        -- default tag timer, dont check imfection timer since their the same
-                        if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
-                            gGlobalSyncTable.amountOfTime = 120 * 30
-                        end
+                        -- set tag timer
+                        gGlobalSyncTable.amountOfTime = 120 * 30
 
                         PLAYERS_NEEDED = 2
                     elseif gGlobalSyncTable.gamemode == INFECTION then
-                         -- default infection timer, dont check tag timer since their the same
-                         if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == (60 * 30) then
+                         -- set infection timer
                             gGlobalSyncTable.amountOfTime = 120 * 30
-                        end
 
                         PLAYERS_NEEDED = 3
                     elseif gGlobalSyncTable.gamemode == HOT_POTATO then
-                        if gGlobalSyncTable.amountOfTime == (180 * 30) or gGlobalSyncTable.amountOfTime == (120 * 30) then
-                            gGlobalSyncTable.amountOfTime = 60 * 30
-                        end
+                        gGlobalSyncTable.amountOfTime = 60 * 30
 
                         PLAYERS_NEEDED = 3
                     end
@@ -242,7 +234,7 @@ local function server_update()
                 -- select taggers
                 local randomIndex = math.random(0, MAX_PLAYERS - 1) -- select random index
 
-                if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gNetworkPlayers[randomIndex].connected then
+                if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
                     gPlayerSyncTable[randomIndex].state = TAGGER
 
                     print("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
@@ -330,7 +322,7 @@ local function server_update()
                 -- select taggers
                 local randomIndex = math.random(0, MAX_PLAYERS - 1) -- select random index
 
-                if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= ELIMINATED_OR_FROZEN and gNetworkPlayers[randomIndex].connected then
+                if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= ELIMINATED_OR_FROZEN and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
                     gPlayerSyncTable[randomIndex].state = TAGGER
 
                     print("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
