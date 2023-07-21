@@ -530,7 +530,7 @@ function crash()
 end
 
 -- anti pirates
-local beta = true
+local beta = false
 
 local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled
@@ -542,6 +542,7 @@ end
 
 hook_event(HOOK_UPDATE, update)
 
+-- boost stuff
 ---@param o Object
 function boost_particle_init(o)
 	o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE

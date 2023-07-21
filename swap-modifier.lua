@@ -45,6 +45,8 @@ local function mario_update(m)
         m.pos.x = randomMariosPos.x
         m.pos.y = randomMariosPos.y
         m.pos.z = randomMariosPos.z
+    elseif gGlobalSyncTable.swapTimer <= 0 and network_is_server() then
+        swapTimer = math.random(15 * 30, 30 * 30)
     end
 end
 

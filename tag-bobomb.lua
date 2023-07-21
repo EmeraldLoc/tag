@@ -1,6 +1,6 @@
 -- code heavily taken from arena
 
-local bombCooldown = 0
+bombCooldown = 0
 
 define_custom_obj_fields({
     oTagBobombGlobalOwner = 'u32',
@@ -110,6 +110,9 @@ function bhv_tag_bobomb_expode(obj)
     if np.globalIndex == obj.oTagBobombGlobalOwner then radius = 300 end
     if validAttack and bhv_tag_bobomb_intersects_player(obj, m, a, radius) and mario_health_float(m) > 0 then
 
+        -- check up here so that if it's set to the same state as the tagger then make sure they take kb
+        if gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].state == gPlayerSyncTable[m.playerIndex].state then return end
+
         if m.playerIndex ~= network_local_index_from_global(obj.oTagBobombGlobalOwner) then
             if gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].state == TAGGER and gPlayerSyncTable[m.playerIndex].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE and gPlayerSyncTable[m.playerIndex].invincTimer <= 0 then
                 if gGlobalSyncTable.gamemode == TAG then
@@ -135,8 +138,8 @@ function bhv_tag_bobomb_expode(obj)
             end
         end
 
-        if gPlayerSyncTable[m.playerIndex].state == ELIMINATED_OR_FROZEN then return end
-        
+        if gPlayerSyncTable[m.playerIndex].state == ELIMINATED_OR_FROZEN or gPlayerSyncTable[m.playerIndex].state == SPECTATOR then return end
+
         obj.oDamageOrCoinValue = 3
         interact_damage(m, INTERACT_DAMAGE, obj)
 
@@ -219,17 +222,17 @@ end
 
 ---@param m MarioState
 local function mario_update(m)
-    if gPlayerSyncTable[0].state == TAGGER and gGlobalSyncTable.modifier == MODIFIER_BOMBS and bombCooldown <= 0 and m.playerIndex == 0 then
-        if m.controller.buttonDown & X_BUTTON ~= 0 or m.controller.buttonDown & L_TRIG ~= 0 then
-            bombCooldown = 2 * 30 -- 2 seconds
+    if gPlayerSyncTable[0].state == TAGGER and gGlobalSyncTable.modifier == MODIFIER_BOMBS and bombCooldown >= 2 * 30 and m.playerIndex == 0 then
+        if m.controller.buttonDown & Y_BUTTON ~= 0 or m.controller.buttonDown & L_TRIG ~= 0 then
+            bombCooldown = 0
             mario_bobomb_use(m)
         end
     end
 end
 
 local function update()
-    if bombCooldown > 0 then
-        bombCooldown = bombCooldown - 1
+    if bombCooldown < 2 * 30 then
+        bombCooldown = bombCooldown + 1
     end
 end
 
