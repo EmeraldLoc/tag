@@ -67,7 +67,7 @@ local function hud_leaderboard()
 
             local x = (screenWidth - width) / 2
             local y = 80 + (renderedIndex * 50)
-            
+
             djui_hud_set_color(26, 26, 28, fade)
             djui_hud_render_rect(x, y - 5, width + 15, 42)
 

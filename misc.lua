@@ -3,6 +3,7 @@
 sLastPos = {x = 0, y = 0, z = 0}
 sDistanceMoved = 0
 sDistanceTimer = 0
+E_MODEL_BOOST_TRAIL = smlua_model_util_get_id("boost_trail_geo")
 
 ---@param table table
 ---@param element any
@@ -90,7 +91,7 @@ function check_round_status()
 
 			gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
 		else
-			timer = 5 * 30 -- 5 seconds
+			timer = 10 * 30 -- 10 seconds
 
 			gGlobalSyncTable.roundState = ROUND_HOT_POTATO_INTERMISSION
 		end
@@ -265,6 +266,15 @@ function level_to_course(level)
 
 	-- if none of these pass, its a invalid level, so return -1, which is not a level
 	return -1
+end
+
+---@param m MarioState
+function generate_boost_trail(m)
+	local x = m.pos.x
+	local y = m.pos.y + 5
+	local z = m.pos.z
+
+	spawn_sync_object(id_bhvBoostParticle, E_MODEL_BOOST_TRAIL, x, y, z, nil)
 end
 
 -- taken from freeze tag, this code was made by djoslin0
@@ -531,3 +541,25 @@ local function update()
 end
 
 hook_event(HOOK_UPDATE, update)
+
+---@param o Object
+function boost_particle_init(o)
+	o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+	o.oFaceAnglePitch = 0
+	o.oFaceAngleYaw = 90
+	o.oFaceAngleRoll = 0
+	o.oAnimState = 2
+	obj_scale(o, 0.15)
+	obj_set_billboard(o)
+end
+
+---@param o Object
+function boost_particle_loop(o)
+	o.oTimer = o.oTimer + 1
+
+	if o.oTimer >= 0.6 * 30 then
+		o.activeFlags = ACTIVE_FLAG_DEACTIVATED
+	end
+end
+
+id_bhvBoostParticle = hook_behavior(nil, OBJ_LIST_DEFAULT, false, boost_particle_init, boost_particle_loop, "Boost Particle")
