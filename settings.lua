@@ -408,10 +408,10 @@ local function mario_update(m)
                 showBlacklistSettings = false
                 blacklistAddRequest = false
                 selection = BLACKLIST_SELECTION
-            elseif selection == BLACKLIST_ADD_SELECTION then
+            elseif selection == BLACKLIST_ADD_SELECTION and network_is_server() then
                 blacklistAddRequest = true
                 djui_chat_message_create("Please run /tag course_name/course_index. To cancel, exit the blacklist menu")
-            elseif selection > MAX_BLACKLIST_SELECTION then
+            elseif selection > MAX_BLACKLIST_SELECTION and network_is_server() then
                 table.remove(blacklistedCourses, selection - MAX_BLACKLIST_SELECTION)
                 if selection > MAX_BLACKLIST_SELECTION + #blacklistedCourses then
                     selection = MAX_BLACKLIST_SELECTION + #blacklistedCourses
@@ -435,7 +435,7 @@ local function mario_update(m)
         end
     end
 
-    if m.controller.buttonPressed & R_JPAD ~= 0 then
+    if m.controller.buttonPressed & R_JPAD ~= 0 and network_is_server() then
         if showAntiCampSettings then
             if selection == ANTI_CAMP_STATUS_SELECTION then
                 gGlobalSyncTable.antiCamp = not gGlobalSyncTable.antiCamp
@@ -466,7 +466,7 @@ local function mario_update(m)
                 gGlobalSyncTable.freezeHealthDrain = gGlobalSyncTable.freezeHealthDrain + 0.1
             end
         end
-    elseif m.controller.buttonPressed & L_JPAD ~= 0 then
+    elseif m.controller.buttonPressed & L_JPAD ~= 0 and network_is_server() then
         if showAntiCampSettings then
             if selection == ANTI_CAMP_STATUS_SELECTION then
                 gGlobalSyncTable.antiCamp = not gGlobalSyncTable.antiCamp
