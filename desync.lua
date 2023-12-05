@@ -49,7 +49,7 @@ local function hud_desync_text()
 
     -- send a packet to the server asking to resync the player
     if packetTimer <= 0 then
-        local p = create_packet(PACKET_TYPE_DESYNCED, {globalIndex = network_global_index_from_local(0), reason = desyncReason})
+        local p = create_packet(PACKET_TYPE_LEVEL_DESYNCED, {globalIndex = network_global_index_from_local(0), reason = desyncReason})
         send_packet_to_server(p)
         packetTimer = 10 * 30
     end

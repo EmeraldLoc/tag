@@ -1,4 +1,4 @@
--- based on arena, taken from mariohunt, all credit for the texture and this file goes to EmilyEmmi
+-- based on arena, code taken from MarioHunt, texture by EmeraldLockdown
 
 TEX_RAD = get_texture_info('runner-mark')
 icon_radar = {}

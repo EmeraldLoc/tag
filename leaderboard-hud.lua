@@ -31,7 +31,9 @@ local function hud_winner_group_render()
             text = "Infected Win"
         elseif gGlobalSyncTable.gamemode == HOT_POTATO then
             text = "Potato Wielders Win"
-        elseif gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == FREEZE_TAG then
+        elseif gGlobalSyncTable.gamemode == ASSASINS then
+            text = "Assasins Win"
+        else
             text = "Taggers Win"
         end
     end
@@ -121,7 +123,9 @@ local function hud_leaderboard()
                 text = "No Infected Players Won"
             elseif gGlobalSyncTable.gamemode == HOT_POTATO then
                 text = "No Potato Wielders Win"
-            elseif gGlobalSyncTable.gamemode == FREEZE_TAG or gGlobalSyncTable.gamemode == TAG then
+            elseif gGlobalSyncTable.gamemode == ASSASINS then
+                text = "No Assasins Win"
+            else
                 text = "No Taggers Won"
             end
         end

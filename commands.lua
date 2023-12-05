@@ -1,7 +1,7 @@
 
 ---@diagnostic disable: param-type-mismatch
 
-local version = "v2.0"
+local version = "v2.01"
 
 ---@param msg string
 function start_command(msg)
@@ -84,7 +84,7 @@ end
 
 ---@param msg string
 function on_tp_command(msg)
-	if (gPlayerSyncTable[0].state ~= ELIMINATED_OR_FROZEN and gPlayerSyncTable[0].state ~= SPECTATOR) or gGlobalSyncTable.gamemode == FREEZE_TAG then
+	if (gPlayerSyncTable[0].state ~= ELIMINATED_OR_FROZEN and gPlayerSyncTable[0].state ~= SPECTATOR) or (gGlobalSyncTable.gamemode == FREEZE_TAG and gPlayerSyncTable[0].state ~= SPECTATOR) then
 		djui_chat_message_create("You must be eliminated or a spectator to run this command")
 
 		return true
@@ -225,7 +225,7 @@ function tag_command(msg)
 				showSettings = not showSettings
 				_G.tagSettingsOpen = showSettings
 			else
-				djui_chat_message_create("Swear Filter settings menu opened!")
+				djui_chat_message_create("Tag: Swear Filter settings menu is already opened!")
 			end
 		else
 			showSettings = not showSettings
@@ -241,6 +241,6 @@ if network_is_server() then
 else
 	hook_chat_command("tag", "View tag settings", tag_command)
 end
-hook_chat_command("tp", "[name|index] Teleports to a player if your eliminated, only works in the tag gamemode", on_tp_command)
+hook_chat_command("tp", "[name|index] Teleports to a player if your eliminated or spectating", on_tp_command)
 hook_chat_command("spectate", "[on|off] Be a spectator", spectator_command)
 hook_chat_command("version", "Get current version of \\#316BE8\\Tag", on_version_command)

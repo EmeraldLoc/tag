@@ -45,40 +45,6 @@ end
 local function hud_bottom_render()
 
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
-
-    if gPlayerSyncTable[0].state ~= ELIMINATED then
-        if gGlobalSyncTable.antiCamp and sDistanceTimer > 1 then
-            -- taken from djoslin0's hide and seek
-            local seconds = math.floor((gGlobalSyncTable.antiCampTimer - sDistanceTimer) / 30)
-            if seconds < 0 then seconds = 0 end
-
-            local text = 'Keep moving! (' .. seconds .. ')'
-            local scale = 0.50
-
-            -- get width of screen and text
-            local screenWidth = djui_hud_get_screen_width()
-            local screenHeight = djui_hud_get_screen_height()
-            local width = djui_hud_measure_text(text) * scale
-
-            -- set position
-            local x = (screenWidth - width) / 2.0
-            local y = screenHeight - 16
-
-            -- make the background flash red
-            local background = (math.sin(flashingIndex / 10.0) * 0.5 + 0.5)
-            background = background * background
-            background = background * background
-
-            -- render the anticamp timer
-            djui_hud_set_color(255 * background, 0, 0, 128);
-            djui_hud_render_rect(x - 6, y, width + 12, 16);
-
-            djui_hud_set_color(255, 125, 125, 255);
-            djui_hud_print_text(text, x, y, scale);
-        end
-
-        return
-    end
     if eliminatedTimer <= 0 then return end
 
     -- set text and scale

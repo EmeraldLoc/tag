@@ -1,7 +1,6 @@
 
 showSettings = false
 blacklistAddRequest = false
-local showAntiCampSettings = false
 local showBlacklistSettings = false
 local noBlacklistTimer = 0
 -- default selections
@@ -12,16 +11,9 @@ local BLJS_SELECTION = 2
 local CANNON_SELECTION = 3
 local WATER_SELECTION = 4
 local FROZEN_HEALTH_DRAIN_SELECTION = 5
-local ANTI_CAMP_SELECTION = 6
-local BLACKLIST_SELECTION = 7
-local DONE_SELECTION = 8
-local MAX_SELECTION = 8
--- anticamp selections
-local MIN_ANTI_CAMP_SELECTION = 0
-local ANTI_CAMP_STATUS_SELECTION = 0
-local ANTI_CAMP_TIME_SELECTION = 1
-local ANTI_CAMP_BACK_SELECTION = 2
-local MAX_ANTI_CAMP_SELECTION = 2
+local BLACKLIST_SELECTION = 6
+local DONE_SELECTION = 7
+local MAX_SELECTION = 7
 -- blacklist selections
 local MIN_BLACKLIST_SELECTION = 0
 local BLACKLIST_ADD_SELECTION = 0
@@ -39,9 +31,7 @@ end
 
 local function settings_text()
     local text = ""
-    if showAntiCampSettings then
-        text = "Anticamp Settings"
-    elseif showBlacklistSettings then
+    if showBlacklistSettings then
         text = "Blacklist Settings"
     else
         text = "Tag Settings"
@@ -66,6 +56,8 @@ local function options()
     if gGlobalSyncTable.randomGamemode then
         djui_hud_print_text("Random", bgWidth - 30 - djui_hud_measure_text("Random"), height + 4, 1)
     else
+        local r, g, b = get_gamemode_rgb_color()
+        djui_hud_set_color(r, g, b, 255)
         djui_hud_print_text(get_gamemode_without_hex(), bgWidth - 30 - djui_hud_measure_text(get_gamemode_without_hex()), height + 4, 1)
     end
 
@@ -152,19 +144,6 @@ local function options()
 
     height = height + 60
 
-    if selection == ANTI_CAMP_SELECTION then
-        djui_hud_set_color(32, 32, 34, 225)
-    else
-        djui_hud_set_color(32, 32, 34, 128)
-    end
-
-    djui_hud_render_rect(20, height, bgWidth - 40, 40)
-    djui_hud_set_color(220, 220, 220, 255)
-    djui_hud_print_text("Anticamp", 30, height + 4, 1)
-    djui_hud_print_text(">", bgWidth - 30 - djui_hud_measure_text(">"), height + 4, 1)
-
-    height = height + 60
-
     if selection == BLACKLIST_SELECTION then
         djui_hud_set_color(32, 32, 34, 225)
     else
@@ -187,51 +166,6 @@ local function options()
     djui_hud_render_rect(20, height, bgWidth - 40, 40)
     djui_hud_set_color(220, 220, 220, 255)
     djui_hud_print_text("Done", 30, height + 4, 1)
-end
-
-local function anticamp_options()
-
-    local height = 150
-
-    if selection == ANTI_CAMP_STATUS_SELECTION then
-        djui_hud_set_color(32, 32, 34, 225)
-    else
-        djui_hud_set_color(32, 32, 34, 128)
-    end
-
-    djui_hud_render_rect(20, height, bgWidth - 40, 40)
-    djui_hud_set_color(220, 220, 220, 255)
-    djui_hud_print_text("Status", 30, height + 4, 1)
-    if gGlobalSyncTable.antiCamp then
-        djui_hud_print_text("On", bgWidth - 30 - djui_hud_measure_text("On"), height + 4, 1)
-    else
-        djui_hud_print_text("Off", bgWidth - 30 - djui_hud_measure_text("Off"), height + 4, 1)
-    end
-
-    height = height + 60
-
-    if selection == ANTI_CAMP_TIME_SELECTION then
-        djui_hud_set_color(32, 32, 34, 225)
-    else
-        djui_hud_set_color(32, 32, 34, 128)
-    end
-
-    djui_hud_render_rect(20, height, bgWidth - 40, 40)
-    djui_hud_set_color(220, 220, 220, 255)
-    djui_hud_print_text("Time", 30, height + 4, 1)
-    djui_hud_print_text(tostring(math.floor(gGlobalSyncTable.antiCampTimer / 30)), bgWidth - 30 - djui_hud_measure_text(tostring(math.floor(gGlobalSyncTable.antiCampTimer / 30))), height + 4, 1)
-
-    height = height + 60
-
-    if selection == ANTI_CAMP_BACK_SELECTION then
-        djui_hud_set_color(32, 32, 34, 225)
-    else
-        djui_hud_set_color(32, 32, 34, 128)
-    end
-
-    djui_hud_render_rect(20, height, bgWidth - 40, 40)
-    djui_hud_set_color(220, 220, 220, 255)
-    djui_hud_print_text("Back", 30, height + 4, 1)
 end
 
 local function blacklist_options()
@@ -300,10 +234,7 @@ local function hud_render()
     if not showSettings then
         if network_is_server() then
             selection = MIN_SELECTION
-        else
-            selection = ANTI_CAMP_SELECTION
         end
-        showAntiCampSettings = false
         showBlacklistSettings = false
         return
     end
@@ -315,10 +246,7 @@ local function hud_render()
 
     background()
     settings_text()
-    if showAntiCampSettings then
-        anticamp_options()
-        instructions()
-    elseif showBlacklistSettings then
+    if showBlacklistSettings then
         blacklist_options()
     else
         options()
@@ -338,80 +266,39 @@ local function mario_update(m)
     if m.controller.buttonPressed & D_JPAD ~= 0 then
         selection = selection + 1
         play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
-        if showAntiCampSettings then
-            if network_is_server() then
-                if selection > MAX_ANTI_CAMP_SELECTION then
-                    selection = MIN_ANTI_CAMP_SELECTION
-                end
-            else
-                selection = ANTI_CAMP_BACK_SELECTION
-            end
-        elseif showBlacklistSettings then
-            if network_is_server() then
-                if selection > MAX_BLACKLIST_SELECTION + #blacklistedCourses then
-                    selection = MIN_BLACKLIST_SELECTION
-                end
-            else
-                selection = BLACKLIST_BACK_SELECTION
+        if showBlacklistSettings then
+            if selection > MAX_BLACKLIST_SELECTION + #blacklistedCourses then
+                selection = MIN_BLACKLIST_SELECTION
             end
         else
-            if network_is_server() then
-                if selection > MAX_SELECTION then
-                    selection = MIN_SELECTION
-                end
-            else
-                if selection > MAX_SELECTION then
-                    selection = ANTI_CAMP_SELECTION
-                end
+            if selection > MAX_SELECTION then
+                selection = MIN_SELECTION
             end
         end
     elseif m.controller.buttonPressed & U_JPAD ~= 0 then
         selection = selection - 1
         play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
-        if showAntiCampSettings then
-            if network_is_server() then
-                if selection < MIN_ANTI_CAMP_SELECTION then
-                    selection = MAX_ANTI_CAMP_SELECTION
-                end
-            else
-                selection = ANTI_CAMP_BACK_SELECTION
-            end
-        elseif showBlacklistSettings then
-            if network_is_server() then
-                if selection < MIN_BLACKLIST_SELECTION then
-                    selection = MAX_BLACKLIST_SELECTION + #blacklistedCourses
-                end
-            else
-                selection = BLACKLIST_BACK_SELECTION
+        if showBlacklistSettings then
+            if selection < MIN_BLACKLIST_SELECTION then
+                selection = MAX_BLACKLIST_SELECTION + #blacklistedCourses
             end
         else
-            if network_is_server() then
-                if selection < MIN_SELECTION then
-                    selection = MAX_SELECTION
-                end
-            else
-                if selection < ANTI_CAMP_SELECTION then
-                    selection = MAX_SELECTION
-                end
+            if selection < MIN_SELECTION then
+                selection = MAX_SELECTION
             end
         end
     end
 
     if m.controller.buttonPressed & A_BUTTON ~= 0 then
-        if showAntiCampSettings then
-            if selection == ANTI_CAMP_BACK_SELECTION then
-                showAntiCampSettings = false
-                selection = ANTI_CAMP_SELECTION
-            end
-        elseif showBlacklistSettings then
+        if showBlacklistSettings then
             if selection == BLACKLIST_BACK_SELECTION then
                 showBlacklistSettings = false
                 blacklistAddRequest = false
                 selection = BLACKLIST_SELECTION
-            elseif selection == BLACKLIST_ADD_SELECTION then
+            elseif selection == BLACKLIST_ADD_SELECTION and network_is_server() then
                 blacklistAddRequest = true
                 djui_chat_message_create("Please run /tag course_name/course_index. To cancel, exit the blacklist menu")
-            elseif selection > MAX_BLACKLIST_SELECTION then
+            elseif selection > MAX_BLACKLIST_SELECTION and network_is_server() then
                 table.remove(blacklistedCourses, selection - MAX_BLACKLIST_SELECTION)
                 if selection > MAX_BLACKLIST_SELECTION + #blacklistedCourses then
                     selection = MAX_BLACKLIST_SELECTION + #blacklistedCourses
@@ -421,9 +308,6 @@ local function mario_update(m)
             if selection == DONE_SELECTION then
                 showSettings = false
                 _G.tagSettingsOpen = false
-            elseif selection == ANTI_CAMP_SELECTION then
-                showAntiCampSettings = true
-                selection = MIN_ANTI_CAMP_SELECTION
             elseif selection == BLACKLIST_SELECTION then
                 if isRomhack then
                     showBlacklistSettings = true
@@ -435,69 +319,77 @@ local function mario_update(m)
         end
     end
 
-    if m.controller.buttonPressed & R_JPAD ~= 0 then
-        if showAntiCampSettings then
-            if selection == ANTI_CAMP_STATUS_SELECTION then
-                gGlobalSyncTable.antiCamp = not gGlobalSyncTable.antiCamp
-            elseif selection == ANTI_CAMP_TIME_SELECTION then
-                gGlobalSyncTable.antiCampTimer = gGlobalSyncTable.antiCampTimer + 30
-            end
-        else
-            if selection == GAMEMODE_SELECTION then
-                if gGlobalSyncTable.randomGamemode then
-                    gGlobalSyncTable.gamemode = MIN_GAMEMODE
-                    gGlobalSyncTable.randomGamemode = false
+    if m.controller.buttonPressed & R_JPAD ~= 0 and network_is_server() then
+        if selection == GAMEMODE_SELECTION then
+            local prevGamemode = gGlobalSyncTable.gamemode
+
+            if gGlobalSyncTable.randomGamemode then
+                gGlobalSyncTable.gamemode = MIN_GAMEMODE
+                gGlobalSyncTable.randomGamemode = false
+            else
+                if gGlobalSyncTable.gamemode + 1 > MAX_GAMEMODE then
+                    gGlobalSyncTable.randomGamemode = true
                 else
-                    if gGlobalSyncTable.gamemode + 1 > MAX_GAMEMODE then
-                        gGlobalSyncTable.randomGamemode = true
-                    else
-                        gGlobalSyncTable.gamemode = gGlobalSyncTable.gamemode + 1
-                    end
+                    gGlobalSyncTable.gamemode = gGlobalSyncTable.gamemode + 1
                 end
-            elseif selection == MODIFIER_SELECTION then
-                gGlobalSyncTable.doModifiers = not gGlobalSyncTable.doModifiers
-            elseif selection == BLJS_SELECTION then
-                gGlobalSyncTable.bljs = not gGlobalSyncTable.bljs
-            elseif selection == CANNON_SELECTION then
-                gGlobalSyncTable.cannons = not gGlobalSyncTable.cannons
-            elseif selection == WATER_SELECTION then
-                gGlobalSyncTable.water = not gGlobalSyncTable.water
-            elseif selection == FROZEN_HEALTH_DRAIN_SELECTION then
-                gGlobalSyncTable.freezeHealthDrain = gGlobalSyncTable.freezeHealthDrain + 0.1
             end
+
+            if gGlobalSyncTable.gamemode == 1 then
+                PLAYERS_NEEDED = 2
+            else
+                PLAYERS_NEEDED = 3
+            end
+
+            if not gGlobalSyncTable.randomGamemode and gGlobalSyncTable.roundState == ROUND_ACTIVE and gGlobalSyncTable.gamemode ~= prevGamemode then
+                gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+            end
+        elseif selection == MODIFIER_SELECTION then
+            gGlobalSyncTable.doModifiers = not gGlobalSyncTable.doModifiers
+        elseif selection == BLJS_SELECTION then
+            gGlobalSyncTable.bljs = not gGlobalSyncTable.bljs
+        elseif selection == CANNON_SELECTION then
+            gGlobalSyncTable.cannons = not gGlobalSyncTable.cannons
+        elseif selection == WATER_SELECTION then
+            gGlobalSyncTable.water = not gGlobalSyncTable.water
+        elseif selection == FROZEN_HEALTH_DRAIN_SELECTION then
+            gGlobalSyncTable.freezeHealthDrain = gGlobalSyncTable.freezeHealthDrain + 0.1
         end
-    elseif m.controller.buttonPressed & L_JPAD ~= 0 then
-        if showAntiCampSettings then
-            if selection == ANTI_CAMP_STATUS_SELECTION then
-                gGlobalSyncTable.antiCamp = not gGlobalSyncTable.antiCamp
-            elseif selection == ANTI_CAMP_TIME_SELECTION then
-                gGlobalSyncTable.antiCampTimer = gGlobalSyncTable.antiCampTimer - 30
-                if gGlobalSyncTable.antiCampTimer < 30 then gGlobalSyncTable.antiCampTimer = 30 end
-            end
-        else
-            if selection == GAMEMODE_SELECTION then
-                if gGlobalSyncTable.randomGamemode then
-                    gGlobalSyncTable.gamemode = MAX_GAMEMODE
-                    gGlobalSyncTable.randomGamemode = false
+    elseif m.controller.buttonPressed & L_JPAD ~= 0 and network_is_server() then
+        if selection == GAMEMODE_SELECTION then
+
+            local prevGamemode = gGlobalSyncTable.gamemode
+
+            if gGlobalSyncTable.randomGamemode then
+                gGlobalSyncTable.gamemode = MAX_GAMEMODE
+                gGlobalSyncTable.randomGamemode = false
+            else
+                if gGlobalSyncTable.gamemode - 1 < MIN_GAMEMODE then
+                    gGlobalSyncTable.randomGamemode = true
                 else
-                    if gGlobalSyncTable.gamemode - 1 < MIN_GAMEMODE then
-                        gGlobalSyncTable.randomGamemode = true
-                    else
-                        gGlobalSyncTable.gamemode = gGlobalSyncTable.gamemode - 1
-                    end
+                    gGlobalSyncTable.gamemode = gGlobalSyncTable.gamemode - 1
                 end
-            elseif selection == MODIFIER_SELECTION then
-                gGlobalSyncTable.doModifiers = not gGlobalSyncTable.doModifiers
-            elseif selection == BLJS_SELECTION then
-                gGlobalSyncTable.bljs = not gGlobalSyncTable.bljs
-            elseif selection == CANNON_SELECTION then
-                gGlobalSyncTable.cannons = not gGlobalSyncTable.cannons
-            elseif selection == WATER_SELECTION then
-                gGlobalSyncTable.water = not gGlobalSyncTable.water
-            elseif selection == FROZEN_HEALTH_DRAIN_SELECTION then
-                gGlobalSyncTable.freezeHealthDrain = gGlobalSyncTable.freezeHealthDrain - 0.1
-                if gGlobalSyncTable.freezeHealthDrain < 0.5 then gGlobalSyncTable.freezeHealthDrain = 0.5 end
             end
+
+            if gGlobalSyncTable.gamemode == 1 then
+                PLAYERS_NEEDED = 2
+            else
+                PLAYERS_NEEDED = 3
+            end
+
+            if not gGlobalSyncTable.randomGamemode and gGlobalSyncTable.roundState == ROUND_ACTIVE and gGlobalSyncTable.gamemode ~= prevGamemode then
+                gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+            end
+        elseif selection == MODIFIER_SELECTION then
+            gGlobalSyncTable.doModifiers = not gGlobalSyncTable.doModifiers
+        elseif selection == BLJS_SELECTION then
+            gGlobalSyncTable.bljs = not gGlobalSyncTable.bljs
+        elseif selection == CANNON_SELECTION then
+            gGlobalSyncTable.cannons = not gGlobalSyncTable.cannons
+        elseif selection == WATER_SELECTION then
+            gGlobalSyncTable.water = not gGlobalSyncTable.water
+        elseif selection == FROZEN_HEALTH_DRAIN_SELECTION then
+            gGlobalSyncTable.freezeHealthDrain = gGlobalSyncTable.freezeHealthDrain - 0.1
+            if gGlobalSyncTable.freezeHealthDrain < 0.5 then gGlobalSyncTable.freezeHealthDrain = 0.5 end
         end
     end
 end

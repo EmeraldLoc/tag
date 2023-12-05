@@ -82,7 +82,7 @@ function check_round_status()
 	end
 
 	if not hasTagger then
-		if gGlobalSyncTable.gamemode ~= HOT_POTATO then
+		if gGlobalSyncTable.gamemode ~= HOT_POTATO and gGlobalSyncTable.gamemode ~= ASSASINS then
 			timer = 15 * 30 -- 15 seconds
 
 			gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
@@ -90,7 +90,7 @@ function check_round_status()
 			timer = 15 * 30 -- 15 seconds
 
 			gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
-		else
+		elseif gGlobalSyncTable.gamemode == HOT_POTATO then
 			timer = 10 * 30 -- 10 seconds
 
 			gGlobalSyncTable.roundState = ROUND_HOT_POTATO_INTERMISSION
@@ -99,12 +99,18 @@ function check_round_status()
 		return
 	end
 
-	if not hasRunner then
+	if not hasRunner and gGlobalSyncTable.gamemode ~= ASSASINS then
 		timer = 15 * 30 -- 15 seconds
 
 		gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
 
 		return
+	end
+
+	if taggerCount == 1 and gGlobalSyncTable.gamemode == ASSASINS then
+		timer = 15 * 30 -- 15 seconds
+
+			gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
 	end
 end
 
@@ -277,56 +283,6 @@ function generate_boost_trail(m)
 	spawn_sync_object(id_bhvBoostParticle, E_MODEL_BOOST_TRAIL, x, y, z, nil)
 end
 
--- taken from freeze tag, this code was made by djoslin0
-function camping_detection(m)
-
-	-- Make sure the certain requirements pass
-	if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
-	if not gGlobalSyncTable.antiCamp then return end
-	if m.playerIndex ~= 0 then return end
-
-	-- prevents repeatedly specifying gPlayerSyncTable[0]
-    local s = gPlayerSyncTable[0]
-
-    -- Track how far the player has moved
-    sDistanceMoved = sDistanceMoved - 0.25 + vec3f_dist(sLastPos, m.pos) * 0.02
-    vec3f_copy(sLastPos, m.pos)
-
-    -- Clamp between 0 and 100
-    if sDistanceMoved < 0   then sDistanceMoved = 0   end
-    if sDistanceMoved > 100 then sDistanceMoved = 100 end
-
-    -- If player hasn't moved enough, and is a runner, start a timer
-    if sDistanceMoved < 25 and s.state == RUNNER then
-        sDistanceTimer = sDistanceTimer + 1
-    end
-
-    -- If the player has moved enough, reset the timer
-    if sDistanceMoved > 25 then
-        sDistanceTimer = 0
-    end
-
-    -- If the player is not a runner or a spectator or eliminated, reset the timer
-    if s.state ~= RUNNER then
-        sDistanceTimer = 0
-    end
-
-    -- Inform the player that they need to move, or eliminate them or make them a tagger depending on the gamemode
-    if sDistanceTimer > gGlobalSyncTable.antiCampTimer then
-		if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == HOT_POTATO then
-        	s.state = ELIMINATED_OR_FROZEN
-			eliminated_popup(0)
-		elseif gGlobalSyncTable.gamemode == FREEZE_TAG or gGlobalSyncTable.gamemode == INFECTION then
-			s.state = TAGGER
-		end
-    end
-
-    -- Make a camping sound
-    if sDistanceTimer > 0 and sDistanceTimer % 30 == 1 then
-        play_sound(SOUND_MENU_CAMERA_BUZZ, m.marioObj.header.gfx.cameraToObject)
-    end
-end
-
 function get_modifier_text()
 	if gGlobalSyncTable.doModifiers then
 		local text = ''
@@ -432,6 +388,10 @@ function get_gamemode_rgb_color()
 		return 36, 214, 54
 	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
 		return 252, 144, 3
+	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+		return 66, 176, 245
+	elseif gGlobalSyncTable.gamemode == ASSASINS then
+		return 255, 0, 0
 	end
 end
 
@@ -444,6 +404,10 @@ function get_gamemode_hex_color()
 		return "\\#24D636\\"
 	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
 		return "\\#FC9003\\"
+	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+		return "\\#42B0F5\\"
+	elseif gGlobalSyncTable.gamemode == ASSASINS then
+		return "\\#FF0000\\"
 	end
 end
 
@@ -456,6 +420,10 @@ function get_gamemode()
 		return "\\#24D636\\Infection\\#FFFFFF\\"
 	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
 		return "\\#FC9003\\Hot Potato\\#FFFFFF\\"
+	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+		return "\\#42B0F5\\Juggernaut\\#FFFFFF\\"
+	elseif gGlobalSyncTable.gamemode == ASSASINS then
+		return "\\#FF0000\\Assasins\\#FFFFFF\\"
 	end
 
 	return "None?"
@@ -476,6 +444,10 @@ function get_gamemode_without_hex()
 		return "Infection"
 	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
 		return "Hot Potato"
+	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+		return "Juggernaut"
+	elseif gGlobalSyncTable.gamemode == ASSASINS then
+		return "Assasins"
 	end
 end
 
@@ -518,9 +490,9 @@ end
 ---@param tagger integer
 ---@param runner integer
 function tagged_popup(tagger, runner)
-	if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == FREEZE_TAG or gGlobalSyncTable.gamemode == HOT_POTATO then
+	if gGlobalSyncTable.gamemode ~= INFECTION then
 		djui_popup_create_global(get_player_name(tagger) .. " \\#E82E2E\\Tagged\n" .. get_player_name(runner), 3)
-	elseif gGlobalSyncTable.gamemode == INFECTION then
+	else
 		djui_popup_create_global(get_player_name(tagger) .. " \\#24D636\\Infected\n" .. get_player_name(runner), 3)
 	end
 end
@@ -530,7 +502,7 @@ function crash()
 end
 
 -- anti pirates
-local beta = false
+local beta = true
 
 local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled

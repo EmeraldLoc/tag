@@ -134,6 +134,12 @@ function bhv_tag_bobomb_expode(obj)
                     gPlayerSyncTable[m.playerIndex].state = TAGGER
                     tagged_popup(network_local_index_from_global(obj.oTagBobombGlobalOwner), m.playerIndex)
                     gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags + 1
+                elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+                    tagged_popup(network_local_index_from_global(obj.oTagBobombGlobalOwner), m.playerIndex)
+                    gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags + 1
+                    gPlayerSyncTable[m.playerIndex].juggernautTags = gPlayerSyncTable[m.playerIndex].juggernautTags + 1
+                elseif gGlobalSyncTable.gamemode == ASSASINS then
+
                 end
             end
         end
