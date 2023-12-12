@@ -10,7 +10,7 @@ local function update()
 
     -- set network descriptions
     for i = 0, MAX_PLAYERS - 1 do
-        if gPlayerSyncTable[i].state == TAGGER then
+        if gPlayerSyncTable[i].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
             network_player_set_description(gNetworkPlayers[i], "Assasin", 232, 46, 46, 255)
         elseif gPlayerSyncTable[i].state == ELIMINATED then
             network_player_set_description(gNetworkPlayers[i], "Eliminated", 191, 54, 54, 255)
@@ -24,15 +24,13 @@ local function update()
 
     local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assasinTarget)
 
-    log_to_console("Target Index is " .. tostring(gPlayerSyncTable[0].assasinTarget ))
-
     if targetIndex >= 0 and targetIndex <= MAX_PLAYERS then
-        if gPlayerSyncTable[targetIndex].state == ELIMINATED or not gNetworkPlayers[targetIndex].connected then
+        if gPlayerSyncTable[targetIndex].state == ELIMINATED or gPlayerSyncTable[targetIndex].state == SPECTATOR or not gNetworkPlayers[targetIndex].connected then
             targetIndex = -1
         end
     end
 
-    if (targetIndex < 0 or targetIndex > MAX_PLAYERS) and gPlayerSyncTable[0].state ~= ELIMINATED then
+    if (targetIndex < 0 or targetIndex > MAX_PLAYERS) and gPlayerSyncTable[0].state ~= ELIMINATED and gPlayerSyncTable[0].state ~= SPECTATOR then
         local attempts = 0
 
         ::selectindex::
@@ -43,7 +41,7 @@ local function update()
             goto updateend
         end
 
-        if not gNetworkPlayers[targetIndex].connected or gPlayerSyncTable[targetIndex].state == ELIMINATED then goto selectindex end
+        if not gNetworkPlayers[targetIndex].connected or gPlayerSyncTable[targetIndex].state == ELIMINATED or gPlayerSyncTable[targetIndex].state == SPECTATOR then goto selectindex end
     end
 
     ::updateend::

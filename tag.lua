@@ -10,9 +10,9 @@ local function update()
 
     -- set network descriptions
     for i = 0, MAX_PLAYERS - 1 do
-        if gPlayerSyncTable[i].state == TAGGER then
+        if gPlayerSyncTable[i].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
             network_player_set_description(gNetworkPlayers[i], "Tagger", 232, 46, 46, 255)
-        elseif gPlayerSyncTable[i].state == RUNNER then
+        elseif gPlayerSyncTable[i].state == RUNNER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
             network_player_set_description(gNetworkPlayers[i], "Runner", 49, 107, 232, 255)
         elseif gPlayerSyncTable[i].state == ELIMINATED then
             network_player_set_description(gNetworkPlayers[i], "Eliminated", 191, 54, 54, 255)

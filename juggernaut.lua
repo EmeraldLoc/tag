@@ -5,9 +5,9 @@ local function update()
 
     -- set network descriptions
     for i = 0, MAX_PLAYERS - 1 do
-        if gPlayerSyncTable[i].state == TAGGER then
+        if gPlayerSyncTable[i].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
             network_player_set_description(gNetworkPlayers[i], "Tagger", 232, 46, 46, 255)
-        elseif gPlayerSyncTable[i].state == RUNNER then
+        elseif gPlayerSyncTable[i].state == RUNNER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
             network_player_set_description(gNetworkPlayers[i], "Runner", 49, 107, 232, 255)
         end
     end
@@ -106,6 +106,7 @@ local function on_pvp(a, v)
     if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE and v.playerIndex == 0 then
         gPlayerSyncTable[v.playerIndex].juggernautTags = gPlayerSyncTable[v.playerIndex].juggernautTags + 1
         gPlayerSyncTable[a.playerIndex].amountOfTags = gPlayerSyncTable[a.playerIndex].amountOfTags + 1
+        gPlayerSyncTable[v.playerIndex].invincTimer = 0.5 * 30
     end
 end
 

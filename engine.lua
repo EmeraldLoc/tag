@@ -22,8 +22,8 @@ MAX_GAMEMODE = 6
 
 PLAYERS_NEEDED = 2
 
+MODIFIER_MIN = 0
 MODIFIER_NONE = 0
-MODIFIER_MIN = 1
 MODIFIER_BOMBS = 1
 MODIFIER_LOW_GRAVITY = 2
 MODIFIER_SWAP = 3
@@ -32,12 +32,13 @@ MODIFIER_NO_BOOST = 5
 MODIFIER_ONE_TAGGER = 6
 MODIFIER_FLY = 7
 MODIFIER_SPEED = 8
-MODIFIER_MAX = 8
+MODIFIER_INCOGNITO = 9
+MODIFIER_MAX = 9
 
 -- globals and sync tables
 gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
 gGlobalSyncTable.modifier = MODIFIER_NONE
-gGlobalSyncTable.doModifiers = true
+gGlobalSyncTable.randomModifiers = true
 gGlobalSyncTable.randomGamemode = true
 gGlobalSyncTable.gamemode = TAG
 gGlobalSyncTable.bljs = false
@@ -75,8 +76,8 @@ defaultLevels = {} -- dont make this local so it can be used in other files
 joinTimer = 6 * 30 -- dont make this local so it can be used in other files
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
 badLevels = {} -- dont make this local so it can be used in other files
+gGlobalSoundSource = {x = 0, y = 0, z = 0} -- dont make this local so it can be used in other files
 local speedBoostTimer = 0
-local flyHeight = 0
 local hotPotatoTimerMultiplier = 1
 
 _G.tagExists = true
@@ -139,7 +140,6 @@ local function server_update()
         end
     elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
         timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
-        math.randomseed(random_f32_around_zero(10000), random_f32_around_zero(10000)) -- set a random seed based off of the random generator provided in super mario 64, since lua's is not very good
         ---@diagnostic disable-next-line: param-type-mismatch
         while ((table.contains(defaultLevels, string.upper(get_level_name(level_to_course(gGlobalSyncTable.selectedLevel), gGlobalSyncTable.selectedLevel, 1))) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel <= 0 do
             if isRomhack then
@@ -167,25 +167,23 @@ local function server_update()
     elseif gGlobalSyncTable.roundState == ROUND_WAIT then
         -- select a modifier and gamemode if timer is at its highest point
         if timer == 16 * 30 then
-            if gGlobalSyncTable.doModifiers then
+            if gGlobalSyncTable.randomModifiers then
                 -- see if we should enable modifiers or not
                 local selectModifier = math.random(1, 3) -- 33% chance
 
                 if selectModifier == 3 then
                     ::selectmodifier::
                     -- select a random modifier
-                    gGlobalSyncTable.modifier = -1 -- switch to -1 to always show chat message
-                    gGlobalSyncTable.modifier = math.random(MODIFIER_MIN, MODIFIER_MAX) -- select random modifier
+                    gGlobalSyncTable.modifier = math.random(MODIFIER_MIN + 1 , MODIFIER_MAX) -- select random modifier, exclude MODIFIER_NONE
 
                     if gGlobalSyncTable.gamemode == JUGGERNAUT and gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
                         goto selectmodifier
                     end
 
-                    if gGlobalSyncTable.gamemode == ASSASINS and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER or gGlobalSyncTable.modifier == MODIFIER_FLY) then
+                    if gGlobalSyncTable.gamemode == ASSASINS and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER or gGlobalSyncTable.modifier == MODIFIER_FLY or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
                         goto selectmodifier
                     end
                 else
-                    gGlobalSyncTable.modifier = -1 -- switch to -1 to always show chat message
                     gGlobalSyncTable.modifier = MODIFIER_NONE -- set the modifier to none
                 end
 
@@ -244,6 +242,7 @@ local function server_update()
             if gPlayerSyncTable[i].state ~= SPECTATOR then
                 gPlayerSyncTable[i].state = RUNNER -- set everyone's state to runner
                 gPlayerSyncTable[i].juggernautTags = 0
+                gPlayerSyncTable[i].assasinTarget = -1
             end
 
             gPlayerSyncTable[i].amountOfTags = 0 -- reset amount of tags
@@ -278,7 +277,7 @@ local function server_update()
                 end
             end
 
-            gGlobalSyncTable.juggernautTagsReq = numPlayers * 4
+            gGlobalSyncTable.juggernautTagsReq = numPlayers * 3
 
             if gGlobalSyncTable.gamemode == HOT_POTATO then
                 hotPotatoTimerMultiplier = amountOfTaggersNeeded
@@ -471,35 +470,16 @@ local function mario_update(m)
         m.flags = m.flags & ~MARIO_VANISH_CAP
     end
 
-    -- flight physics
-    if m.action == ACT_FLYING and m.playerIndex == 0 then
-        if m.forwardVel < 45 and m.pos.y < flyHeight then
-            m.forwardVel = m.forwardVel + 2
-
-            if m.forwardVel > 45 then m.forwardVel = 45 end
-        end
-        if m.forwardVel > 150 and m.pos.y < flyHeight then m.forwardVel = 150 end
-        if m.pos.y > flyHeight then
-            m.forwardVel = m.forwardVel - 0.5
-        end
-    elseif m.action == ACT_FLYING_TRIPLE_JUMP and m.playerIndex == 0 then
-        flyHeight = m.pos.y + 5000
-
-        if gPlayerSyncTable[0].state == SPECTATOR or gPlayerSyncTable[0].state == ELIMINATED_OR_FROZEN then
-            flyHeight = 1000000
-        end
-    end
-
     -- set model state according to state
-    if gPlayerSyncTable[m.playerIndex].state == TAGGER and gGlobalSyncTable.gamemode ~= ASSASINS then
+    if gPlayerSyncTable[m.playerIndex].state == TAGGER and gGlobalSyncTable.gamemode ~= ASSASINS and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
         m.marioBodyState.modelState = MODEL_STATE_METAL
-    elseif gPlayerSyncTable[m.playerIndex].state == RUNNER then
+    elseif gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
+        m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA
+    elseif gPlayerSyncTable[m.playerIndex].state == RUNNER or (gGlobalSyncTable.modifier == MODIFIER_INCOGNITO and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) then
         m.marioBodyState.modelState = 0
     end
 
-    if gPlayerSyncTable[m.playerIndex].invincTimer ~= nil then -- check to allow sync
-        m.invincTimer = gPlayerSyncTable[m.playerIndex].invincTimer
-    end
+    m.invincTimer = gPlayerSyncTable[m.playerIndex].invincTimer
 
     if m.playerIndex == 0 then
         ---@type NetworkPlayer
@@ -575,98 +555,35 @@ local function mario_update(m)
             obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)))
         end
 
-        if find_object_with_behavior(get_behavior_from_id(id_bhv1Up)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhv1Up)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvBubba)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBubba)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvOneCoin)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvOneCoin)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvRedCoin)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvRedCoin)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvRedCoinStarMarker)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvRedCoinStarMarker)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHo)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHo)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHoThrowMario)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHoThrowMario)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvWhompKingBoss)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvWhompKingBoss)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvSmallWhomp)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvSmallWhomp)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvMoneybag)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvMoneybag)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvMoneybagHidden)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvMoneybagHidden)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvSpindrift)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvSpindrift)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvYoshi)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvYoshi)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvBulletBill)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBulletBill)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvHoot)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHoot)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvTweester)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvTweester)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvBowser)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBowser)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvBowserBodyAnchor)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBowserBodyAnchor)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvBowserTailAnchor)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBowserTailAnchor)))
-        end
-
-        if find_object_with_behavior(get_behavior_from_id(id_bhvKingBobomb)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvKingBobomb)))
-        end
+        -- get rid of unwated behaviors
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhv1Up)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBubba)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvOneCoin)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvRedCoin)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvRedCoinStarMarker)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHo)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHoThrowMario)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvWhompKingBoss)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvSmallWhomp)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvMoneybag)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvMoneybagHidden)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvSpindrift)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvYoshi)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBulletBill)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHoot)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvTweester)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBowser)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBowserBodyAnchor)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBowserTailAnchor)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvKingBobomb)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvStar)))
+        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvStarSpawnCoordinates)))
 
         if not isRomhack then
-            if find_object_with_behavior(get_behavior_from_id(id_bhvActivatedBackAndForthPlatform)) ~= nil then
-                obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvActivatedBackAndForthPlatform)))
-            end
-
-            if find_object_with_behavior(get_behavior_from_id(id_bhvExclamationBox)) ~= nil then
-                obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvExclamationBox)))
-            end
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvActivatedBackAndForthPlatform)))
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvExclamationBox)))
         else
-            if find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)) ~= nil then
-                obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)))
-            end
+            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)))
         end
 
         -- handle speed boost
@@ -676,10 +593,6 @@ local function mario_update(m)
 
         -- handle if just join
         if joinTimer == 2 * 30 then
-            if (gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_WAIT or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION) then
-                show_modifiers()
-            end
-
             if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
                 if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION or gGlobalSyncTable.gamemode == HOT_POTATO or gGlobalSyncTable.gamemode == ASSASINS then
                     gPlayerSyncTable[0].state = ELIMINATED_OR_FROZEN
@@ -723,6 +636,7 @@ end
 
 local function before_set_mario_action(m, action)
     if m.playerIndex == 0 then
+        -- cancel any unwanted action
         if action == ACT_WAITING_FOR_DIALOG or action == ACT_READING_SIGN or action == ACT_READING_AUTOMATIC_DIALOG or action == ACT_READING_NPC_DIALOG or action == ACT_JUMBO_STAR_CUTSCENE or action == ACT_LAVA_BOOST or action == ACT_QUICKSAND_DEATH or action == ACT_BURNING_FALL or action == ACT_BURNING_JUMP then
             return 1
         end
@@ -731,8 +645,11 @@ end
 
 ---@param m MarioState
 local function before_phys(m)
+
+    if m.playerIndex ~= 0 then return end
+
     -- handle speed boost
-    if speedBoostTimer < 5 * 30 and m.playerIndex == 0 and gPlayerSyncTable[0].state == TAGGER then -- this allows for 5 seconds of speedboost
+    if speedBoostTimer < 5 * 30 and gPlayerSyncTable[0].state == TAGGER then -- this allows for 5 seconds of speedboost
         if m.action ~= ACT_BACKWARD_AIR_KB and m.action ~= ACT_FORWARD_AIR_KB then
             m.vel.x = m.vel.x * 1.25
             m.vel.z = m.vel.z * 1.25
@@ -742,6 +659,12 @@ local function before_phys(m)
         end
 
         generate_boost_trail(m)
+    end
+
+    -- handle fly speed reduction
+    if gGlobalSyncTable.modifier == MODIFIER_FLY and gPlayerSyncTable[0].state == RUNNER and m.action == ACT_FLYING then
+        m.vel.x = m.vel.x * 0.8
+        m.vel.z = m.vel.z * 0.8
     end
 end
 
@@ -775,11 +698,11 @@ local function hud_round_status()
 
     -- render rect
     djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale));
+    djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale))
 
     -- render text
-    djui_hud_set_color(255, 255, 255, 255);
-    djui_hud_print_text(text, x, y, scale);
+    djui_hud_set_color(255, 255, 255, 255)
+    djui_hud_print_text(text, x, y, scale)
 end
 
 local function hud_gamemode()
@@ -796,11 +719,11 @@ local function hud_gamemode()
 
     -- render rect
     djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale));
+    djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale))
 
     -- render text
-    djui_hud_set_color(r, g, b, 255);
-    djui_hud_print_text(text, x, y, scale);
+    djui_hud_set_color(r, g, b, 255)
+    djui_hud_print_text(text, x, y, scale)
 end
 
 local function hud_modifier()
@@ -818,11 +741,11 @@ local function hud_modifier()
 
     -- render rect
     djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x, y, width + (24 * scale), (32 * scale));
+    djui_hud_render_rect(x, y, width + (24 * scale), (32 * scale))
 
     -- render text
-    djui_hud_set_color(r, g, b, 255);
-    djui_hud_print_text(text, x + (8 * scale), y, scale);
+    djui_hud_set_color(r, g, b, 255)
+    djui_hud_print_text(text, x + (8 * scale), y, scale)
 end
 
 local function hud_boost()
@@ -1056,12 +979,6 @@ function check_if_romhack_enabled()
         end
     end
 end
-
-hook_on_sync_table_change(gGlobalSyncTable, 'modifier', gGlobalSyncTable.modifier, function (tag, oldVal, newVal)
-    if oldVal ~= newVal and gGlobalSyncTable.modifier ~= -1 then
-        show_modifiers()
-    end
-end)
 
 hook_on_sync_table_change(gGlobalSyncTable, 'randomGamemode', gGlobalSyncTable.randomGamemode, function (tag, oldVal, newVal)
     if oldVal ~= newVal then

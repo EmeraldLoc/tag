@@ -22,7 +22,6 @@ local MAX_BLACKLIST_SELECTION = 1
 local screenHeight = 0
 local bgWidth = 525
 local selection = GAMEMODE_SELECTION
-local gGlobalSoundSource = {x = 0, y = 0, z = 0}
 
 local function background()
     djui_hud_set_color(0, 0, 0, 128)
@@ -72,10 +71,14 @@ local function options()
     djui_hud_render_rect(20, height, bgWidth - 40, 40)
     djui_hud_set_color(220, 220, 220, 255)
     djui_hud_print_text("Modifier", 30, height + 4, 1)
-    if gGlobalSyncTable.doModifiers then
-        djui_hud_print_text("On", bgWidth - 30 - djui_hud_measure_text("On"), height + 4, 1)
+    if gGlobalSyncTable.randomModifiers then
+        djui_hud_print_text("Random", bgWidth - 30 - djui_hud_measure_text("Random"), height + 4, 1)
+    elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
+        djui_hud_print_text("Disabled", bgWidth - 30 - djui_hud_measure_text("Disabled"), height + 4, 1)
     else
-        djui_hud_print_text("Off", bgWidth - 30 - djui_hud_measure_text("Off"), height + 4, 1)
+        local r, g, b = get_modifier_rgb()
+        djui_hud_set_color(r, g, b, 255)
+        djui_hud_print_text(get_modifier_text_without_hex(), bgWidth - 30 - djui_hud_measure_text(get_modifier_text_without_hex()), height + 4, 1)
     end
 
     height = height + 60
@@ -306,13 +309,16 @@ local function mario_update(m)
             end
         else
             if selection == DONE_SELECTION then
+                play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
                 showSettings = false
                 _G.tagSettingsOpen = false
             elseif selection == BLACKLIST_SELECTION then
                 if isRomhack then
+                    play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
                     showBlacklistSettings = true
                     selection = MIN_BLACKLIST_SELECTION
                 else
+                    play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
                     noBlacklistTimer = 5 * 30
                 end
             end
@@ -320,6 +326,7 @@ local function mario_update(m)
     end
 
     if m.controller.buttonPressed & R_JPAD ~= 0 and network_is_server() then
+        play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
         if selection == GAMEMODE_SELECTION then
             local prevGamemode = gGlobalSyncTable.gamemode
 
@@ -344,7 +351,23 @@ local function mario_update(m)
                 gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
             end
         elseif selection == MODIFIER_SELECTION then
-            gGlobalSyncTable.doModifiers = not gGlobalSyncTable.doModifiers
+            local prevModifier = gGlobalSyncTable.modifier
+
+            if gGlobalSyncTable.randomModifiers then
+                gGlobalSyncTable.modifier = MODIFIER_MIN
+                gGlobalSyncTable.randomModifiers = false
+            else
+                if gGlobalSyncTable.modifier + 1 > MODIFIER_MAX then
+                    gGlobalSyncTable.randomModifiers = true
+                    gGlobalSyncTable.modifier = MODIFIER_NONE
+                else
+                    gGlobalSyncTable.modifier = gGlobalSyncTable.modifier + 1
+                end
+            end
+
+            if not gGlobalSyncTable.randomModifiers and gGlobalSyncTable.roundState == ROUND_ACTIVE and gGlobalSyncTable.modifier ~= prevModifier then
+                gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+            end
         elseif selection == BLJS_SELECTION then
             gGlobalSyncTable.bljs = not gGlobalSyncTable.bljs
         elseif selection == CANNON_SELECTION then
@@ -355,6 +378,7 @@ local function mario_update(m)
             gGlobalSyncTable.freezeHealthDrain = gGlobalSyncTable.freezeHealthDrain + 0.1
         end
     elseif m.controller.buttonPressed & L_JPAD ~= 0 and network_is_server() then
+        play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
         if selection == GAMEMODE_SELECTION then
 
             local prevGamemode = gGlobalSyncTable.gamemode
@@ -380,7 +404,23 @@ local function mario_update(m)
                 gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
             end
         elseif selection == MODIFIER_SELECTION then
-            gGlobalSyncTable.doModifiers = not gGlobalSyncTable.doModifiers
+
+            local prevModifier = gGlobalSyncTable.modifier
+
+            if gGlobalSyncTable.randomModifiers then
+                gGlobalSyncTable.modifier = MODIFIER_MAX
+                gGlobalSyncTable.randomModifiers = false
+            else
+                if gGlobalSyncTable.modifier - 1 < MODIFIER_MIN then
+                    gGlobalSyncTable.randomModifiers = true
+                else
+                    gGlobalSyncTable.modifier = gGlobalSyncTable.modifier - 1
+                end
+            end
+
+            if not gGlobalSyncTable.randomModifiers and gGlobalSyncTable.roundState == ROUND_ACTIVE and gGlobalSyncTable.gamemode ~= prevModifier then
+                gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+            end
         elseif selection == BLJS_SELECTION then
             gGlobalSyncTable.bljs = not gGlobalSyncTable.bljs
         elseif selection == CANNON_SELECTION then

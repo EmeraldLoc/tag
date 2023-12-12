@@ -276,6 +276,8 @@ end
 
 ---@param m MarioState
 function generate_boost_trail(m)
+	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
+
 	local x = m.pos.x
 	local y = m.pos.y + 5
 	local z = m.pos.z
@@ -284,98 +286,90 @@ function generate_boost_trail(m)
 end
 
 function get_modifier_text()
-	if gGlobalSyncTable.doModifiers then
-		local text = ''
+	local text = ''
 
-		-- set modifier text depending on current modifier
-		if gGlobalSyncTable.modifier == MODIFIER_BOMBS then
-			text = "\\#E82E2E\\Bombs"
-		elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
-			text = "\\#666666\\Low Gravity"
-		elseif gGlobalSyncTable.modifier == MODIFIER_SWAP then
-			text = "\\#FF0000\\Sw\\#45B245\\ap"
-		elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
-			text = "\\#E82E2E\\No Radar"
-		elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
-			text = "\\#0099FF\\No Boost"
-		elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
-			text = "\\#316BE8\\One Tagger"
-		elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
-			text = "\\#D61B1B\\Fly"
-		elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
-			text = "\\#0099FF\\Speed"
-		elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
-			text = "\\#FFFFFF\\None"
-		end
-
-		-- return the modifier
-		return text
-	else
-		return "\\#FFFFFF\\Disabled"
+	-- set modifier text depending on current modifier
+	if gGlobalSyncTable.modifier == MODIFIER_BOMBS then
+		text = "\\#E82E2E\\Bombs"
+	elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
+		text = "\\#676767\\Low Gravity"
+	elseif gGlobalSyncTable.modifier == MODIFIER_SWAP then
+		text = "\\#FF0000\\Sw\\#45B245\\ap"
+	elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
+		text = "\\#E82E2E\\No Radar"
+	elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
+		text = "\\#0099FF\\No Boost"
+	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
+		text = "\\#316BE8\\One Tagger"
+	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
+		text = "\\#D61B1B\\Fly"
+	elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
+		text = "\\#0099FF\\Speed"
+	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+		text = "\\#676767\\Incognito"
+	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
+		text = "\\#FFFFFF\\None"
+	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
+		text = "\\#FFFFFF\\Disabled"
 	end
+
+	-- return the modifier
+	return text
 end
 
 function get_modifier_text_without_hex()
-	if gGlobalSyncTable.doModifiers then
-		local text = ''
+	local text = ''
 
-		-- set modifier text depending on current modifier
-		if gGlobalSyncTable.modifier == MODIFIER_BOMBS then
-			text = "Bombs"
-		elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
-			text = "Low Gravity"
-		elseif gGlobalSyncTable.modifier == MODIFIER_SWAP then
-			text = "Swap"
-		elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
-			text = "No Radar"
-		elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
-			text = "No Boost"
-		elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
-			text = "One Tagger"
-		elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
-			text = "Fly"
-		elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
-			text = "Speed"
-		elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
-			text = "None"
-		end
-
-		-- return the modifier
-		return text
-	else
-		return "Disabled"
+	-- set modifier text depending on current modifier
+	if gGlobalSyncTable.modifier == MODIFIER_BOMBS then
+		text = "Bombs"
+	elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
+		text = "Low Gravity"
+	elseif gGlobalSyncTable.modifier == MODIFIER_SWAP then
+		text = "Swap"
+	elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
+		text = "No Radar"
+	elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
+		text = "No Boost"
+	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
+		text = "One Tagger"
+	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
+		text = "Fly"
+	elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
+		text = "Speed"
+	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+		text = "Incognito"
+	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
+		text = "None"
+	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
+		text = "Disabled"
 	end
+
+	-- return the modifier
+	return text
 end
 
 function get_modifier_rgb()
-	if gGlobalSyncTable.doModifiers then
-		if gGlobalSyncTable.modifier == MODIFIER_BOMBS then
-			return 232, 46, 46
-		elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
-			return 102, 102, 102
-		elseif gGlobalSyncTable.modifier == MODIFIER_SWAP then
-			return 255, 0, 0
-		elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
-			return 255, 0, 0
-		elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
-			return 0, 153, 255
-		elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
-			return 49, 107, 232
-		elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
-			return 214, 27, 27
-		elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
-			return 0, 153, 255
-		elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
-			return 255, 255, 255
-		end
-	else
+	if gGlobalSyncTable.modifier == MODIFIER_BOMBS then
+		return 232, 46, 46
+	elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
+		return 103, 103, 103
+	elseif gGlobalSyncTable.modifier == MODIFIER_SWAP then
+		return 255, 0, 0
+	elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
+		return 255, 0, 0
+	elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
+		return 0, 153, 255
+	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
+		return 49, 107, 232
+	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
+		return 214, 27, 27
+	elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
+		return 0, 153, 255
+	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+		return 103, 103, 103
+	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
 		return 255, 255, 255
-	end
-end
-
-function show_modifiers()
-	if gGlobalSyncTable.doModifiers then
-		djui_chat_message_create("\\#316BE8\\Modifier: " .. get_modifier_text())
 	end
 end
 
@@ -454,12 +448,14 @@ end
 ---@param tagger integer
 ---@param victim integer
 function freezed_popup(tagger, victim)
+	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
 	djui_popup_create_global(get_player_name(tagger) .. "\\#7EC0EE\\ Froze\n" .. get_player_name(victim), 3)
 end
 
 ---@param runner integer
 ---@param frozen integer
 function unfreezed_popup(runner, frozen)
+	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
 	djui_popup_create_global(get_player_name(runner) .. "\\#7EC0EE\\ Unfroze\n" .. get_player_name(frozen), 3)
 end
 
@@ -475,6 +471,7 @@ end
 
 ---@param taggedIndex integer
 function tagger_popup(taggedIndex)
+	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
 	if gGlobalSyncTable.gamemode == INFECTION then
 		djui_popup_create_global(get_player_name(taggedIndex) .. " \\#FFFFFF\\is now\n\\#24D636\\Infected", 3)
 	else
@@ -484,12 +481,14 @@ end
 
 ---@param runnerIndex integer
 function runner_popup(runnerIndex)
+	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
 	djui_popup_create_global(get_player_name(runnerIndex) .. " \\#FFFFFF\\became a\n\\#316BE8\\Runner", 3)
 end
 
 ---@param tagger integer
 ---@param runner integer
 function tagged_popup(tagger, runner)
+	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
 	if gGlobalSyncTable.gamemode ~= INFECTION then
 		djui_popup_create_global(get_player_name(tagger) .. " \\#E82E2E\\Tagged\n" .. get_player_name(runner), 3)
 	else
@@ -500,19 +499,6 @@ end
 function crash()
 	crash()
 end
-
--- anti pirates
-local beta = true
-
-local function update()
-	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled
-	if gNetworkPlayers[0].name ~= "EmeraldLockdown" and network_is_server() and beta then
-		-- this crashes the game
-		crash()
-	end
-end
-
-hook_event(HOOK_UPDATE, update)
 
 -- boost stuff
 ---@param o Object
@@ -536,3 +522,16 @@ function boost_particle_loop(o)
 end
 
 id_bhvBoostParticle = hook_behavior(nil, OBJ_LIST_DEFAULT, false, boost_particle_init, boost_particle_loop, "Boost Particle")
+
+-- dang pirates, hope their too stupid to find this, oh btw pirating adobe software is perfectly moral (joke dont cancel me >:)
+local beta = true
+
+local function update()
+	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled
+	if gNetworkPlayers[0].name ~= "EmeraldLockdown" and network_is_server() and beta then
+		-- this crashes the game
+		crash()
+	end
+end
+
+hook_event(HOOK_UPDATE, update)

@@ -153,7 +153,7 @@ function spectator_command(msg)
 		djui_chat_message_create("You are now a spectator")
 		gPlayerSyncTable[0].state = SPECTATOR
 		return true
-	elseif (msg == "no" or msg == "off" or msg == "disable") and gGlobalSyncTable.roundState ~= ROUND_ACTIVE then
+	elseif (msg == "no" or msg == "off" or msg == "disable") and gGlobalSyncTable.roundState ~= ROUND_ACTIVE and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then
 		djui_chat_message_create("You are no longer a spectator")
 		gPlayerSyncTable[0].state = RUNNER
 		return true
@@ -224,12 +224,15 @@ function tag_command(msg)
 			if not _G.swearSettingsOpened then
 				showSettings = not showSettings
 				_G.tagSettingsOpen = showSettings
+				play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
 			else
+				play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
 				djui_chat_message_create("Tag: Swear Filter settings menu is already opened!")
 			end
 		else
 			showSettings = not showSettings
 			_G.tagSettingsOpen = showSettings
+			play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
 		end
 	end
 	return true
