@@ -55,11 +55,11 @@ function send_packet_to_server(p)
 	if p.packetType ~= nil and not network_is_server() then -- make sure the packet is valid and the server is not sending the packet
 		-- send the packet to the sever
         network_send_to(1, true, p) -- 1 is always the server
-        print("Tag: Sent packet to the server with packet type " .. p.packetType)
+        log_to_console("Tag: Sent packet to the server with packet type " .. p.packetType)
     elseif network_is_server() then
-        print("Tag: Tried to send packet to the server when we are the server")
+        log_to_console("Tag: Tried to send packet to the server when we are the server")
     else
-        print("Tag: Tried to send a invalid packet to the server")
+        log_to_console("Tag: Tried to send a invalid packet to the server")
 	end
 end
 
@@ -70,8 +70,8 @@ function send_packet(globalIndex, p)
         -- send the packet
         network_send_to(network_local_index_from_global(globalIndex), true, p)
     elseif network_local_index_from_global(globalIndex) == 0 then
-        print("Tag: Tried to send packet to the same player")
+        log_to_console("Tag: Tried to send packet to the same player")
     else
-        print("Tag: Tried to send a invalid packet")
+        log_to_console("Tag: Tried to send a invalid packet")
     end
 end

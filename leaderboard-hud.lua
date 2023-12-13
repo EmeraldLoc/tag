@@ -75,10 +75,14 @@ local function hud_leaderboard()
 
             local r, g, b = hex_to_rgb(network_get_player_text_color_string(i))
             width = djui_hud_measure_text(text)
-            x = (screenWidth - 430) / 2
+            x = (screenWidth - 345) / 2
 
             djui_hud_set_color(r, g, b, fade)
             djui_hud_print_text(text, x, y, 1)
+
+            x = (screenWidth - 430) / 2
+
+            render_player_head(i, x, y, 1.9, 1.9)
 
             if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
                 text = "Time as runner: " .. math.floor(gPlayerSyncTable[i].amountOfTimeAsRunner / 30) .. "s"
@@ -143,7 +147,6 @@ local function hud_leaderboard()
 end
 
 local function hud_render()
-
     if (gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN) or joinTimer > 0 then
         fade = 0
         hudTimer = 15 * 30

@@ -136,7 +136,7 @@ local function server_update()
 
             PLAYERS_NEEDED = 2
 
-            print("Tag: Attempted to keep tag going by setting the gamemode to tag")
+            log_to_console("Tag: Attempted to keep tag going by setting the gamemode to tag")
         end
     elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
         timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
@@ -155,7 +155,7 @@ local function server_update()
 
         prevLevel = gGlobalSyncTable.selectedLevel
         gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
-        print("Tag: Round State is now ROUND_WAIT")
+        log_to_console("Tag: Round State is now ROUND_WAIT")
     end
 
     if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
@@ -168,10 +168,10 @@ local function server_update()
         -- select a modifier and gamemode if timer is at its highest point
         if timer == 16 * 30 then
             if gGlobalSyncTable.randomModifiers then
-                -- see if we should enable modifiers or not
-                local selectModifier = math.random(1, 3) -- 33% chance
+                -- see if we should use a modifier modifiers or not
+                local selectModifier = math.random(1, 2) -- 50% chance
 
-                if selectModifier == 3 then
+                if selectModifier == 2 then
                     ::selectmodifier::
                     -- select a random modifier
                     gGlobalSyncTable.modifier = math.random(MODIFIER_MIN + 1 , MODIFIER_MAX) -- select random modifier, exclude MODIFIER_NONE
@@ -186,53 +186,51 @@ local function server_update()
                 else
                     gGlobalSyncTable.modifier = MODIFIER_NONE -- set the modifier to none
                 end
-
-                    -- if we select a random gamemode, select that random gamemode now
-                if gGlobalSyncTable.randomGamemode then
-                    if numPlayers >= 3 then -- 3 because in order for this to work we cant have it select freeze tag without enough players
-                        gGlobalSyncTable.gamemode = -1 -- force popup to show
-                        gGlobalSyncTable.gamemode = math.random(MIN_GAMEMODE, MAX_GAMEMODE)
-                    else
-                        gGlobalSyncTable.gamemode = TAG -- set to tag explicitly
-                    end
-
-                    if gGlobalSyncTable.gamemode == FREEZE_TAG then
-                        -- set freeze tag timer
-                        gGlobalSyncTable.amountOfTime = 180 * 30
-
-                        PLAYERS_NEEDED = 3
-                    elseif gGlobalSyncTable.gamemode == TAG then
-                        -- set tag timer
-                        gGlobalSyncTable.amountOfTime = 120 * 30
-
-                        PLAYERS_NEEDED = 2
-                    elseif gGlobalSyncTable.gamemode == INFECTION then
-                         -- set infection timer
-                        gGlobalSyncTable.amountOfTime = 120 * 30
-
-                        PLAYERS_NEEDED = 3
-                    elseif gGlobalSyncTable.gamemode == HOT_POTATO then
-                        -- set hot potato timer
-                        gGlobalSyncTable.amountOfTime = 60 * 30
-
-                        PLAYERS_NEEDED = 3
-                    elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-                        -- set juggernaut timer
-                        gGlobalSyncTable.amountOfTime = 120 * 30
-
-                        PLAYERS_NEEDED = 3
-                    elseif gGlobalSyncTable.gamemode == ASSASINS then
-                        -- set assasins timer
-                        gGlobalSyncTable.amountOfTime = 120 * 30
-
-                        PLAYERS_NEEDED = 3
-                    end
-                end
-            else
-                gGlobalSyncTable.modifier = MODIFIER_NONE
             end
 
-            print("Tag: Modifier is set to " .. get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex())
+            -- if we select a random gamemode, select that random gamemode now
+            if gGlobalSyncTable.randomGamemode then
+                if numPlayers >= 3 then -- 3 is the minimum player count for random gamemodes
+                    gGlobalSyncTable.gamemode = -1 -- force popup to show
+                    gGlobalSyncTable.gamemode = math.random(MIN_GAMEMODE, MAX_GAMEMODE)
+                else
+                    gGlobalSyncTable.gamemode = TAG -- set to tag explicitly
+                end
+
+                if gGlobalSyncTable.gamemode == FREEZE_TAG then
+                    -- set freeze tag timer
+                    gGlobalSyncTable.amountOfTime = 180 * 30
+
+                    PLAYERS_NEEDED = 3
+                elseif gGlobalSyncTable.gamemode == TAG then
+                    -- set tag timer
+                    gGlobalSyncTable.amountOfTime = 120 * 30
+
+                    PLAYERS_NEEDED = 2
+                elseif gGlobalSyncTable.gamemode == INFECTION then
+                     -- set infection timer
+                    gGlobalSyncTable.amountOfTime = 120 * 30
+
+                    PLAYERS_NEEDED = 3
+                elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+                    -- set hot potato timer
+                    gGlobalSyncTable.amountOfTime = 60 * 30
+
+                    PLAYERS_NEEDED = 3
+                elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+                    -- set juggernaut timer
+                    gGlobalSyncTable.amountOfTime = 120 * 30
+
+                    PLAYERS_NEEDED = 3
+                elseif gGlobalSyncTable.gamemode == ASSASINS then
+                    -- set assasins timer
+                    gGlobalSyncTable.amountOfTime = 120 * 30
+
+                    PLAYERS_NEEDED = 3
+                end
+            end
+
+            log_to_console("Tag: Modifier is set to " .. get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex())
         end
 
         timer = timer - 1 -- subtract timer by one
@@ -260,7 +258,7 @@ local function server_update()
                 amountOfTaggersNeeded = numPlayers - 1
             end
 
-            print("Tag: Assigning Players")
+            log_to_console("Tag: Assigning Players")
 
             local amountOfTaggers = 0
 
@@ -271,7 +269,7 @@ local function server_update()
                 if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
                     gPlayerSyncTable[randomIndex].state = TAGGER
 
-                    print("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
+                    log_to_console("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
 
                     amountOfTaggers = amountOfTaggers + 1
                 end
@@ -297,7 +295,7 @@ local function server_update()
 
             gGlobalSyncTable.roundState = ROUND_ACTIVE -- begin round
 
-            print("Tag: Started the game")
+            log_to_console("Tag: Started the game")
         end
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
         if timer > 0 then
@@ -321,7 +319,7 @@ local function server_update()
                     gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN -- end round
                 end
 
-                print("Tag: Runners Won")
+                log_to_console("Tag: Runners Won")
 
                 return
             else
@@ -344,7 +342,7 @@ local function server_update()
 
         if timer <= 0 then
             gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
-            print("Tag: Starting a new round...")
+            log_to_console("Tag: Starting a new round...")
         end
     elseif gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
         timer = timer - 1
@@ -370,7 +368,7 @@ local function server_update()
 
             timer = 60 * 30
 
-            print("Tag: Assigning Players")
+            log_to_console("Tag: Assigning Players")
 
             local amountOfTaggers = 0
 
@@ -381,7 +379,7 @@ local function server_update()
                 if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= ELIMINATED_OR_FROZEN and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
                     gPlayerSyncTable[randomIndex].state = TAGGER
 
-                    print("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
+                    log_to_console("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
 
                     amountOfTaggers = amountOfTaggers + 1
                 end
@@ -427,6 +425,8 @@ local function update()
             network_player_set_description(gNetworkPlayers[i], "Spectator", 100, 100, 100, 255)
         elseif gPlayerSyncTable[i].state == -1 then
             network_player_set_description(gNetworkPlayers[i], "None", 50, 50, 50, 255)
+        elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+            network_player_set_description(gNetworkPlayers[i], "Incognito", 103, 103, 103, 255)
         end
     end
 end
@@ -682,7 +682,7 @@ local function hud_round_status()
     elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.state == ROUND_TAGGERS_WIN then
         text = "Starting new round"
     elseif gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
-        text = "Intermission: " .. math.floor(gGlobalSyncTable.displayTimer / 30)
+        text = "Intermission: " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
     else
         return
     end

@@ -496,6 +496,70 @@ function tagged_popup(tagger, runner)
 	end
 end
 
+-- this entire snippet for the player head was made by EmilyEmmi (with adjustments for tag made by me :), thanks!
+local PART_ORDER = {
+    SKIN,
+    HAIR,
+    CAP,
+}
+
+HEAD_HUD = get_texture_info("hud_head_recolor")
+WING_HUD = get_texture_info("hud_wing")
+
+-- the actual head render function.
+--- @param index integer
+--- @param x integer
+--- @param y integer
+--- @param scaleX number
+--- @param scaleY number
+function render_player_head(index, x, y, scaleX, scaleY)
+    local m = gMarioStates[index]
+    local sMario = gPlayerSyncTable[index]
+    local np = gNetworkPlayers[index]
+
+    local alpha = 255
+    if (m.marioBodyState.modelState & MODEL_STATE_NOISE_ALPHA) ~= 0 then
+        alpha = 100 -- vanish effect
+    end
+    local isMetal = false
+    
+    local tileY = m.character.type
+    for i=1,#PART_ORDER do
+        local color = {r = 255, g = 255, b = 255}
+		if (m.marioBodyState.modelState & MODEL_STATE_METAL) ~= 0 then -- metal
+			color = network_player_palette_to_color(np, METAL, color)
+			djui_hud_set_color(color.r, color.g, color.b, alpha)
+			djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, 5*16, tileY*16, 16, 16)
+			isMetal = true
+
+			break
+		end
+
+		local part = PART_ORDER[i]
+		if tileY == 2 and part == HAIR then -- toad doesn't use hair
+			part = GLOVES
+		end
+		network_player_palette_to_color(np, part, color)
+
+        djui_hud_set_color(color.r, color.g, color.b, alpha)
+        djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, (i-1)*16, tileY*16, 16, 16)
+    end
+
+    if not isMetal then
+        djui_hud_set_color(255, 255, 255, alpha)
+        --djui_hud_render_texture(HEAD_HUD, x, y, scaleX, scaleY)
+        djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, (#PART_ORDER)*16, tileY*16, 16, 16)
+
+        djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, (#PART_ORDER+1)*16, tileY*16, 16, 16) -- hat emblem
+            if m.marioBodyState.capState == MARIO_HAS_WING_CAP_ON then
+                djui_hud_render_texture(WING_HUD, x, y, scaleX, scaleY) -- wing
+            end
+    elseif m.marioBodyState.capState == MARIO_HAS_WING_CAP_ON then
+        djui_hud_set_color(109, 170, 173, alpha) -- blueish green
+        djui_hud_render_texture(WING_HUD, x, y, scaleX, scaleY) -- wing
+    end
+end
+
 function crash()
 	crash()
 end
