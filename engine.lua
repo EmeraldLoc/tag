@@ -43,7 +43,7 @@ gGlobalSyncTable.randomGamemode = true
 gGlobalSyncTable.gamemode = TAG
 gGlobalSyncTable.bljs = false
 gGlobalSyncTable.cannons = false
-gGlobalSyncTable.water = false
+gGlobalSyncTable.water = true
 gGlobalSyncTable.swapTimer = 1
 gGlobalSyncTable.displayTimer = 1
 gGlobalSyncTable.selectedLevel = 1
@@ -87,21 +87,21 @@ ACT_NOTHING = allocate_mario_action(ACT_FLAG_IDLE)
 
 -- tables
 levels = {
-    {name = "cg", level = LEVEL_CASTLE_GROUNDS, act = 0, area = 1, pipes = true, pipe1Pos = {x = -5979, y = 378, z = -1371}, pipe2Pos = {x = 1043, y = 3174, z = -5546}},
-    {name = "bob", level = LEVEL_BOB, act = 0, area = 1, pipes = true, pipe1Pos = {x = -4694, y = 0, z = 6699}, pipe2Pos = {x = 5079, y = 3072, z = 655}},
-    {name = "wf", level = LEVEL_WF, act = 0, area = 1, pipes = false},
-    {name = "ccm", level = LEVEL_CCM, act = 0, area = 1, pipes = true, pipe1Pos = {x = -1352, y = 2560, z = -1824}, pipe2Pos = {x = 5628, y = -4607, z = -28}},
-    {name = "lll", level = LEVEL_LLL, act = 0, area = 1, pipes = false},
-    {name = "ssl", level = LEVEL_SSL, act = 0, area = 1, pipes = false},
-    {name = "issl", level = LEVEL_SSL, act = 0, area = 2, pipes = true, pipe1Pos = {x = -460, y = 0, z = 4247}, pipe2Pos = {x = 997, y = 3942, z = 1234}},
-    {name = "bitfs", level = LEVEL_BITFS, act = 0, area = 1, pipes = true, pipe1Pos = {x = -154, y = -2866, z = -102}, pipe2Pos = {x = 1205, y = 5478, z = 58}},
-    {name = "ttm", level = LEVEL_TTM, act = 0, area = 1, pipes = true, pipe1Pos = {x = -1080, y = -4634, z = 4176}, pipe2Pos = {x = 1031, y = 2306, z = -198}},
-    {name = "thi", level = LEVEL_THI, act = 0, area = 1, pipes = false},
-    {name = "sl", level = LEVEL_SL, act = 0, area = 1, pipes = false},
-    {name = "ttc", level = LEVEL_TTC, act = 0, area = 1, pipes = true, pipe1Pos = {x = 1361, y = -4822, z = 176}, pipe2Pos = {x = 1594, y = 5284, z = 1565}},
-    {name = "jrb", level = LEVEL_JRB, act = 0, area = 1, pipes = true, pipe1Pos = {x = 3000, y = -5119, z = 2688}, pipe2Pos = {x = -6398, y = 1126, z = 191}},
-    {name = "rr", level = LEVEL_RR, act = 0, area = 1, pipes = true, pipe1Pos = {x = -4221, y = 6451, z = -5885}, pipe2Pos = {x = 2125, y = -1833, z = 2079}},
-    {name = "arena", level = LEVEL_BOWSER_1, act = 0, area = 1, pipes = false},
+    {name = "cg",    level = LEVEL_CASTLE_GROUNDS, act = 0, area = 1, pipes = true, pipe1Pos = {x = -5979, y = 378, z = -1371}, pipe2Pos = {x = 1043, y = 3174, z = -5546}},
+    {name = "bob",   level = LEVEL_BOB,            act = 0, area = 1, pipes = true, pipe1Pos = {x = -4694, y = 0, z = 6699}, pipe2Pos = {x = 5079, y = 3072, z = 655}},
+    {name = "rr",    level = LEVEL_RR,             act = 0, area = 1, pipes = true, pipe1Pos = {x = -4221, y = 6451, z = -5885}, pipe2Pos = {x = 2125, y = -1833, z = 2079}},
+    {name = "ccm",   level = LEVEL_CCM,            act = 0, area = 1, pipes = true, pipe1Pos = {x = -1352, y = 2560, z = -1824}, pipe2Pos = {x = 5628, y = -4607, z = -28}},
+    {name = "issl",  level = LEVEL_SSL,            act = 0, area = 2, pipes = true, pipe1Pos = {x = -460, y = 0, z = 4247}, pipe2Pos = {x = 997, y = 3942, z = 1234}},
+    {name = "bitfs", level = LEVEL_BITFS,          act = 0, area = 1, pipes = true, pipe1Pos = {x = -154, y = -2866, z = -102}, pipe2Pos = {x = 1205, y = 5478, z = 58}},
+    {name = "ttm",   level = LEVEL_TTM,            act = 0, area = 1, pipes = true, pipe1Pos = {x = -1080, y = -4634, z = 4176}, pipe2Pos = {x = 1031, y = 2306, z = -198}},
+    {name = "ttc",   level = LEVEL_TTC,            act = 0, area = 1, pipes = true, pipe1Pos = {x = 1361, y = -4822, z = 176}, pipe2Pos = {x = 1594, y = 5284, z = 1565}},
+    {name = "jrb",   level = LEVEL_JRB,            act = 0, area = 1, pipes = true, pipe1Pos = {x = 3000, y = -5119, z = 2688}, pipe2Pos = {x = -6398, y = 1126, z = 191}},
+    {name = "wf",    level = LEVEL_WF,             act = 0, area = 1, pipes = false},
+    {name = "lll",   level = LEVEL_LLL,            act = 0, area = 1, pipes = false},
+    {name = "ssl",   level = LEVEL_SSL,            act = 0, area = 1, pipes = false},
+    {name = "thi",   level = LEVEL_THI,            act = 0, area = 1, pipes = false},
+    {name = "sl",    level = LEVEL_SL,             act = 0, area = 1, pipes = false},
+    {name = "arena", level = LEVEL_BOWSER_1,       act = 0, area = 1, pipes = false},
 }
 
 local function server_update()
@@ -539,7 +539,7 @@ local function mario_update(m)
 
         -- spawn pipes
         if not isRomhack then
-            if selectedLevel.pipes == true and find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)) == nil then
+            if selectedLevel.pipes == true and obj_get_first_with_behavior_id(id_bhvWarpPipe) == nil then
                 spawn_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe1Pos.x, selectedLevel.pipe1Pos.y, selectedLevel.pipe1Pos.z, function (o)
                     o.oBehParams = 1
                 end)
@@ -551,39 +551,39 @@ local function mario_update(m)
         end
 
         -- delete unwanted pipes
-        if gNetworkPlayers[0].currLevelNum == LEVEL_THI and find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)) ~= nil then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)))
+        if gNetworkPlayers[0].currLevelNum == LEVEL_THI and obj_get_first_with_behavior_id(id_bhvWarpPipe) ~= nil then
+            obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
         end
 
         -- get rid of unwated behaviors
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhv1Up)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBubba)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvOneCoin)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvRedCoin)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvRedCoinStarMarker)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHo)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHeaveHoThrowMario)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvWhompKingBoss)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvSmallWhomp)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvMoneybag)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvMoneybagHidden)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvSpindrift)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvYoshi)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBulletBill)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvHoot)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvTweester)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBowser)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBowserBodyAnchor)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvBowserTailAnchor)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvKingBobomb)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvStar)))
-        obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvStarSpawnCoordinates)))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhv1Up))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBubba))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvOneCoin))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvRedCoin))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvRedCoinStarMarker))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvHeaveHo))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvHeaveHoThrowMario))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWhompKingBoss))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvSmallWhomp))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvMoneybag))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvMoneybagHidden))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvSpindrift))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvYoshi))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBulletBill))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvHoot))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvTweester))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowser))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowserBodyAnchor))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowserTailAnchor))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvKingBobomb))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStar))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStarSpawnCoordinates))
 
         if not isRomhack then
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvActivatedBackAndForthPlatform)))
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvExclamationBox)))
+            obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvActivatedBackAndForthPlatform))
+            obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvExclamationBox))
         else
-            obj_mark_for_deletion(find_object_with_behavior(get_behavior_from_id(id_bhvWarpPipe)))
+            obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
         end
 
         -- handle speed boost
@@ -627,7 +627,7 @@ local function mario_update(m)
             end
         end
 
-        -- handle tick tock clock
+        -- sync tick tock clock speed
         if get_ttc_speed_setting() ~= gGlobalSyncTable.ttcSpeed then
             set_ttc_speed_setting(gGlobalSyncTable.ttcSpeed)
         end
@@ -984,8 +984,8 @@ hook_on_sync_table_change(gGlobalSyncTable, 'randomGamemode', gGlobalSyncTable.r
     if oldVal ~= newVal then
         local text = ""
 
-        if gGlobalSyncTable.randomGamemode then text = "random" end
-        if not gGlobalSyncTable.randomGamemode then text = "not random" end
+        if gGlobalSyncTable.randomGamemode then text = "random"
+        else text = "not random" end
 
         if text ~= "" then
             djui_chat_message_create("Gamemode is " .. text)

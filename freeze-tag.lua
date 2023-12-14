@@ -29,21 +29,17 @@ local function mario_update(m)
     if gPlayerSyncTable[m.playerIndex].state == FROZEN then
         -- set model state and action and velocity
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA
-        set_mario_action(m, ACT_SHIVERING, 0)
         m.forwardVel = 0
         m.vel.y = 0
-
-        -- snap mario to the floor
-        m.pos.y = m.floorHeight
 
         -- cheeck if terrain is snow
         local terrainIsSnow = (m.area.terrainType & TERRAIN_MASK) == TERRAIN_SNOW;
 
         if gGlobalSyncTable.roundState == ROUND_ACTIVE then
-            -- see if were swimming and tangible
-            if m.action & ACT_FLAG_SWIMMING ~= 0 and m.action & ACT_FLAG_INTANGIBLE == 0 then
+            -- see if we are swimming
+            if m.action & ACT_FLAG_SWIMMING ~= 0 then
                 -- check current water level
-                if m.pos.y >= (m.waterLevel - 140) and not terrainIsSnow then
+                if m.pos.y >= m.waterLevel - 140 and not terrainIsSnow then
                     -- subtract mario's health to compensate for mario's healing in water
                     m.health = m.health - 0x1A;
                 else
@@ -55,6 +51,10 @@ local function mario_update(m)
                         m.health = m.health + 1;
                     end
                 end
+            else
+                -- snap mario to the floor
+                m.pos.y = m.floorHeight
+                set_mario_action(m, ACT_SHIVERING, 0)
             end
 
 
@@ -94,7 +94,7 @@ local function hud_health_render()
     djui_hud_set_color(126, 192, 238, 128)
     djui_hud_render_rect(x, y, width, height)
 
-    local text = "Dying of the Cold" -- create text variable
+    local text = "Freezing to Death" -- AAA, HELP, IM DYING OF THE COLD, MOM, QUICK, IM DYING, THE SUNS COLD, AAA
 
     scale = 0.25
     width = djui_hud_measure_text(text) * scale
