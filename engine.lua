@@ -43,7 +43,7 @@ gGlobalSyncTable.randomGamemode = true
 gGlobalSyncTable.gamemode = TAG
 gGlobalSyncTable.bljs = false
 gGlobalSyncTable.cannons = false
-gGlobalSyncTable.water = true
+gGlobalSyncTable.water = false
 gGlobalSyncTable.swapTimer = 1
 gGlobalSyncTable.displayTimer = 1
 gGlobalSyncTable.selectedLevel = 1
@@ -87,15 +87,15 @@ ACT_NOTHING = allocate_mario_action(ACT_FLAG_IDLE)
 
 -- tables
 levels = {
-    {name = "cg",    level = LEVEL_CASTLE_GROUNDS, act = 0, area = 1, pipes = true, pipe1Pos = {x = -5979, y = 378, z = -1371}, pipe2Pos = {x = 1043, y = 3174, z = -5546}},
-    {name = "bob",   level = LEVEL_BOB,            act = 0, area = 1, pipes = true, pipe1Pos = {x = -4694, y = 0, z = 6699}, pipe2Pos = {x = 5079, y = 3072, z = 655}},
+    {name = "cg",    level = LEVEL_CASTLE_GROUNDS, act = 0, area = 1, pipes = true, pipe1Pos = {x = -5979, y = 378, z = -1371},  pipe2Pos = {x = 1043, y = 3174, z = -5546}},
+    {name = "bob",   level = LEVEL_BOB,            act = 0, area = 1, pipes = true, pipe1Pos = {x = -4694, y = 0, z = 6699},     pipe2Pos = {x = 5079, y = 3072, z = 655}},
     {name = "rr",    level = LEVEL_RR,             act = 0, area = 1, pipes = true, pipe1Pos = {x = -4221, y = 6451, z = -5885}, pipe2Pos = {x = 2125, y = -1833, z = 2079}},
     {name = "ccm",   level = LEVEL_CCM,            act = 0, area = 1, pipes = true, pipe1Pos = {x = -1352, y = 2560, z = -1824}, pipe2Pos = {x = 5628, y = -4607, z = -28}},
-    {name = "issl",  level = LEVEL_SSL,            act = 0, area = 2, pipes = true, pipe1Pos = {x = -460, y = 0, z = 4247}, pipe2Pos = {x = 997, y = 3942, z = 1234}},
-    {name = "bitfs", level = LEVEL_BITFS,          act = 0, area = 1, pipes = true, pipe1Pos = {x = -154, y = -2866, z = -102}, pipe2Pos = {x = 1205, y = 5478, z = 58}},
+    {name = "issl",  level = LEVEL_SSL,            act = 0, area = 2, pipes = true, pipe1Pos = {x = -460, y = 0, z = 4247},      pipe2Pos = {x = 997, y = 3942, z = 1234}},
+    {name = "bitfs", level = LEVEL_BITFS,          act = 0, area = 1, pipes = true, pipe1Pos = {x = -154, y = -2866, z = -102},  pipe2Pos = {x = 1205, y = 5478, z = 58}},
     {name = "ttm",   level = LEVEL_TTM,            act = 0, area = 1, pipes = true, pipe1Pos = {x = -1080, y = -4634, z = 4176}, pipe2Pos = {x = 1031, y = 2306, z = -198}},
-    {name = "ttc",   level = LEVEL_TTC,            act = 0, area = 1, pipes = true, pipe1Pos = {x = 1361, y = -4822, z = 176}, pipe2Pos = {x = 1594, y = 5284, z = 1565}},
-    {name = "jrb",   level = LEVEL_JRB,            act = 0, area = 1, pipes = true, pipe1Pos = {x = 3000, y = -5119, z = 2688}, pipe2Pos = {x = -6398, y = 1126, z = 191}},
+    {name = "ttc",   level = LEVEL_TTC,            act = 0, area = 1, pipes = true, pipe1Pos = {x = 1361, y = -4822, z = 176},   pipe2Pos = {x = 1594, y = 5284, z = 1565}},
+    {name = "jrb",   level = LEVEL_JRB,            act = 0, area = 1, pipes = true, pipe1Pos = {x = 3000, y = -5119, z = 2688},  pipe2Pos = {x = -6398, y = 1126, z = 191}},
     {name = "wf",    level = LEVEL_WF,             act = 0, area = 1, pipes = false},
     {name = "lll",   level = LEVEL_LLL,            act = 0, area = 1, pipes = false},
     {name = "ssl",   level = LEVEL_SSL,            act = 0, area = 1, pipes = false},
@@ -141,7 +141,7 @@ local function server_update()
     elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
         timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
         ---@diagnostic disable-next-line: param-type-mismatch
-        while ((table.contains(defaultLevels, string.upper(get_level_name(level_to_course(gGlobalSyncTable.selectedLevel), gGlobalSyncTable.selectedLevel, 1))) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel <= 0 do
+        while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel <= 0 do
             if isRomhack then
                 gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
             else
@@ -440,6 +440,7 @@ local function mario_update(m)
     end
 
     m.squishTimer = 0
+    m.specialTripleJump = 0
 
     if not gGlobalSyncTable.bljs and m.forwardVel <= -48 and (m.action == ACT_LONG_JUMP or m.action == ACT_LONG_JUMP_LAND or m.action == ACT_LONG_JUMP_LAND_STOP) then
         m.forwardVel = -48 -- this is the dive speed
@@ -479,7 +480,9 @@ local function mario_update(m)
         m.marioBodyState.modelState = 0
     end
 
-    m.invincTimer = gPlayerSyncTable[m.playerIndex].invincTimer
+    if joinTimer <= 0 then
+        m.invincTimer = gPlayerSyncTable[m.playerIndex].invincTimer
+    end
 
     if m.playerIndex == 0 then
         ---@type NetworkPlayer
@@ -1006,11 +1009,7 @@ hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
 hook_event(HOOK_USE_ACT_SELECT, function() return false end)
 -- this hook allows us to walk on lava and quicksand
 hook_event(HOOK_ALLOW_HAZARD_SURFACE, function ()
-    if gGlobalSyncTable.gamemode == JUGGERNAUT and gPlayerSyncTable[0].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        return true
-    end
-
-    return false
+   return false
 end)
 
 ---@diagnostic disable-next-line: missing-parameter

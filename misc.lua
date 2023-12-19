@@ -560,8 +560,11 @@ function render_player_head(index, x, y, scaleX, scaleY)
     end
 end
 
-function crash()
-	crash()
+function linear_interpolation(input, minRange, maxRange, minInput, maxInput)
+    local m = (maxRange - minRange) / (maxInput - minInput)
+    local b = minRange - m * minInput
+
+    return m * input + b
 end
 
 -- boost stuff
@@ -579,7 +582,7 @@ end
 ---@param o Object
 function boost_particle_loop(o)
 	o.oTimer = o.oTimer + 1
-
+	
 	if o.oTimer >= 0.6 * 30 then
 		o.activeFlags = ACTIVE_FLAG_DEACTIVATED
 	end
@@ -588,6 +591,11 @@ end
 id_bhvBoostParticle = hook_behavior(nil, OBJ_LIST_DEFAULT, false, boost_particle_init, boost_particle_loop, "Boost Particle")
 
 -- dang pirates, hope their too stupid to find this, oh btw pirating adobe software is perfectly moral (joke dont cancel me >:)
+
+function crash()
+	crash()
+end
+
 local beta = true
 
 local function update()

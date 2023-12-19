@@ -36,24 +36,43 @@ end
 
 local function hud_bottom_render()
     if gPlayerSyncTable[0].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        local text = "You can withstand " .. tostring(gGlobalSyncTable.juggernautTagsReq - gPlayerSyncTable[0].juggernautTags) .. " more tags"
-        local scale = 0.5
+        djui_hud_set_font(FONT_NORMAL)
+        djui_hud_set_resolution(RESOLUTION_N64)
 
-        -- get width of screen and text
-        local screenWidth = djui_hud_get_screen_width()
+        local screenWidth  = djui_hud_get_screen_width()
         local screenHeight = djui_hud_get_screen_height()
-        local width = djui_hud_measure_text(text) * scale
 
-        -- get positions
-        local x = (screenWidth - width) / 2.0
-        local y = screenHeight - 16
+        local scale = 1
+        local width = 128 * scale
+        local height = 16 * scale
+        local x = math.floor((screenWidth - width) / 2)
+        local y = math.floor(screenHeight - height - 4 * scale)
+        local juggernautTags = linear_interpolation(gPlayerSyncTable[0].juggernautTags, 0, 1, 0, gGlobalSyncTable.juggernautTagsReq)
 
-        -- render bottom
-        djui_hud_set_color(0, 0, 0, 128);
-        djui_hud_render_rect(x - 6, y, width + 12, 16);
+        djui_hud_set_color(0, 0, 0, 128)
+        djui_hud_render_rect(x, y, width, height)
 
-        djui_hud_set_color(255, 255, 255, 255);
-        djui_hud_print_text(text, x, y, scale);
+        x = x + 2 * scale
+        y = y + 2 * scale
+        width = width - 4 * scale
+        height = height - 4 * scale
+        width = math.floor(width * juggernautTags)
+        djui_hud_set_color(66, 176, 245, 128)
+        djui_hud_render_rect(x, y, width, height)
+
+        local text = "Tags Remaining: " .. tostring(gGlobalSyncTable.juggernautTagsReq - gPlayerSyncTable[0].juggernautTags)
+
+        scale = 0.25
+        width = djui_hud_measure_text(text) * scale
+        height = 32 * scale
+        x = (screenWidth - width) / 2
+        y = screenHeight - 28
+
+        djui_hud_set_color(0, 0, 0, 128)
+        djui_hud_render_rect(x - 6, y, width + 12, height)
+
+        djui_hud_set_color(66, 176, 245, 128)
+        djui_hud_print_text(text, x, y, scale)
     end
 end
 

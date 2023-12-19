@@ -359,7 +359,9 @@ local function mario_update(m)
             else
                 if gGlobalSyncTable.modifier + 1 > MODIFIER_MAX then
                     gGlobalSyncTable.randomModifiers = true
-                    gGlobalSyncTable.modifier = MODIFIER_NONE
+                    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then
+                        gGlobalSyncTable.modifier = MODIFIER_NONE
+                    end
                 else
                     gGlobalSyncTable.modifier = gGlobalSyncTable.modifier + 1
                 end

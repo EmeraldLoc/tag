@@ -1,7 +1,7 @@
 
 ---@diagnostic disable: param-type-mismatch
 
-local version = "v2.01"
+version = "v2.01"
 
 ---@param msg string
 function start_command(msg)
@@ -12,63 +12,65 @@ function start_command(msg)
 		return true
 	end
 
-	if tonumber(msg) ~= nil then
-		if not isRomhack then
-			for i, level in pairs(levels) do
-				if level_to_course(level.level) == tonumber(msg) then
-					timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
-					gGlobalSyncTable.selectedLevel = i
-					prevLevel = gGlobalSyncTable.selectedLevel
-					gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+	if msg ~= "" then
+		if tonumber(msg) ~= nil then
+			if not isRomhack then
+				for i, level in pairs(levels) do
+					if level_to_course(level.level) == tonumber(msg) then
+						timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+						gGlobalSyncTable.selectedLevel = i
+						prevLevel = gGlobalSyncTable.selectedLevel
+						gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
 
-					djui_chat_message_create("Starting game in level " .. get_level_name(level_to_course(level.level), level.level, 1))
-
-					return true
-				end
-			end
-		else
-			for i = COURSE_MIN, COURSE_MAX do
-				if tonumber(msg) == i then
-					timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
-					gGlobalSyncTable.selectedLevel = course_to_level(i)
-					prevLevel = gGlobalSyncTable.selectedLevel
-					gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
-
-					djui_chat_message_create("Starting game in level " .. get_level_name(i, course_to_level(i), 1))
-
-					return true
-				end
-			end
-		end
-	else
-		if isRomhack then
-			for i = COURSE_MIN, COURSE_MAX do
-				if msg:lower() == get_level_name(i, course_to_level(i), 1):lower() and (not table.contains(defaultLevels, string.upper(get_level_name(level_to_course(gGlobalSyncTable.selectedLevel), gGlobalSyncTable.selectedLevel, 1))) and level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_RR and level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_MIN - 1) then
-					timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
-					gGlobalSyncTable.selectedLevel = course_to_level(i)
-					prevLevel = gGlobalSyncTable.selectedLevel
-					gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
-
-					djui_chat_message_create("Starting game in level " .. get_level_name(i, course_to_level(i), 1))
-
-					return true
-				end
-			end
-		else
-			for i, level in pairs(levels) do
-				if msg:lower() == level.name or msg:lower() == get_level_name(level_to_course(level.level), level.level, 1):lower() then
-					timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
-					gGlobalSyncTable.selectedLevel = i
-					prevLevel = gGlobalSyncTable.selectedLevel
-					gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
-	
-					if level.level ~= LEVEL_CASTLE_GROUNDS then
 						djui_chat_message_create("Starting game in level " .. get_level_name(level_to_course(level.level), level.level, 1))
-					else
-						djui_chat_message_create("Starting game in level Castle Grounds") -- since castle grounds doesnt have a course, manually set it
+
+						return true
 					end
-	
-					return true
+				end
+			else
+				for i = COURSE_MIN, COURSE_MAX do
+					if tonumber(msg) == i then
+						timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+						gGlobalSyncTable.selectedLevel = course_to_level(i)
+						prevLevel = gGlobalSyncTable.selectedLevel
+						gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+
+						djui_chat_message_create("Starting game in level " .. get_level_name(i, course_to_level(i), 1))
+
+						return true
+					end
+				end
+			end
+		else
+			if isRomhack then
+				for i = COURSE_MIN, COURSE_MAX do
+					if msg:lower() == get_level_name(i, course_to_level(i), 1):lower() and (not table.contains(defaultLevels, string.upper(get_level_name(level_to_course(gGlobalSyncTable.selectedLevel), gGlobalSyncTable.selectedLevel, 1))) and level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_RR and level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_MIN - 1) then
+						timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+						gGlobalSyncTable.selectedLevel = course_to_level(i)
+						prevLevel = gGlobalSyncTable.selectedLevel
+						gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+
+						djui_chat_message_create("Starting game in level " .. get_level_name(i, course_to_level(i), 1))
+
+						return true
+					end
+				end
+			else
+				for i, level in pairs(levels) do
+					if msg:lower() == level.name or msg:lower() == get_level_name(level_to_course(level.level), level.level, 1):lower() then
+						timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+						gGlobalSyncTable.selectedLevel = i
+						prevLevel = gGlobalSyncTable.selectedLevel
+						gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+
+						if level.level ~= LEVEL_CASTLE_GROUNDS then
+							djui_chat_message_create("Starting game in level " .. get_level_name(level_to_course(level.level), level.level, 1))
+						else
+							djui_chat_message_create("Starting game in level Castle Grounds") -- since castle grounds doesnt have a course, manually set it
+						end
+
+						return true
+					end
 				end
 			end
 		end
@@ -246,4 +248,4 @@ else
 end
 hook_chat_command("tp", "[name|index] Teleports to a player if your eliminated or spectating", on_tp_command)
 hook_chat_command("spectate", "[on|off] Be a spectator", spectator_command)
-hook_chat_command("version", "Get current version of \\#316BE8\\Tag", on_version_command)
+hook_chat_command("version", "Get current version of Tag", on_version_command)

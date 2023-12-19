@@ -43,11 +43,11 @@ function mario_bobomb_use(m)
     local np = gNetworkPlayers[m.playerIndex]
 
     spawn_sync_object(id_bhvTagBobomb, E_MODEL_BLACK_BOBOMB, m.pos.x, m.pos.y + 50, m.pos.z,
-        function (obj)
+        function (o)
             -- set starter variables
-            obj.oTagBobombGlobalOwner = np.globalIndex
-            obj.oMoveAngleYaw = m.faceAngle.y
-            obj.oForwardVel = m.forwardVel + 50
+            o.oTagBobombGlobalOwner = np.globalIndex
+            o.oMoveAngleYaw = m.faceAngle.y
+            o.oForwardVel = m.forwardVel + 50
         end)
 
     -- set actions depending on action flag
