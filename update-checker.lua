@@ -3,6 +3,9 @@ local finishedChecking = false
 local updateFile = nil
 
 local function check_for_updates()
+    -- you may take this code for your own mods, no credit is required
+    if VERSION_NUMBER < 37 then return end -- only works in v37
+
     if not finishedChecking then
         -- attempt to load the current verion's audio file
         local url = "https://github.com/EmeraldLoc/Tag/raw/main/" .. version .. ".mp3"

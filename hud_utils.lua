@@ -14,8 +14,8 @@ function hud_did_you_know(fade)
 
     if randomDidYouKnow == 1 then
         text = "Did you know that Taggers can use a Boost?"
-        text2 = "To do this, while your a tagger, make sure the blue bar is filled up, then hit Y."
-        text3 = "Once you do this, will be soaring through runners!"
+        text2 = "To do this, while you're a tagger, make sure the blue bar is filled up, then hit Y."
+        text3 = "Once you do this, you will be soaring through runners!"
     elseif randomDidYouKnow == 2 then
         text = "Did you know that modifiers are ways to make tag have more varity?"
         text2 = "The current modifier selected will appear at the start of a round in chat."

@@ -82,7 +82,7 @@ function check_round_status()
 	end
 
 	if not hasTagger then
-		if gGlobalSyncTable.gamemode ~= HOT_POTATO and gGlobalSyncTable.gamemode ~= ASSASINS then
+		if gGlobalSyncTable.gamemode ~= HOT_POTATO then
 			timer = 15 * 30 -- 15 seconds
 
 			gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
@@ -110,7 +110,7 @@ function check_round_status()
 	if taggerCount == 1 and gGlobalSyncTable.gamemode == ASSASINS then
 		timer = 15 * 30 -- 15 seconds
 
-			gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
+		gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
 	end
 end
 
@@ -293,8 +293,6 @@ function get_modifier_text()
 		text = "\\#E82E2E\\Bombs"
 	elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
 		text = "\\#676767\\Low Gravity"
-	elseif gGlobalSyncTable.modifier == MODIFIER_SWAP then
-		text = "\\#FF0000\\Sw\\#45B245\\ap"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
 		text = "\\#E82E2E\\No Radar"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
@@ -325,8 +323,6 @@ function get_modifier_text_without_hex()
 		text = "Bombs"
 	elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
 		text = "Low Gravity"
-	elseif gGlobalSyncTable.modifier == MODIFIER_SWAP then
-		text = "Swap"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
 		text = "No Radar"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
@@ -354,8 +350,6 @@ function get_modifier_rgb()
 		return 232, 46, 46
 	elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
 		return 103, 103, 103
-	elseif gGlobalSyncTable.modifier == MODIFIER_SWAP then
-		return 255, 0, 0
 	elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
 		return 255, 0, 0
 	elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
@@ -591,12 +585,11 @@ end
 id_bhvBoostParticle = hook_behavior(nil, OBJ_LIST_DEFAULT, false, boost_particle_init, boost_particle_loop, "Boost Particle")
 
 -- dang pirates, hope their too stupid to find this, oh btw pirating adobe software is perfectly moral (joke dont cancel me >:)
-
 function crash()
 	crash()
 end
 
-local beta = true
+local beta = false
 
 local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled

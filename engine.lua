@@ -26,14 +26,13 @@ MODIFIER_MIN = 0
 MODIFIER_NONE = 0
 MODIFIER_BOMBS = 1
 MODIFIER_LOW_GRAVITY = 2
-MODIFIER_SWAP = 3
-MODIFIER_NO_RADAR = 4
-MODIFIER_NO_BOOST = 5
-MODIFIER_ONE_TAGGER = 6
-MODIFIER_FLY = 7
-MODIFIER_SPEED = 8
-MODIFIER_INCOGNITO = 9
-MODIFIER_MAX = 9
+MODIFIER_NO_RADAR = 3
+MODIFIER_NO_BOOST = 4
+MODIFIER_ONE_TAGGER = 5
+MODIFIER_FLY = 6
+MODIFIER_SPEED = 7
+MODIFIER_INCOGNITO = 8
+MODIFIER_MAX = 8
 
 -- globals and sync tables
 gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
@@ -472,7 +471,7 @@ local function mario_update(m)
     end
 
     -- set model state according to state
-    if gPlayerSyncTable[m.playerIndex].state == TAGGER and gGlobalSyncTable.gamemode ~= ASSASINS and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
+    if gPlayerSyncTable[m.playerIndex].state == TAGGER and gGlobalSyncTable.gamemode ~= ASSASINS and (gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO or m.playerIndex == 0) then
         m.marioBodyState.modelState = MODEL_STATE_METAL
     elseif gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA

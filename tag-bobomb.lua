@@ -46,39 +46,42 @@ function mario_bobomb_use(m)
         function (o)
             -- set starter variables
             o.oTagBobombGlobalOwner = np.globalIndex
+            o.oFaceAngleYaw = m.faceAngle.y
             o.oMoveAngleYaw = m.faceAngle.y
-            o.oForwardVel = m.forwardVel + 50
         end)
 
     -- set actions depending on action flag
-    if (m.action & ACT_FLAG_INVULNERABLE) ~= 0 or (m.action & ACT_FLAG_INTANGIBLE) ~= 0 then
-        -- nothing
-    elseif (m.action & ACT_FLAG_SWIMMING) ~= 0 then
+    if m.action & ACT_FLAG_SWIMMING ~= 0 then
         set_mario_action(m, ACT_WATER_PUNCH, 0)
-    elseif (m.action & ACT_FLAG_MOVING) ~= 0 then
+    elseif m.action & ACT_FLAG_MOVING ~= 0 then
         set_mario_action(m, ACT_MOVE_PUNCHING, 0)
-    elseif (m.action & ACT_FLAG_AIR) ~= 0 then
+    elseif m.action & ACT_FLAG_AIR ~= 0 then
         set_mario_action(m, ACT_DIVE, 0)
-    elseif (m.action & ACT_FLAG_STATIONARY) ~= 0 then
+    elseif m.action & ACT_FLAG_STATIONARY ~= 0 then
         set_mario_action(m, ACT_PUNCHING, 0)
     end
 end
 
-function bhv_tag_bobomb_init(obj)
-    obj.oAction = 0
-    obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
-    obj_scale(obj, 0.75)
+function bhv_tag_bobomb_init(o)
+    o.oAction = 0
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    obj_scale(o, 0.75)
     cur_obj_play_sound_2(SOUND_AIR_BOBOMB_LIT_FUSE)
-    obj.oVelX = sins(obj.oMoveAngleYaw) * obj.oForwardVel
-    obj.oVelY = 30
-    obj.oVelZ = coss(obj.oMoveAngleYaw) * obj.oForwardVel
-    obj.oAnimations = gObjectAnimations.bobomb_seg8_anims_0802396C
+    -- alright this section is kinda complex, lemme break it down, first, set the forward velocity
+    o.oForwardVel = gMarioStates[o.oTagBobombGlobalOwner].forwardVel + 50
+    -- here, we use math.sin instead of sins because sins cant process negative numbers
+    -- math.sin takes in a radian, so, convert moveAngleYaw to a radian
+    o.oVelX = math.sin(math.rad((o.oMoveAngleYaw / 65535) * 360)) * o.oForwardVel
+    o.oVelY = 30
+    -- same as above
+    o.oVelZ = math.cos(math.rad((o.oMoveAngleYaw / 65535) * 360)) * o.oForwardVel
+    o.oAnimations = gObjectAnimations.bobomb_seg8_anims_0802396C
     cur_obj_init_animation(1)
-    network_init_object(obj, false, nil)
+    network_init_object(o, false, nil)
 end
 
-function bhv_tag_bobomb_intersects_player(obj, m, pos, radius)
-    local ownerNp = network_player_from_global_index(obj.oTagBobombGlobalOwner)
+function bhv_tag_bobomb_intersects_player(o, m, pos, radius)
+    local ownerNp = network_player_from_global_index(o.oTagBobombGlobalOwner)
     local cm = m
     if m.playerIndex == 0 and ownerNp.localIndex ~= 0 then
         cm = lag_compensation_get_local_state(ownerNp)
@@ -91,74 +94,82 @@ function bhv_tag_bobomb_intersects_player(obj, m, pos, radius)
     return ret
 end
 
-function bhv_tag_bobomb_expode(obj)
-    obj.oAction = 1
-    obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
-    obj_set_billboard(obj)
-    obj_scale(obj, 2)
-    obj.oAnimState = -1
+function bhv_tag_bobomb_expode(o)
+    o.oAction = 1
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    obj_set_billboard(o)
+    obj_scale(o, 2)
+    o.oAnimState = -1
     cur_obj_play_sound_2(SOUND_GENERAL2_BOBOMB_EXPLOSION)
     set_environmental_camera_shake(SHAKE_ENV_EXPLOSION)
-    obj.oOpacity = 255
-    obj_set_model_extended(obj, E_MODEL_EXPLOSION)
+    o.oOpacity = 255
+    obj_set_model_extended(o, E_MODEL_EXPLOSION)
 
     local m = gMarioStates[0]
     local np = gNetworkPlayers[0]
-    local a = { x = obj.oPosX, y = obj.oPosY, z = obj.oPosZ }
-    local validAttack = global_index_hurts_mario_state(obj.oTagBobombGlobalOwner, m) or np.globalIndex == obj.oTagBobombGlobalOwner
+    local a = { x = o.oPosX, y = o.oPosY, z = o.oPosZ }
+    local validAttack = global_index_hurts_mario_state(o.oTagBobombGlobalOwner, m) or np.globalIndex == o.oTagBobombGlobalOwner
     local radius = 500
-    if np.globalIndex == obj.oTagBobombGlobalOwner then radius = 300 end
-    if validAttack and bhv_tag_bobomb_intersects_player(obj, m, a, radius) and mario_health_float(m) > 0 then
+    if np.globalIndex == o.oTagBobombGlobalOwner then radius = 300 end
+    if validAttack and bhv_tag_bobomb_intersects_player(o, m, a, radius) and mario_health_float(m) > 0 then
 
         -- check up here so that if it's set to the same state as the tagger then make sure they take kb
-        if gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].state == gPlayerSyncTable[m.playerIndex].state then return end
+        if gGlobalSyncTable.gamemode ~= ASSASINS then
+            if gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].state == gPlayerSyncTable[m.playerIndex].state then return end
+        end
 
-        if m.playerIndex ~= network_local_index_from_global(obj.oTagBobombGlobalOwner) then
-            if gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].state == TAGGER and gPlayerSyncTable[m.playerIndex].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE and gPlayerSyncTable[m.playerIndex].invincTimer <= 0 then
+        if m.playerIndex ~= network_local_index_from_global(o.oTagBobombGlobalOwner) then
+            if ((gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].state == TAGGER and gPlayerSyncTable[m.playerIndex].state == RUNNER) or gGlobalSyncTable.gamemode == ASSASINS) and gGlobalSyncTable.roundState == ROUND_ACTIVE and gPlayerSyncTable[m.playerIndex].invincTimer <= 0 then
                 if gGlobalSyncTable.gamemode == TAG then
-                    gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].state = RUNNER
+                    gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].state = RUNNER
                     gPlayerSyncTable[m.playerIndex].state = TAGGER
-                    tagged_popup(network_local_index_from_global(obj.oTagBobombGlobalOwner), m.playerIndex)
-                    gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags + 1
+                    tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
+                    gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
                 elseif gGlobalSyncTable.gamemode == FREEZE_TAG then
                     gPlayerSyncTable[m.playerIndex].state = ELIMINATED_OR_FROZEN
                     gGlobalSyncTable.frozenIndex = network_global_index_from_local(m.playerIndex)
-                    freezed_popup(network_local_index_from_global(obj.oTagBobombGlobalOwner), m.playerIndex)
-                    gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags + 1
+                    freezed_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
+                    gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
                 elseif gGlobalSyncTable.gamemode == INFECTION then
                     gPlayerSyncTable[m.playerIndex].state = TAGGER
-                    tagged_popup(network_local_index_from_global(obj.oTagBobombGlobalOwner), m.playerIndex)
-                    gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags + 1
+                    tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
+                    gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
                 elseif gGlobalSyncTable.gamemode == HOT_POTATO then
-                    gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].state = RUNNER
+                    gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].state = RUNNER
                     gPlayerSyncTable[m.playerIndex].state = TAGGER
-                    tagged_popup(network_local_index_from_global(obj.oTagBobombGlobalOwner), m.playerIndex)
-                    gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags + 1
+                    tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
+                    gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
                 elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-                    tagged_popup(network_local_index_from_global(obj.oTagBobombGlobalOwner), m.playerIndex)
-                    gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(obj.oTagBobombGlobalOwner)].amountOfTags + 1
+                    tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
+                    gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
                     gPlayerSyncTable[m.playerIndex].juggernautTags = gPlayerSyncTable[m.playerIndex].juggernautTags + 1
                 elseif gGlobalSyncTable.gamemode == ASSASINS then
-
+                    if network_local_index_from_global(gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].assasinTarget) == 0 then
+                        tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
+                        gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
+                        gPlayerSyncTable[m.playerIndex].state = ELIMINATED_OR_FROZEN
+                     else
+                        return -- make nothing happen
+                    end
                 end
             end
         end
 
         if gPlayerSyncTable[m.playerIndex].state == ELIMINATED_OR_FROZEN or gPlayerSyncTable[m.playerIndex].state == SPECTATOR then return end
 
-        obj.oDamageOrCoinValue = 3
-        interact_damage(m, INTERACT_DAMAGE, obj)
+        o.oDamageOrCoinValue = 3
+        interact_damage(m, INTERACT_DAMAGE, o)
 
         -- knockback
-        local ownerNp = network_player_from_global_index(obj.oTagBobombGlobalOwner)
+        local ownerNp = network_player_from_global_index(o.oTagBobombGlobalOwner)
         local cm = m
-        if np.globalIndex ~= obj.oTagBobombGlobalOwner then
+        if np.globalIndex ~= o.oTagBobombGlobalOwner then
             cm = lag_compensation_get_local_state(ownerNp)
         end
         local vel = {
-            x = cm.pos.x - obj.oPosX,
+            x = cm.pos.x - o.oPosX,
             y = 0.5,
-            z = cm.pos.z - obj.oPosZ,
+            z = cm.pos.z - o.oPosZ,
         }
         vec3f_normalize(vel)
         vel.y = 0.5
@@ -176,17 +187,17 @@ function bhv_tag_bobomb_expode(obj)
     end
 end
 
-function bhv_tag_bobomb_thrown_loop(obj)
-    local a   = { x = obj.oPosX, y = obj.oPosY, z = obj.oPosZ }
-    local dir = { x = obj.oVelX, y = obj.oVelY, z = obj.oVelZ }
-    obj.oVelY = obj.oVelY - 3
-    obj.oFaceAnglePitch = obj.oFaceAnglePitch - 0x100
+function bhv_tag_bobomb_thrown_loop(o)
+    local a   = { x = o.oPosX, y = o.oPosY, z = o.oPosZ }
+    local dir = { x = o.oVelX, y = o.oVelY, z = o.oVelZ }
+    o.oVelY = o.oVelY - 3
+    o.oFaceAnglePitch = o.oFaceAnglePitch - 0x100
 
     for i = 0, MAX_PLAYERS - 1 do
         local m = gMarioStates[i]
-        if active_player(m) and global_index_hurts_mario_state(obj.oTagBobombGlobalOwner, m) and not is_invuln_or_intang(m) then
-            if bhv_tag_bobomb_intersects_player(obj, m, a, 200) then
-                bhv_tag_bobomb_expode(obj)
+        if active_player(m) and global_index_hurts_mario_state(o.oTagBobombGlobalOwner, m) and not is_invuln_or_intang(m) then
+            if bhv_tag_bobomb_intersects_player(o, m, a, 200) then
+                bhv_tag_bobomb_expode(o)
                 return
             end
         end
@@ -196,33 +207,33 @@ function bhv_tag_bobomb_thrown_loop(obj)
             a.x, a.y, a.z,
             dir.x, dir.y, dir.z)
 
-    local floorHeight = find_floor_height(obj.oPosX, obj.oPosY + 100, obj.oPosZ)
-            
-    if obj.oTimer > 30 * 1 or info.surface ~= nil or obj.oPosY < floorHeight then
-        bhv_tag_bobomb_expode(obj)
+    local floorHeight = find_floor_height(o.oPosX, o.oPosY + 100, o.oPosZ)
+
+    if o.oTimer > 30 * 1 or info.surface ~= nil or o.oPosY < floorHeight then
+        bhv_tag_bobomb_expode(o)
         return
     else
-        obj.oPosX = obj.oPosX + dir.x
-        obj.oPosY = obj.oPosY + dir.y
-        obj.oPosZ = obj.oPosZ + dir.z
+        o.oPosX = o.oPosX + dir.x
+        o.oPosY = o.oPosY + dir.y
+        o.oPosZ = o.oPosZ + dir.z
     end
 end
 
-function bhv_tag_bobomb_explode_loop(obj)
-    if obj.oTimer >= 9 then
-        obj.activeFlags = ACTIVE_FLAG_DEACTIVATED
+function bhv_tag_bobomb_explode_loop(o)
+    if o.oTimer >= 9 then
+        o.activeFlags = ACTIVE_FLAG_DEACTIVATED
     end
 
-    obj.oOpacity = obj.oOpacity - 14
-    cur_obj_scale((obj.oTimer / 9.0 + 1.0) * 2)
-    obj.oAnimState = obj.oAnimState + 1
+    o.oOpacity = o.oOpacity - 14
+    cur_obj_scale((o.oTimer / 9.0 + 1.0) * 2)
+    o.oAnimState = o.oAnimState + 1
 end
 
-function bhv_tag_bobomb_loop(obj)
-    if obj.oAction == 0 then
-        bhv_tag_bobomb_thrown_loop(obj)
+function bhv_tag_bobomb_loop(o)
+    if o.oAction == 0 then
+        bhv_tag_bobomb_thrown_loop(o)
     else
-        bhv_tag_bobomb_explode_loop(obj)
+        bhv_tag_bobomb_explode_loop(o)
     end
 end
 

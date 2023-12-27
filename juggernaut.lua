@@ -47,7 +47,7 @@ local function hud_bottom_render()
         local height = 16 * scale
         local x = math.floor((screenWidth - width) / 2)
         local y = math.floor(screenHeight - height - 4 * scale)
-        local juggernautTags = linear_interpolation(gPlayerSyncTable[0].juggernautTags, 0, 1, 0, gGlobalSyncTable.juggernautTagsReq)
+        local juggernautTags = linear_interpolation(gGlobalSyncTable.juggernautTagsReq - gPlayerSyncTable[0].juggernautTags, 0, 1, 0, gGlobalSyncTable.juggernautTagsReq)
 
         djui_hud_set_color(0, 0, 0, 128)
         djui_hud_render_rect(x, y, width, height)
