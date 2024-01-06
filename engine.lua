@@ -5,6 +5,7 @@ ROUND_WAIT = 2
 ROUND_TAGGERS_WIN = 3
 ROUND_RUNNERS_WIN = 4
 ROUND_HOT_POTATO_INTERMISSION = 5
+ROUND_VOTING = 6
 
 RUNNER = 0
 TAGGER = 1
@@ -34,6 +35,22 @@ MODIFIER_SPEED = 7
 MODIFIER_INCOGNITO = 8
 MODIFIER_MAX = 8
 
+TEXTURE_CG_PAINTING    = get_texture_info("cg_painting")
+TEXTURE_BOB_PAINTING   = get_texture_info("bob_painting")
+TEXTURE_WF_PAINTING    = get_texture_info("wf_painting")
+TEXTURE_JRB_PAINTING   = get_texture_info("jrb_painting")
+TEXTURE_CCM_PAINTING   = get_texture_info("ccm_painting")
+TEXTURE_BITDW_PAINTING = get_texture_info("bitdw_painting")
+TEXTURE_BITFS_PAINTING = get_texture_info("bitfs_painting")
+TEXTURE_LLL_PAINTING   = get_texture_info("lll_painting")
+TEXTURE_SSL_PAINTING   = get_texture_info("ssl_painting")
+TEXTURE_ISSL_PAINTING  = get_texture_info("issl_painting")
+TEXTURE_RR_PAINTING    = get_texture_info("rr_painting")
+TEXTURE_THI_PAINTING   = get_texture_info("thi_painting")
+TEXTURE_TTM_PAINTING   = get_texture_info("ttm_painting")
+TEXTURE_SL_PAINTING    = get_texture_info("sl_painting")
+TEXTURE_TTC_PAINTING   = get_texture_info("ttc_painting")
+
 -- globals and sync tables
 gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
 gGlobalSyncTable.modifier = MODIFIER_NONE
@@ -58,6 +75,7 @@ for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init
         gPlayerSyncTable[i].juggernautTags = 0
         gPlayerSyncTable[i].assasinTarget = -1
         gPlayerSyncTable[i].assasinStunTimer = -1
+        gPlayerSyncTable[i].votingNumber = 0
     end
 end
 
@@ -86,21 +104,21 @@ ACT_NOTHING = allocate_mario_action(ACT_FLAG_IDLE)
 
 -- tables
 levels = {
-    {name = "cg",    level = LEVEL_CASTLE_GROUNDS, act = 0, area = 1, pipes = true, pipe1Pos = {x = -5979, y = 378, z = -1371},  pipe2Pos = {x = 1043, y = 3174, z = -5546}},
-    {name = "bob",   level = LEVEL_BOB,            act = 0, area = 1, pipes = true, pipe1Pos = {x = -4694, y = 0, z = 6699},     pipe2Pos = {x = 5079, y = 3072, z = 655}},
-    {name = "rr",    level = LEVEL_RR,             act = 0, area = 1, pipes = true, pipe1Pos = {x = -4221, y = 6451, z = -5885}, pipe2Pos = {x = 2125, y = -1833, z = 2079}},
-    {name = "ccm",   level = LEVEL_CCM,            act = 0, area = 1, pipes = true, pipe1Pos = {x = -1352, y = 2560, z = -1824}, pipe2Pos = {x = 5628, y = -4607, z = -28}},
-    {name = "issl",  level = LEVEL_SSL,            act = 0, area = 2, pipes = true, pipe1Pos = {x = -460, y = 0, z = 4247},      pipe2Pos = {x = 997, y = 3942, z = 1234}},
-    {name = "bitfs", level = LEVEL_BITFS,          act = 0, area = 1, pipes = true, pipe1Pos = {x = -154, y = -2866, z = -102},  pipe2Pos = {x = 1205, y = 5478, z = 58}},
-    {name = "ttm",   level = LEVEL_TTM,            act = 0, area = 1, pipes = true, pipe1Pos = {x = -1080, y = -4634, z = 4176}, pipe2Pos = {x = 1031, y = 2306, z = -198}},
-    {name = "ttc",   level = LEVEL_TTC,            act = 0, area = 1, pipes = true, pipe1Pos = {x = 1361, y = -4822, z = 176},   pipe2Pos = {x = 1594, y = 5284, z = 1565}},
-    {name = "jrb",   level = LEVEL_JRB,            act = 0, area = 1, pipes = true, pipe1Pos = {x = 3000, y = -5119, z = 2688},  pipe2Pos = {x = -6398, y = 1126, z = 191}},
-    {name = "wf",    level = LEVEL_WF,             act = 0, area = 1, pipes = false},
-    {name = "lll",   level = LEVEL_LLL,            act = 0, area = 1, pipes = false},
-    {name = "ssl",   level = LEVEL_SSL,            act = 0, area = 1, pipes = false},
-    {name = "thi",   level = LEVEL_THI,            act = 0, area = 1, pipes = false},
-    {name = "sl",    level = LEVEL_SL,             act = 0, area = 1, pipes = false},
-    {name = "arena", level = LEVEL_BOWSER_1,       act = 0, area = 1, pipes = false},
+    {name = "cg",    level = LEVEL_CASTLE_GROUNDS, painting = TEXTURE_CG_PAINTING,    act = 0, area = 1, pipes = true, pipe1Pos = {x = -5979, y = 378, z = -1371},  pipe2Pos = {x = 1043, y = 3174, z = -5546}},
+    {name = "bob",   level = LEVEL_BOB,            painting = TEXTURE_BOB_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = -4694, y = 0, z = 6699},     pipe2Pos = {x = 5079, y = 3072, z = 655}},
+    {name = "rr",    level = LEVEL_RR,             painting = TEXTURE_RR_PAINTING,    act = 0, area = 1, pipes = true, pipe1Pos = {x = -4221, y = 6451, z = -5885}, pipe2Pos = {x = 2125, y = -1833, z = 2079}},
+    {name = "ccm",   level = LEVEL_CCM,            painting = TEXTURE_CCM_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = -1352, y = 2560, z = -1824}, pipe2Pos = {x = 5628, y = -4607, z = -28}},
+    {name = "issl",  level = LEVEL_SSL,            painting = TEXTURE_ISSL_PAINTING,  act = 0, area = 2, pipes = true, pipe1Pos = {x = -460, y = 0, z = 4247},      pipe2Pos = {x = 997, y = 3942, z = 1234}},
+    {name = "bitfs", level = LEVEL_BITFS,          painting = TEXTURE_BITFS_PAINTING, act = 0, area = 1, pipes = true, pipe1Pos = {x = -154, y = -2866, z = -102},  pipe2Pos = {x = 1205, y = 5478, z = 58}},
+    {name = "ttm",   level = LEVEL_TTM,            painting = TEXTURE_TTM_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = -1080, y = -4634, z = 4176}, pipe2Pos = {x = 1031, y = 2306, z = -198}},
+    {name = "ttc",   level = LEVEL_TTC,            painting = TEXTURE_TTC_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = 1361, y = -4822, z = 176},   pipe2Pos = {x = 1594, y = 5284, z = 1565}},
+    {name = "jrb",   level = LEVEL_JRB,            painting = TEXTURE_JRB_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = 3000, y = -5119, z = 2688},  pipe2Pos = {x = -6398, y = 1126, z = 191}},
+    {name = "wf",    level = LEVEL_WF,             painting = TEXTURE_WF_PAINTING,    act = 0, area = 1, pipes = false},
+    {name = "lll",   level = LEVEL_LLL,            painting = TEXTURE_LLL_PAINTING,   act = 0, area = 1, pipes = false},
+    {name = "ssl",   level = LEVEL_SSL,            painting = TEXTURE_SSL_PAINTING,   act = 0, area = 1, pipes = false},
+    {name = "thi",   level = LEVEL_THI,            painting = TEXTURE_THI_PAINTING,   act = 0, area = 1, pipes = false},
+    {name = "sl",    level = LEVEL_SL,             painting = TEXTURE_SL_PAINTING,    act = 0, area = 1, pipes = false},
+    {name = "arena", level = LEVEL_BOWSER_1,       painting = TEXTURE_BITDW_PAINTING, act = 0, area = 1, pipes = false},
 }
 
 local function server_update()
@@ -154,6 +172,7 @@ local function server_update()
 
         prevLevel = gGlobalSyncTable.selectedLevel
         gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+
         log_to_console("Tag: Round State is now ROUND_WAIT")
     end
 
@@ -340,8 +359,9 @@ local function server_update()
         timer = timer - 1
 
         if timer <= 0 then
-            gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
-            log_to_console("Tag: Starting a new round...")
+            gGlobalSyncTable.roundState = ROUND_VOTING
+            timer = 20 * 30
+            log_to_console("Tag: Beggining voting...")
         end
     elseif gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
         timer = timer - 1
@@ -389,6 +409,53 @@ local function server_update()
             if hotPotatoTimerMultiplier > 2.3 then hotPotatoTimerMultiplier = 2.3 end
 
             gGlobalSyncTable.roundState = ROUND_ACTIVE
+        end
+    elseif gGlobalSyncTable.roundState == ROUND_VOTING then
+        timer = timer - 1
+        if timer >= 0 then
+            gGlobalSyncTable.displayTimer = timer
+        end
+
+        if timer <= -3 * 30 then
+            timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+            local voteResult = -1
+            local maxVotes = -1
+            for i = 1, 4 do
+                -- get number of votes
+                local votes = 0
+                for v = 0, MAX_PLAYERS - 1 do
+                    if gNetworkPlayers[v].connected then
+                        if gPlayerSyncTable[v].votingNumber == v then
+                            votes = votes + 1
+                        end
+                    end
+                end
+
+                if votes > maxVotes then
+                    voteResult = i
+                    maxVotes = votes
+                end
+            end
+
+            if voteRandomLevels[voteResult] ~= nil then
+                gGlobalSyncTable.selectedLevel = voteRandomLevels[voteResult]
+            end
+
+            ---@diagnostic disable-next-line: param-type-mismatch
+            while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or voteRandomLevels[voteResult] == nil do
+                if isRomhack then
+                    gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
+                else
+                    gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+
+                    if levels[gGlobalSyncTable.selectedLevel].level == LEVEL_TTC then
+                        gGlobalSyncTable.ttcSpeed = math.random(0, 3)
+                    end
+                end
+            end
+
+            prevLevel = gGlobalSyncTable.selectedLevel
+            gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
         end
     end
 end
@@ -606,10 +673,10 @@ local function mario_update(m)
             end
 
             m.freeze = 1
-        elseif network_is_server() then
-            joinTimer = 0
         elseif joinTimer > 0 then
             m.freeze = 1
+        elseif network_is_server() then
+            joinTimer = 0
         end
 
         -- handle desync timer

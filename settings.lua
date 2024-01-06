@@ -3,6 +3,7 @@ showSettings = false
 blacklistAddRequest = false
 local showBlacklistSettings = false
 local noBlacklistTimer = 0
+local joystickCooldown = 0
 -- default selections
 local MIN_SELECTION = 0
 local GAMEMODE_SELECTION = 0
@@ -19,6 +20,7 @@ local MIN_BLACKLIST_SELECTION = 0
 local BLACKLIST_ADD_SELECTION = 0
 local BLACKLIST_BACK_SELECTION = 1
 local MAX_BLACKLIST_SELECTION = 1
+-- other
 local screenHeight = 0
 local bgWidth = 525
 local selection = GAMEMODE_SELECTION
@@ -262,11 +264,14 @@ local function mario_update(m)
     if not showSettings then return end
     if m.playerIndex ~= 0 then return end
 
-    if noBlacklistTimer > 0 then
-        noBlacklistTimer = noBlacklistTimer - 1
-    end
+    if noBlacklistTimer > 0 then noBlacklistTimer = noBlacklistTimer - 1 end
 
-    if m.controller.buttonPressed & D_JPAD ~= 0 then
+    if joystickCooldown > 0 then joystickCooldown = joystickCooldown - 1 end
+
+    -- if our stick is at 0, then set joystickCooldown to 0
+    if m.controller.stickX == 0 and m.controller.stickY == 0 then joystickCooldown = 0 end
+
+    if m.controller.buttonPressed & D_JPAD ~= 0 or (m.controller.stickY < -0.5 and joystickCooldown <= 0) then
         selection = selection + 1
         play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
         if showBlacklistSettings then
@@ -278,7 +283,9 @@ local function mario_update(m)
                 selection = MIN_SELECTION
             end
         end
-    elseif m.controller.buttonPressed & U_JPAD ~= 0 then
+
+        joystickCooldown = 0.2 * 30
+    elseif m.controller.buttonPressed & U_JPAD ~= 0 or (m.controller.stickY > 0.5 and joystickCooldown <= 0) then
         selection = selection - 1
         play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
         if showBlacklistSettings then
@@ -290,6 +297,8 @@ local function mario_update(m)
                 selection = MAX_SELECTION
             end
         end
+
+        joystickCooldown = 0.2 * 30
     end
 
     if m.controller.buttonPressed & A_BUTTON ~= 0 then
@@ -325,7 +334,7 @@ local function mario_update(m)
         end
     end
 
-    if m.controller.buttonPressed & R_JPAD ~= 0 and network_is_server() then
+    if (m.controller.buttonPressed & R_JPAD ~= 0 or (m.controller.stickX > 0.5 and joystickCooldown <= 0)) and network_is_server() then
         play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
         if selection == GAMEMODE_SELECTION then
             local prevGamemode = gGlobalSyncTable.gamemode
@@ -379,7 +388,9 @@ local function mario_update(m)
         elseif selection == FROZEN_HEALTH_DRAIN_SELECTION then
             gGlobalSyncTable.freezeHealthDrain = gGlobalSyncTable.freezeHealthDrain + 0.1
         end
-    elseif m.controller.buttonPressed & L_JPAD ~= 0 and network_is_server() then
+
+        joystickCooldown = 0.2 * 30
+    elseif (m.controller.buttonPressed & L_JPAD ~= 0 or (m.controller.stickX < -0.5 and joystickCooldown <= 0)) and network_is_server() then
         play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
         if selection == GAMEMODE_SELECTION then
 
@@ -433,6 +444,8 @@ local function mario_update(m)
             gGlobalSyncTable.freezeHealthDrain = gGlobalSyncTable.freezeHealthDrain - 0.1
             if gGlobalSyncTable.freezeHealthDrain < 0.5 then gGlobalSyncTable.freezeHealthDrain = 0.5 end
         end
+
+        joystickCooldown = 0.2 * 30
     end
 end
 

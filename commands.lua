@@ -1,8 +1,6 @@
 
 ---@diagnostic disable: param-type-mismatch
 
-version = "v2.1"
-
 ---@param msg string
 function start_command(msg)
 

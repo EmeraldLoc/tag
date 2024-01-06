@@ -162,7 +162,7 @@ local function hud_render()
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
     -- render stuff
-    if hudTimer > 2 * 30 then
+    if hudTimer > 0.5 * 30 then
         if fade < 255 then
             fade = fade + 20
 

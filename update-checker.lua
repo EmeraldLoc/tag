@@ -1,4 +1,5 @@
 
+version = "v2.2"
 local finishedChecking = false
 local updateFile = nil
 
