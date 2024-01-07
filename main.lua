@@ -1,3 +1,3 @@
--- name: \\#316BE8\\Tag\\#dcdcdc\\
+-- name: \\#316BE8\\Tag\\#dcdcdc\\ (Beta)
 -- description: All Tag Related Gamemodes!\n\nThis mod contains Freeze Tag, Infection, Hot Potato, Juggernaut, Assasins, and the good'ol Tag, with modifiers, and full romhack support!\n\n This mod includes a blacklist command to blacklist bad levels in romhacks\n\Have fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\
 -- incompatible: gamemode tag

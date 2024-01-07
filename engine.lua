@@ -94,6 +94,7 @@ joinTimer = 6 * 30 -- dont make this local so it can be used in other files
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
 badLevels = {} -- dont make this local so it can be used in other files
 gGlobalSoundSource = {x = 0, y = 0, z = 0} -- dont make this local so it can be used in other files
+isPaused = false
 local speedBoostTimer = 0
 local hotPotatoTimerMultiplier = 1
 
@@ -158,7 +159,7 @@ local function server_update()
     elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
         timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
         ---@diagnostic disable-next-line: param-type-mismatch
-        while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel <= 0 do
+        while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel <= 0 or table.contains(blacklistedCourses, gGlobalSyncTable.selectedLevel) do
             if isRomhack then
                 gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
             else
@@ -425,7 +426,7 @@ local function server_update()
                 local votes = 0
                 for v = 0, MAX_PLAYERS - 1 do
                     if gNetworkPlayers[v].connected then
-                        if gPlayerSyncTable[v].votingNumber == v then
+                        if gPlayerSyncTable[v].votingNumber == i then
                             votes = votes + 1
                         end
                     end
@@ -442,7 +443,7 @@ local function server_update()
             end
 
             ---@diagnostic disable-next-line: param-type-mismatch
-            while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or voteRandomLevels[voteResult] == nil do
+            while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or (voteRandomLevels[voteResult] == nil and gGlobalSyncTable.selectedLevel == prevLevel) do
                 if isRomhack then
                     gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
                 else
@@ -689,7 +690,7 @@ local function mario_update(m)
             m.freeze = 1
             m.action = ACT_NOTHING
         elseif (joinTimer <= 0 and desyncTimer > 0) or network_is_server() then
-            if showSettings then
+            if showSettings or isPaused then
                 m.freeze = 1
             elseif (_G.swearExists and not _G.swearSettingsOpened) or _G.swearExists == nil then
                 m.freeze = 0

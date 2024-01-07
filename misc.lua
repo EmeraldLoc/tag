@@ -584,12 +584,12 @@ end
 
 id_bhvBoostParticle = hook_behavior(nil, OBJ_LIST_DEFAULT, false, boost_particle_init, boost_particle_loop, "Boost Particle")
 
--- dang pirates, hope their too stupid to find this, oh btw pirating adobe software is perfectly moral (joke dont cancel me >:)
+-- dang pirates, hope their too stupid to find this (I mean they probably are since all the people pirating are children (don't quote on that (why are you still reaing this anyway, are you obsessed with what i have to say about meaningless conversation, plus im the wrong guy you should be askin, there's so many other people you should ask. Also your still reading, props to you to making this far, since you've made it this far, let me talk about a stack interchange, the stack interchange is a interchange for freeway users that allows for efficent traffic flow, the downside is that it costs an arm and a leg, which is a big problem because I dont have an arm or leg to spare (I only have 2 of each!!) which is a disaster, but, if you want to help fund me making a stack interchange in my backyard, please go to this video to see instructions on how to: https://youtu.be/p7YXXieghto))) Thanks for reading my uninformative rambling all the way, I wish you a good day!
 function crash()
 	crash()
 end
 
-local beta = false
+local beta = true
 
 local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled

@@ -174,19 +174,37 @@ end
 function tag_command(msg)
 	if blacklistAddRequest then
 		if tonumber(msg) ~= nil then
-			for i = COURSE_MIN, COURSE_MAX do
-				if tonumber(msg) == i then
-					if not table.contains(blacklistedCourses, i) then
-						table.insert(blacklistedCourses, i)
-					else
-						djui_chat_message_create("Course " .. get_level_name(i, course_to_level(i), 1) .. " is already blacklisted")
+			if isRomhack then
+				for i = COURSE_MIN, COURSE_MAX do
+					if tonumber(msg) == i then
+						if not table.contains(blacklistedCourses, i) then
+							table.insert(blacklistedCourses, i)
+						else
+							djui_chat_message_create("Course " .. get_level_name(i, course_to_level(i), 1) .. " is already blacklisted")
+						end
+
+						djui_chat_message_create("Blacklisted " .. get_level_name(i, course_to_level(i), 1))
+
+						blacklistAddRequest = false
+
+						return true
 					end
+				end
+			else
+				for i = 1, #levels do
+					if tonumber(msg) == level_to_course(levels[i].level) then
+						if not table.contains(blacklistedCourses, i) then
+							table.insert(blacklistedCourses, i)
+						else
+							djui_chat_message_create("Course " .. get_level_name(level_to_course(levels[i].level), levels[i].level, 1) .. " is already blacklisted")
+						end
 
-					djui_chat_message_create("Blacklisted " .. get_level_name(i, course_to_level(i), 1))
+						djui_chat_message_create("Blacklisted " .. get_level_name(level_to_course(levels[i].level), levels[i].level, 1))
 
-					blacklistAddRequest = false
+						blacklistAddRequest = false
 
-					return true
+						return true
+					end
 				end
 			end
 
@@ -196,27 +214,51 @@ function tag_command(msg)
 
 			return true
 		else
-			for i = COURSE_MIN, COURSE_MAX do
-				if msg:lower() == get_level_name(i, course_to_level(i), 1):lower() then
-					if not table.contains(blacklistedCourses, i) then
-						table.insert(blacklistedCourses, i)
-					else
-						djui_chat_message_create("Course " .. get_level_name(i, course_to_level(i), 1) .. " is already blacklisted")
+			if isRomhack then
+				for i = COURSE_MIN, COURSE_MAX do
+					if msg:lower() == get_level_name(i, course_to_level(i), 1):lower() then
+						if not table.contains(blacklistedCourses, i) then
+							table.insert(blacklistedCourses, i)
+						else
+							djui_chat_message_create("Course " .. get_level_name(i, course_to_level(i), 1) .. " is already blacklisted")
+						end
+
+						djui_chat_message_create("Blacklisted " .. get_level_name(i, course_to_level(i), 1))
+
+						blacklistAddRequest = false
+
+						return true
 					end
-
-					djui_chat_message_create("Blacklisted " .. get_level_name(i, course_to_level(i), 1))
-
-					blacklistAddRequest = false
-
-					return true
 				end
+
+				djui_chat_message_create("Course " .. msg .. " not found")
+
+				blacklistAddRequest = false
+
+				return true
+			else
+				for i = 1, #levels do
+					if msg:lower() == levels[i].name then
+						if not table.contains(blacklistedCourses, i) then
+							table.insert(blacklistedCourses, i)
+						else
+							djui_chat_message_create("Course " .. levels[i].name .. " is already blacklisted")
+						end
+
+						djui_chat_message_create("Blacklisted " .. levels[i].name)
+
+						blacklistAddRequest = false
+
+						return true
+					end
+				end
+
+				djui_chat_message_create("Course " .. msg .. " not found")
+
+				blacklistAddRequest = false
+
+				return true
 			end
-
-			djui_chat_message_create("Course " .. msg .. " not found")
-
-			blacklistAddRequest = false
-
-			return true
 		end
 
 		blacklistAddRequest = false

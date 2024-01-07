@@ -2,7 +2,6 @@
 showSettings = false
 blacklistAddRequest = false
 local showBlacklistSettings = false
-local noBlacklistTimer = 0
 local joystickCooldown = 0
 -- default selections
 local MIN_SELECTION = 0
@@ -215,23 +214,23 @@ local function blacklist_options()
 
         djui_hud_render_rect(20, height, bgWidth - 40, 40)
         djui_hud_set_color(220, 220, 220, 255)
-        djui_hud_print_text(get_level_name(blacklistedCourses[i], course_to_level(blacklistedCourses[i]), 1), 30, height + 4, 1)
-        djui_hud_print_text(tostring(blacklistedCourses[i]), bgWidth - 30 - djui_hud_measure_text(tostring(blacklistedCourses[i])), height + 4, 1)
+        if isRomhack then
+            djui_hud_print_text(get_level_name(blacklistedCourses[i], course_to_level(blacklistedCourses[i]), 1), 30, height + 4, 1)
+            djui_hud_print_text(tostring(blacklistedCourses[i]), bgWidth - 30 - djui_hud_measure_text(tostring(blacklistedCourses[i])), height + 4, 1)
+        else
+            djui_hud_print_text(get_level_name(level_to_course(levels[blacklistedCourses[i]].level), levels[blacklistedCourses[i]].level, 1), 30, height + 4, 1)
+            djui_hud_print_text(tostring(level_to_course(levels[blacklistedCourses[i]].level)), bgWidth - 30 - djui_hud_measure_text(tostring(level_to_course(levels[blacklistedCourses[i]].level))), height + 4, 1)
+        end
 
         height = height + 60
     end
 end
 
 local function instructions()
-    if noBlacklistTimer > 0 then
-        djui_hud_set_color(220, 220, 220, 255)
-        djui_hud_print_text("You can't use the blacklist setting without a romhack", 30, screenHeight - 50, 1)
-    else
-        djui_hud_set_color(220, 220, 220, 255)
-        djui_hud_print_text("DPAD Up/Down to move up and down", 30, screenHeight - 150, 1)
-        djui_hud_print_text("DPAD Left/Right to change settings", 30, screenHeight - 100, 1)
-        djui_hud_print_text("A to select options", 30, screenHeight - 50, 1)
-    end
+    djui_hud_set_color(220, 220, 220, 255)
+    djui_hud_print_text("Up/Down to move up and down", 30, screenHeight - 150, 1)
+    djui_hud_print_text("Left/Right to change settings", 30, screenHeight - 100, 1)
+    djui_hud_print_text("A to select options", 30, screenHeight - 50, 1)
 end
 
 local function hud_render()
@@ -263,9 +262,6 @@ end
 local function mario_update(m)
     if not showSettings then return end
     if m.playerIndex ~= 0 then return end
-
-    if noBlacklistTimer > 0 then noBlacklistTimer = noBlacklistTimer - 1 end
-
     if joystickCooldown > 0 then joystickCooldown = joystickCooldown - 1 end
 
     -- if our stick is at 0, then set joystickCooldown to 0
@@ -322,14 +318,9 @@ local function mario_update(m)
                 showSettings = false
                 _G.tagSettingsOpen = false
             elseif selection == BLACKLIST_SELECTION then
-                if isRomhack then
-                    play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
-                    showBlacklistSettings = true
-                    selection = MIN_BLACKLIST_SELECTION
-                else
-                    play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-                    noBlacklistTimer = 5 * 30
-                end
+                play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
+                showBlacklistSettings = true
+                selection = MIN_BLACKLIST_SELECTION
             end
         end
     end

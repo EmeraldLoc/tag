@@ -1,4 +1,6 @@
 
+TEXTURE_RANDOM_PAINTING = get_texture_info("random_painting")
+
 voteRandomLevels = {}
 local fade = 0
 local screenWidth = djui_hud_get_screen_width()
@@ -62,9 +64,13 @@ local function hud_map_vote()
         djui_hud_set_color(220, 220, 220, fade) -- #dcdcdc
         djui_hud_print_text("?", x + ((128 - djui_hud_measure_text("?"))) - 16, y + 32, 5) -- don't ask #2
 
-        if i ~= 4 then
+        if not isRomhack or i == 4 then
             djui_hud_set_color(255, 255, 255, fade)
-            djui_hud_render_texture(levels[voteRandomLevels[i]].painting, x, y, 4, 4)
+            if i ~= 4 then
+                djui_hud_render_texture(levels[voteRandomLevels[i]].painting, x, y, 4, 4)
+            else
+                djui_hud_render_texture(TEXTURE_RANDOM_PAINTING, x, y, 1, 1)
+            end
         end
 
         y = (screenHeight + 200) / 2
@@ -79,11 +85,15 @@ local function hud_map_vote()
         djui_hud_render_rect(x, y, 256, 35)
         djui_hud_set_color(255, 255, 255, fade)
         if i ~= 4 then
-            if levels[voteRandomLevels[i]].level == LEVEL_SSL and levels[voteRandomLevels[i]].area == 2 then
-                -- override for issl
-                text = "Inside Shifting Sand Land: " .. tostring(votes)
+            if not isRomhack then
+                if levels[voteRandomLevels[i]].level == LEVEL_SSL and levels[voteRandomLevels[i]].area == 2 then
+                    -- override for issl
+                    text = "Inside Shifting Sand Land: " .. tostring(votes)
+                else
+                    text = tostring(get_level_name(level_to_course(levels[voteRandomLevels[i]].level), levels[voteRandomLevels[i]].level, 1)) .. ": " .. tostring(votes)
+                end
             else
-                text = tostring(get_level_name(level_to_course(levels[voteRandomLevels[i]].level), levels[voteRandomLevels[i]].level, 1)) .. ": " .. tostring(votes)
+                text = tostring(get_level_name(level_to_course(voteRandomLevels[i]), voteRandomLevels[i], 1)) .. ": " .. tostring(votes)
             end
         else
             text = "Random: " .. tostring(votes)
@@ -97,14 +107,22 @@ local function hud_map_vote()
     elseif math.floor(gGlobalSyncTable.displayTimer / 30) > 5 then
         text = "You have " .. tostring(math.floor(gGlobalSyncTable.displayTimer / 30) - 5) .. " seconds remaining"
     else
-
-        local level = levels[voteRandomLevels[currentMapWinner]]
-
-        if level.level == LEVEL_SSL and level.area == 2 then
-            -- override for issl
-            text = "Inside Shifting Sand Land has been selected!"
+        if currentMapWinner == 4 then
+            text = "A Random Level has been selected!"
         else
-            text = get_level_name(level_to_course(level.level), level.level, 1) .. " has been selected!"
+            if not isRomhack then
+                local level = levels[voteRandomLevels[currentMapWinner]]
+
+                if level.level == LEVEL_SSL and level.area == 2 then
+                    -- override for issl
+                    text = "Inside Shifting Sand Land has been selected!"
+                else
+                    text = get_level_name(level_to_course(level.level), level.level, 1) .. " has been selected!"
+                end
+            else
+                local level = voteRandomLevels[currentMapWinner]
+                text = get_level_name(level_to_course(level), level, 1) .. " has been selected!"
+            end
         end
     end
     djui_hud_set_color(220, 220, 220, fade)
@@ -124,11 +142,13 @@ local function on_render()
     if justEnabled then
         if network_is_server() then
             while voteRandomLevels[3] == nil do
-                local randomLevel = math.random(1, #levels)
-                while table.contains(voteRandomLevels, randomLevel) or table.contains(blacklistedCourses, level_to_course(randomLevel)) do
-                    randomLevel = math.random(1, #levels)
+                local randomLevel = 0
+                if isRomhack then randomLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
+                else randomLevel = math.random(1, #levels) end
+                while table.contains(voteRandomLevels, randomLevel) or table.contains(blacklistedCourses, level_to_course(randomLevel)) or (level_is_vanilla_level(randomLevel) and isRomhack) or randomLevel == gGlobalSyncTable.selectedLevel do
+                    if isRomhack then randomLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
+                    else randomLevel = math.random(1, #levels) end
                 end
-
                 table.insert(voteRandomLevels, randomLevel)
             end
 
