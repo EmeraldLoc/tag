@@ -51,15 +51,11 @@ local function hud_pause()
     djui_hud_print_text(text, x - djui_hud_measure_text(text), y + 300, 2)
 end
 
-local done = true
 local function on_render()
+    if not isPaused then return end
     djui_hud_set_resolution(RESOLUTION_DJUI)
     djui_hud_set_font(FONT_NORMAL)
-    if isPaused then
-        hud_pause()
-    else
-
-    end
+    hud_pause()
 end
 
 ---@param m MarioState
