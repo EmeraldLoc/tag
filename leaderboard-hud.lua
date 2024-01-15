@@ -51,8 +51,36 @@ end
 local function hud_leaderboard()
 
     local renderedIndex = 0
+    local winners = {}
 
     for i = 0, MAX_PLAYERS - 1 do
+        if gNetworkPlayers[i].connected then
+            if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
+                if gPlayerSyncTable[i].state ~= TAGGER or gPlayerSyncTable[i].amountOfTags <= 0 then goto continue end
+            elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
+                if (gPlayerSyncTable[i].state ~= RUNNER and gGlobalSyncTable.gamemode ~= FREEZE_TAG) or (gPlayerSyncTable[i].state ~= ELIMINATED_OR_FROZEN and gPlayerSyncTable[i].state ~= RUNNER and gGlobalSyncTable.gamemode == FREEZE_TAG) or gPlayerSyncTable[i].amountOfTimeAsRunner <= 0 then goto continue end
+            end
+
+            table.insert(winners, i)
+        end
+
+        ::continue::
+    end
+
+    -- sort
+    if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
+        table.sort(winners, function (a, b)
+            if gPlayerSyncTable[a].amountOfTags > gPlayerSyncTable[b].amountOfTags then
+                return a
+            else
+                return b
+            end
+        end)
+    end
+
+    for w = 1, #winners do
+        local i = winners[w]
+
         if gNetworkPlayers[i].connected then
             if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
                 if gPlayerSyncTable[i].state ~= TAGGER or gPlayerSyncTable[i].amountOfTags <= 0 then goto continue end
@@ -63,6 +91,12 @@ local function hud_leaderboard()
             local displayName = strip_hex(gNetworkPlayers[i].name)
 
             local text = displayName
+
+            if text:len() > 17 then
+                text = string.sub(text, 1, 17)
+
+                text = text .. "..."
+            end
 
             local screenWidth = djui_hud_get_screen_width()
             local width = 450
@@ -75,14 +109,30 @@ local function hud_leaderboard()
 
             local r, g, b = hex_to_rgb(network_get_player_text_color_string(i))
             width = djui_hud_measure_text(text)
-            x = (screenWidth - 345) / 2
+            x = (screenWidth - 265) / 2
 
             djui_hud_set_color(r, g, b, fade)
             djui_hud_print_text(text, x, y, 1)
 
-            x = (screenWidth - 430) / 2
+            x = (screenWidth - 350) / 2
 
             render_player_head(i, x, y, 1.9, 1.9)
+
+            x = (screenWidth - 430) / 2
+
+            text = "#" .. w
+
+            if i == 1 then
+                djui_hud_set_color(255, 215, 0, 255)
+            elseif i == 2 then
+                djui_hud_set_color(169, 169, 169, 255)
+            elseif i == 3 then
+                djui_hud_set_color(205, 127, 50, 255)
+            else
+                djui_hud_set_color(220, 220, 220, 255)
+            end
+
+            djui_hud_print_text(text, x, y, 1)
 
             if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
                 text = "Time as runner: " .. math.floor(gPlayerSyncTable[i].amountOfTimeAsRunner / 30) .. "s"

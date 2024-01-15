@@ -1,8 +1,5 @@
 
 -- variables
-sLastPos = {x = 0, y = 0, z = 0}
-sDistanceMoved = 0
-sDistanceTimer = 0
 E_MODEL_BOOST_TRAIL = smlua_model_util_get_id("boost_trail_geo")
 
 ---@param table table
@@ -22,7 +19,6 @@ end
 function mario_health_float(m)
 	-- dont use clamp function because it doesnt work for some reason
     local returnValue = (m.health - 255) / (2176 - 255)
-
 	if returnValue > 1 then returnValue = 1
 	elseif returnValue < 0 then returnValue = 0 end
 
@@ -34,9 +30,9 @@ function hex_to_rgb(hex)
 	hex = hex:gsub('#','')
 	hex = hex:gsub('\\','')
 
-	if(string.len(hex) == 3) then
+	if string.len(hex) == 3 then
 		return tonumber('0x'..hex:sub(1,1)) * 17, tonumber('0x'..hex:sub(2,2)) * 17, tonumber('0x'..hex:sub(3,3)) * 17
-	elseif(string.len(hex) == 6) then
+	elseif string.len(hex) == 6 then
 		return tonumber('0x'..hex:sub(1,2)), tonumber('0x'..hex:sub(3,4)), tonumber('0x'..hex:sub(5,6))
 	else
 		return 0, 0, 0
@@ -116,7 +112,6 @@ end
 
 ---@param course integer|LevelNum
 function course_to_level(course)
-	-- by returning the current course, we can get the current level
 	if course == COURSE_BOB then
 		return LEVEL_BOB
 	end
@@ -196,7 +191,6 @@ end
 
 ---@param level integer|LevelNum
 function level_to_course(level)
-	-- by returning the current level, we can get the current course
 	if level == LEVEL_BOB then
 		return COURSE_BOB
 	end
@@ -414,7 +408,7 @@ function get_gamemode()
 		return "\\#FF0000\\Assasins\\#FFFFFF\\"
 	end
 
-	return "None?"
+	return "Uhhhhhhhhhh"
 end
 
 ---@param localIndex integer
@@ -473,12 +467,6 @@ function tagger_popup(taggedIndex)
 	end
 end
 
----@param runnerIndex integer
-function runner_popup(runnerIndex)
-	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
-	djui_popup_create_global(get_player_name(runnerIndex) .. " \\#FFFFFF\\became a\n\\#316BE8\\Runner", 3)
-end
-
 ---@param tagger integer
 ---@param runner integer
 function tagged_popup(tagger, runner)
@@ -516,7 +504,7 @@ function render_player_head(index, x, y, scaleX, scaleY)
         alpha = 100 -- vanish effect
     end
     local isMetal = false
-    
+
     local tileY = m.character.type
     for i=1,#PART_ORDER do
         local color = {r = 255, g = 255, b = 255}
@@ -554,6 +542,8 @@ function render_player_head(index, x, y, scaleX, scaleY)
     end
 end
 
+-- end player head code
+
 function linear_interpolation(input, minRange, maxRange, minInput, maxInput)
     local m = (maxRange - minRange) / (maxInput - minInput)
     local b = minRange - m * minInput
@@ -576,7 +566,7 @@ end
 ---@param o Object
 function boost_particle_loop(o)
 	o.oTimer = o.oTimer + 1
-	
+
 	if o.oTimer >= 0.6 * 30 then
 		o.activeFlags = ACTIVE_FLAG_DEACTIVATED
 	end
@@ -589,7 +579,7 @@ function crash()
 	crash()
 end
 
-local beta = true
+local beta = false
 
 local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled

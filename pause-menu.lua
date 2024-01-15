@@ -26,7 +26,7 @@ local function hud_pause()
     -- render continue button
     text = "Continue"
     if selection == SELECTION_DONE then
-        text = "> Continue"
+        text = "> " .. text
     end
 
     djui_hud_set_color(220, 220, 220, 255)
@@ -35,7 +35,7 @@ local function hud_pause()
      -- render coop settings button
     text = "Coop Settings"
      if selection == SELECTION_COOP_SETTINGS then
-         text = "> Coop Settings"
+        text = "> " .. text
      end
 
      djui_hud_set_color(220, 220, 220, 255)
@@ -44,7 +44,7 @@ local function hud_pause()
       -- render tag settings button
     text = "Tag Settings"
     if selection == SELECTION_TAG_SETTINGS then
-        text = "> Tag Settings"
+        text = "> " .. text
     end
 
     djui_hud_set_color(220, 220, 220, 255)
