@@ -299,6 +299,8 @@ function get_modifier_text()
 		text = "\\#0099FF\\Speed"
 	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
 		text = "\\#676767\\Incognito"
+	elseif gGlobalSyncTable.modifier == MODIFIER_HIGH_GRAVITY then
+		text = "\\#BE6f4A\\High Gravity"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
@@ -329,6 +331,8 @@ function get_modifier_text_without_hex()
 		text = "Speed"
 	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
 		text = "Incognito"
+	elseif gGlobalSyncTable.modifier == MODIFIER_HIGH_GRAVITY then
+		text = "High Gravity"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
 		text = "None"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
@@ -356,6 +360,8 @@ function get_modifier_rgb()
 		return 0, 153, 255
 	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
 		return 103, 103, 103
+	elseif gGlobalSyncTable.modifier == MODIFIER_HIGH_GRAVITY then
+		return 190, 111, 74
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
 		return 255, 255, 255
 	end
