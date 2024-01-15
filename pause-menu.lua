@@ -121,6 +121,8 @@ local function mario_update(m)
 
             play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
         end
+    elseif not isPaused and not showSettings then
+        selection = 0
     end
 
     if m.controller.buttonPressed & START_BUTTON ~= 0 then
