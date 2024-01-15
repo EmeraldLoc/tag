@@ -156,7 +156,7 @@ function spectator_command(msg)
 	elseif (msg == "no" or msg == "off" or msg == "disable") and gGlobalSyncTable.roundState ~= ROUND_ACTIVE and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then
 		djui_chat_message_create("You are no longer a spectator")
 		gPlayerSyncTable[0].state = RUNNER
-		warp_to_level(LEVEL_VCUTM, 1, 0) -- not used
+		warp_to_level(LEVEL_VCUTM, 1, 0) -- Enter spectator in singleplayer and see what happens >:)
 		return true
 	elseif msg == "no" or msg == "off" or msg == "disable" then
 		djui_chat_message_create("You must wait for the game to end to no longer be a spectator")
