@@ -693,8 +693,10 @@ local function mario_update(m)
         elseif (joinTimer <= 0 and desyncTimer > 0) or network_is_server() then
             if showSettings or isPaused then
                 m.freeze = 1
+                camera_freeze()
             elseif (_G.swearExists and not _G.swearSettingsOpened) or _G.swearExists == nil then
                 m.freeze = 0
+                camera_unfreeze()
             end
         end
 
