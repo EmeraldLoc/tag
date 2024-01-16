@@ -70,17 +70,18 @@ local function hud_leaderboard()
     -- sort
     if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
         table.sort(winners, function (a, b)
-            if gPlayerSyncTable[a].amountOfTags > gPlayerSyncTable[b].amountOfTags then
-                return a
-            else
-                return b
-            end
+            return gPlayerSyncTable[a].amountOfTags > gPlayerSyncTable[b].amountOfTags
+        end)
+    elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
+        table.sort(winners, function (a, b)
+            return gPlayerSyncTable[a].amountOfTimeAsRunner > gPlayerSyncTable[b].amountOfTimeAsRunner
         end)
     end
 
+    local position = 1
+
     for w = 1, #winners do
         local i = winners[w]
-
         if gNetworkPlayers[i].connected then
             if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
                 if gPlayerSyncTable[i].state ~= TAGGER or gPlayerSyncTable[i].amountOfTags <= 0 then goto continue end
@@ -120,13 +121,25 @@ local function hud_leaderboard()
 
             x = (screenWidth - 430) / 2
 
-            text = "#" .. w
+            -- decide what position this player should be at. Don't use w variable to allow for ties as shown below
+            if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN and w > 1 then
+                -- check the previous index and see if they tie, if they don't, increase position
+                if gPlayerSyncTable[i].amountOfTags ~= gPlayerSyncTable[winnerIndexes[w - 1]].amountOfTags then
+                    position = position + 1
+                end
+            elseif w > 1 then
+                -- check the previous index and see if they tie, if they don't, increase position
+                if gPlayerSyncTable[i].amountOfTimeAsRunner ~= gPlayerSyncTable[winnerIndexes[w - 1]].amountOfTimeAsRunner then
+                    position = position + 1
+                end
+            end
 
-            if i == 1 then
+            text = "#" .. position
+            if position == 1 then
                 djui_hud_set_color(255, 215, 0, 255)
-            elseif i == 2 then
+            elseif position == 2 then
                 djui_hud_set_color(169, 169, 169, 255)
-            elseif i == 3 then
+            elseif position == 3 then
                 djui_hud_set_color(205, 127, 50, 255)
             else
                 djui_hud_set_color(220, 220, 220, 255)

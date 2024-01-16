@@ -39,6 +39,7 @@ local function hud_pause()
     else
         text = "Stop Spectating"
     end
+
     if selection == SELECTION_SPECTATE then
        text = "> " .. text
     end
@@ -120,6 +121,11 @@ local function mario_update(m)
             end
 
             play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
+        end
+
+        if m.controller.buttonPressed & R_TRIG ~= 0 then
+            djui_open_pause_menu()
+            m.controller.buttonPressed = m.controller.buttonPressed & ~R_TRIG
         end
     elseif not isPaused and not showSettings then
         selection = 0

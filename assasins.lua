@@ -189,7 +189,7 @@ local function on_pvp(a, v)
             gPlayerSyncTable[a.playerIndex].amountOfTags = gPlayerSyncTable[a.playerIndex].amountOfTags + 1
             gPlayerSyncTable[a.playerIndex].assasinTarget = -1
         else
-            gPlayerSyncTable[a.playerIndex].assasinStunTimer = 5 * 30
+            gPlayerSyncTable[a.playerIndex].assasinStunTimer = 1 * 30
         end
     end
 end

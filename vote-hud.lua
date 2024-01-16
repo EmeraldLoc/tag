@@ -1,4 +1,6 @@
 
+-- would not recommend taking this code, it's not the best in the world....
+
 TEXTURE_RANDOM_PAINTING = get_texture_info("random_painting")
 
 voteRandomLevels = {}
@@ -89,6 +91,8 @@ local function hud_map_vote()
                 if levels[voteRandomLevels[i]].level == LEVEL_SSL and levels[voteRandomLevels[i]].area == 2 then
                     -- override for issl
                     text = "Inside Shifting Sand Land: " .. tostring(votes)
+                elseif levels[voteRandomLevels[i]].level == LEVEL_BOWSER_1 then
+                    text = "Bowser 1: " .. tostring(votes)
                 else
                     text = tostring(get_level_name(level_to_course(levels[voteRandomLevels[i]].level), levels[voteRandomLevels[i]].level, 1)) .. ": " .. tostring(votes)
                 end
@@ -116,6 +120,8 @@ local function hud_map_vote()
                 if level.level == LEVEL_SSL and level.area == 2 then
                     -- override for issl
                     text = "Inside Shifting Sand Land has been selected!"
+                elseif level.level == LEVEL_BOWSER_1 then
+                    text = "Bowser 1 has been selected!"
                 else
                     text = get_level_name(level_to_course(level.level), level.level, 1) .. " has been selected!"
                 end

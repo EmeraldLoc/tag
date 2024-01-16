@@ -42,7 +42,7 @@ function start_command(msg)
 		else
 			if isRomhack then
 				for i = COURSE_MIN, COURSE_MAX do
-					if msg:lower() == get_level_name(i, course_to_level(i), 1):lower() and (not table.contains(defaultLevels, string.upper(get_level_name(level_to_course(gGlobalSyncTable.selectedLevel), gGlobalSyncTable.selectedLevel, 1))) and level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_RR and level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_MIN - 1) then
+					if msg:lower() == get_level_name(i, course_to_level(i), 1):lower() and (not level_is_vanilla_level(gGlobalSyncTable.selectedLevel) and level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_RR and level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_MIN - 1) then
 						timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
 						gGlobalSyncTable.selectedLevel = course_to_level(i)
 						prevLevel = gGlobalSyncTable.selectedLevel

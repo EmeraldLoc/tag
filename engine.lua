@@ -90,7 +90,6 @@ flashingIndex = 0 -- dont make this local so it can be used in other files
 isRomhack = false -- dont make this local so it can be used in other files
 blacklistedCourses = {} -- dont make this local so it can be used in other files
 winnerIndexes = {} -- dont make this local so it can be used in other files
-defaultLevels = {} -- dont make this local so it can be used in other files
 joinTimer = 6 * 30 -- dont make this local so it can be used in other files
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
 badLevels = {} -- dont make this local so it can be used in other files
@@ -196,7 +195,7 @@ local function server_update()
                     -- select a random modifier
                     gGlobalSyncTable.modifier = math.random(MODIFIER_MIN + 1 , MODIFIER_MAX) -- select random modifier, exclude MODIFIER_NONE
 
-                    if gGlobalSyncTable.gamemode == JUGGERNAUT and gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
+                    if gGlobalSyncTable.gamemode == JUGGERNAUT and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
                         goto selectmodifier
                     end
 
@@ -296,6 +295,8 @@ local function server_update()
             end
 
             gGlobalSyncTable.juggernautTagsReq = numPlayers * 3
+
+            if gGlobalSyncTable.juggernautTagsReq > 30 then gGlobalSyncTable.juggernautTagsReq = 30 end
 
             if gGlobalSyncTable.gamemode == HOT_POTATO then
                 hotPotatoTimerMultiplier = amountOfTaggersNeeded
@@ -586,7 +587,7 @@ local function mario_update(m)
                         table.insert(badLevels, gGlobalSyncTable.selectedLevel)
 
                         ---@diagnostic disable-next-line: param-type-mismatch
-                        while ((table.contains(defaultLevels, string.upper(get_level_name(level_to_course(gGlobalSyncTable.selectedLevel), gGlobalSyncTable.selectedLevel, 1))) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel < 0 do
+                        while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel < 0 do
                             gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_MAX)) -- select a random level
                         end
 
@@ -693,10 +694,8 @@ local function mario_update(m)
         elseif (joinTimer <= 0 and desyncTimer > 0) or network_is_server() then
             if showSettings or isPaused then
                 m.freeze = 1
-                camera_freeze()
             elseif (_G.swearExists and not _G.swearSettingsOpened) or _G.swearExists == nil then
                 m.freeze = 0
-                camera_unfreeze()
             end
         end
 
@@ -1008,35 +1007,8 @@ local function act_nothing(m)
 end
 
 function check_if_romhack_enabled()
-    -- set default levels
-    table.insert(defaultLevels, "BOB-OMB BATTLEFIELD")
-    table.insert(defaultLevels, "WHOMP'S FORTRESS")
-    table.insert(defaultLevels, "JOLLY ROGER BAY")
-    table.insert(defaultLevels, "COOL, COOL MOUNTAIN")
-    table.insert(defaultLevels, "BIG BOO'S HAUNT")
-    table.insert(defaultLevels, "HAZY MAZE CAVE")
-    table.insert(defaultLevels, "LETHAL LAVA LAND")
-    table.insert(defaultLevels, "SHIFTING SAND LAND")
-    table.insert(defaultLevels, "DIRE, DIRE DOCKS")
-    table.insert(defaultLevels, "SNOWMAN'S LAND")
-    table.insert(defaultLevels, "WET-DRY WORLD")
-    table.insert(defaultLevels, "TALL, TALL MOUNTAIN")
-    table.insert(defaultLevels, "TINY-HUGE ISLAND")
-    table.insert(defaultLevels, "TICK TOCK CLOCK")
-    table.insert(defaultLevels, "RAINBOW RIDE")
-    table.insert(defaultLevels, "BOWSER IN THE DARK WORLD")
-    table.insert(defaultLevels, "BOWSER IN THE FIRE SEA")
-    table.insert(defaultLevels, "BOWSER IN THE SKY")
-    table.insert(defaultLevels, "THE PRINCESS'S SECRET SLIDE")
-    table.insert(defaultLevels, "CAVERN OF THE METAL CAP")
-    table.insert(defaultLevels, "TOWER OF THE WING CAP")
-    table.insert(defaultLevels, "VANISH CAP UNDER THE MOAT")
-    table.insert(defaultLevels, "WING MARIO OVER THE RAINBOW")
-    table.insert(defaultLevels, "THE SECRET AQUARIUM")
-    table.insert(defaultLevels, "PEACH'S CASTLE")
-
     -- check thru 50 mods (if you have more than 50 mods enabled your crazy)
-    for i=0,50 do
+    for i = 0, 50 do
         if gActiveMods[i] ~= nil then
             if gActiveMods[i].incompatible ~= nil then
                 -- check if it is a romhack by checking the incompatible tag
