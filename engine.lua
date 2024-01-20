@@ -85,15 +85,16 @@ gServerSettings.playerInteractions = PLAYER_INTERACTIONS_SOLID -- force player a
 gServerSettings.bubbleDeath = 0
 
 -- variables
-timer = 0 -- dont make this local so it can be used in other files
-flashingIndex = 0 -- dont make this local so it can be used in other files
-isRomhack = false -- dont make this local so it can be used in other files
-blacklistedCourses = {} -- dont make this local so it can be used in other files
-winnerIndexes = {} -- dont make this local so it can be used in other files
-joinTimer = 6 * 30 -- dont make this local so it can be used in other files
+timer = 0
+flashingIndex = 0
+isRomhack = false
+nametagsEnabled = false
+blacklistedCourses = {}
+winnerIndexes = {}
+joinTimer = 6 * 30
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
-badLevels = {} -- dont make this local so it can be used in other files
-gGlobalSoundSource = {x = 0, y = 0, z = 0} -- dont make this local so it can be used in other files
+badLevels = {}
+gGlobalSoundSource = {x = 0, y = 0, z = 0}
 isPaused = false
 local speedBoostTimer = 0
 local hotPotatoTimerMultiplier = 1
@@ -1006,19 +1007,20 @@ local function act_nothing(m)
     m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - 1
 end
 
-function check_if_romhack_enabled()
+function check_mods()
     -- check thru 50 mods (if you have more than 50 mods enabled your crazy)
     for i = 0, 50 do
         if gActiveMods[i] ~= nil then
             if gActiveMods[i].incompatible ~= nil then
                 -- check if it is a romhack by checking the incompatible tag
-                if string.match(gActiveMods[i].incompatible, 'romhack') then
+                if string.match(gActiveMods[i].incompatible, "romhack") then
                     -- set romhack to true and water by default to true
                     isRomhack = true
 
                     gGlobalSyncTable.water = true
-
-                    return
+                elseif string.match(gActiveMods[i].incompatible, "nametags") then
+                    -- set nametagsEnabled to true
+                    nametagsEnabled = true
                 end
             end
         end
@@ -1057,5 +1059,5 @@ end)
 ---@diagnostic disable-next-line: missing-parameter
 hook_mario_action(ACT_NOTHING, act_nothing)
 
--- check if romhack is enabled
-check_if_romhack_enabled()
+-- check for mods
+check_mods()

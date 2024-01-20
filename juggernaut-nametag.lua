@@ -1,7 +1,5 @@
 -- base by agent x, changes by me
 
-local MAX_SCALE = 0.32
-
 local gStateExtras = {}
 for i = 0, (MAX_PLAYERS - 1) do
     gStateExtras[i] = {}
@@ -76,6 +74,10 @@ local function on_hud_render()
         local m = gMarioStates[i]
         local out = { x = 0, y = 0, z = 0 }
         local pos = { x = m.marioObj.header.gfx.pos.x, y = m.pos.y + 210, z = m.marioObj.header.gfx.pos.z }
+        -- if nametags are enabled, move pos up by 50 pixels
+        if nametagsEnabled then
+            pos.y = pos.y + 50
+        end
         if djui_hud_world_pos_to_screen_pos(pos, out) and m.marioBodyState.updateTorsoTime == gMarioStates[0].marioBodyState.updateTorsoTime and active_player(m) ~= 0 and m.action ~= ACT_IN_CANNON and (m.playerIndex ~= 0 or (m.playerIndex == 0 and m.action ~= ACT_FIRST_PERSON)) then
             local scale = 0.32
             local dist = vec3f_dist(gLakituState.pos, m.pos)
