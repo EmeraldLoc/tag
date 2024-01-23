@@ -20,7 +20,7 @@ local function hud_pause()
     djui_hud_render_rect(0, 0, screenWidth + 20, screenHeight + 20)
 
     -- render course
-    local text = "(" .. tostring(np.currCourseNum) .. ") " .. get_level_name(np.currCourseNum, np.currLevelNum, np.currAreaIndex)
+    local text = "(" .. tostring(np.currCourseNum) .. ") " .. name_of_level(np.currLevelNum, np.currAreaIndex)
     djui_hud_set_color(220, 220, 220, 255)
     djui_hud_print_text(text, x - djui_hud_measure_text(text), y - 100, 2)
 

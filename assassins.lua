@@ -6,12 +6,12 @@ local eliminatedTimer = 0
 
 local function update()
 
-    if gGlobalSyncTable.gamemode ~= ASSASINS then return end
+    if gGlobalSyncTable.gamemode ~= ASSASSINS then return end
 
     -- set network descriptions
     for i = 0, MAX_PLAYERS - 1 do
         if gPlayerSyncTable[i].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
-            network_player_set_description(gNetworkPlayers[i], "Assasin", 232, 46, 46, 255)
+            network_player_set_description(gNetworkPlayers[i], "Assassin", 232, 46, 46, 255)
         elseif gPlayerSyncTable[i].state == ELIMINATED then
             network_player_set_description(gNetworkPlayers[i], "Eliminated", 191, 54, 54, 255)
         end
@@ -22,7 +22,7 @@ local function update()
         eliminatedTimer = eliminatedTimer - 1
     end
 
-    local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assasinTarget)
+    local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assassinTarget)
 
     if targetIndex >= 0 and targetIndex <= MAX_PLAYERS then
         if gPlayerSyncTable[targetIndex].state == ELIMINATED or gPlayerSyncTable[targetIndex].state == SPECTATOR or not gNetworkPlayers[targetIndex].connected then
@@ -46,13 +46,13 @@ local function update()
 
     ::updateend::
 
-    gPlayerSyncTable[0].assasinTarget = network_global_index_from_local(targetIndex)
+    gPlayerSyncTable[0].assassinTarget = network_global_index_from_local(targetIndex)
 end
 
 ---@param m MarioState
 local function mario_update(m)
 
-    if gGlobalSyncTable.gamemode ~= ASSASINS then return end
+    if gGlobalSyncTable.gamemode ~= ASSASSINS then return end
 
     m.health = 0x880 -- set mario's health to full
 
@@ -64,8 +64,8 @@ local function mario_update(m)
     end
 
     -- handle being stunned
-    if gPlayerSyncTable[0].assasinStunTimer > 0 and m.playerIndex == 0 then
-        gPlayerSyncTable[0].assasinStunTimer = gPlayerSyncTable[0].assasinStunTimer - 1
+    if gPlayerSyncTable[0].assassinStunTimer > 0 and m.playerIndex == 0 then
+        gPlayerSyncTable[0].assassinStunTimer = gPlayerSyncTable[0].assassinStunTimer - 1
         set_mario_action(m, ACT_SHOCKED, 0)
     end
 end
@@ -97,6 +97,7 @@ local function hud_bottom_render()
 end
 
 local function hud_side_panel_render()
+
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
@@ -110,7 +111,7 @@ local function hud_side_panel_render()
     djui_hud_set_color(255, 255, 255, 255)
     djui_hud_print_text("Target:", x + 10, y, 1)
 
-    local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assasinTarget)
+    local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assassinTarget)
 
     if targetIndex >= 0 and targetIndex <= MAX_PLAYERS then
         local r, g, b = hex_to_rgb(network_get_player_text_color_string(targetIndex))
@@ -121,7 +122,7 @@ end
 
 local function hud_render()
 
-    if gGlobalSyncTable.gamemode ~= ASSASINS then return end
+    if gGlobalSyncTable.gamemode ~= ASSASSINS then return end
 
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
@@ -131,7 +132,7 @@ local function hud_render()
     hud_bottom_render()
 
     -- render side panel
-    if gGlobalSyncTable.roundState == ROUND_ACTIVE and gPlayerSyncTable[0].state ~= ELIMINATED then
+    if gGlobalSyncTable.roundState == ROUND_ACTIVE and gPlayerSyncTable[0].state ~= ELIMINATED and gPlayerSyncTable[0].state ~= SPECTATOR then
         hud_side_panel_render()
     end
 
@@ -140,7 +141,7 @@ local function hud_render()
         for i = 1, MAX_PLAYERS - 1 do
             if gNetworkPlayers[i].connected then
                 -- loop thru all connnected players
-                if gPlayerSyncTable[i].state == TAGGER and gPlayerSyncTable[0].state == TAGGER and network_local_index_from_global(gPlayerSyncTable[0].assasinTarget) == i then -- check if we meet the checks to render the radar
+                if gPlayerSyncTable[i].state == TAGGER and gPlayerSyncTable[0].state == TAGGER and network_local_index_from_global(gPlayerSyncTable[0].assassinTarget) == i then -- check if we meet the checks to render the radar
                     render_radar(gMarioStates[i], icon_radar[i], false) -- render radar on player
                 end
             end
@@ -151,7 +152,7 @@ end
 ---@param m MarioState
 local function on_death(m)
 
-    if gGlobalSyncTable.gamemode ~= ASSASINS then return end
+    if gGlobalSyncTable.gamemode ~= ASSASSINS then return end
 
     if gGlobalSyncTable.roundState == ROUND_ACTIVE then
         -- become eliminated on death
@@ -169,7 +170,7 @@ end
 ---@param a MarioState
 ---@param v MarioState
 local function allow_pvp(a, v)
-    if gGlobalSyncTable.gamemode ~= ASSASINS then return end
+    if gGlobalSyncTable.gamemode ~= ASSASSINS then return end
 
     -- check if eliminated player is trying to perform a pvp attack
     if gPlayerSyncTable[v.playerIndex].state == ELIMINATED or gPlayerSyncTable[a.playerIndex].state == ELIMINATED then return false end
@@ -178,18 +179,28 @@ end
 ---@param a MarioState
 ---@param v MarioState
 local function on_pvp(a, v)
+    if gGlobalSyncTable.gamemode ~= ASSASSINS then return end
 
-    if gGlobalSyncTable.gamemode ~= ASSASINS then return end
+    if v.playerIndex ~= 0 then return end
+    send_pvp_packet(a.playerIndex, v.playerIndex)
+end
+
+---@param aI number
+---@param vI number
+function assassins_handle_pvp(aI, vI)
+
+    local a = gPlayerSyncTable[aI]
+    local v = gPlayerSyncTable[vI]
 
     -- check if tagger tagged runner
-    if gPlayerSyncTable[v.playerIndex].state == TAGGER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gGlobalSyncTable.roundState == ROUND_ACTIVE and v.playerIndex == 0 then
-        if network_local_index_from_global(gPlayerSyncTable[a.playerIndex].assasinTarget) == v.playerIndex then
-            gPlayerSyncTable[v.playerIndex].state = ELIMINATED
-            tagged_popup(a.playerIndex, v.playerIndex)
-            gPlayerSyncTable[a.playerIndex].amountOfTags = gPlayerSyncTable[a.playerIndex].amountOfTags + 1
-            gPlayerSyncTable[a.playerIndex].assasinTarget = -1
+    if v.state == TAGGER and a.state == TAGGER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        if network_local_index_from_global(a.assassinTarget) == vI then
+            v.state = ELIMINATED
+            tagged_popup(aI, vI)
+            a.amountOfTags = a.amountOfTags + 1
+            a.assassinTarget = -1
         else
-            gPlayerSyncTable[a.playerIndex].assasinStunTimer = 1 * 30
+            a.assassinStunTimer = 1 * 30
         end
     end
 end
@@ -199,7 +210,7 @@ end
 ---@param intee InteractionType
 local function allow_interact(m, o, intee)
 
-    if gGlobalSyncTable.gamemode ~= ASSASINS then return end
+    if gGlobalSyncTable.gamemode ~= ASSASSINS then return end
 
     -- check if player interacts with another player
     if intee == INTERACT_PLAYER then

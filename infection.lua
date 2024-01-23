@@ -71,24 +71,33 @@ end
 ---@param v MarioState
 local function allow_pvp(a, v)
     if gGlobalSyncTable.gamemode == INFECTION then
-         -- check if eliminated player is trying to perform a pvp attack
-         if gPlayerSyncTable[v.playerIndex].state == ELIMINATED or gPlayerSyncTable[a.playerIndex].state == ELIMINATED then return false end
+        -- check if eliminated player is trying to perform a pvp attack
+        if gPlayerSyncTable[v.playerIndex].state == ELIMINATED or gPlayerSyncTable[a.playerIndex].state == ELIMINATED then return false end
     end
 end
 
 ---@param a MarioState
 ---@param v MarioState
 local function on_pvp(a, v)
-
     if gGlobalSyncTable.gamemode ~= INFECTION then return end
+    if v.playerIndex ~= 0 then return end
+    send_pvp_packet(a.playerIndex, v.playerIndex)
+end
+
+---@param aI number
+---@param vI number
+function infection_handle_pvp(aI, vI)
+
+    local a = gPlayerSyncTable[aI]
+    local v = gPlayerSyncTable[vI]
 
     -- check if tagger tagged runner
-    if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE  and v.playerIndex == 0 then
-        gPlayerSyncTable[v.playerIndex].state = TAGGER
+    if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        v.state = TAGGER
 
-        tagged_popup(a.playerIndex, v.playerIndex)
-        gPlayerSyncTable[a.playerIndex].amountOfTags = gPlayerSyncTable[a.playerIndex].amountOfTags + 1
-        gPlayerSyncTable[a.playerIndex].invincTimer = 1 * 30
+        tagged_popup(aI, vI)
+        a.amountOfTags = a.amountOfTags + 1
+        a.invincTimer = 1 * 30
     end
 end
 

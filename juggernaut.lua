@@ -118,13 +118,22 @@ end
 ---@param a MarioState
 ---@param v MarioState
 local function on_pvp(a, v)
-
     if gGlobalSyncTable.gamemode ~= JUGGERNAUT then return end
+    if v.playerIndex ~= 0 then return end
+    send_pvp_packet(a.playerIndex, v.playerIndex)
+end
+
+---@param aI number
+---@param vI number
+function juggernaut_handle_pvp(aI, vI)
+
+    local a = gPlayerSyncTable[aI]
+    local v = gPlayerSyncTable[vI]
 
     -- check if tagger tagged runner
-    if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE and v.playerIndex == 0 then
-        gPlayerSyncTable[v.playerIndex].juggernautTags = gPlayerSyncTable[v.playerIndex].juggernautTags + 1
-        gPlayerSyncTable[a.playerIndex].amountOfTags = gPlayerSyncTable[a.playerIndex].amountOfTags + 1
+    if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        v.juggernautTags = v.juggernautTags + 1
+        a.amountOfTags = a.amountOfTags + 1
     end
 end
 

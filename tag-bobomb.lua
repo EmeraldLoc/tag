@@ -114,12 +114,12 @@ function bhv_tag_bobomb_expode(o)
     if validAttack and bhv_tag_bobomb_intersects_player(o, m, a, radius) and mario_health_float(m) > 0 then
 
         -- check up here so that if it's set to the same state as the tagger then make sure they take kb
-        if gGlobalSyncTable.gamemode ~= ASSASINS then
+        if gGlobalSyncTable.gamemode ~= ASSASSINS then
             if gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].state == gPlayerSyncTable[m.playerIndex].state then return end
         end
 
         if m.playerIndex ~= network_local_index_from_global(o.oTagBobombGlobalOwner) then
-            if ((gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].state == TAGGER and gPlayerSyncTable[m.playerIndex].state == RUNNER) or gGlobalSyncTable.gamemode == ASSASINS) and gGlobalSyncTable.roundState == ROUND_ACTIVE and gPlayerSyncTable[m.playerIndex].invincTimer <= 0 then
+            if ((gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].state == TAGGER and gPlayerSyncTable[m.playerIndex].state == RUNNER) or gGlobalSyncTable.gamemode == ASSASSINS) and gGlobalSyncTable.roundState == ROUND_ACTIVE and gPlayerSyncTable[m.playerIndex].invincTimer <= 0 then
                 if gGlobalSyncTable.gamemode == TAG then
                     gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].state = RUNNER
                     gPlayerSyncTable[m.playerIndex].state = TAGGER
@@ -143,8 +143,8 @@ function bhv_tag_bobomb_expode(o)
                     tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
                     gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
                     gPlayerSyncTable[m.playerIndex].juggernautTags = gPlayerSyncTable[m.playerIndex].juggernautTags + 1
-                elseif gGlobalSyncTable.gamemode == ASSASINS then
-                    if network_local_index_from_global(gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].assasinTarget) == 0 then
+                elseif gGlobalSyncTable.gamemode == ASSASSINS then
+                    if network_local_index_from_global(gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].assassinTarget) == 0 then
                         tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
                         gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
                         gPlayerSyncTable[m.playerIndex].state = ELIMINATED_OR_FROZEN

@@ -215,10 +215,10 @@ local function blacklist_options()
         djui_hud_render_rect(20, height, bgWidth - 40, 40)
         djui_hud_set_color(220, 220, 220, 255)
         if isRomhack then
-            djui_hud_print_text(get_level_name(blacklistedCourses[i], course_to_level(blacklistedCourses[i]), 1), 30, height + 4, 1)
+            djui_hud_print_text(name_of_level(course_to_level(blacklistedCourses[i]), 1), 30, height + 4, 1)
             djui_hud_print_text(tostring(blacklistedCourses[i]), bgWidth - 30 - djui_hud_measure_text(tostring(blacklistedCourses[i])), height + 4, 1)
         else
-            djui_hud_print_text(get_level_name(level_to_course(levels[blacklistedCourses[i]].level), levels[blacklistedCourses[i]].level, 1), 30, height + 4, 1)
+            djui_hud_print_text(name_of_level(levels[blacklistedCourses[i]].level, levels[blacklistedCourses[i]].area), 30, height + 4, 1)
             djui_hud_print_text(tostring(level_to_course(levels[blacklistedCourses[i]].level)), bgWidth - 30 - djui_hud_measure_text(tostring(level_to_course(levels[blacklistedCourses[i]].level))), height + 4, 1)
         end
 

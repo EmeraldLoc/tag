@@ -94,10 +94,10 @@ local function hud_map_vote()
                 elseif levels[voteRandomLevels[i]].level == LEVEL_BOWSER_1 then
                     text = "Bowser 1: " .. tostring(votes)
                 else
-                    text = tostring(get_level_name(level_to_course(levels[voteRandomLevels[i]].level), levels[voteRandomLevels[i]].level, 1)) .. ": " .. tostring(votes)
+                    text = tostring(name_of_level(levels[voteRandomLevels[i]].level, levels[voteRandomLevels[i]].area)) .. ": " .. tostring(votes)
                 end
             else
-                text = tostring(get_level_name(level_to_course(voteRandomLevels[i]), voteRandomLevels[i], 1)) .. ": " .. tostring(votes)
+                text = tostring(name_of_level(voteRandomLevels[i], 1)) .. ": " .. tostring(votes)
             end
         else
             text = "Random: " .. tostring(votes)
@@ -123,11 +123,11 @@ local function hud_map_vote()
                 elseif level.level == LEVEL_BOWSER_1 then
                     text = "Bowser 1 has been selected!"
                 else
-                    text = get_level_name(level_to_course(level.level), level.level, 1) .. " has been selected!"
+                    text = name_of_level(level.level, level.area) .. " has been selected!"
                 end
             else
                 local level = voteRandomLevels[currentMapWinner]
-                text = get_level_name(level_to_course(level), level, 1) .. " has been selected!"
+                text = name_of_level(level, 1) .. " has been selected!"
             end
         end
     end

@@ -161,12 +161,12 @@ end
 ---@param a MarioState
 ---@param v MarioState
 local function allow_pvp(a, v)
-    if gGlobalSyncTable.gamemode == FREEZE_TAG then
-        -- check if frozen player is trying to perform a pvp attack
-        if gPlayerSyncTable[a.playerIndex].state == FROZEN then return false end
-        -- check if a tagger is trying to attack a frozen player
-        if gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].state == FROZEN then return false end
-    end
+    if gGlobalSyncTable.gamemode ~= FREEZE_TAG then return end
+
+    -- check if frozen player is trying to perform a pvp attack
+    if gPlayerSyncTable[a.playerIndex].state == FROZEN then return false end
+    -- check if a tagger is trying to attack a frozen player
+    if gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].state == FROZEN then return false end
 end
 
 ---@param m MarioState
@@ -191,22 +191,30 @@ local function allow_interact(m, o, intee)
 end
 
 local function on_pvp(a, v)
-
     if gGlobalSyncTable.gamemode ~= FREEZE_TAG then return end
+    if v.playerIndex ~= 0 then return end
+    send_pvp_packet(a.playerIndex, v.playerIndex)
+end
+
+---@param aI number
+---@param vI number
+function freeze_tag_handle_pvp(aI, vI)
+
+    local a = gPlayerSyncTable[aI]
+    local v = gPlayerSyncTable[vI]
 
     -- check if tagger tagged runner
-    if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE and v.playerIndex == 0 then
-        gPlayerSyncTable[a.playerIndex].amountOfTags = gPlayerSyncTable[a.playerIndex].amountOfTags + 1
-        gPlayerSyncTable[v.playerIndex].state = FROZEN
-        freezed_popup(a.playerIndex, v.playerIndex)
+    if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        a.amountOfTags = a.amountOfTags + 1
+        v.state = FROZEN
+        freezed_popup(aI, vI)
     end
 
     -- check if runner attacked frozen
-    if gPlayerSyncTable[v.playerIndex].state == FROZEN and gPlayerSyncTable[a.playerIndex].state == RUNNER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE and v.playerIndex == 0 then
-        gPlayerSyncTable[v.playerIndex].state = RUNNER
-        gPlayerSyncTable[v.playerIndex].invincTimer = 2 * 30
-        set_mario_action(gMarioStates[v.playerIndex], ACT_IDLE, 0)
-        unfreezed_popup(a.playerIndex, v.playerIndex)
+    if v.state == FROZEN and a.state == RUNNER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        v.state = RUNNER
+        v.invincTimer = 2 * 30
+        unfreezed_popup(aI, vI)
     end
 end
 

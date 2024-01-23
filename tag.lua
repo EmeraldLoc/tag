@@ -120,17 +120,26 @@ end
 ---@param a MarioState
 ---@param v MarioState
 local function on_pvp(a, v)
-
     if gGlobalSyncTable.gamemode ~= TAG then return end
+    if v.playerIndex ~= 0 then return end
+    send_pvp_packet(a.playerIndex, v.playerIndex)
+end
+
+---@param aI number
+---@param vI number
+function tag_handle_pvp(aI, vI)
+
+    local a = gPlayerSyncTable[aI]
+    local v = gPlayerSyncTable[vI]
 
     -- check if tagger tagged runner
-    if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gPlayerSyncTable[v.playerIndex].invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE and v.playerIndex == 0 then
-        gPlayerSyncTable[v.playerIndex].state = TAGGER
-        gPlayerSyncTable[a.playerIndex].state = RUNNER
+    if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        v.state = TAGGER
+        a.state = RUNNER
 
-        tagged_popup(a.playerIndex, v.playerIndex)
-        gPlayerSyncTable[a.playerIndex].amountOfTags = gPlayerSyncTable[a.playerIndex].amountOfTags + 1
-        gPlayerSyncTable[a.playerIndex].invincTimer = 1 * 30
+        tagged_popup(aI, vI)
+        a.amountOfTags = a.amountOfTags + 1
+        a.invincTimer = 1 * 30
     end
 end
 

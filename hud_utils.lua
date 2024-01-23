@@ -27,7 +27,7 @@ function hud_did_you_know(fade)
     elseif randomDidYouKnow == 4 then
         text = "Did you know that this mod fully supports romhacks right out the gate?"
         text2 = "Levels can be blacklisted with the blacklist command if theres a bad level you dont want to play on,"
-        text3 = "especially if there's water, EW!"
+        text3 = "especially if there's water in it..."
     elseif randomDidYouKnow == 5 then
         text = "Do you know who the author of this mod is?"
         text2 = "It's EmeraldLockdown, a modder who's been modding since 1995! *cough 2022 cough*"

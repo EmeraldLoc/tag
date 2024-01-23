@@ -95,7 +95,7 @@ function check_round_status()
 		return
 	end
 
-	if not hasRunner and gGlobalSyncTable.gamemode ~= ASSASINS then
+	if not hasRunner and gGlobalSyncTable.gamemode ~= ASSASSINS then
 		timer = 15 * 30 -- 15 seconds
 
 		gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
@@ -103,7 +103,7 @@ function check_round_status()
 		return
 	end
 
-	if taggerCount == 1 and gGlobalSyncTable.gamemode == ASSASINS then
+	if taggerCount == 1 and gGlobalSyncTable.gamemode == ASSASSINS then
 		timer = 15 * 30 -- 15 seconds
 
 		gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
@@ -268,6 +268,27 @@ function level_to_course(level)
 	return -1
 end
 
+function name_of_level(level, area)
+	-- first check the area and see if we have a override name, if we don't, proceed as normal
+	if area > 1 and (level == LEVEL_SSL or level == LEVEL_THI) then
+		if level == LEVEL_SSL then
+			return "Inside of Shifting Sand Land"
+		elseif level == LEVEL_THI then
+			return "Inside of Tiny Huge Island"
+		end
+	end
+	-- now check for levels that get named "Peach's Castle"
+
+	if level == LEVEL_BITDW then
+		return "Bowser 1"
+	elseif level == LEVEL_CASTLE_GROUNDS then
+		return "Castle Grounds"
+	end
+
+	-- we don't have an override, so use normal sm64 function
+	return get_level_name(level_to_course(level), level, area)
+end
+
 ---@param m MarioState
 function generate_boost_trail(m)
 	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
@@ -378,7 +399,7 @@ function get_gamemode_rgb_color()
 		return 252, 144, 3
 	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
 		return 66, 176, 245
-	elseif gGlobalSyncTable.gamemode == ASSASINS then
+	elseif gGlobalSyncTable.gamemode == ASSASSINS then
 		return 255, 0, 0
 	end
 end
@@ -394,7 +415,7 @@ function get_gamemode_hex_color()
 		return "\\#FC9003\\"
 	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
 		return "\\#42B0F5\\"
-	elseif gGlobalSyncTable.gamemode == ASSASINS then
+	elseif gGlobalSyncTable.gamemode == ASSASSINS then
 		return "\\#FF0000\\"
 	end
 end
@@ -410,8 +431,8 @@ function get_gamemode()
 		return "\\#FC9003\\Hot Potato\\#FFFFFF\\"
 	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
 		return "\\#42B0F5\\Juggernaut\\#FFFFFF\\"
-	elseif gGlobalSyncTable.gamemode == ASSASINS then
-		return "\\#FF0000\\Assasins\\#FFFFFF\\"
+	elseif gGlobalSyncTable.gamemode == ASSASSINS then
+		return "\\#FF0000\\Assassins\\#FFFFFF\\"
 	end
 
 	return "Uhhhhhhhhhh"
@@ -434,8 +455,8 @@ function get_gamemode_without_hex()
 		return "Hot Potato"
 	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
 		return "Juggernaut"
-	elseif gGlobalSyncTable.gamemode == ASSASINS then
-		return "Assasins"
+	elseif gGlobalSyncTable.gamemode == ASSASSINS then
+		return "Assassins"
 	end
 end
 

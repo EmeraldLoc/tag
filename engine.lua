@@ -18,7 +18,7 @@ FREEZE_TAG = 2
 INFECTION = 3
 HOT_POTATO = 4
 JUGGERNAUT = 5
-ASSASINS = 6
+ASSASSINS = 6
 MAX_GAMEMODE = 6
 
 PLAYERS_NEEDED = 2
@@ -48,8 +48,10 @@ TEXTURE_SSL_PAINTING   = get_texture_info("ssl_painting")
 TEXTURE_ISSL_PAINTING  = get_texture_info("issl_painting")
 TEXTURE_RR_PAINTING    = get_texture_info("rr_painting")
 TEXTURE_THI_PAINTING   = get_texture_info("thi_painting")
+TEXTURE_ITHI_PAINTING  = get_texture_info("ithi_painting")
 TEXTURE_TTM_PAINTING   = get_texture_info("ttm_painting")
 TEXTURE_SL_PAINTING    = get_texture_info("sl_painting")
+TEXTURE_WDW_PAINTING    = get_texture_info("wdw_painting")
 TEXTURE_TTC_PAINTING   = get_texture_info("ttc_painting")
 
 -- globals and sync tables
@@ -74,8 +76,8 @@ for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init
         gPlayerSyncTable[i].amountOfTags = 0
         gPlayerSyncTable[i].amountOfTimeAsRunner = 0
         gPlayerSyncTable[i].juggernautTags = 0
-        gPlayerSyncTable[i].assasinTarget = -1
-        gPlayerSyncTable[i].assasinStunTimer = -1
+        gPlayerSyncTable[i].assassinTarget = -1
+        gPlayerSyncTable[i].assassinStunTimer = -1
         gPlayerSyncTable[i].votingNumber = 0
     end
 end
@@ -90,7 +92,6 @@ flashingIndex = 0
 isRomhack = false
 nametagsEnabled = false
 blacklistedCourses = {}
-winnerIndexes = {}
 joinTimer = 6 * 30
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
 badLevels = {}
@@ -98,6 +99,8 @@ gGlobalSoundSource = {x = 0, y = 0, z = 0}
 isPaused = false
 local speedBoostTimer = 0
 local hotPotatoTimerMultiplier = 1
+local pipeTimer = 0
+local pipeUse = 0
 
 _G.tagExists = true
 _G.tagSettingsOpen = false
@@ -115,10 +118,12 @@ levels = {
     {name = "ttm",   level = LEVEL_TTM,            painting = TEXTURE_TTM_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = -1080, y = -4634, z = 4176}, pipe2Pos = {x = 1031, y = 2306, z = -198}},
     {name = "ttc",   level = LEVEL_TTC,            painting = TEXTURE_TTC_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = 1361, y = -4822, z = 176},   pipe2Pos = {x = 1594, y = 5284, z = 1565}},
     {name = "jrb",   level = LEVEL_JRB,            painting = TEXTURE_JRB_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = 3000, y = -5119, z = 2688},  pipe2Pos = {x = -6398, y = 1126, z = 191}},
+    {name = "wdw",   level = LEVEL_WDW,            painting = TEXTURE_WDW_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = 3346, y = 154, z = 2918},    pipe2Pos = {x = -3342, y = 3584, z = -3353}},
     {name = "wf",    level = LEVEL_WF,             painting = TEXTURE_WF_PAINTING,    act = 0, area = 1, pipes = false},
     {name = "lll",   level = LEVEL_LLL,            painting = TEXTURE_LLL_PAINTING,   act = 0, area = 1, pipes = false},
     {name = "ssl",   level = LEVEL_SSL,            painting = TEXTURE_SSL_PAINTING,   act = 0, area = 1, pipes = false},
     {name = "thi",   level = LEVEL_THI,            painting = TEXTURE_THI_PAINTING,   act = 0, area = 1, pipes = false},
+    {name = "ithi",  level = LEVEL_THI,            painting = TEXTURE_ITHI_PAINTING,  act = 0, area = 3, pipes = false},
     {name = "sl",    level = LEVEL_SL,             painting = TEXTURE_SL_PAINTING,    act = 0, area = 1, pipes = false},
     {name = "arena", level = LEVEL_BOWSER_1,       painting = TEXTURE_BITDW_PAINTING, act = 0, area = 1, pipes = false},
 }
@@ -200,7 +205,7 @@ local function server_update()
                         goto selectmodifier
                     end
 
-                    if gGlobalSyncTable.gamemode == ASSASINS and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER or gGlobalSyncTable.modifier == MODIFIER_FLY or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
+                    if gGlobalSyncTable.gamemode == ASSASSINS and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER or gGlobalSyncTable.modifier == MODIFIER_FLY or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
                         goto selectmodifier
                     end
                 else
@@ -242,8 +247,8 @@ local function server_update()
                     gGlobalSyncTable.amountOfTime = 120 * 30
 
                     PLAYERS_NEEDED = 3
-                elseif gGlobalSyncTable.gamemode == ASSASINS then
-                    -- set assasins timer
+                elseif gGlobalSyncTable.gamemode == ASSASSINS then
+                    -- set assassins timer
                     gGlobalSyncTable.amountOfTime = 120 * 30
 
                     PLAYERS_NEEDED = 3
@@ -260,7 +265,7 @@ local function server_update()
             if gPlayerSyncTable[i].state ~= SPECTATOR then
                 gPlayerSyncTable[i].state = RUNNER -- set everyone's state to runner
                 gPlayerSyncTable[i].juggernautTags = 0
-                gPlayerSyncTable[i].assasinTarget = -1
+                gPlayerSyncTable[i].assassinTarget = -1
             end
 
             gPlayerSyncTable[i].amountOfTags = 0 -- reset amount of tags
@@ -295,9 +300,9 @@ local function server_update()
                 end
             end
 
-            gGlobalSyncTable.juggernautTagsReq = numPlayers * 3
+            gGlobalSyncTable.juggernautTagsReq = math.floor(numPlayers * 2.5)
 
-            if gGlobalSyncTable.juggernautTagsReq > 30 then gGlobalSyncTable.juggernautTagsReq = 30 end
+            if gGlobalSyncTable.juggernautTagsReq > 20 then gGlobalSyncTable.juggernautTagsReq = 20 end
 
             if gGlobalSyncTable.gamemode == HOT_POTATO then
                 hotPotatoTimerMultiplier = amountOfTaggersNeeded
@@ -307,7 +312,7 @@ local function server_update()
                 hotPotatoTimerMultiplier = 1
             end
 
-            if gGlobalSyncTable.gamemode == ASSASINS then
+            if gGlobalSyncTable.gamemode == ASSASSINS then
                 for i = 0, MAX_PLAYERS-1 do
                     if gPlayerSyncTable[i].state ~= SPECTATOR then
                         gPlayerSyncTable[i].state = TAGGER
@@ -335,7 +340,7 @@ local function server_update()
             if gGlobalSyncTable.gamemode ~= HOT_POTATO then
                 timer = 15 * 30 -- 15 seconds
 
-                if gGlobalSyncTable.gamemode == ASSASINS then
+                if gGlobalSyncTable.gamemode == ASSASSINS then
                     gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN -- end round
                 else
                     gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN -- end round
@@ -509,6 +514,12 @@ local function mario_update(m)
         end
     end
 
+    -- pipe
+    pipeTimer = pipeTimer + 1
+    if pipeTimer > 3 * 30 then
+        pipeUse = 0
+    end
+
     m.squishTimer = 0
     m.specialTripleJump = 0
 
@@ -527,7 +538,7 @@ local function mario_update(m)
         m.area.camera.cutscene = 0
     end
 
-    if gPlayerSyncTable[m.playerIndex].state ~= SPECTATOR and gGlobalSyncTable.modifier ~= MODIFIER_FLY and gGlobalSyncTable.gamemode ~= ASSASINS then
+    if gPlayerSyncTable[m.playerIndex].state ~= SPECTATOR and gGlobalSyncTable.modifier ~= MODIFIER_FLY then
         m.flags = m.flags & ~MARIO_WING_CAP
         m.flags = m.flags & ~MARIO_METAL_CAP
         m.flags = m.flags & ~MARIO_VANISH_CAP
@@ -542,7 +553,7 @@ local function mario_update(m)
     end
 
     -- set model state according to state
-    if gPlayerSyncTable[m.playerIndex].state == TAGGER and gGlobalSyncTable.gamemode ~= ASSASINS and (gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO or m.playerIndex == 0) then
+    if gPlayerSyncTable[m.playerIndex].state == TAGGER and gGlobalSyncTable.gamemode ~= ASSASSINS and (gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO or m.playerIndex == 0) then
         m.marioBodyState.modelState = MODEL_STATE_METAL
     elseif gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA
@@ -651,6 +662,11 @@ local function mario_update(m)
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvKingBobomb))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStar))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStarSpawnCoordinates))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvSpawnedStar))
+
+        if not gGlobalSyncTable.water then
+            obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWaterLevelDiamond))
+        end
 
         if not isRomhack then
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvActivatedBackAndForthPlatform))
@@ -667,7 +683,7 @@ local function mario_update(m)
         -- handle if just join
         if joinTimer == 2 * 30 then
             if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
-                if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION or gGlobalSyncTable.gamemode == HOT_POTATO or gGlobalSyncTable.gamemode == ASSASINS then
+                if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION or gGlobalSyncTable.gamemode == HOT_POTATO or gGlobalSyncTable.gamemode == ASSASSINS then
                     gPlayerSyncTable[0].state = ELIMINATED_OR_FROZEN
                 else
                     gPlayerSyncTable[0].state = TAGGER
@@ -943,7 +959,7 @@ local function allow_pvp(a, v)
     -- check if 2 runners are trying to attack eachother
     if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == RUNNER then return false end
     -- check if 2 taggers are trying to attack eachother
-    if gPlayerSyncTable[v.playerIndex].state == TAGGER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gGlobalSyncTable.gamemode ~= ASSASINS then return false end
+    if gPlayerSyncTable[v.playerIndex].state == TAGGER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gGlobalSyncTable.gamemode ~= ASSASSINS then return false end
     -- don't allow spectators to attack players, vice versa
     if gPlayerSyncTable[v.playerIndex].state == SPECTATOR or gPlayerSyncTable[a.playerIndex].state == SPECTATOR then return false end
 end
@@ -952,7 +968,6 @@ end
 ---@param o Object
 ---@param intee InteractionType
 local function allow_interact(m, o, intee)
-
     -- check if intee is unwanted
     if intee == INTERACT_STAR_OR_KEY or intee == INTERACT_KOOPA_SHELL or intee == INTERACT_WARP_DOOR then
         return false
@@ -974,9 +989,12 @@ local function allow_interact(m, o, intee)
                     m.vel.y = 60
                     m.forwardVel = 15
 
-                    if m.invincTimer <= 0 then
+                    if m.invincTimer < 2 * 30 and pipeUse < 3 then
                         gPlayerSyncTable[m.playerIndex].invincTimer = 2 * 30 -- 2 seconds
+                        pipeUse = pipeUse + 1
                     end
+
+                    pipeTimer = 0
 
                     reset_camera(m.area.camera) -- reset camera
 

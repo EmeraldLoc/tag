@@ -1,6 +1,6 @@
 # Tag
 
-This mod is a collection of multiple gamemodes all in one mod! The mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, and Assasins. It also contains modifiers that effect the gameplay of the gamemode, which can add twists to your game!
+This mod is a collection of multiple gamemodes all in one mod! The mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, and Assassins. It also contains modifiers that effect the gameplay of the gamemode, which can add twists to your game!
 
 ### FAQ
 

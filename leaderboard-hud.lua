@@ -31,8 +31,8 @@ local function hud_winner_group_render()
             text = "Infected Win"
         elseif gGlobalSyncTable.gamemode == HOT_POTATO then
             text = "Potato Wielders Win"
-        elseif gGlobalSyncTable.gamemode == ASSASINS then
-            text = "Assasins Win"
+        elseif gGlobalSyncTable.gamemode == ASSASSINS then
+            text = "Assassins Win"
         else
             text = "Taggers Win"
         end
@@ -124,12 +124,12 @@ local function hud_leaderboard()
             -- decide what position this player should be at. Don't use w variable to allow for ties as shown below
             if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN and w > 1 then
                 -- check the previous index and see if they tie, if they don't, increase position
-                if gPlayerSyncTable[i].amountOfTags ~= gPlayerSyncTable[winnerIndexes[w - 1]].amountOfTags then
+                if gPlayerSyncTable[i].amountOfTags ~= gPlayerSyncTable[winners[w - 1]].amountOfTags then
                     position = position + 1
                 end
             elseif w > 1 then
                 -- check the previous index and see if they tie, if they don't, increase position
-                if gPlayerSyncTable[i].amountOfTimeAsRunner ~= gPlayerSyncTable[winnerIndexes[w - 1]].amountOfTimeAsRunner then
+                if gPlayerSyncTable[i].amountOfTimeAsRunner ~= gPlayerSyncTable[winners[w - 1]].amountOfTimeAsRunner then
                     position = position + 1
                 end
             end
@@ -190,8 +190,8 @@ local function hud_leaderboard()
                 text = "No Infected Players Won"
             elseif gGlobalSyncTable.gamemode == HOT_POTATO then
                 text = "No Potato Wielders Win"
-            elseif gGlobalSyncTable.gamemode == ASSASINS then
-                text = "No Assasins Win"
+            elseif gGlobalSyncTable.gamemode == ASSASSINS then
+                text = "No Assassins Win"
             else
                 text = "No Taggers Won"
             end
