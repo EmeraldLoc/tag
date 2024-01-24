@@ -2,7 +2,7 @@
 randomDidYouKnow = 0
 
 function select_random_did_you_know()
-    randomDidYouKnow = math.random(1, 5)
+    randomDidYouKnow = math.random(1, 23)
 end
 
 function hud_did_you_know(fade)
@@ -12,10 +12,11 @@ function hud_did_you_know(fade)
     local text3 = ""
     local text4 = ""
 
+    -- I had way too much fun with this
     if randomDidYouKnow == 1 then
         text = "Did you know that Taggers can use a Boost?"
         text2 = "To do this, while you're a tagger, make sure the blue bar is filled up, then hit Y."
-        text3 = "Once you do this, you will be soaring through runners!"
+        text3 = "Once you do this, you will be tagging runners left and right!"
     elseif randomDidYouKnow == 2 then
         text = "Did you know that modifiers are ways to make tag have more varity?"
         text2 = "The current modifier selected will appear at the start of a round in chat."
@@ -30,9 +31,67 @@ function hud_did_you_know(fade)
         text3 = "especially if there's water in it..."
     elseif randomDidYouKnow == 5 then
         text = "Do you know who the author of this mod is?"
-        text2 = "It's EmeraldLockdown, a modder who's been modding since 1995! *cough 2022 cough*"
+        text2 = "It's EmeraldLockdown, a modder who's been modding since 2022 (dang time moves fast)!"
         text3 = "EmeraldLockdown, also known as Emerald, has made many contributions to the project, and modding community."
         text4 = "If your wondering, yes, this is a plug to my other mods :D"
+    elseif randomDidYouKnow == 6 then
+        text = "Did you know that you suck at the game?"
+    elseif randomDidYouKnow == 7 then
+        text = "I find it weird that whenever your not online, my productivity increases tenfold."
+    elseif randomDidYouKnow == 8 then
+        text = "Honestly, I just find stuff to put in here, I really don't know what, there's like 5"
+        text2 = "actually helpful \"Did you know's,\" but hey just know a guy typed this stuff out"
+        text3 = "at 6:06 on January 13 2024"
+    elseif randomDidYouKnow == 9 then
+        text = "Did you know that your great at this game?"
+    elseif randomDidYouKnow == 10 then
+        text = "Ever checked out Geometry Dash? Pretty cool game, 2.2 just came out, 2.21 will be out in"
+        text2 = "another 7 years, can't wait honestly."
+    elseif randomDidYouKnow == 11 then
+        text = "If your playing this mod with cheats, what are you even doing?"
+    elseif randomDidYouKnow == 12 then
+        text = "Shoutouts to Simpleflips."
+    elseif randomDidYouKnow == 13 then
+        text = "In the game code, the index of this random did you know is 13, I don't know why you need"
+        text2 = "to know that, but now you do"
+    elseif randomDidYouKnow == 14 then
+        text = "Wanna contribute? Search \"tag mod sm64 github,\" it'll be like the 3rd result. Help get it"
+        text2 = "to the top, or no cookie for you >:("
+    elseif randomDidYouKnow == 15 then
+        text = "As of January 23 2024, 6:11 pm, I'm having good fun writing these."
+    elseif randomDidYouKnow == 16 then
+        text = "I am not responsible for any grammer mistakes found in this text, dangit you're."
+    elseif randomDidYouKnow == 17 then
+        text = "When next tag version?!?!?!?"
+    elseif randomDidYouKnow == 18 then
+        text = "When coop v" .. VERSION_NUMBER + 1
+    elseif randomDidYouKnow == 19 then
+        text = "Ya know what, a great mod you should download is MarioHunt. Really good mod, made by EmilyEmmi."
+    elseif randomDidYouKnow == 20 then
+        text = "sm64.us.f3dex2e"
+    elseif randomDidYouKnow == 21 then
+        text = "Here's a tip, if your ever asked to tip a company, you might not see a \"Nothing\" button, but"
+        text2 = "don't worry, it's somewhere there!"
+        text4 = "No i'm not a villian to society, it's just that I don't want to tip people... in a AIRPORT"
+    elseif randomDidYouKnow == 22 then
+        text = "There are 25 random tips/me ranting for no good reason. Anyways I love geography, really"
+        text2 = "cool stuff. Just learning about random things about countries and how their borders make"
+        text3 = "those things happen is great. I mean just yesterday (today being Tuesday Jan 23 2024) I"
+        text4 = "watched a video about how the U.S. transports its nukes, and it... crap ran out of room"
+    elseif randomDidYouKnow == 23 then
+        text = "I did say there were 25 random tips, if you didn't see that, ignore this."
+        text2 = "contains people who can take your house away at any time, lovely!"
+        text3 = "They've only had a few accidents"
+        text4 = "Also there's 26 random tips, although i'm not gonna update this, so yea..."
+    elseif randomDidYouKnow == 24 then
+        text = "You should really go check out Flood, super cool gamemode, made by Agent X."
+    elseif randomDidYouKnow == 25 then
+        text = "Can't wait to become an anarchist. Idk why I said that."
+    elseif randomDidYouKnow == 26 then
+        text = "I'm 24 of this in, doing 2 more, hope you enjoy. Make sure to like and subscribe,"
+        text2 = "only a small percentage of my viewers are subscribed, so if you hit that button,"
+        text3 = "it will really help out a ton. It's completely free, and you can change your mind"
+        text4 = "at anytime. Thanks! Now enjoy the video! (5 seconds later) Make sure to like and su..."
     end
 
     local scale = 1

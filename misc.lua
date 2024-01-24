@@ -1,13 +1,15 @@
 
--- variables
+-- this is the boost trail model
 E_MODEL_BOOST_TRAIL = smlua_model_util_get_id("boost_trail_geo")
 
 ---@param table table
 ---@param element any
 function table.contains(table, element)
+	-- we check each value in the table
     for _, value in pairs(table) do
-		-- check if value is equal to the element
+		-- check if that value is equal to the element
       	if value == element then
+			-- if so, we are good to go, and the table contains the element, return true!
         	return true
       	end
     end
@@ -17,19 +19,22 @@ function table.contains(table, element)
 end
 
 function mario_health_float(m)
-	-- dont use clamp function because it doesnt work for some reason
+	-- fancy maths code that djoslin0 made
     local returnValue = (m.health - 255) / (2176 - 255)
+	-- dont use clamp function because it doesnt work for some reason, either that or I'm dumb
 	if returnValue > 1 then returnValue = 1
 	elseif returnValue < 0 then returnValue = 0 end
 
 	return returnValue
 end
 
+-- credit to jsmorely
 function hex_to_rgb(hex)
 	-- remove the # and the \\ from the hex so that we can convert it properly
 	hex = hex:gsub('#','')
 	hex = hex:gsub('\\','')
 
+	-- honestly I copied this from the rainmeter (windows customization) forum... credit to jsmorely!
 	if string.len(hex) == 3 then
 		return tonumber('0x'..hex:sub(1,1)) * 17, tonumber('0x'..hex:sub(2,2)) * 17, tonumber('0x'..hex:sub(3,3)) * 17
 	elseif string.len(hex) == 6 then
@@ -44,10 +49,14 @@ function strip_hex(name)
 	-- create variables
 	local s = ''
 	local inSlash = false
+	-- the way this works is if your in a slash, you dont add the characters in the slash,
+	-- otherwise, you do, this allows you to skip the hex's
+	
 	-- loop thru each character in the string
 	for i = 1, #name do
 		local c = name:sub(i,i)
 		if c == '\\' then
+			-- we are now in (or out) of the slash, set variable accordingly
 			inSlash = not inSlash
 		elseif not inSlash then
 			s = s .. c
@@ -289,15 +298,22 @@ function name_of_level(level, area)
 	return get_level_name(level_to_course(level), level, area)
 end
 
----@param m MarioState
-function generate_boost_trail(m)
+function generate_boost_trail()
 	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
 
-	local x = m.pos.x
-	local y = m.pos.y + 5
-	local z = m.pos.z
+	for i = 0, MAX_PLAYERS - 1 do
+		if not gNetworkPlayers[i].connected then goto continue end
+		if not gPlayerSyncTable[i].boosting then goto continue end
+		local m = gMarioStates[i]
 
-	spawn_sync_object(id_bhvBoostParticle, E_MODEL_BOOST_TRAIL, x, y, z, nil)
+		local x = m.pos.x
+		local y = m.pos.y + 5
+		local z = m.pos.z
+
+		spawn_non_sync_object(id_bhvBoostParticle, E_MODEL_BOOST_TRAIL, x, y, z, nil)
+
+		::continue::
+	end
 end
 
 function get_modifier_text()

@@ -1,4 +1,13 @@
+
+-- if your trying to learn this code, I hope i've done a good job.
+-- This file is pretty much (other than misc.lua) the most unorganized file of them all
+-- threw so much crap in here that isn't even apart of the actual game loop or anything
+-- anyways other than that, everything should be good, so
+-- wish you luck on your journey!
+
 -- constants
+
+-- round states
 ROUND_WAIT_PLAYERS = 0
 ROUND_ACTIVE = 1
 ROUND_WAIT = 2
@@ -7,11 +16,13 @@ ROUND_RUNNERS_WIN = 4
 ROUND_HOT_POTATO_INTERMISSION = 5
 ROUND_VOTING = 6
 
+-- roles (gamemode-specific roles specified in designated gamemode files)
 RUNNER = 0
 TAGGER = 1
 ELIMINATED_OR_FROZEN = 2
 SPECTATOR = 3
 
+-- gamemodes
 MIN_GAMEMODE = 1
 TAG = 1
 FREEZE_TAG = 2
@@ -21,8 +32,10 @@ JUGGERNAUT = 5
 ASSASSINS = 6
 MAX_GAMEMODE = 6
 
+-- players needed (it's only 2 if your on the tag gamemode, otherwise this variable is 3)
 PLAYERS_NEEDED = 2
 
+-- modifiers
 MODIFIER_MIN = 0
 MODIFIER_NONE = 0
 MODIFIER_BOMBS = 1
@@ -36,6 +49,7 @@ MODIFIER_INCOGNITO = 8
 MODIFIER_HIGH_GRAVITY = 9
 MODIFIER_MAX = 9
 
+-- paintings found in vote screen, this is for all vanilla levels.
 TEXTURE_CG_PAINTING    = get_texture_info("cg_painting")
 TEXTURE_BOB_PAINTING   = get_texture_info("bob_painting")
 TEXTURE_WF_PAINTING    = get_texture_info("wf_painting")
@@ -51,63 +65,99 @@ TEXTURE_THI_PAINTING   = get_texture_info("thi_painting")
 TEXTURE_ITHI_PAINTING  = get_texture_info("ithi_painting")
 TEXTURE_TTM_PAINTING   = get_texture_info("ttm_painting")
 TEXTURE_SL_PAINTING    = get_texture_info("sl_painting")
-TEXTURE_WDW_PAINTING    = get_texture_info("wdw_painting")
+TEXTURE_WDW_PAINTING   = get_texture_info("wdw_painting")
 TEXTURE_TTC_PAINTING   = get_texture_info("ttc_painting")
 
 -- globals and sync tables
+-- this is the round state, this variable tells you what current round it is
 gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+-- this is the currently selected modifier. If random modifiers are off (as in you've selected
+-- one manually) then MODIFIER_NONE = Disabled
 gGlobalSyncTable.modifier = MODIFIER_NONE
+-- dictates wether or not modifiers and gamemodes are random
 gGlobalSyncTable.randomModifiers = true
 gGlobalSyncTable.randomGamemode = true
+-- what the gamemode is
 gGlobalSyncTable.gamemode = TAG
+-- toggles for bljs, cnanons, and water
 gGlobalSyncTable.bljs = false
 gGlobalSyncTable.cannons = false
 gGlobalSyncTable.water = false
-gGlobalSyncTable.swapTimer = 1
+-- display timer, used for all sorts of timers, timers from the top
+-- of the screen, to timers in the vote menu
 gGlobalSyncTable.displayTimer = 1
+-- the current selected level. When romhacks are enabled, this is set to the actual level
+-- number (i.e LEVEL_BOB), otherwise, it's set to the level in the levels table (found below here)
 gGlobalSyncTable.selectedLevel = 1
+-- juggernaut tags required. Since this changes depending on player count, make it a global variable
 gGlobalSyncTable.juggernautTagsReq = 15
+-- amount of time left in a round
 gGlobalSyncTable.amountOfTime = 120 * 30
+-- ttc speed, because ttc syncing sucks
 gGlobalSyncTable.ttcSpeed = 0
-for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init
+for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then
+        -- the player's role
         gPlayerSyncTable[i].state = RUNNER
+        -- the player's invinc timer, I forgot why I use the player sync table, think for
+        -- syincing it or something, anyways that's what it is so
         gPlayerSyncTable[i].invincTimer = 0
+        -- amount of tags a player has gotten, and the amount of time a runner has
+        -- been a runner, this is for the leaderboard
         gPlayerSyncTable[i].amountOfTags = 0
         gPlayerSyncTable[i].amountOfTimeAsRunner = 0
+        -- juggernaut lives/tags
         gPlayerSyncTable[i].juggernautTags = 0
+        -- the assassins's target and stun timer (stun as the shock action)
         gPlayerSyncTable[i].assassinTarget = -1
         gPlayerSyncTable[i].assassinStunTimer = -1
+        -- what number you voted for in the level voting system
         gPlayerSyncTable[i].votingNumber = 0
+        -- wether or not your boosting
+        gPlayerSyncTable[i].boosting = false
     end
 end
 
 -- server settings
 gServerSettings.playerInteractions = PLAYER_INTERACTIONS_SOLID -- force player attacks to be on
-gServerSettings.bubbleDeath = 0
+gServerSettings.bubbleDeath = 0 -- just.... no
 
 -- variables
+-- this is the local server timer used to set gGlobalSyncTable.activeTimer and other variables
 timer = 0
-flashingIndex = 0
+-- if we are a romhack or not (checked in check_mods function)
 isRomhack = false
+-- if nametags are enabled or not (checked in check_mods function)
 nametagsEnabled = false
+-- the name
 blacklistedCourses = {}
+-- the join timer, this is what gives it time to sync
 joinTimer = 6 * 30
+-- the previous level, used for when the server selects levels to pick
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
+-- These are levels that are failed to be warped to for romhacks
 badLevels = {}
+-- the global sound source, used for audio
 gGlobalSoundSource = {x = 0, y = 0, z = 0}
+-- if we are paused or not, for custom pause menu
 isPaused = false
+-- speed boost timer handles boosting
 local speedBoostTimer = 0
+-- hot potato timer multiplier is when the timer is faster if there's more people in
+-- hot potato
 local hotPotatoTimerMultiplier = 1
+-- pipe invinc vars
 local pipeTimer = 0
 local pipeUse = 0
 
+-- just some global variables, honestly idk why the second one is there but it is so.....
 _G.tagExists = true
 _G.tagSettingsOpen = false
 
+-- just a action we can use, used for when the round ends and mario freezes
 ACT_NOTHING = allocate_mario_action(ACT_FLAG_IDLE)
 
--- tables
+-- this is the table for levels, pretty self explanitory.
 levels = {
     {name = "cg",    level = LEVEL_CASTLE_GROUNDS, painting = TEXTURE_CG_PAINTING,    act = 0, area = 1, pipes = true, pipe1Pos = {x = -5979, y = 378, z = -1371},  pipe2Pos = {x = 1043, y = 3174, z = -5546}},
     {name = "bob",   level = LEVEL_BOB,            painting = TEXTURE_BOB_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = -4694, y = 0, z = 6699},     pipe2Pos = {x = 5079, y = 3072, z = 655}},
@@ -129,6 +179,7 @@ levels = {
 }
 
 local function server_update()
+    -- set some basic sync table vars
     for i = 0, MAX_PLAYERS - 1 do
         if not gNetworkPlayers[i].connected then
             gPlayerSyncTable[i].state = -1
@@ -138,9 +189,11 @@ local function server_update()
         end
     end
 
+    -- get number of players
     local numPlayers = 0
 
     for i = 0, MAX_PLAYERS - 1 do
+        -- don't include spectators
         if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state ~= SPECTATOR then
             numPlayers = numPlayers + 1
         end
@@ -164,6 +217,8 @@ local function server_update()
         end
     elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
         timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+
+        -- this long while loop is just to select a random level, ik, extremely hard to read
         ---@diagnostic disable-next-line: param-type-mismatch
         while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel <= 0 or table.contains(blacklistedCourses, gGlobalSyncTable.selectedLevel) do
             if isRomhack then
@@ -184,9 +239,10 @@ local function server_update()
     end
 
     if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
+        -- force state to be runner, so long as they aren't a spectator
         for i = 0, MAX_PLAYERS - 1 do
             if gPlayerSyncTable[i].state ~= SPECTATOR then
-                gPlayerSyncTable[i].state = RUNNER -- set everyone's state to runner
+                gPlayerSyncTable[i].state = RUNNER
             end
         end
     elseif gGlobalSyncTable.roundState == ROUND_WAIT then
@@ -222,6 +278,7 @@ local function server_update()
                     gGlobalSyncTable.gamemode = TAG -- set to tag explicitly
                 end
 
+                -- this just sets the amount of time var and players needed var
                 if gGlobalSyncTable.gamemode == FREEZE_TAG then
                     -- set freeze tag timer
                     gGlobalSyncTable.amountOfTime = 180 * 30
@@ -485,6 +542,7 @@ local function update()
         speedBoostTimer = 5 * 30 -- 5 seconds
     end
 
+    -- set some variables if we are a spectator
     if gPlayerSyncTable[0].state == SPECTATOR then
         gPlayerSyncTable[0].amountOfTimeAsRunner = 0
         gPlayerSyncTable[0].amountOfTags = 0
@@ -501,6 +559,7 @@ local function update()
         elseif gPlayerSyncTable[i].state == -1 then
             network_player_set_description(gNetworkPlayers[i], "None", 50, 50, 50, 255)
         elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+            -- love the color of this, idk why I like it so much but it's such a nice gray.
             network_player_set_description(gNetworkPlayers[i], "Incognito", 103, 103, 103, 255)
         end
     end
@@ -508,36 +567,38 @@ end
 
 ---@param m MarioState
 local function mario_update(m)
+    -- get rid of water
     if not gGlobalSyncTable.water then
         for i = 1, 6 do
             set_environment_region(i, -10000)
         end
     end
 
-    -- pipe
-    pipeTimer = pipeTimer + 1
-    if pipeTimer > 3 * 30 then
-        pipeUse = 0
-    end
-
-    m.squishTimer = 0
+    -- disable special triple jump
     m.specialTripleJump = 0
 
+    -- this ensures bljs are a no good, but hey, you can go as fast as a dive so
     if not gGlobalSyncTable.bljs and m.forwardVel <= -48 and (m.action == ACT_LONG_JUMP or m.action == ACT_LONG_JUMP_LAND or m.action == ACT_LONG_JUMP_LAND_STOP) then
         m.forwardVel = -48 -- this is the dive speed
     end
 
-    m.peakHeight = m.pos.y
+    m.peakHeight = m.pos.y -- disables fall damage
 
+    -- set player that just joined to be invisible (-1 is not a valid state so)
     if gPlayerSyncTable[m.playerIndex].state == -1 then
         obj_set_model_extended(m.marioObj, E_MODEL_NONE)
     end
 
+    -- this is for bowser stages
     if m.statusForCamera.cameraEvent == CAM_EVENT_BOWSER_INIT then
         m.statusForCamera.cameraEvent = 0
         m.area.camera.cutscene = 0
     end
 
+    -- this sets cap flags
+    -- guide:
+    -- | = add
+    -- & ~ = subtract
     if gPlayerSyncTable[m.playerIndex].state ~= SPECTATOR and gGlobalSyncTable.modifier ~= MODIFIER_FLY then
         m.flags = m.flags & ~MARIO_WING_CAP
         m.flags = m.flags & ~MARIO_METAL_CAP
@@ -556,11 +617,12 @@ local function mario_update(m)
     if gPlayerSyncTable[m.playerIndex].state == TAGGER and gGlobalSyncTable.gamemode ~= ASSASSINS and (gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO or m.playerIndex == 0) then
         m.marioBodyState.modelState = MODEL_STATE_METAL
     elseif gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
-        m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA
+        m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA -- vanish cap mario
     elseif gPlayerSyncTable[m.playerIndex].state == RUNNER or (gGlobalSyncTable.modifier == MODIFIER_INCOGNITO and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) then
-        m.marioBodyState.modelState = 0
+        m.marioBodyState.modelState = 0 -- normal
     end
 
+    -- sync invinc timer to sync table invinc timer
     if joinTimer <= 0 then
         m.invincTimer = gPlayerSyncTable[m.playerIndex].invincTimer
     end
@@ -571,6 +633,7 @@ local function mario_update(m)
         local selectedLevel = levels[gGlobalSyncTable.selectedLevel] -- get currently selected level
 
         -- check if mario is in the proper level, act, and area, if not, rewarp mario
+        -- this is all warp shenenagins, and i'm waaay too lazy to do in depth comments, so, just wing it i guess
         if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_WAIT or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
             if not isRomhack then
                 if np.currLevelNum ~= selectedLevel.level or np.currActNum ~= selectedLevel.act or np.currAreaIndex ~= selectedLevel.area then
@@ -623,20 +686,28 @@ local function mario_update(m)
 
         -- spawn pipes
         if not isRomhack then
-            if selectedLevel.pipes == true and obj_get_first_with_behavior_id(id_bhvWarpPipe) == nil then
-                spawn_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe1Pos.x, selectedLevel.pipe1Pos.y, selectedLevel.pipe1Pos.z, function (o)
+            -- make sure the level has pipes (found in level table), then check if they aren't spawned
+            if selectedLevel.pipes and obj_get_first_with_behavior_id(id_bhvWarpPipe) == nil then
+                -- spawn pipes
+                spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe1Pos.x, selectedLevel.pipe1Pos.y, selectedLevel.pipe1Pos.z, function (o)
                     o.oBehParams = 1
                 end)
 
-                spawn_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe2Pos.x, selectedLevel.pipe2Pos.y, selectedLevel.pipe2Pos.z, function (o)
+                spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe2Pos.x, selectedLevel.pipe2Pos.y, selectedLevel.pipe2Pos.z, function (o)
                     o.oBehParams = 2
                 end)
             end
         end
 
-        -- delete unwanted pipes
-        if gNetworkPlayers[0].currLevelNum == LEVEL_THI and obj_get_first_with_behavior_id(id_bhvWarpPipe) ~= nil then
+        -- delete unwanted pipes in Tiny Huge Island
+        if gNetworkPlayers[0].currLevelNum == LEVEL_THI and obj_get_first_with_behavior_id(id_bhvWarpPipe) ~= nil and not isRomhack then
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
+        end
+
+        -- handle pipe invinc timers and such, too lazy to write what this does
+        pipeTimer = pipeTimer + 1
+        if pipeTimer > 3 * 30 then
+            pipeUse = 0
         end
 
         -- get rid of unwated behaviors
@@ -663,11 +734,17 @@ local function mario_update(m)
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStar))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStarSpawnCoordinates))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvSpawnedStar))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvKoopaShell))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWingCap))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvMetalCap))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvVanishCap))
 
+        -- water level diamond breaks water being disabled, so just get rid of it
         if not gGlobalSyncTable.water then
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWaterLevelDiamond))
         end
 
+        -- delete objects depending if we are in a romhack or not
         if not isRomhack then
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvActivatedBackAndForthPlatform))
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvExclamationBox))
@@ -675,13 +752,14 @@ local function mario_update(m)
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
         end
 
-        -- handle speed boost
+        -- handle speed boost, this is a fun if statement
         if m.controller.buttonPressed & Y_BUTTON ~= 0 and speedBoostTimer >= 20 * 30 and gPlayerSyncTable[0].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST and gGlobalSyncTable.modifier ~= MODIFIER_BOMBS and gGlobalSyncTable.modifier ~= MODIFIER_FLY and gGlobalSyncTable.modifier ~= MODIFIER_SPEED then
             speedBoostTimer = 0
         end
 
         -- handle if just join
         if joinTimer == 2 * 30 then
+            -- this here sets our initial state
             if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
                 if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION or gGlobalSyncTable.gamemode == HOT_POTATO or gGlobalSyncTable.gamemode == ASSASSINS then
                     gPlayerSyncTable[0].state = ELIMINATED_OR_FROZEN
@@ -693,13 +771,14 @@ local function mario_update(m)
             end
 
             m.freeze = 1
+        -- some m.freeze stuff and join timer shenenagins
         elseif joinTimer > 0 then
             m.freeze = 1
         elseif network_is_server() then
             joinTimer = 0
         end
 
-        -- handle desync timer
+        -- ooo desync timer
         if desyncTimer <= 0 then
             m.freeze = 1
         end
@@ -709,6 +788,7 @@ local function mario_update(m)
             m.freeze = 1
             m.action = ACT_NOTHING
         elseif (joinTimer <= 0 and desyncTimer > 0) or network_is_server() then
+            -- yea idk what this is this looks awful, not changing it though since it somehow works
             if showSettings or isPaused then
                 m.freeze = 1
             elseif (_G.swearExists and not _G.swearSettingsOpened) or _G.swearExists == nil then
@@ -739,6 +819,7 @@ local function before_phys(m)
 
     -- handle speed boost
     if speedBoostTimer < 5 * 30 and gPlayerSyncTable[0].state == TAGGER then -- this allows for 5 seconds of speedboost
+        -- goodbye mario speed
         if m.action ~= ACT_BACKWARD_AIR_KB and m.action ~= ACT_FORWARD_AIR_KB then
             m.vel.x = m.vel.x * 1.25
             m.vel.z = m.vel.z * 1.25
@@ -747,10 +828,15 @@ local function before_phys(m)
             m.vel.z = m.vel.z * 1.05
         end
 
-        generate_boost_trail(m)
+        -- tells other players we are boosting
+        gPlayerSyncTable[0].boosting = true
     end
 
-    -- handle fly speed reduction
+    -- this function handles boost trail
+    generate_boost_trail()
+
+    -- reduce fly speed, not to be confused with fly-phyisics.lua, this handles reduction in speed if your a runner
+    -- dont get me wrong it should def be in fly-physics.lua, too lazy to move it now though
     if gGlobalSyncTable.modifier == MODIFIER_FLY and gPlayerSyncTable[0].state == RUNNER and m.action == ACT_FLYING then
         m.vel.x = m.vel.x * 0.8
         m.vel.z = m.vel.z * 0.8
@@ -758,6 +844,9 @@ local function before_phys(m)
 end
 
 local function hud_round_status()
+
+    -- if you want comments on the hud stuff, you ain't getting it, I barely undestand it
+    -- but I understand it just enough to make the huds I make
 
     local text = ""
 
@@ -949,8 +1038,6 @@ local function hud_render()
 
     -- hide hud
     hud_hide()
-
-    flashingIndex = flashingIndex + 1
 end
 
 ---@param a MarioState
@@ -973,13 +1060,17 @@ local function allow_interact(m, o, intee)
         return false
     end
 
+    -- check if we interacted with a pipe, if we did, do pipe shenenagins
     if intee == INTERACT_WARP and o.behavior == get_behavior_from_id(id_bhvWarpPipe) and not isRomhack then
+        -- here we ensure our state isn't set to frozen
         if (gGlobalSyncTable.gamemode == FREEZE_TAG and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) or gGlobalSyncTable.gamemode ~= FREEZE_TAG then
+            -- get second pipe
             local o2 = obj_get_first_with_behavior_id(id_bhvWarpPipe)
             while o2 ~= nil do
                 if o2 == o then
                     o2 = obj_get_next_with_same_behavior_id(o2)
                 else
+                    -- pretty much teleport to the pipe and set invincibility
                     m.pos.x = o2.oPosX
                     m.pos.y = o2.oPosY + 200
                     m.pos.z = o2.oPosZ
@@ -1007,21 +1098,25 @@ local function allow_interact(m, o, intee)
 
         return false
     elseif intee == INTERACT_WARP then
+        -- disable warp interaction
         return false
     end
 
-    -- dont allow spectator to interact with objects
+    -- dont allow spectator to interact with objects, L
+    -- they are allowed to interact with pipes because that is handled above, so that's awesome!
     if gPlayerSyncTable[m.playerIndex].state == SPECTATOR then return false end
 end
 
 ---@param m MarioState
 local function act_nothing(m)
+    -- great action am I right
     m.forwardVel = 0
     m.vel.x = 0
     m.vel.y = 0
     m.vel.z = 0
     m.slideVelX = 0
     m.slideVelZ = 0
+    -- this is to freeze mario's animation btw
     m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - 1
 end
 
@@ -1036,6 +1131,7 @@ function check_mods()
                     isRomhack = true
 
                     gGlobalSyncTable.water = true
+                -- check for nametags mod by looking at incompatible tag
                 elseif string.match(gActiveMods[i].incompatible, "nametags") then
                     -- set nametagsEnabled to true
                     nametagsEnabled = true
@@ -1046,6 +1142,7 @@ function check_mods()
 end
 
 hook_on_sync_table_change(gGlobalSyncTable, 'randomGamemode', gGlobalSyncTable.randomGamemode, function (tag, oldVal, newVal)
+    -- the only one of these awful sync table changes you will see, enjoy.
     if oldVal ~= newVal then
         local text = ""
 
@@ -1058,12 +1155,19 @@ hook_on_sync_table_change(gGlobalSyncTable, 'randomGamemode', gGlobalSyncTable.r
     end
 end)
 
+-- runs once per frame (all game logic runs at 30fps)
 hook_event(HOOK_UPDATE, update)
+-- runs when the hud is rendered
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
+-- runs when mario is updated
 hook_event(HOOK_MARIO_UPDATE, mario_update)
+-- runs before mario's physic step
 hook_event(HOOK_BEFORE_PHYS_STEP, before_phys)
+-- runs right before mario is about to attack
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
+-- runs right before mario is about to interact with an object
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
+-- runs right before mario sets his action
 hook_event(HOOK_BEFORE_SET_MARIO_ACTION, before_set_mario_action)
 -- make sure the user can never pause exit
 hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
@@ -1074,8 +1178,11 @@ hook_event(HOOK_ALLOW_HAZARD_SURFACE, function ()
    return false
 end)
 
+-- make ACT_NOTHING do something, wild ain't it
 ---@diagnostic disable-next-line: missing-parameter
 hook_mario_action(ACT_NOTHING, act_nothing)
 
 -- check for mods
 check_mods()
+
+-- Good job, you made it to the end of your file. I'd suggest heading over to tag.lua next!

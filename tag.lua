@@ -1,14 +1,20 @@
+-- this will be the only gamemode file explained in-depth
+
 -- constants
+-- this is another player role, a custom one, you will notice it's set to the same thing
+-- as engine.lua's ELIMINATED_OR_FROZEN variable, this is intentional
 local ELIMINATED = 2
 
 -- variables
+-- this shows the elimanted hud that you've probably only seen 2 times if your good at the game
 local eliminatedTimer = 0
 
 local function update()
-
+    -- we do this in every function to ensure this only runs when the tag gamemode is active
     if gGlobalSyncTable.gamemode ~= TAG then return end
 
-    -- set network descriptions
+    -- set network descriptions/the thing when you hold tab thats in the middle
+    -- pretty self explanitory
     for i = 0, MAX_PLAYERS - 1 do
         if gPlayerSyncTable[i].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
             network_player_set_description(gNetworkPlayers[i], "Tagger", 232, 46, 46, 255)
@@ -34,7 +40,8 @@ local function mario_update(m)
     
     if gPlayerSyncTable[m.playerIndex].state == ELIMINATED then
         -- set model state
-        m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA
+        m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA -- vanish cap style
+        -- make mario have vanish cap and wing cap (wait so why did I do the line above? Idk)
         m.flags = m.flags | MARIO_VANISH_CAP
         m.flags = m.flags | MARIO_WING_CAP
     end
@@ -42,6 +49,9 @@ end
 
 local function hud_bottom_render()
 
+    -- incase your wondering, don't check gamemode because the function
+    -- this function is ran in already checks, so we just checkk if the round is active
+    -- and eliminated timer is less than or equal to 0
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
     if eliminatedTimer <= 0 then return end
 
@@ -79,9 +89,10 @@ local function hud_render()
 
     -- check that we dont have the modifier MODIFIER_NO_RADAR enabled
     if gGlobalSyncTable.modifier ~= MODIFIER_NO_RADAR then
+        -- render radar for each player
         for i = 1, MAX_PLAYERS - 1 do
             if gNetworkPlayers[i].connected then
-                -- loop thru all connnected players
+                -- make sure the states line up
                 if gPlayerSyncTable[i].state == RUNNER and gPlayerSyncTable[0].state == TAGGER then -- check if we meet the checks to render the radar
                     render_radar(gMarioStates[i], icon_radar[i], false) -- render radar on player
                 end
@@ -94,17 +105,15 @@ end
 local function on_death(m)
 
     if gGlobalSyncTable.gamemode ~= TAG then return end
+    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
+    if m.playerIndex ~= 0 then return end
 
-    if gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        -- become eliminated on death
-        if m.playerIndex == 0 then
-            if gPlayerSyncTable[0].state == RUNNER then
-                gPlayerSyncTable[0].state = ELIMINATED
-                eliminated_popup(0)
+    -- set us to eliminated :cry:
+    if gPlayerSyncTable[0].state == RUNNER then
+        gPlayerSyncTable[0].state = ELIMINATED
+        eliminated_popup(0)
 
-                eliminatedTimer = 8 * 30 -- 8 seconds
-            end
-        end
+        eliminatedTimer = 8 * 30 -- 8 seconds
     end
 end
 
@@ -121,6 +130,8 @@ end
 ---@param v MarioState
 local function on_pvp(a, v)
     if gGlobalSyncTable.gamemode ~= TAG then return end
+    -- yea pvp is handled using a custom method, if you wanna check that out,
+    -- start in the pvp-packets.lua file, but pretty much we send a pvp packet here
     if v.playerIndex ~= 0 then return end
     send_pvp_packet(a.playerIndex, v.playerIndex)
 end
@@ -128,7 +139,8 @@ end
 ---@param aI number
 ---@param vI number
 function tag_handle_pvp(aI, vI)
-
+    -- the tag pvp handle function, this checks our states and such
+    -- fyi, this is ran on the server, check out pvp-packets.lua
     local a = gPlayerSyncTable[aI]
     local v = gPlayerSyncTable[vI]
 
@@ -156,6 +168,7 @@ local function allow_interact(m, o, intee)
             if gNetworkPlayers[i].connected then
                 -- find the other player and check his state
                 if gMarioStates[i].marioObj == o and (gPlayerSyncTable[m.playerIndex].state == ELIMINATED or gPlayerSyncTable[i].state == ELIMINATED) then
+                    -- don't allow the interaction
                     return false
                 end
             end
