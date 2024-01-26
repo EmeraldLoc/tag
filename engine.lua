@@ -830,6 +830,9 @@ local function before_phys(m)
 
         -- tells other players we are boosting
         gPlayerSyncTable[0].boosting = true
+    else
+        -- we aren't boosting, so set boosting var to false
+        gPlayerSyncTable[0].boosting = false
     end
 
     -- this function handles boost trail

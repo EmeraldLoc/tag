@@ -299,17 +299,23 @@ function name_of_level(level, area)
 end
 
 function generate_boost_trail()
+	-- don't show if the incognito modifier is on
 	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
 
+	-- loop thru all players
 	for i = 0, MAX_PLAYERS - 1 do
+		-- ensure we are connected and are boosting
 		if not gNetworkPlayers[i].connected then goto continue end
 		if not gPlayerSyncTable[i].boosting then goto continue end
+
+		-- get mario state and coords
 		local m = gMarioStates[i]
 
 		local x = m.pos.x
 		local y = m.pos.y + 5
 		local z = m.pos.z
 
+		-- spawn boost particle object
 		spawn_non_sync_object(id_bhvBoostParticle, E_MODEL_BOOST_TRAIL, x, y, z, nil)
 
 		::continue::
@@ -539,7 +545,6 @@ WING_HUD = get_texture_info("hud_wing")
 --- @param scaleY number
 function render_player_head(index, x, y, scaleX, scaleY)
     local m = gMarioStates[index]
-    local sMario = gPlayerSyncTable[index]
     local np = gNetworkPlayers[index]
 
     local alpha = 255
@@ -549,7 +554,7 @@ function render_player_head(index, x, y, scaleX, scaleY)
     local isMetal = false
 
     local tileY = m.character.type
-    for i=1,#PART_ORDER do
+    for i = 1, #PART_ORDER do
         local color = {r = 255, g = 255, b = 255}
 		if (m.marioBodyState.modelState & MODEL_STATE_METAL) ~= 0 then -- metal
 			color = network_player_palette_to_color(np, METAL, color)
