@@ -62,6 +62,7 @@ local function on_death(m)
         if m.playerIndex == 0 then
             if gPlayerSyncTable[0].state == RUNNER then
                 gPlayerSyncTable[0].state = TAGGER
+                tagger_popup(m.playerIndex)
             end
         end
     end

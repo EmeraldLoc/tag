@@ -92,6 +92,10 @@ function hud_did_you_know(fade)
         text2 = "only a small percentage of my viewers are subscribed, so if you hit that button,"
         text3 = "it will really help out a ton. It's completely free, and you can change your mind"
         text4 = "at anytime. Thanks! Now enjoy the video! (5 seconds later) Make sure to like and su..."
+    elseif randomDidYouKnow == 27 then
+        text = "Hate campers? Use this 1 simple trick: diving! Here's how it works:"
+        text2 = "1. Hit B"
+        text3 = "2. There is no step 2, it's that easy!!!"
     end
 
     local scale = 1
