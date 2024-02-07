@@ -12,3 +12,5 @@ This mod is a collection of multiple gamemodes all in one mod! The mod contains 
   - Yes, credit is not required, just make sure you understand how the code your copying works, and i'm fine with it.
 - How can I contribute to the repo?
   - You can fork this repo and make a pull request.
+- Where can I report bugs or suggestions?
+  - You may report bugs or suggestions in the "Issues" tab
