@@ -104,14 +104,13 @@ end
 local function on_death(m)
 
     if gGlobalSyncTable.gamemode ~= JUGGERNAUT then return end
+    if not gGlobalSyncTable.eliminateOnDeath then return end
+    if m.playerIndex ~= 0 then return end
+    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
 
-    if gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        -- End the game if the juggernaut dies
-        if m.playerIndex == 0 then
-            if gPlayerSyncTable[0].state == RUNNER then
-                gPlayerSyncTable[0].state = TAGGER -- end the game
-            end
-        end
+    -- end the game if the juggernaut dies
+    if gPlayerSyncTable[0].state == RUNNER then
+        gPlayerSyncTable[0].state = TAGGER -- end the game
     end
 end
 

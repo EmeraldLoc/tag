@@ -106,9 +106,10 @@ local function on_death(m)
 
     if gGlobalSyncTable.gamemode ~= TAG then return end
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
+    if not gGlobalSyncTable.eliminateOnDeath then return end
     if m.playerIndex ~= 0 then return end
 
-    -- set us to eliminated :cry:
+    -- set us to eliminated
     if gPlayerSyncTable[0].state == RUNNER then
         gPlayerSyncTable[0].state = ELIMINATED
         eliminated_popup(0)
@@ -159,7 +160,6 @@ end
 ---@param o Object
 ---@param intee InteractionType
 local function allow_interact(m, o, intee)
-
     if gGlobalSyncTable.gamemode ~= TAG then return end
 
     -- check if player interacts with another player

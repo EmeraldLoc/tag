@@ -172,7 +172,7 @@ local function on_render()
         justEnabled = false
     end
 
-    if fade < 255 and gGlobalSyncTable.displayTimer > 0 then
+    if fade < 255 and gGlobalSyncTable.displayTimer > 0 and (joinTimer <= 2 * 30 or network_is_server()) then
         fade = fade + 20
         if fade >= 255 then fade = 255 end
     elseif fade > 0 and gGlobalSyncTable.displayTimer <= 0 then

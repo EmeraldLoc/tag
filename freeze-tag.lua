@@ -139,22 +139,15 @@ end
 local function on_death(m)
 
     if gGlobalSyncTable.gamemode ~= FREEZE_TAG then return end
+    if not gGlobalSyncTable.eliminateOnDeath then return end
+    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
+    if m.playerIndex ~= 0 then return end
 
-    if gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        -- become tagger on death, wether frozen or runner
-        if m.playerIndex == 0 then
-            if gPlayerSyncTable[0].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-                gPlayerSyncTable[0].state = TAGGER
+    -- become tagger on death
+    if gPlayerSyncTable[0].state == RUNNER or gPlayerSyncTable[0].state == FROZEN then
+        gPlayerSyncTable[0].state = TAGGER
 
-                tagger_popup(0)
-            end
-
-            if gPlayerSyncTable[0].state == FROZEN and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-                gPlayerSyncTable[m.playerIndex].state = TAGGER
-
-                tagger_popup(0)
-            end
-        end
+        tagger_popup(0)
     end
 end
 

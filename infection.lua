@@ -56,15 +56,14 @@ end
 local function on_death(m)
 
     if gGlobalSyncTable.gamemode ~= INFECTION then return end
+    if not gGlobalSyncTable.eliminateOnDeath then return end
+    if m.playerIndex ~= 0 then return end
+    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
 
-    if gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        -- become a tagger on death
-        if m.playerIndex == 0 then
-            if gPlayerSyncTable[0].state == RUNNER then
-                gPlayerSyncTable[0].state = TAGGER
-                tagger_popup(m.playerIndex)
-            end
-        end
+    -- become a tagger on death
+    if gPlayerSyncTable[0].state == RUNNER then
+        gPlayerSyncTable[0].state = TAGGER
+        tagger_popup(0)
     end
 end
 

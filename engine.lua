@@ -95,6 +95,17 @@ gGlobalSyncTable.juggernautTagsReq = 15
 gGlobalSyncTable.amountOfTime = 120 * 30
 -- ttc speed, because ttc syncing sucks
 gGlobalSyncTable.ttcSpeed = 0
+-- toggles elimination on death
+gGlobalSyncTable.eliminateOnDeath = true
+-- toggles vote level system
+gGlobalSyncTable.doVoting = true
+-- all gamemode active timers
+gGlobalSyncTable.tagActiveTimer = 120 * 30
+gGlobalSyncTable.freezeTagActiveTimer = 180 * 30
+gGlobalSyncTable.infectionActiveTimer = 120 * 30
+gGlobalSyncTable.hotPotatoActiveTimer = 60 * 30
+gGlobalSyncTable.juggernautActiveTimer = 120 * 30
+gGlobalSyncTable.assassinsActiveTimer = 120 * 30
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then
         -- the player's role
@@ -123,7 +134,7 @@ gServerSettings.playerInteractions = PLAYER_INTERACTIONS_SOLID -- force player a
 gServerSettings.bubbleDeath = 0 -- just.... no
 
 -- variables
--- this is the local server timer used to set gGlobalSyncTable.activeTimer and other variables
+-- this is the local server timer used to set gGlobalSyncTable.displayTimer and other variables
 timer = 0
 -- if we are a romhack or not (checked in check_mods function)
 isRomhack = false
@@ -207,9 +218,7 @@ local function server_update()
             gGlobalSyncTable.gamemode = TAG
 
             -- default tag timer
-            if gGlobalSyncTable.amountOfTime == (180 * 30) then
-                gGlobalSyncTable.amountOfTime = 120 * 30
-            end
+            gGlobalSyncTable.amountOfTime = gGlobalSyncTable.tagActiveTimer
 
             PLAYERS_NEEDED = 2
 
@@ -277,39 +286,39 @@ local function server_update()
                 else
                     gGlobalSyncTable.gamemode = TAG -- set to tag explicitly
                 end
+            end
 
-                -- this just sets the amount of time var and players needed var
-                if gGlobalSyncTable.gamemode == FREEZE_TAG then
-                    -- set freeze tag timer
-                    gGlobalSyncTable.amountOfTime = 180 * 30
+            -- set the amount of time var and players needed var
+            if gGlobalSyncTable.gamemode == FREEZE_TAG then
+                -- set freeze tag timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.freezeTagActiveTimer
 
-                    PLAYERS_NEEDED = 3
-                elseif gGlobalSyncTable.gamemode == TAG then
-                    -- set tag timer
-                    gGlobalSyncTable.amountOfTime = 120 * 30
+                PLAYERS_NEEDED = 3
+            elseif gGlobalSyncTable.gamemode == TAG then
+                -- set tag timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.tagActiveTimer
 
-                    PLAYERS_NEEDED = 2
-                elseif gGlobalSyncTable.gamemode == INFECTION then
-                     -- set infection timer
-                    gGlobalSyncTable.amountOfTime = 120 * 30
+                PLAYERS_NEEDED = 2
+            elseif gGlobalSyncTable.gamemode == INFECTION then
+                 -- set infection timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.infectionActiveTimer
 
-                    PLAYERS_NEEDED = 3
-                elseif gGlobalSyncTable.gamemode == HOT_POTATO then
-                    -- set hot potato timer
-                    gGlobalSyncTable.amountOfTime = 60 * 30
+                PLAYERS_NEEDED = 3
+            elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+                -- set hot potato timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.hotPotatoActiveTimer
 
-                    PLAYERS_NEEDED = 3
-                elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-                    -- set juggernaut timer
-                    gGlobalSyncTable.amountOfTime = 120 * 30
+                PLAYERS_NEEDED = 3
+            elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+                -- set juggernaut timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.juggernautActiveTimer
 
-                    PLAYERS_NEEDED = 3
-                elseif gGlobalSyncTable.gamemode == ASSASSINS then
-                    -- set assassins timer
-                    gGlobalSyncTable.amountOfTime = 120 * 30
+                PLAYERS_NEEDED = 3
+            elseif gGlobalSyncTable.gamemode == ASSASSINS then
+                -- set assassins timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.assassinsActiveTimer
 
-                    PLAYERS_NEEDED = 3
-                end
+                PLAYERS_NEEDED = 3
             end
 
             log_to_console("Tag: Modifier is set to " .. get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex())
@@ -330,6 +339,28 @@ local function server_update()
         end
 
         if timer <= 0 then
+
+            -- set the amount of time var and players needed var
+            if gGlobalSyncTable.gamemode == FREEZE_TAG then
+                -- set freeze tag timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.freezeTagActiveTimer
+            elseif gGlobalSyncTable.gamemode == TAG then
+                -- set tag timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.tagActiveTimer
+            elseif gGlobalSyncTable.gamemode == INFECTION then
+                 -- set infection timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.infectionActiveTimer
+            elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+                -- set hot potato timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.hotPotatoActiveTimer
+            elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+                -- set juggernaut timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.juggernautActiveTimer
+            elseif gGlobalSyncTable.gamemode == ASSASSINS then
+                -- set assassins timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.assassinsActiveTimer
+            end
+
             timer = gGlobalSyncTable.amountOfTime -- set timer to amount of time in a round
 
             local amountOfTaggersNeeded = math.floor(numPlayers / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
@@ -425,8 +456,28 @@ local function server_update()
         timer = timer - 1
 
         if timer <= 0 then
-            gGlobalSyncTable.roundState = ROUND_VOTING
-            timer = 20 * 30
+            if gGlobalSyncTable.doVoting then
+                gGlobalSyncTable.roundState = ROUND_VOTING
+                timer = 20 * 30
+            else
+                timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+
+                ---@diagnostic disable-next-line: param-type-mismatch
+                while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or (voteRandomLevels[voteResult] == nil and gGlobalSyncTable.selectedLevel == prevLevel) do
+                    if isRomhack then
+                        gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
+                    else
+                        gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+
+                        if levels[gGlobalSyncTable.selectedLevel].level == LEVEL_TTC then
+                            gGlobalSyncTable.ttcSpeed = math.random(0, 3)
+                        end
+                    end
+                end
+
+                prevLevel = gGlobalSyncTable.selectedLevel
+                gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+            end
             log_to_console("Tag: Beggining voting...")
         end
     elseif gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then

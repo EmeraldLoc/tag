@@ -94,19 +94,17 @@ end
 
 ---@param m MarioState
 local function on_death(m)
-
     if gGlobalSyncTable.gamemode ~= HOT_POTATO then return end
+    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then return end
+    if not gGlobalSyncTable.eliminateOnDeath then return end
+    if m.playerIndex ~= 0 then return end
 
-    if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
-        -- become eliminated on death
-        if m.playerIndex == 0 then
-            if gPlayerSyncTable[0].state == RUNNER then
-                gPlayerSyncTable[0].state = ELIMINATED
-                eliminated_popup(0)
+    -- become eliminated on death
+    if gPlayerSyncTable[0].state == RUNNER then
+        gPlayerSyncTable[0].state = ELIMINATED
+        eliminated_popup(0)
 
-                eliminatedTimer = 8 * 30 -- 8 seconds
-            end
-        end
+        eliminatedTimer = 8 * 30 -- 8 seconds
     end
 end
 
