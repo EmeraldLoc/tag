@@ -100,7 +100,6 @@ local function mario_update(m)
             if selection == SELECTION_DONE then
                 isPaused = not isPaused
             elseif selection == SELECTION_SPECTATE then
-
                 if gPlayerSyncTable[0].state == SPECTATOR then
                     if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
                         djui_chat_message_create("You must wait for the game to end to no longer be a spectator")

@@ -70,7 +70,25 @@ function start_command(msg)
 		end
 	end
 
-	gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+	timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+
+	---@diagnostic disable-next-line: param-type-mismatch
+	while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or gGlobalSyncTable.selectedLevel == prevLevel do
+		if isRomhack then
+			gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
+		else
+			gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+
+			if levels[gGlobalSyncTable.selectedLevel].level == LEVEL_TTC then
+				gGlobalSyncTable.ttcSpeed = math.random(0, 3)
+			end
+		end
+	end
+
+	prevLevel = gGlobalSyncTable.selectedLevel
+	gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+
+	log_to_console("Tag: Settings round state to ROUND_WAIT...")
 
 	djui_chat_message_create("Starting round")
 

@@ -21,7 +21,7 @@ local function hud_winner_group_render()
     local text = ""
 
     if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
-        if gGlobalSyncTable.gamemode == FREEZE_TAG then
+        if gGlobalSyncTable.gamemode == FREEZE_TAG and gGlobalSyncTable.freezeHealthDrain > 0 then
             text = "Runners and Frozen Win"
         else
             text = "Runners Win"
@@ -58,7 +58,7 @@ local function hud_leaderboard()
             if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
                 if gPlayerSyncTable[i].state ~= TAGGER or gPlayerSyncTable[i].amountOfTags <= 0 then goto continue end
             elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
-                if (gPlayerSyncTable[i].state ~= RUNNER and gGlobalSyncTable.gamemode ~= FREEZE_TAG) or (gPlayerSyncTable[i].state ~= ELIMINATED_OR_FROZEN and gPlayerSyncTable[i].state ~= RUNNER and gGlobalSyncTable.gamemode == FREEZE_TAG) or gPlayerSyncTable[i].amountOfTimeAsRunner <= 0 then goto continue end
+                if (gPlayerSyncTable[i].state ~= RUNNER and (gGlobalSyncTable.gamemode ~= FREEZE_TAG or gGlobalSyncTable.freezeHealthDrain == 0)) or (gPlayerSyncTable[i].state ~= ELIMINATED_OR_FROZEN and gPlayerSyncTable[i].state ~= RUNNER and (gGlobalSyncTable.gamemode == FREEZE_TAG and gGlobalSyncTable.freezeHealthDrain > 0)) or gPlayerSyncTable[i].amountOfTimeAsRunner <= 0 then goto continue end
             end
 
             table.insert(winners, i)
@@ -86,7 +86,7 @@ local function hud_leaderboard()
             if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
                 if gPlayerSyncTable[i].state ~= TAGGER or gPlayerSyncTable[i].amountOfTags <= 0 then goto continue end
             elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
-                if (gPlayerSyncTable[i].state ~= RUNNER and gGlobalSyncTable.gamemode ~= FREEZE_TAG) or (gPlayerSyncTable[i].state ~= ELIMINATED_OR_FROZEN and gPlayerSyncTable[i].state ~= RUNNER and gGlobalSyncTable.gamemode == FREEZE_TAG) or gPlayerSyncTable[i].amountOfTimeAsRunner <= 0 then goto continue end
+                if (gPlayerSyncTable[i].state ~= RUNNER and (gGlobalSyncTable.gamemode ~= FREEZE_TAG or gGlobalSyncTable.freezeHealthDrain == 0)) or (gPlayerSyncTable[i].state ~= ELIMINATED_OR_FROZEN and gPlayerSyncTable[i].state ~= RUNNER and (gGlobalSyncTable.gamemode == FREEZE_TAG and gGlobalSyncTable.freezeHealthDrain > 0)) or gPlayerSyncTable[i].amountOfTimeAsRunner <= 0 then goto continue end
             end
 
             local displayName = strip_hex(gNetworkPlayers[i].name)
@@ -180,7 +180,7 @@ local function hud_leaderboard()
         local text = ""
 
         if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
-            if gGlobalSyncTable.gamemode == FREEZE_TAG then
+            if gGlobalSyncTable.gamemode == FREEZE_TAG and gGlobalSyncTable.freezeHealthDrain > 0 then
                 text = "No Runners or Frozen Won"
             else
                 text = "No Runners Won"

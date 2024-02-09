@@ -32,6 +32,11 @@ JUGGERNAUT = 5
 ASSASSINS = 6
 MAX_GAMEMODE = 6
 
+-- spectator states
+SPECTATOR_STATE_MARIO = 0
+SPECTATOR_STATE_FREECAM = 1
+SPECTATOR_STATE_FOLLOW = 2
+
 -- players needed (it's only 2 if your on the tag gamemode, otherwise this variable is 3)
 PLAYERS_NEEDED = 2
 
@@ -106,6 +111,10 @@ gGlobalSyncTable.infectionActiveTimer = 120 * 30
 gGlobalSyncTable.hotPotatoActiveTimer = 60 * 30
 gGlobalSyncTable.juggernautActiveTimer = 120 * 30
 gGlobalSyncTable.assassinsActiveTimer = 120 * 30
+-- auto mode
+gGlobalSyncTable.autoMode = true
+-- enable tagger boosts or not
+gGlobalSyncTable.boosts = true
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then
         -- the player's role
@@ -124,8 +133,10 @@ for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we a
         gPlayerSyncTable[i].assassinStunTimer = -1
         -- what number you voted for in the level voting system
         gPlayerSyncTable[i].votingNumber = 0
-        -- wether or not your boosting
+        -- whether or not your boosting
         gPlayerSyncTable[i].boosting = false
+        -- spectator state
+        gPlayerSyncTable[i].spectatorState = SPECTATOR_STATE_MARIO
     end
 end
 
@@ -152,6 +163,8 @@ badLevels = {}
 gGlobalSoundSource = {x = 0, y = 0, z = 0}
 -- if we are paused or not, for custom pause menu
 isPaused = false
+-- whether or not to use romhack cam
+useRomhackCam = mod_storage_load("useRomhackCam") or true
 -- speed boost timer handles boosting
 local speedBoostTimer = 0
 -- hot potato timer multiplier is when the timer is faster if there's more people in
@@ -225,6 +238,19 @@ local function server_update()
             log_to_console("Tag: Attempted to keep tag going by setting the gamemode to tag")
         end
     elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
+        -- if we aren't in auto mode, then don't run this code, and run designated code in the if statemnt
+        if not gGlobalSyncTable.autoMode then
+            if timer >= 16 * 30 then
+                for i = 0, MAX_PLAYERS - 1 do
+                    if gPlayerSyncTable[i].state ~= SPECTATOR then
+                        gPlayerSyncTable[i].state = RUNNER
+                    end
+                end
+            end
+
+            goto ifend
+        end
+
         timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
 
         -- this long while loop is just to select a random level, ik, extremely hard to read
@@ -245,15 +271,20 @@ local function server_update()
         gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
 
         log_to_console("Tag: Round State is now ROUND_WAIT")
+
+        ::ifend::
     end
 
     if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
-        -- force state to be runner, so long as they aren't a spectator
+        -- force state to be runner, so long as they aren't a spectator, and we are in auto mode
         for i = 0, MAX_PLAYERS - 1 do
-            if gPlayerSyncTable[i].state ~= SPECTATOR then
+            if gPlayerSyncTable[i].state ~= SPECTATOR and gGlobalSyncTable.autoMode then
                 gPlayerSyncTable[i].state = RUNNER
             end
         end
+
+        -- set timer to 15 seconds to prevent state being set constantly
+        timer = 15 * 30
     elseif gGlobalSyncTable.roundState == ROUND_WAIT then
         -- select a modifier and gamemode if timer is at its highest point
         if timer == 16 * 30 then
@@ -324,22 +355,21 @@ local function server_update()
             log_to_console("Tag: Modifier is set to " .. get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex())
         end
 
-        timer = timer - 1 -- subtract timer by one
-        gGlobalSyncTable.displayTimer = timer -- set display timer to timer
-
         for i = 0, MAX_PLAYERS - 1 do
-            if gPlayerSyncTable[i].state ~= SPECTATOR then
+            if gPlayerSyncTable[i].state ~= SPECTATOR and gGlobalSyncTable.autoMode then
                 gPlayerSyncTable[i].state = RUNNER -- set everyone's state to runner
-                gPlayerSyncTable[i].juggernautTags = 0
-                gPlayerSyncTable[i].assassinTarget = -1
             end
 
+            gPlayerSyncTable[i].juggernautTags = 0 -- reset juggernaut tags
+            gPlayerSyncTable[i].assassinTarget = -1 -- reset assassin target
             gPlayerSyncTable[i].amountOfTags = 0 -- reset amount of tags
             gPlayerSyncTable[i].amountOfTimeAsRunner = 0 -- reset amount of time as runner
         end
 
-        if timer <= 0 then
+        timer = timer - 1 -- subtract timer by one
+        gGlobalSyncTable.displayTimer = timer -- set display timer to timer
 
+        if timer <= 0 then
             -- set the amount of time var and players needed var
             if gGlobalSyncTable.gamemode == FREEZE_TAG then
                 -- set freeze tag timer
@@ -363,28 +393,41 @@ local function server_update()
 
             timer = gGlobalSyncTable.amountOfTime -- set timer to amount of time in a round
 
+            -- if we have custom roles, skip straight to actually starting the round
+            local skipTaggerSelection = false
+            for i = 0, MAX_PLAYERS - 1 do
+                if gNetworkPlayers[i].connected then
+                    if gPlayerSyncTable[i].state ~= RUNNER and gPlayerSyncTable[i].state ~= SPECTATOR then
+                        skipTaggerSelection = true
+                    end
+                end
+            end
+
             local amountOfTaggersNeeded = math.floor(numPlayers / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
-            if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
-                amountOfTaggersNeeded = 1 -- set amount of taggers to one if the modifier is one tagger
-            end
-            if gGlobalSyncTable.gamemode == JUGGERNAUT then
-                amountOfTaggersNeeded = numPlayers - 1
-            end
 
-            log_to_console("Tag: Assigning Players")
+            if not skipTaggerSelection then
+                if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
+                    amountOfTaggersNeeded = 1 -- set amount of taggers to one if the modifier is one tagger
+                end
+                if gGlobalSyncTable.gamemode == JUGGERNAUT then
+                    amountOfTaggersNeeded = numPlayers - 1
+                end
 
-            local amountOfTaggers = 0
+                log_to_console("Tag: Assigning Players")
 
-            while amountOfTaggers < amountOfTaggersNeeded do
-                -- select taggers
-                local randomIndex = math.random(0, MAX_PLAYERS - 1) -- select random index
+                local amountOfTaggers = 0
 
-                if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
-                    gPlayerSyncTable[randomIndex].state = TAGGER
+                while amountOfTaggers < amountOfTaggersNeeded do
+                    -- select taggers
+                    local randomIndex = math.random(0, MAX_PLAYERS - 1) -- select random index
 
-                    log_to_console("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
+                    if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
+                        gPlayerSyncTable[randomIndex].state = TAGGER
 
-                    amountOfTaggers = amountOfTaggers + 1
+                        log_to_console("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
+
+                        amountOfTaggers = amountOfTaggers + 1
+                    end
                 end
             end
 
@@ -456,10 +499,23 @@ local function server_update()
         timer = timer - 1
 
         if timer <= 0 then
-            if gGlobalSyncTable.doVoting then
+            if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
                 gGlobalSyncTable.roundState = ROUND_VOTING
                 timer = 20 * 30
+                log_to_console("Tag: Settings round state to ROUND_VOTING...")
             else
+                if not gGlobalSyncTable.autoMode then
+                    for i = 0, MAX_PLAYERS - 1 do
+                        if gPlayerSyncTable[i].state ~= SPECTATOR then
+                            gPlayerSyncTable[i].state = RUNNER
+                        end
+                    end
+
+                    gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+
+                    goto ifend
+                end
+
                 timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
 
                 ---@diagnostic disable-next-line: param-type-mismatch
@@ -477,8 +533,11 @@ local function server_update()
 
                 prevLevel = gGlobalSyncTable.selectedLevel
                 gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+
+                log_to_console("Tag: Settings round state to ROUND_WAIT...")
+
+                ::ifend::
             end
-            log_to_console("Tag: Beggining voting...")
         end
     elseif gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
         timer = timer - 1
@@ -578,6 +637,7 @@ local function server_update()
 end
 
 local function update()
+    -- server update
     if network_is_server() then server_update() end
 
     if joinTimer <= 0 then -- check this so the user has time to sync up
@@ -587,9 +647,9 @@ local function update()
     end
 
     -- handle speed boost
-    if speedBoostTimer < 20 * 30 and gPlayerSyncTable[0].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST and gGlobalSyncTable.modifier ~= MODIFIER_BOMBS and gGlobalSyncTable.modifier ~= MODIFIER_FLY and gGlobalSyncTable.modifier ~= MODIFIER_SPEED then
+    if speedBoostTimer < 20 * 30 and gPlayerSyncTable[0].state == TAGGER and boosts_enabled() then
         speedBoostTimer = speedBoostTimer + 1
-    elseif gPlayerSyncTable[0].state ~= TAGGER or gGlobalSyncTable.modifier == MODIFIER_NO_BOOST or gGlobalSyncTable.modifier == MODIFIER_BOMBS or gGlobalSyncTable.modifier == MODIFIER_FLY or gGlobalSyncTable.modifier == MODIFIER_SPEED then
+    elseif gPlayerSyncTable[0].state ~= TAGGER or not boosts_enabled() then
         speedBoostTimer = 5 * 30 -- 5 seconds
     end
 
@@ -733,6 +793,10 @@ local function mario_update(m)
                     end
                 end
             end
+        elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS and not gGlobalSyncTable.autoMode then
+            if np.currLevelNum ~= LEVEL_CASTLE_GROUNDS then
+                warp_to_level(LEVEL_CASTLE_GROUNDS, 1, 0)
+            end
         end
 
         -- spawn pipes
@@ -804,12 +868,12 @@ local function mario_update(m)
         end
 
         -- handle speed boost, this is a fun if statement
-        if m.controller.buttonPressed & Y_BUTTON ~= 0 and speedBoostTimer >= 20 * 30 and gPlayerSyncTable[0].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST and gGlobalSyncTable.modifier ~= MODIFIER_BOMBS and gGlobalSyncTable.modifier ~= MODIFIER_FLY and gGlobalSyncTable.modifier ~= MODIFIER_SPEED then
+        if m.controller.buttonPressed & Y_BUTTON ~= 0 and speedBoostTimer >= 20 * 30 and gPlayerSyncTable[0].state == TAGGER and boosts_enabled() then
             speedBoostTimer = 0
         end
 
         -- handle if just join
-        if joinTimer == 2 * 30 then
+        if joinTimer == 2 * 30 and not network_is_server() then
             -- this here sets our initial state
             if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
                 if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION or gGlobalSyncTable.gamemode == HOT_POTATO or gGlobalSyncTable.gamemode == ASSASSINS then
@@ -906,7 +970,11 @@ local function hud_round_status()
 
     -- set text
     if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
-        text = "Waiting for Players"
+        if gGlobalSyncTable.autoMode then
+            text = "Waiting for Players"
+        else
+            text = "Waiting for Host"
+        end
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
         text = "Time Remaining: " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
     elseif gGlobalSyncTable.roundState == ROUND_WAIT then
@@ -983,7 +1051,7 @@ end
 local function hud_boost()
 
     if gPlayerSyncTable[0].state ~= TAGGER then return end
-    if gGlobalSyncTable.modifier == MODIFIER_NO_BOOST or gGlobalSyncTable.modifier == MODIFIER_FLY or gGlobalSyncTable.modifier == MODIFIER_SPEED or gGlobalSyncTable.modifier == MODIFIER_BOMBS then return end
+    if not boosts_enabled() then return end
 
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_N64)

@@ -2,8 +2,12 @@
 -- constants
 local FROZEN = 2
 
+-- global scope vars
+ACT_FROZEN = allocate_mario_action(ACT_FLAG_IDLE)
+ACT_FROZEN_SUBMERGED = ACT_GROUP_SUBMERGED | allocate_mario_action(ACT_FLAG_IDLE)
+
 -- global vars
-gGlobalSyncTable.freezeHealthDrain = 2.5
+gGlobalSyncTable.freezeHealthDrain = 25
 
 local function update()
 
@@ -32,35 +36,16 @@ local function mario_update(m)
         m.forwardVel = 0
         m.vel.y = 0
 
-        -- cheeck if terrain is snow
-        local terrainIsSnow = (m.area.terrainType & TERRAIN_MASK) == TERRAIN_SNOW;
-
         if gGlobalSyncTable.roundState == ROUND_ACTIVE then
-            -- see if we are swimming
-            if m.action & ACT_FLAG_SWIMMING ~= 0 then
-                -- check current water level
-                if m.pos.y >= m.waterLevel - 140 and not terrainIsSnow then
-                    -- subtract mario's health to compensate for mario's healing in water
-                    m.health = m.health - 0x1A;
-                else
-                    if terrainIsSnow then
-                        -- add mario's health to compensate for mario taking damage when under water
-                        m.health = m.health + 3;
-                    else
-                        -- add mario's health to compensate for mario taking damage when under water
-                        m.health = m.health + 1;
-                    end
-                end
+            if m.pos.y < m.waterLevel then
+                set_mario_action(m, ACT_FROZEN_SUBMERGED, 0)
             else
-                -- snap mario to the floor
-                m.pos.y = m.floorHeight
-                set_mario_action(m, ACT_SHIVERING, 0)
+                set_mario_action(m, ACT_FROZEN, 0)
             end
-
 
             -- if mario's health is greater than 0 then subtract his health by 2.5
             if m.health > 0 then
-                m.health = m.health - gGlobalSyncTable.freezeHealthDrain
+                m.health = m.health - (gGlobalSyncTable.freezeHealthDrain / 10)
             end
         end
     else
@@ -70,6 +55,7 @@ end
 
 local function hud_health_render()
     if gPlayerSyncTable[0].state ~= FROZEN then return end
+    if gGlobalSyncTable.freezeHealthDrain == 0 then return end
 
     local screenWidth  = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
@@ -117,7 +103,7 @@ local function hud_render()
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_N64)
-    
+
     -- render frozen health
     hud_health_render()
 
@@ -211,10 +197,28 @@ function freeze_tag_handle_pvp(aI, vI)
     end
 end
 
+---@param m MarioState
+local function act_frozen(m)
+    if gPlayerSyncTable[m.playerIndex].state ~= FROZEN then return set_mario_action(m, m.prevAction, 0) end
+
+    -- set velocity varaibles to none
+    m.forwardVel = 0
+    m.vel.x = 0
+    m.vel.y = 0
+    m.vel.z = 0
+    m.slideVelX = 0
+    m.slideVelZ = 0
+    -- freeze mario's animation
+    m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - 1
+end
+
 hook_event(HOOK_UPDATE, update)
+hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_DEATH, on_death)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
-hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_PVP_ATTACK, on_pvp)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
+
+hook_mario_action(ACT_FROZEN, act_frozen)
+hook_mario_action(ACT_FROZEN_SUBMERGED, act_frozen)

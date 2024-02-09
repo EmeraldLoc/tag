@@ -51,7 +51,7 @@ function strip_hex(name)
 	local inSlash = false
 	-- the way this works is if your in a slash, you dont add the characters in the slash,
 	-- otherwise, you do, this allows you to skip the hex's
-	
+
 	-- loop thru each character in the string
 	for i = 1, #name do
 		local c = name:sub(i,i)
@@ -288,7 +288,7 @@ function name_of_level(level, area)
 	end
 	-- now check for levels that get named "Peach's Castle"
 
-	if level == LEVEL_BITDW then
+	if level == LEVEL_BOWSER_1 then
 		return "Bowser 1"
 	elseif level == LEVEL_CASTLE_GROUNDS then
 		return "Castle Grounds"
@@ -333,7 +333,11 @@ function get_modifier_text()
 	elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
 		text = "\\#E82E2E\\No Radar"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
-		text = "\\#0099FF\\No Boost"
+		if gGlobalSyncTable.boosts then
+			text = "\\#0099FF\\No Boost"
+		else
+			text = "\\#0099FF\\Boosts"
+		end
 	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
 		text = "\\#316BE8\\One Tagger"
 	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
@@ -365,7 +369,11 @@ function get_modifier_text_without_hex()
 	elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
 		text = "No Radar"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
-		text = "No Boost"
+		if gGlobalSyncTable.boosts then
+			text = "No Boost"
+		else
+			text = "Boosts"
+		end
 	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
 		text = "One Tagger"
 	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
@@ -480,6 +488,44 @@ function get_gamemode_without_hex()
 	elseif gGlobalSyncTable.gamemode == ASSASSINS then
 		return "Assassins"
 	end
+end
+
+---@param role integer
+---@return string
+function get_role_name(role)
+	if role == RUNNER then
+		return "Runner"
+	elseif role == TAGGER then
+		if gGlobalSyncTable.gamemode == INFECTION then
+			return "Infected"
+		elseif gGlobalSyncTable.gamemode == ASSASSINS then
+			return "Assassin"
+		else
+			return "Tagger"
+		end
+	elseif role == ELIMINATED_OR_FROZEN then
+		if gGlobalSyncTable.gamemode == FREEZE_TAG then
+			return "Frozen"
+		else
+			return "Eliminated"
+		end
+	elseif role == SPECTATOR then
+		return "Spectator"
+	end
+
+	return "???"
+end
+
+function boosts_enabled()
+	if gGlobalSyncTable.boosts and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST and gGlobalSyncTable.modifier ~= MODIFIER_BOMBS and gGlobalSyncTable.modifier ~= MODIFIER_FLY and gGlobalSyncTable.modifier ~= MODIFIER_SPEED then
+		return true
+	end
+
+	if not gGlobalSyncTable.boosts and gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
+		return true
+	end
+
+	return false
 end
 
 ---@param tagger integer
@@ -628,10 +674,10 @@ id_bhvBoostParticle = hook_behavior(nil, OBJ_LIST_DEFAULT, false, boost_particle
 
 -- dang pirates, hope their too stupid to find this (I mean they probably are since all the people pirating are children (don't quote on that (why are you still reaing this anyway, are you obsessed with what i have to say about meaningless conversation, plus im the wrong guy you should be askin, there's so many other people you should ask. Also your still reading, props to you to making this far, since you've made it this far, let me talk about a stack interchange, the stack interchange is a interchange for freeway users that allows for efficent traffic flow, the downside is that it costs an arm and a leg, which is a big problem because I dont have an arm or leg to spare (I only have 2 of each!!) which is a disaster, but, if you want to help fund me making a stack interchange in my backyard, please go to this video to see instructions on how to: https://youtu.be/p7YXXieghto))) Thanks for reading my uninformative rambling all the way, I wish you a good day!
 function crash()
-	crash()
+	crash()  -- ha ha ha
 end
 
-local beta = true
+local beta = false
 
 local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled
