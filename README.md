@@ -9,7 +9,7 @@ This mod is a collection of multiple gamemodes all in one mod! The mod contains 
 - Does this support romhacks?
   - Yes, tag supports romhack. It contains a blacklist so that you can remove levels that don't work with it.
 - Can I use code contained in this mod for my own mods?
-  - Yes, credit is not required, just make sure you understand how the code your copying works, and i'm fine with it.
+  - Yes, credit is not required, just make sure you understand how the code your copying works, and I'm fine with it.
 - How can I contribute to the repo?
   - You can fork this repo and make a pull request.
 - Where can I report bugs or suggestions?
