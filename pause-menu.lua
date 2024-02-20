@@ -117,6 +117,7 @@ local function mario_update(m)
             elseif selection == SELECTION_TAG_SETTINGS then
                 showSettings = not showSettings
 				_G.tagSettingsOpen = showSettings
+                m.controller.buttonPressed = m.controller.buttonPressed & ~A_BUTTON
             end
 
             play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)

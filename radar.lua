@@ -1,4 +1,4 @@
--- based on arena, code taken from MarioHunt, texture by EmeraldLockdown
+-- based on arena, code taken from MarioHunt by EmilyEmmi, texture by EmeraldLockdown
 
 TEX_RAD = get_texture_info('runner-mark')
 icon_radar = {}

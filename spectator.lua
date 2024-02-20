@@ -4,6 +4,8 @@ ACT_FREECAM = allocate_mario_action(ACT_FLAG_MOVING)
 ACT_FOLLOW_IDLE_SUBMERGED = ACT_GROUP_SUBMERGED | allocate_mario_action(ACT_FLAG_IDLE)
 ACT_FOLLOW_IDLE = allocate_mario_action(ACT_FLAG_IDLE)
 
+spectatorHideHud = false
+
 local followTargetIndex = 0
 
 ---@param m MarioState
@@ -96,6 +98,7 @@ local function mario_update(m)
 
     if s.state ~= SPECTATOR then
         s.spectatorState = SPECTATOR_STATE_MARIO
+        spectatorHideHud = false
 
         return
     end
@@ -108,6 +111,10 @@ local function mario_update(m)
     if m.controller.buttonPressed & U_JPAD ~= 0 then
         s.spectatorState = s.spectatorState + 1
         if s.spectatorState > SPECTATOR_STATE_FOLLOW then s.spectatorState = SPECTATOR_STATE_MARIO end
+    end
+
+    if m.controller.buttonPressed & X_BUTTON ~= 0 then
+        spectatorHideHud = not spectatorHideHud
     end
 
     if s.spectatorState == SPECTATOR_STATE_FREECAM then
@@ -157,6 +164,8 @@ local function mario_update(m)
 end
 
 local function hud_player_name()
+
+    if spectatorHideHud then return end
 
     local s = gPlayerSyncTable[0]
     local text = ""

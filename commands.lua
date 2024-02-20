@@ -105,7 +105,7 @@ function on_tp_command(msg)
 	end
 
 	if tonumber(msg) ~= nil then
-		local index = tonumber(msg)
+		local index = network_local_index_from_global(tonumber(msg))
 
 		if index > MAX_PLAYERS then
 			djui_chat_message_create("Please type a number under " .. tostring(MAX_PLAYERS + 1))

@@ -164,7 +164,8 @@ gGlobalSoundSource = {x = 0, y = 0, z = 0}
 -- if we are paused or not, for custom pause menu
 isPaused = false
 -- whether or not to use romhack cam
-useRomhackCam = mod_storage_load("useRomhackCam") or true
+useRomhackCam = true
+if mod_storage_load("useRomhackCam") == "false" then useRomhackCam = false end
 -- speed boost timer handles boosting
 local speedBoostTimer = 0
 -- hot potato timer multiplier is when the timer is faster if there's more people in
@@ -358,6 +359,12 @@ local function server_update()
         for i = 0, MAX_PLAYERS - 1 do
             if gPlayerSyncTable[i].state ~= SPECTATOR and gGlobalSyncTable.autoMode then
                 gPlayerSyncTable[i].state = RUNNER -- set everyone's state to runner
+            end
+
+            local m = gMarioStates[i]
+
+            if m.action == ACT_NOTHING then
+                set_mario_action(m, ACT_IDLE, 0)
             end
 
             gPlayerSyncTable[i].juggernautTags = 0 -- reset juggernaut tags
@@ -887,13 +894,13 @@ local function mario_update(m)
 
             m.freeze = 1
         -- some m.freeze stuff and join timer shenenagins
-        elseif joinTimer > 0 then
+        elseif joinTimer > 0 and not network_is_server() then
             m.freeze = 1
         elseif network_is_server() then
             joinTimer = 0
         end
 
-        -- ooo desync timer
+        -- desync timer
         if desyncTimer <= 0 then
             m.freeze = 1
         end
@@ -901,7 +908,7 @@ local function mario_update(m)
         -- handle leaderboard and desync timer
         if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
             m.freeze = 1
-            m.action = ACT_NOTHING
+            set_mario_action(m, ACT_NOTHING, 0)
         elseif (joinTimer <= 0 and desyncTimer > 0) or network_is_server() then
             -- yea idk what this is this looks awful, not changing it though since it somehow works
             if showSettings or isPaused then
@@ -1147,6 +1154,10 @@ local function hud_bombs()
 end
 
 local function hud_render()
+
+    -- if we are hiding the hud as a spectator, don't render the hud
+    if spectatorHideHud then return end
+
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
