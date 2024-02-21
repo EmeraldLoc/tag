@@ -573,6 +573,49 @@ function tagged_popup(tagger, runner)
 	end
 end
 
+---@param gamemode integer
+function get_rules_for_gamemode(gamemode)
+	if gamemode == TAG then
+		return "There are 2 roles in Tag, Runner and Tagger. Runners are tasked to run away from Taggers. Taggers are tasked to tag (hit) Runners. When a Tagger hits a Runner, they swap roles! If you die as a runner, and the Eliminate on Death settings is enabled, then you will become Eliminated. If a tagger dies, then they simply go back to the start of the level. If all runners become eliminated, the taggers automatically win. If the runners win, the position on the leaderboard is determined by how long you were a runner for. If the taggers win, your position on the leaderboard is determined by how many tags you got. Enjoy!"
+	elseif gamemode == FREEZE_TAG then
+		return "Freeze Tag contains 3 roles, Runner, Tagger, and Frozen. Runners are to run away from Taggers, and unfreeze Frozen players. Taggers aim to tag Runners. If you get tagged as a Runner, you become Frozen, and to be saved, a runner has to unfreeze you. If a runner does not unfreeze you, and you freeze to death, you become a Tagger. For the leaderboard, if Runners and Frozen won, it uses the amount of time as a runner (does not include time frozen). If the Taggers won, then it uses the amount of tags. Here's a tip, if a Tagger is camping a player who you want to unfreeze, attempt to dive into the player (it helps alot). Enjoy!"
+	elseif gamemode == INFECTION then
+		return "If you haven't, or you don't know how it works, read the Tag gamemode section. Infection is Tag except for a few things. Taggers are renamed to Infected. If an Infected player tags a Runner, that Runner becomes Infected. The elimination sytem is the same as Tag, same with the leaderboard."
+	elseif gamemode == HOT_POTATO then
+		return "If you haven't, or you don't know how it works, read the Tag gamemode section. Hot Potato is the exact same thing as Tag, except at the end of a round, you explode and become Eliminated, and a new set of taggers pop into existence. So it's pretty much Tag, except with multiple rounds. Leaderboard works the same as in Tag, same with elimination on death."
+	elseif gamemode == JUGGERNAUT then
+		return "If you haven't, or you don't know how it works, read the Tag gamemode section. Juggernaut is extremely similar to Tag, the differences being that 1 player is assigned to be the Juggernaut. The Juggernaut can withstand multiple tags, which you can see at the bottom ui element. If a Juggernaut falls off the map, they die, and taggers automatically win. Leaderboard works the same as in Tag."
+	elseif gamemode == ASSASSINS then
+		return "The Assassins gamemode is much more different from the rest. Everyone is an Assassin. An Assassin is given a target, you must chase down and tag that target. Note, multiple people can have the same target, this gets very chaotic and stressful! The leaderboard is based on how many tags you got. You do not become eliminated on death."
+	end
+end
+
+function get_general_rules()
+	-- ack, long text
+	return "Tag is a set of 6 gamemodes, Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, and Assassins. These gamemodes are selected randomly, or selected by the server. Modifiers are, well, modifiers that modify parts of a game. These are either selected by the server, or selected by random. During a round, you may have special abilities (indicated by a ui element at the bottom of your screen), hit whatever button is binded to Y to use these ablities. At the end of a round, you can see what placement you got via the leaderboards, this is pretty self explanitory. The voting system is a way to vote for a map to play on.\n\nThat's the general \"rules\" of Tag, enjoy!"
+end
+
+-- thanks for this one chatgpt, my knowledge ain't even close to getting that right
+function warp_text(text, maxLength)
+    local lines = {}
+    local line = ""
+
+    for word in text:gmatch("%S+") do
+        if #line + #word < maxLength then
+            line = line .. word .. " "
+        else
+            table.insert(lines, line)
+            line = word .. " "
+        end
+    end
+
+    if #line > 0 then
+        table.insert(lines, line)
+    end
+
+    return lines
+end
+
 -- this entire snippet for the player head was made by EmilyEmmi (with adjustments for tag made by me :), thanks!
 local PART_ORDER = {
     SKIN,

@@ -6,10 +6,6 @@ blacklistAddRequest = false
 INPUT_A = 0
 INPUT_JOYSTICK = 1
 
--- permissions
-PERMISSION_NONE = 0
-PERMISSION_SERVER = 1
-
 local showBlacklistSettings = false
 local showPlayerSettings = false
 local showStartSettings = false
@@ -18,13 +14,6 @@ local joystickCooldown = 0
 local screenHeight = djui_hud_get_screen_height()
 local bgWidth = 525
 local selection = 1
-
-local function has_permission(perm)
-    if perm == PERMISSION_NONE then return true end
-    if perm == PERMISSION_SERVER and network_is_server() then return true end
-
-    return false
-end
 
 local function on_off_text(bool)
     if bool then return "On" else return "Off" end
@@ -356,6 +345,34 @@ local function set_player_role(i)
     end
 end
 
+local function get_rules(gamemode)
+    if gamemode ~= nil then
+        local text = get_rules_for_gamemode(gamemode)
+        entries = {
+            {text = text},
+            {name = "Back",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = rulesEntries
+                selection = 1
+            end}}
+        selection = 1
+    else
+        local text = get_general_rules()
+        entries = {
+            {text = text},
+            {name = "Back",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = rulesEntries
+                selection = 1
+            end}}
+        selection = 1
+    end
+end
+
 -- default selections
 settingsEntries = {
     -- start selection
@@ -456,6 +473,15 @@ settingsEntries = {
         selection = 1
     end,
     valueText = ">",},
+    -- rules selection
+    {name = "Rules",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        entries = rulesEntries
+        selection = 1
+    end,
+    valueText = ">",},
     -- done selection
     {name = "Done",
     permission = PERMISSION_NONE,
@@ -532,23 +558,67 @@ startEntries = {}
 playerEntries = {}
 blacklistEntries = {}
 
+-- rules entries
+rulesEntries = {
+    {name = "General",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(nil)
+    end,},
+
+    {name = "Tag",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(TAG)
+    end},
+
+    {name = "Freeze Tag",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(FREEZE_TAG)
+    end},
+
+    {name = "Infection",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(INFECTION)
+    end},
+
+    {name = "Hot Potato",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(HOT_POTATO)
+    end},
+
+    {name = "Juggernaut",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(JUGGERNAUT)
+    end},
+
+    {name = "Assassins",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(ASSASSINS)
+    end},
+
+    {name = "Back",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        entries = settingsEntries
+        selection = 1
+    end,}
+}
+
 entries = settingsEntries
-
-if isRomhack then
-    MAX_START_SELECTION = 15
-    for i = COURSE_BOB, COURSE_RR do
-        ---@diagnostic disable-next-line: param-type-mismatch
-        if level_is_vanilla_level(course_to_level(i)) or table.contains(blacklistedCourses, i) then
-            MAX_START_SELECTION = MAX_START_SELECTION - 1
-        end
-    end
-
-    MAX_START_SELECTION = MAX_START_SELECTION + 2
-else
-    MAX_START_SELECTION = #levels + 2
-end
-local START_STOP_SELECTION = MAX_START_SELECTION - 1
-local START_DONE_SELECTION = MAX_START_SELECTION
 
 local function background()
     djui_hud_set_color(0, 0, 0, 128)
@@ -775,6 +845,27 @@ local function hud_render()
             height = height + 60
         end
 
+        if entries[i].text ~= nil then
+            -- appreciate the free labor chatgpt (ok I did a little bit of cleanup)
+            local wrappedTextLines = warp_text(entries[i].text, 53)
+
+            for j, line in ipairs(wrappedTextLines) do
+                if selection == i then
+                    djui_hud_set_color(240, 240, 240, 255)
+                else
+                    djui_hud_set_color(200, 200, 200, 255)
+                end
+
+                djui_hud_print_text(line, 20, height - scrollOffset + (j - 1) * 28, 1)
+            end
+
+            for _ = 1, #wrappedTextLines do
+                height = height + 25
+            end
+
+            goto continue
+        end
+
         if selection == i then
             djui_hud_set_color(32, 32, 34, 225)
         else
@@ -806,6 +897,8 @@ local function hud_render()
         if entries[i].valueText ~= nil then
             djui_hud_print_text(entries[i].valueText, bgWidth - 30 - djui_hud_measure_text(entries[i].valueText), height + 4 - scrollOffset, 1)
         end
+
+        ::continue::
     end
 end
 
