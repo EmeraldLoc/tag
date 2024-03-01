@@ -185,7 +185,7 @@ local function on_pvp(a, v)
 
         local aS = gPlayerSyncTable[a.playerIndex]
 
-        -- send packet to the server giving the server our target
+        -- send packet to the server giving the server our target for resyncing if needed
         local p = {packetType = PACKET_TYPE_ASSASSINS_TARGET, assassinsTarget = aS.assassinTarget, assassinsIndex = network_global_index_from_local(a.playerIndex)}
         send_packet_to_server(p)
 
