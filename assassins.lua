@@ -181,7 +181,19 @@ end
 local function on_pvp(a, v)
     if gGlobalSyncTable.gamemode ~= ASSASSINS then return end
 
+    if a.playerIndex == 0 then
+
+        local aS = gPlayerSyncTable[a.playerIndex]
+
+        -- send packet to the server giving the server our target
+        local p = {packetType = PACKET_TYPE_ASSASSINS_TARGET, assassinsTarget = aS.assassinTarget, assassinsIndex = network_global_index_from_local(a.playerIndex)}
+        send_packet_to_server(p)
+
+        return
+    end
+
     if v.playerIndex ~= 0 then return end
+
     send_pvp_packet(a.playerIndex, v.playerIndex)
 end
 

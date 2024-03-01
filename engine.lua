@@ -48,7 +48,7 @@ MODIFIER_LOW_GRAVITY = 2
 MODIFIER_NO_RADAR = 3
 MODIFIER_NO_BOOST = 4
 MODIFIER_ONE_TAGGER = 5
-MODIFIER_FLY = 6
+MODIFIER_FOG = 6
 MODIFIER_SPEED = 7
 MODIFIER_INCOGNITO = 8
 MODIFIER_HIGH_GRAVITY = 9
@@ -302,7 +302,7 @@ local function server_update()
                         goto selectmodifier
                     end
 
-                    if gGlobalSyncTable.gamemode == ASSASSINS and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER or gGlobalSyncTable.modifier == MODIFIER_FLY or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
+                    if gGlobalSyncTable.gamemode == ASSASSINS and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
                         goto selectmodifier
                     end
                 else
@@ -717,7 +717,7 @@ local function mario_update(m)
     -- guide:
     -- | = add
     -- & ~ = subtract
-    if gPlayerSyncTable[m.playerIndex].state ~= SPECTATOR and gGlobalSyncTable.modifier ~= MODIFIER_FLY then
+    if gPlayerSyncTable[m.playerIndex].state ~= SPECTATOR then
         m.flags = m.flags & ~MARIO_WING_CAP
         m.flags = m.flags & ~MARIO_METAL_CAP
         m.flags = m.flags & ~MARIO_VANISH_CAP
@@ -725,10 +725,6 @@ local function mario_update(m)
         m.flags = m.flags | MARIO_WING_CAP
         m.flags = m.flags & ~MARIO_METAL_CAP
         m.flags = m.flags | MARIO_VANISH_CAP
-    elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
-        m.flags = m.flags | MARIO_WING_CAP
-        m.flags = m.flags & ~MARIO_METAL_CAP
-        m.flags = m.flags & ~MARIO_VANISH_CAP
     end
 
     -- set model state according to state
@@ -959,13 +955,6 @@ local function before_phys(m)
 
     -- this function handles boost trail
     generate_boost_trail()
-
-    -- reduce fly speed, not to be confused with fly-phyisics.lua, this handles reduction in speed if your a runner
-    -- dont get me wrong it should def be in fly-physics.lua, too lazy to move it now though
-    if gGlobalSyncTable.modifier == MODIFIER_FLY and gPlayerSyncTable[0].state == RUNNER and m.action == ACT_FLYING then
-        m.vel.x = m.vel.x * 0.8
-        m.vel.z = m.vel.z * 0.8
-    end
 end
 
 local function hud_round_status()

@@ -119,6 +119,11 @@ local function mario_update(m)
     if not isPaused then return end
     if showSettings then return end
 
+    if m.controller.buttonPressed & R_TRIG ~= 0 then
+        djui_open_pause_menu()
+        m.controller.buttonPressed = m.controller.buttonPressed & ~R_TRIG
+    end
+
     -- reset joystick cooldown
     if m.controller.stickX == 0 and m.controller.stickY == 0 then
         joystickCooldown = 0

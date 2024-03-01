@@ -340,8 +340,8 @@ function get_modifier_text()
 		end
 	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
 		text = "\\#316BE8\\One Tagger"
-	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
-		text = "\\#D61B1B\\Fly"
+	elseif gGlobalSyncTable.modifier == MODIFIER_FOG then
+		text = "\\#7ACEF5\\Fog"
 	elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
 		text = "\\#0099FF\\Speed"
 	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
@@ -376,8 +376,8 @@ function get_modifier_text_without_hex()
 		end
 	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
 		text = "One Tagger"
-	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
-		text = "Fly"
+	elseif gGlobalSyncTable.modifier == MODIFIER_FOG then
+		text = "Fog"
 	elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
 		text = "Speed"
 	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
@@ -405,8 +405,8 @@ function get_modifier_rgb()
 		return 0, 153, 255
 	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
 		return 49, 107, 232
-	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
-		return 214, 27, 27
+	elseif gGlobalSyncTable.modifier == MODIFIER_FOG then
+		return 122, 206, 245
 	elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
 		return 0, 153, 255
 	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
@@ -517,7 +517,7 @@ function get_role_name(role)
 end
 
 function boosts_enabled()
-	if gGlobalSyncTable.boosts and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST and gGlobalSyncTable.modifier ~= MODIFIER_BOMBS and gGlobalSyncTable.modifier ~= MODIFIER_FLY and gGlobalSyncTable.modifier ~= MODIFIER_SPEED then
+	if gGlobalSyncTable.boosts and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST and gGlobalSyncTable.modifier ~= MODIFIER_BOMBS and gGlobalSyncTable.modifier ~= MODIFIER_SPEED then
 		return true
 	end
 
