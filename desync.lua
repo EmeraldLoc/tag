@@ -65,7 +65,6 @@ local function hud_render()
     if joinTimer > 0 then return end
 
     if desyncTimer >= 10 * 30 - 5 and desyncTimer <= 10 * 30 then
-        djui_chat_message_create("Selected random did you know")
         select_random_did_you_know()
     end
 
