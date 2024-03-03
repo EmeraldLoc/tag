@@ -9,8 +9,8 @@ local function recieve_packet(p)
                 -- use the create packet function to create a packet with the packet type Desynced Initiate Resync
                 local desyncPacket = create_packet(PACKET_TYPE_LEVEL_DESYNCED_INITIATE_RESYNC, gGlobalSyncTable.selectedLevel)
                 -- send the packet to the global index that we set when the desynced player sent their global index
-                send_packet(p.data.globalIndex, desyncPacket)
-                log_to_console("Tag: Sent the ok to resync, desync reason is " .. p.data.reason)
+                send_packet(p.globalIndex, desyncPacket)
+                log_to_console("Tag: Sent the ok to resync, desync reason is " .. p.reason)
             elseif p.reason == DESYNC_REASON_ROUND_STATE then
                 -- send the round state to the desynced player to resync them
                 -- use the create packet function to create a packet with the packet type Desynced Initiate Resync
