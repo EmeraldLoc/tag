@@ -728,11 +728,17 @@ local function mario_update(m)
     end
 
     -- set model state according to state
-    if gPlayerSyncTable[m.playerIndex].state == TAGGER and gGlobalSyncTable.gamemode ~= ASSASSINS and (gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO or m.playerIndex == 0) then
+    if gPlayerSyncTable[m.playerIndex].state == TAGGER
+    and gGlobalSyncTable.gamemode ~= ASSASSINS
+    and ((gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO
+    or gPlayerSyncTable[0].state == TAGGER)
+    or m.playerIndex == 0) then
         m.marioBodyState.modelState = MODEL_STATE_METAL
     elseif gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA -- vanish cap mario
-    elseif gPlayerSyncTable[m.playerIndex].state == RUNNER or (gGlobalSyncTable.modifier == MODIFIER_INCOGNITO and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) then
+    elseif gPlayerSyncTable[m.playerIndex].state == RUNNER
+    or (gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
+    and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) then
         m.marioBodyState.modelState = 0 -- normal
     end
 
