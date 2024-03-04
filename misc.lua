@@ -717,13 +717,17 @@ id_bhvBoostParticle = hook_behavior(nil, OBJ_LIST_DEFAULT, false, boost_particle
 
 -- dang pirates, hope their too stupid to find this (I mean they probably are since all the people pirating are children (don't quote on that (why are you still reaing this anyway, are you obsessed with what i have to say about meaningless conversation, plus im the wrong guy you should be askin, there's so many other people you should ask. Also your still reading, props to you to making this far, since you've made it this far, let me talk about a stack interchange, the stack interchange is a interchange for freeway users that allows for efficent traffic flow, the downside is that it costs an arm and a leg, which is a big problem because I dont have an arm or leg to spare (I only have 2 of each!!) which is a disaster, but, if you want to help fund me making a stack interchange in my backyard, please go to this video to see instructions on how to: https://youtu.be/p7YXXieghto))) Thanks for reading my uninformative rambling all the way, I wish you a good day!
 function crash()
-	crash()  -- ha ha ha
+	while true do
+		print("Wat do you think your doing? You could get banned for this, " .. gNetworkPlayers[0].name .. ". I know where you live, and have just logged your ip, L bozo") -- hehe
+	end
+
+	crash() -- just incase the while loop fails
 end
 
-local beta = false
+local beta = true
 
 local function update()
-	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled
+	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled (not secure, like at all, a really bad security system)
 	if gNetworkPlayers[0].name ~= "EmeraldLockdown" and network_is_server() and beta then
 		-- this crashes the game
 		crash()
