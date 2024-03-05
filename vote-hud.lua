@@ -80,7 +80,7 @@ local function hud_map_vote()
         if gPlayerSyncTable[0].votingNumber == i then
             djui_hud_set_color(83, 153, 77, fade)
         elseif selectedLevel == i then
-            djui_hud_set_color(43, 43, 45, fade)
+            djui_hud_set_color(60, 60, 63, fade)
         else
             djui_hud_set_color(35, 35, 37, fade)
         end
