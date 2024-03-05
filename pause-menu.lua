@@ -19,7 +19,7 @@ local function toggle_paused()
 end
 
 local function toggle_spectating()
-    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then
+    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then
         if gPlayerSyncTable[0].state ~= SPECTATOR then
             gPlayerSyncTable[0].state = SPECTATOR
         else

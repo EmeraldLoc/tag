@@ -41,7 +41,10 @@ local function update()
             goto updateend
         end
 
-        if not gNetworkPlayers[targetIndex].connected or gPlayerSyncTable[targetIndex].state == ELIMINATED or gPlayerSyncTable[targetIndex].state == SPECTATOR then goto selectindex end
+        if not gNetworkPlayers[targetIndex].connected
+        or gPlayerSyncTable[targetIndex].state == ELIMINATED
+        or gPlayerSyncTable[targetIndex].state == SPECTATOR
+        then goto selectindex end
     end
 
     ::updateend::
@@ -111,6 +114,7 @@ local function hud_side_panel_render()
     djui_hud_set_color(255, 255, 255, 255)
     djui_hud_print_text("Target:", x + 10, y, 1)
 
+    if gPlayerSyncTable[0].assassinTarget == nil then return end
     local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assassinTarget)
 
     if targetIndex >= 0 and targetIndex <= MAX_PLAYERS then
@@ -214,11 +218,14 @@ function assassins_handle_pvp(aI, vI)
                 tagged_popup(aI, vI)
                 a.amountOfTags = a.amountOfTags + 1
                 a.assassinTarget = -1
+                goto endfunc
             end
         end
 
         a.assassinStunTimer = 1 * 30
     end
+
+    ::endfunc::
 end
 
 ---@param m MarioState

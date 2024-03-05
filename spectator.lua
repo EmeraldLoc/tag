@@ -133,7 +133,7 @@ local function mario_update(m)
         end
 
         -- follow index selection
-        if m.controller.buttonDown & R_JPAD ~= 0 or followTargetIndex == 0 then
+        if m.controller.buttonPressed & R_JPAD ~= 0 or followTargetIndex == 0 then
             local originalIndex = followTargetIndex
             followTargetIndex = followTargetIndex + 1
 
@@ -147,7 +147,7 @@ local function mario_update(m)
             end
         end
 
-        if m.controller.buttonDown & L_JPAD ~= 0 then
+        if m.controller.buttonPressed & L_JPAD ~= 0 then
             local originalIndex = followTargetIndex
             followTargetIndex = followTargetIndex - 1
 
