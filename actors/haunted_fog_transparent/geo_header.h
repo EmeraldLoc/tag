@@ -1,0 +1,7 @@
+extern const GeoLayout haunted_fog_transparent_geo[];
+extern Lights1 haunted_fog_transparent_f3dlite_material_lights;
+extern Vtx haunted_fog_transparent_Cylinder_mesh_layer_5_vtx_0[155];
+extern Gfx haunted_fog_transparent_Cylinder_mesh_layer_5_tri_0[];
+extern Gfx mat_haunted_fog_transparent_f3dlite_material[];
+extern Gfx haunted_fog_transparent_Cylinder_mesh_layer_5[];
+extern Gfx haunted_fog_transparent_material_revert_render_settings[];

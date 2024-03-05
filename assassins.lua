@@ -205,15 +205,19 @@ function assassins_handle_pvp(aI, vI)
     local v = gPlayerSyncTable[vI]
 
     -- check if tagger tagged runner
-    if v.state == TAGGER and a.state == TAGGER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        if network_local_index_from_global(a.assassinTarget) == vI then
-            v.state = ELIMINATED
-            tagged_popup(aI, vI)
-            a.amountOfTags = a.amountOfTags + 1
-            a.assassinTarget = -1
-        else
-            a.assassinStunTimer = 1 * 30
+    if v.state == TAGGER and a.state == TAGGER
+    and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        -- wrap to avoid script error
+        if a.assassinTarget ~= nil then
+            if network_local_index_from_global(a.assassinTarget) == vI then
+                v.state = ELIMINATED
+                tagged_popup(aI, vI)
+                a.amountOfTags = a.amountOfTags + 1
+                a.assassinTarget = -1
+            end
         end
+
+        a.assassinStunTimer = 1 * 30
     end
 end
 

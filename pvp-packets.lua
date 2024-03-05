@@ -27,6 +27,8 @@ end
 
 -- send a pvp interaction packet to the server (this is what you see in files like tag.lua)
 function send_pvp_packet(aI, vI)
+    -- nil check
+    if aI == nil or vI == nil then return end
     -- convert local indexes to global indexes
     aI = network_global_index_from_local(aI)
     vI = network_global_index_from_local(vI)

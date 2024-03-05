@@ -262,7 +262,7 @@ local function server_update()
             else
                 gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
 
-                if levels[gGlobalSyncTable.selectedLevel].level == LEVEL_TTC then
+                if levels[gGlobalSyncTable.selectedLevel].level == LEVEL_TTC and not isRomhack then
                     gGlobalSyncTable.ttcSpeed = math.random(0, 3)
                 end
             end
@@ -298,11 +298,23 @@ local function server_update()
                     -- select a random modifier
                     gGlobalSyncTable.modifier = math.random(MODIFIER_MIN + 1 , MODIFIER_MAX) -- select random modifier, exclude MODIFIER_NONE
 
-                    if gGlobalSyncTable.gamemode == JUGGERNAUT and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
+                    if gGlobalSyncTable.gamemode == JUGGERNAUT
+                    and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
+                    or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
                         goto selectmodifier
                     end
 
-                    if gGlobalSyncTable.gamemode == ASSASSINS and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
+                    if gGlobalSyncTable.gamemode == ASSASSINS
+                    and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
+                    or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
+                        goto selectmodifier
+                    end
+
+                    if (levels[gGlobalSyncTable.selectedLevel].name == "ithi"
+                    or levels[gGlobalSyncTable.selectedLevel].name == "lll"
+                    or levels[gGlobalSyncTable.selectedLevel].name == "bitfs")
+                    and not isRomhack
+                    and gGlobalSyncTable.modifier == MODIFIER_FOG then
                         goto selectmodifier
                     end
                 else
