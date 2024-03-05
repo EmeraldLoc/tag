@@ -132,7 +132,7 @@ function juggernaut_handle_pvp(aI, vI)
     -- check if tagger tagged runner
     if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
         v.juggernautTags = v.juggernautTags + 1
-        v.invincTimer = 2 * 30
+        v.invincTimer = 2 * 30 -- 2 seconds
         a.amountOfTags = a.amountOfTags + 1
     end
 end
