@@ -28,6 +28,7 @@ local function toggle_spectating()
         end
     else
         local i = math.random(1, 5)
+        local showRareMessage = math.random(1, 1000000)
 
         if i == 1 then
             djui_chat_message_create("Did you actually think I was dumb enough not to prevent this?")
@@ -39,6 +40,10 @@ local function toggle_spectating()
             djui_chat_message_create("Is it hard to wait until the round ends?")
         elseif i == 5 then
             djui_chat_message_create(network_get_player_text_color_string(0) .. gNetworkPlayers[i].name .. "\\#FFFFFF\\, why do you try this thing when you know deep down it won't work?")
+        end
+
+        if showRareMessage == 777 then
+            djui_chat_message_create("1 in 1000000 chance of this message appearing. One time EmilyEmmi proved all my messages wrong and unspectated during a round :(")
         end
     end
 end

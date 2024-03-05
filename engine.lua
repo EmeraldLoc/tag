@@ -725,6 +725,7 @@ local function mario_update(m)
         m.area.camera.cutscene = 0
     end
 
+    -- don't lose cap permanently (thanks shine thief)
     m.cap = 0
 
     -- this sets cap flags
