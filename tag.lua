@@ -131,26 +131,28 @@ end
 ---@param v MarioState
 local function on_pvp(a, v)
     if gGlobalSyncTable.gamemode ~= TAG then return end
-    -- yea pvp is handled using a custom method, if you wanna check that out,
-    -- start in the pvp-packets.lua file, but pretty much we send a pvp packet here
+
     if v.playerIndex ~= 0 then return end
-    send_pvp_packet(a.playerIndex, v.playerIndex)
+    -- handle pvp if we are the victim
+    tag_handle_pvp(a.playerIndex, v.playerIndex)
 end
 
 ---@param aI number
 ---@param vI number
 function tag_handle_pvp(aI, vI)
-    -- the tag pvp handle function, this checks our states and such
-    -- fyi, this is ran on the server, check out pvp-packets.lua
+    -- this checks and sets our states
     local a = gPlayerSyncTable[aI]
     local v = gPlayerSyncTable[vI]
 
     -- check if tagger tagged runner
     if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        -- flip states
         v.state = TAGGER
         a.state = RUNNER
 
+        -- create popup
         tagged_popup(aI, vI)
+        -- increase amount of tags and set invincibility timer to 1 second
         a.amountOfTags = a.amountOfTags + 1
         a.invincTimer = 1 * 30
     end

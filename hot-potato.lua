@@ -122,7 +122,7 @@ end
 local function on_pvp(a, v)
     if gGlobalSyncTable.gamemode ~= HOT_POTATO then return end
     if v.playerIndex ~= 0 then return end
-    send_pvp_packet(a.playerIndex, v.playerIndex)
+    hot_potato_handle_pvp(a.playerIndex, v.playerIndex)
 end
 
 ---@param aI number
@@ -134,10 +134,13 @@ function hot_potato_handle_pvp(aI, vI)
 
     -- check if tagger tagged runner
     if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        -- flip states
         v.state = TAGGER
         a.state = RUNNER
 
+        -- create popup
         tagged_popup(aI, vI)
+        -- increase amount of tags and set invincibility to 1 second
         a.amountOfTags = a.amountOfTags + 1
         a.invincTimer = 1 * 30
     end

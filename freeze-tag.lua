@@ -172,7 +172,7 @@ end
 local function on_pvp(a, v)
     if gGlobalSyncTable.gamemode ~= FREEZE_TAG then return end
     if v.playerIndex ~= 0 then return end
-    send_pvp_packet(a.playerIndex, v.playerIndex)
+    freeze_tag_handle_pvp(a.playerIndex, v.playerIndex)
 end
 
 ---@param aI number
@@ -184,15 +184,21 @@ function freeze_tag_handle_pvp(aI, vI)
 
     -- check if tagger tagged runner
     if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        a.amountOfTags = a.amountOfTags + 1
+        -- freeze runner
         v.state = FROZEN
+        -- increase taggers tag count
+        a.amountOfTags = a.amountOfTags + 1
+        -- create popup
         freezed_popup(aI, vI)
     end
 
     -- check if runner attacked frozen
     if v.state == FROZEN and a.state == RUNNER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        -- unfreeze freezed player
         v.state = RUNNER
+        -- 2 second invincibility
         v.invincTimer = 2 * 30
+        -- create popup
         unfreezed_popup(aI, vI)
     end
 end
