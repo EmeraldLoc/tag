@@ -354,7 +354,7 @@ local function get_rules(gamemode)
             permission = PERMISSION_NONE,
             input = INPUT_A,
             func = function ()
-                entries = rulesEntries
+                entries = helpEntries
                 selection = 1
             end}}
         selection = 1
@@ -366,7 +366,7 @@ local function get_rules(gamemode)
             permission = PERMISSION_NONE,
             input = INPUT_A,
             func = function ()
-                entries = rulesEntries
+                entries = helpEntries
                 selection = 1
             end}}
         selection = 1
@@ -473,12 +473,12 @@ settingsEntries = {
         selection = 1
     end,
     valueText = ">",},
-    -- rules selection
-    {name = "Rules",
+    -- help selection
+    {name = "Help",
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
-        entries = rulesEntries
+        entries = helpEntries
         selection = 1
     end,
     valueText = ">",},
@@ -558,8 +558,8 @@ startEntries = {}
 playerEntries = {}
 blacklistEntries = {}
 
--- rules entries
-rulesEntries = {
+-- help entries
+helpEntries = {
     {name = "General",
     permission = PERMISSION_NONE,
     input = INPUT_A,
@@ -607,6 +607,23 @@ rulesEntries = {
     input = INPUT_A,
     func = function ()
         get_rules(ASSASSINS)
+    end},
+
+    {name = "Spectating",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        local text = get_spectator_help()
+        entries = {
+            {text = text},
+            {name = "Back",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = helpEntries
+                selection = 1
+            end}}
+        selection = 1
     end},
 
     {name = "Back",

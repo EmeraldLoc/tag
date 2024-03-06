@@ -112,7 +112,6 @@ local function hud_side_panel_render()
     djui_hud_set_color(255, 255, 255, 255)
     djui_hud_print_text("Target:", x + 10, y, 1)
 
-    if gPlayerSyncTable[0].assassinTarget == nil then return end
     local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assassinTarget)
 
     if targetIndex >= 0 and targetIndex <= MAX_PLAYERS then
@@ -133,7 +132,9 @@ local function hud_render()
     hud_bottom_render()
 
     -- render side panel
-    if gGlobalSyncTable.roundState == ROUND_ACTIVE and gPlayerSyncTable[0].state ~= ELIMINATED and gPlayerSyncTable[0].state ~= SPECTATOR then
+    if gGlobalSyncTable.roundState == ROUND_ACTIVE
+    and gPlayerSyncTable[0].state ~= ELIMINATED
+    and gPlayerSyncTable[0].state ~= SPECTATOR then
         hud_side_panel_render()
     end
 
@@ -194,20 +195,17 @@ function assassins_handle_pvp(aI, vI)
     -- check if tagger tagged runner
     if v.state == TAGGER and a.state == TAGGER
         and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        -- wrap to avoid script error (?)
-        if a.assassinTarget ~= nil then
-            -- check that the assassins target is the victim
-            if network_local_index_from_global(a.assassinTarget) == vI then
-                -- kill the target
-                v.state = ELIMINATED
-                -- create popup
-                tagged_popup(aI, vI)
-                -- increase amount of tags and set assassinTarget to -1 (none)
-                a.amountOfTags = a.amountOfTags + 1
-                a.assassinTarget = -1
-                -- goto end of function
-                goto endfunc
-            end
+        -- check that the assassins target is the victim
+        if network_local_index_from_global(a.assassinTarget) == vI then
+            -- kill the target
+            v.state = ELIMINATED
+            -- create popup
+            tagged_popup(aI, vI)
+            -- increase amount of tags and set assassinTarget to -1 (none)
+            a.amountOfTags = a.amountOfTags + 1
+            a.assassinTarget = -1
+            -- goto end of function
+            goto endfunc
         end
 
         -- set the assassin's stun timer

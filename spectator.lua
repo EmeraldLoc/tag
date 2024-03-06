@@ -163,7 +163,7 @@ local function mario_update(m)
     end
 end
 
-local function hud_player_name()
+local function hud_bottom_render()
 
     if spectatorHideHud then return end
 
@@ -208,14 +208,15 @@ local function hud_player_name()
 end
 
 local function on_render()
-
     if gPlayerSyncTable[0].state ~= SPECTATOR then return end
-    if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN or gGlobalSyncTable.roundState == ROUND_VOTING then return end
+    if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
+    or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
+    or gGlobalSyncTable.roundState == ROUND_VOTING then return end
 
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
-    hud_player_name()
+    hud_bottom_render()
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
