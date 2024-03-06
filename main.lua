@@ -717,6 +717,11 @@ local function mario_update(m)
 
     m.peakHeight = m.pos.y -- disables fall damage
 
+    -- disable hangable ceilings
+    if m.ceil.type & SURFACE_HANGABLE ~= 0 then
+        m.ceil.type = m.ceil.type & ~SURFACE_HANGABLE
+    end
+
     -- set player that just joined to be invisible (-1 is not a valid state so)
     if gPlayerSyncTable[m.playerIndex].state == -1 then
         obj_set_model_extended(m.marioObj, E_MODEL_NONE)
@@ -1176,11 +1181,14 @@ local function hud_render()
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
     -- render hud
-    hud_round_status()
-    hud_gamemode()
-    hud_modifier()
-    hud_boost()
-    hud_bombs()
+    if gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN
+    and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN then
+        hud_round_status()
+        hud_gamemode()
+        hud_modifier()
+        hud_boost()
+        hud_bombs()
+    end
 
     -- hide hud
     hud_hide()

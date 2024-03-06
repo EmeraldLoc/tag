@@ -7,9 +7,9 @@ local eliminatedTimer = 0
 local function update()
     if gGlobalSyncTable.gamemode ~= ASSASSINS then return end
 
-    -- set network descriptions
+    -- set network descriptions and state
     for i = 0, MAX_PLAYERS - 1 do
-        if gPlayerSyncTable[i].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
+        if (gPlayerSyncTable[i].state == TAGGER or gPlayerSyncTable[i].state == RUNNER) and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
             network_player_set_description(gNetworkPlayers[i], "Assassin", 232, 46, 46, 255)
         elseif gPlayerSyncTable[i].state == ELIMINATED then
             network_player_set_description(gNetworkPlayers[i], "Eliminated", 191, 54, 54, 255)
@@ -21,36 +21,43 @@ local function update()
         eliminatedTimer = eliminatedTimer - 1
     end
 
-    local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assassinTarget)
+    if gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        -- get target index
+        local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assassinTarget)
 
-    if targetIndex >= 0 and targetIndex <= MAX_PLAYERS then
-        if gPlayerSyncTable[targetIndex].state == ELIMINATED or gPlayerSyncTable[targetIndex].state == SPECTATOR or not gNetworkPlayers[targetIndex].connected then
-            targetIndex = -1
+        -- reset target index if its invalid
+        if targetIndex >= 0 and targetIndex <= MAX_PLAYERS then
+            if gPlayerSyncTable[targetIndex].state ~= TAGGER or not gNetworkPlayers[targetIndex].connected then
+                targetIndex = -1
+            end
         end
+
+        local numberOfAssassins = 0
+        for i = 1, MAX_PLAYERS - 1 do
+            local np = gNetworkPlayers[i]
+            local s = gPlayerSyncTable[i]
+
+            if np.connected and s.state == TAGGER then
+                numberOfAssassins = numberOfAssassins + 1
+            end
+        end
+
+        if (targetIndex < 0 or targetIndex > MAX_PLAYERS)
+        and gPlayerSyncTable[0].state == TAGGER
+        and numberOfAssassins > 0 then
+            ::selectindex::
+            targetIndex = math.random(1, 15)
+
+            if not gNetworkPlayers[targetIndex].connected
+                or gPlayerSyncTable[targetIndex].state == ELIMINATED
+                or gPlayerSyncTable[targetIndex].state == SPECTATOR
+            then
+                goto selectindex
+            end
+        end
+
+        gPlayerSyncTable[0].assassinTarget = network_global_index_from_local(targetIndex)
     end
-
-    if (targetIndex < 0 or targetIndex > MAX_PLAYERS) and gPlayerSyncTable[0].state ~= ELIMINATED and gPlayerSyncTable[0].state ~= SPECTATOR then
-        local attempts = 0
-
-        ::selectindex::
-        attempts = attempts + 1
-        targetIndex = math.random(1, 15)
-
-        if attempts > 0.01 * 30 then -- pretty terrible way to fix the host freezing when the host tags the final player
-            goto updateend
-        end
-
-        if not gNetworkPlayers[targetIndex].connected
-            or gPlayerSyncTable[targetIndex].state == ELIMINATED
-            or gPlayerSyncTable[targetIndex].state == SPECTATOR
-        then
-            goto selectindex
-        end
-    end
-
-    ::updateend::
-
-    gPlayerSyncTable[0].assassinTarget = network_global_index_from_local(targetIndex)
 end
 
 ---@param m MarioState
@@ -195,24 +202,10 @@ function assassins_handle_pvp(aI, vI)
     -- check if tagger tagged runner
     if v.state == TAGGER and a.state == TAGGER
         and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        -- check that the assassins target is the victim
-        if network_local_index_from_global(a.assassinTarget) == vI then
-            -- kill the target
-            v.state = ELIMINATED
-            -- create popup
-            tagged_popup(aI, vI)
-            -- increase amount of tags and set assassinTarget to -1 (none)
-            a.amountOfTags = a.amountOfTags + 1
-            a.assassinTarget = -1
-            -- goto end of function
-            goto endfunc
-        end
-
-        -- set the assassin's stun timer
-        a.assassinStunTimer = 1 * 30
+        -- send packet to attacker, since he has the target
+        local p = create_packet(PACKET_TYPE_ASSASSINS_TARGET, network_global_index_from_local(vI))
+        send_packet(network_global_index_from_local(aI), p)
     end
-
-    ::endfunc::
 end
 
 ---@param m MarioState

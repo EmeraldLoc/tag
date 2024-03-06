@@ -207,11 +207,7 @@ end
 local function act_frozen(m)
     if gPlayerSyncTable[m.playerIndex].state ~= FROZEN then
         -- prevents being frozen for eternity
-        if m.prevAction ~= ACT_FROZEN then
-            return set_mario_action(m, m.prevAction, 0)
-        else
-            return set_mario_action(m, ACT_IDLE, 0)
-        end
+        return set_mario_action(m, ACT_IDLE, 0)
     end
 
     -- set velocity varaibles to none
