@@ -205,6 +205,11 @@ local function set_time_limit(gamemode)
     -- seriously though don't take this as an example for your mods, please, please make
     -- it organized and compressed, and don't underlook functions, they are HUGE
 
+    -- New developments: Future me here. What the heck is the abomination of junky code
+    -- What the hell was past me thinking, holy crap, this code SUCKS
+    -- I aint redoing it, cuz it works, but this is the most crappy piece of junk
+    -- i've seen all day
+
     -- set variable based off of dir and speed
     if gamemode == TAG then
         if direction == CONT_LEFT then
