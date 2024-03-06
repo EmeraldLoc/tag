@@ -2,7 +2,7 @@
 
 -- constants
 -- this is another player role, a custom one, you will notice it's set to the same thing
--- as engine.lua's ELIMINATED_OR_FROZEN variable, this is intentional
+-- as main.lua's ELIMINATED_OR_FROZEN variable, this is intentional
 local ELIMINATED = 2
 
 -- variables
