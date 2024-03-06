@@ -718,8 +718,8 @@ local function mario_update(m)
     m.peakHeight = m.pos.y -- disables fall damage
 
     -- disable hangable ceilings
-    if m.ceil.type & SURFACE_HANGABLE ~= 0 then
-        m.ceil.type = m.ceil.type & ~SURFACE_HANGABLE
+    if m.ceil.type == SURFACE_HANGABLE then
+        m.ceil.type = SURFACE_DEFAULT
     end
 
     -- set player that just joined to be invisible (-1 is not a valid state so)

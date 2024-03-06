@@ -133,7 +133,7 @@ function juggernaut_handle_pvp(aI, vI)
     if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
         -- increase juggernaut tags
         v.juggernautTags = v.juggernautTags + 1
-        -- set inviniciblity to 4 seconds, and increase tag count 
+        -- set inviniciblity to 6 seconds, and increase tag count 
         v.invincTimer = 6 * 30
         a.amountOfTags = a.amountOfTags + 1
     end
