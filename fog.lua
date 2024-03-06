@@ -1,6 +1,12 @@
 
 -- not optimal, if there's a better way, please make an issue at https://github.com/EmeraldLoc/tag
 
+-- the way fog works in sm64 is not reproducable with lua mods, so instead opt for models.
+-- this uses 6 objects in total. Five transparent objects, 1 opaque object.
+-- we spawn 5 transparent object for a smooth "opaquining" (thats not a word) effect (its not smooth)
+-- spawn in an opaque object as some objects ignore transparent objects opacity being solid
+-- this looks pretty good, but the more you look at it, the worse it gets. I know, your welcome.
+
 local E_MODEL_FOG = smlua_model_util_get_id("normal_fog_opaque_geo")
 local E_MODEL_FOG_TRANSPARENT = smlua_model_util_get_id("normal_fog_transparent_geo")
 local warpTimer = 0.2 * 30
