@@ -728,7 +728,7 @@ function crash()
 	crash() -- just incase the while loop fails
 end
 
-local beta = true
+local beta = false
 
 local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled (not secure, like at all, a really bad security system)
