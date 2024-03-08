@@ -1,9 +1,6 @@
 -- constants
 local ELIMINATED = 2
 
--- variables
-local eliminatedTimer = 0
-
 local function update()
     if gGlobalSyncTable.gamemode ~= ASSASSINS then return end
 
@@ -14,11 +11,6 @@ local function update()
         elseif gPlayerSyncTable[i].state == ELIMINATED then
             network_player_set_description(gNetworkPlayers[i], "Eliminated", 191, 54, 54, 255)
         end
-    end
-
-    -- set eliminated timer
-    if eliminatedTimer > 0 then
-        eliminatedTimer = eliminatedTimer - 1
     end
 
     if gGlobalSyncTable.roundState == ROUND_ACTIVE then
@@ -80,31 +72,6 @@ local function mario_update(m)
     end
 end
 
-local function hud_bottom_render()
-    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
-    if eliminatedTimer <= 0 then return end
-
-    -- set text and scale
-    local text = "You are Eliminated. use the tp command to teleport to anyone"
-    local scale = 0.5
-
-    -- get width of screen and text
-    local screenWidth = djui_hud_get_screen_width()
-    local screenHeight = djui_hud_get_screen_height()
-    local width = djui_hud_measure_text(text) * scale
-
-    -- get positions
-    local x = (screenWidth - width) / 2.0
-    local y = screenHeight - 16
-
-    -- render bottom
-    djui_hud_set_color(0, 0, 0, 128);
-    djui_hud_render_rect(x - 6, y, width + 12, 16);
-
-    djui_hud_set_color(255, 54, 54, 255);
-    djui_hud_print_text(text, x, y, scale);
-end
-
 local function hud_side_panel_render()
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
@@ -134,9 +101,6 @@ local function hud_render()
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_N64)
-
-    -- render bottom hud
-    hud_bottom_render()
 
     -- render side panel
     if gGlobalSyncTable.roundState == ROUND_ACTIVE
@@ -168,8 +132,6 @@ local function on_death(m)
             if gPlayerSyncTable[0].state == RUNNER then
                 gPlayerSyncTable[0].state = ELIMINATED
                 eliminated_popup(0)
-
-                eliminatedTimer = 8 * 30 -- 8 seconds
             end
         end
     end

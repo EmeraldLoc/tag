@@ -94,67 +94,6 @@ function start_command(msg)
 end
 
 ---@param msg string
-function on_tp_command(msg)
-    if (gPlayerSyncTable[0].state ~= ELIMINATED_OR_FROZEN and gPlayerSyncTable[0].state ~= SPECTATOR) or (gGlobalSyncTable.gamemode == FREEZE_TAG and gPlayerSyncTable[0].state ~= SPECTATOR) then
-        djui_chat_message_create("You must be eliminated or a spectator to run this command")
-
-        return true
-    end
-
-    if tonumber(msg) ~= nil then
-        local index = network_local_index_from_global(tonumber(msg))
-
-        if index > MAX_PLAYERS then
-            djui_chat_message_create("Please type a number under " .. tostring(MAX_PLAYERS + 1))
-
-            return true
-        end
-
-        if index <= 0 then
-            djui_chat_message_create("Please type a number greater than 0")
-
-            return true
-        end
-
-        if gNetworkPlayers[index].connected then
-            local m = gMarioStates[0]
-            local t = gMarioStates[index]
-
-            m.pos.x = t.pos.x
-            m.pos.y = t.pos.y
-            m.pos.z = t.pos.z
-
-            djui_chat_message_create("Teleported to " ..
-                network_get_player_text_color_string(index) .. gNetworkPlayers[index].name)
-        else
-            djui_chat_message_create("This player is not online")
-
-            return true
-        end
-    else
-        for i = 0, network_player_connected_count() do
-            if msg:lower() == strip_hex(gNetworkPlayers[i].name):lower() and msg ~= "" then
-                local m = gMarioStates[0]
-                local t = gMarioStates[i]
-
-                m.pos.x = t.pos.x
-                m.pos.y = t.pos.y
-                m.pos.z = t.pos.z
-
-                djui_chat_message_create("Teleported to " ..
-                    network_get_player_text_color_string(i) .. gNetworkPlayers[i].name)
-
-                return true
-            end
-        end
-
-        djui_chat_message_create("Player not found")
-
-        return true
-    end
-end
-
----@param msg string
 function on_version_command(msg)
     djui_chat_message_create("Current \\#316BE8\\Tag \\#FFFFFF\\Version: " .. version)
 
@@ -303,6 +242,5 @@ if network_is_server() then
 else
     hook_chat_command("tag", "View tag settings", tag_command)
 end
-hook_chat_command("tp", "[name|index] Teleports to a player if your eliminated or spectating", on_tp_command)
 hook_chat_command("spectate", "[on|off] Be a spectator", spectator_command)
 hook_chat_command("version", "Get current version of Tag", on_version_command)

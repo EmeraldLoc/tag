@@ -28,17 +28,6 @@ function global_index_hurts_mario_state(globalIndex, m)
     return true
 end
 
-function active_player(m)
-    local np = gNetworkPlayers[m.playerIndex]
-    if m.playerIndex == 0 then
-        return true
-    end
-    if not np.connected then
-        return false
-    end
-    return is_player_active(m)
-end
-
 function mario_bobomb_use(m)
     local np = gNetworkPlayers[m.playerIndex]
 
@@ -195,7 +184,7 @@ function bhv_tag_bobomb_thrown_loop(o)
 
     for i = 0, MAX_PLAYERS - 1 do
         local m = gMarioStates[i]
-        if active_player(m) and global_index_hurts_mario_state(o.oTagBobombGlobalOwner, m) and not is_invuln_or_intang(m) then
+        if gNetworkPlayers[m.playerIndex].connected and global_index_hurts_mario_state(o.oTagBobombGlobalOwner, m) and not is_invuln_or_intang(m) then
             if bhv_tag_bobomb_intersects_player(o, m, a, 200) then
                 bhv_tag_bobomb_expode(o)
                 return

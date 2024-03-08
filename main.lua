@@ -1,5 +1,5 @@
--- name: \\#316BE8\\Tag\\#dcdcdc\\ (v2.2 R.C 1)
--- description: All Tag Related Gamemodes!\n\nThis mod contains Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and the good'ol Tag, with modifiers, and full romhack support!\n\nThis mod includes a blacklist command to blacklist bad levels in romhacks\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f79cf0\\EmilyEmmi\\#dcdcdc\\ and\\#ff7f00\\ Agent X\\#dcdcdc\\.
+-- name: \\#316BE8\\Tag (v2.2)\\#dcdcdc\\
+-- description: All Tag Related Gamemodes!\n\nThis mod contains Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and the good'ol Tag, with modifiers, and full romhack support!\n\nThis mod includes a blacklist command to blacklist bad levels in romhacks\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\ and\\#ff7f00\\ Agent X\\#dcdcdc\\\n\nPainting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi.
 -- incompatible: gamemode tag
 
 -- if your trying to learn this code, I hope i've done a good job.
@@ -11,113 +11,113 @@
 -- constants
 
 -- round states
-ROUND_WAIT_PLAYERS = 0
-ROUND_ACTIVE = 1
-ROUND_WAIT = 2
-ROUND_TAGGERS_WIN = 3
-ROUND_RUNNERS_WIN = 4
-ROUND_HOT_POTATO_INTERMISSION = 5
-ROUND_VOTING = 6
+ROUND_WAIT_PLAYERS                     = 0
+ROUND_ACTIVE                           = 1
+ROUND_WAIT                             = 2
+ROUND_TAGGERS_WIN                      = 3
+ROUND_RUNNERS_WIN                      = 4
+ROUND_HOT_POTATO_INTERMISSION          = 5
+ROUND_VOTING                           = 6
 
 -- roles (gamemode-specific roles specified in designated gamemode files)
-RUNNER = 0
-TAGGER = 1
-ELIMINATED_OR_FROZEN = 2
-SPECTATOR = 3
+RUNNER                                 = 0
+TAGGER                                 = 1
+ELIMINATED_OR_FROZEN                   = 2
+SPECTATOR                              = 3
 
 -- gamemodes
-MIN_GAMEMODE = 1
-TAG = 1
-FREEZE_TAG = 2
-INFECTION = 3
-HOT_POTATO = 4
-JUGGERNAUT = 5
-ASSASSINS = 6
-MAX_GAMEMODE = 6
+MIN_GAMEMODE                           = 1
+TAG                                    = 1
+FREEZE_TAG                             = 2
+INFECTION                              = 3
+HOT_POTATO                             = 4
+JUGGERNAUT                             = 5
+ASSASSINS                              = 6
+MAX_GAMEMODE                           = 6
 
 -- spectator states
-SPECTATOR_STATE_MARIO = 0
-SPECTATOR_STATE_FREECAM = 1
-SPECTATOR_STATE_FOLLOW = 2
+SPECTATOR_STATE_MARIO                  = 0
+SPECTATOR_STATE_FREECAM                = 1
+SPECTATOR_STATE_FOLLOW                 = 2
 
 -- players needed (it's only 2 if your on the tag gamemode, otherwise this variable is 3)
-PLAYERS_NEEDED = 2
+PLAYERS_NEEDED                         = 2
 
 -- modifiers
-MODIFIER_MIN = 0
-MODIFIER_NONE = 0
-MODIFIER_BOMBS = 1
-MODIFIER_LOW_GRAVITY = 2
-MODIFIER_NO_RADAR = 3
-MODIFIER_NO_BOOST = 4
-MODIFIER_ONE_TAGGER = 5
-MODIFIER_FOG = 6
-MODIFIER_SPEED = 7
-MODIFIER_INCOGNITO = 8
-MODIFIER_HIGH_GRAVITY = 9
-MODIFIER_MAX = 9
+MODIFIER_MIN                           = 0
+MODIFIER_NONE                          = 0
+MODIFIER_BOMBS                         = 1
+MODIFIER_LOW_GRAVITY                   = 2
+MODIFIER_NO_RADAR                      = 3
+MODIFIER_NO_BOOST                      = 4
+MODIFIER_ONE_TAGGER                    = 5
+MODIFIER_FOG                           = 6
+MODIFIER_SPEED                         = 7
+MODIFIER_INCOGNITO                     = 8
+MODIFIER_HIGH_GRAVITY                  = 9
+MODIFIER_MAX                           = 9
 
 -- paintings found in vote screen, this is for all vanilla levels.
-TEXTURE_CG_PAINTING    = get_texture_info("cg_painting")
-TEXTURE_BOB_PAINTING   = get_texture_info("bob_painting")
-TEXTURE_WF_PAINTING    = get_texture_info("wf_painting")
-TEXTURE_JRB_PAINTING   = get_texture_info("jrb_painting")
-TEXTURE_CCM_PAINTING   = get_texture_info("ccm_painting")
-TEXTURE_BITDW_PAINTING = get_texture_info("bitdw_painting")
-TEXTURE_BITFS_PAINTING = get_texture_info("bitfs_painting")
-TEXTURE_LLL_PAINTING   = get_texture_info("lll_painting")
-TEXTURE_SSL_PAINTING   = get_texture_info("ssl_painting")
-TEXTURE_ISSL_PAINTING  = get_texture_info("issl_painting")
-TEXTURE_RR_PAINTING    = get_texture_info("rr_painting")
-TEXTURE_THI_PAINTING   = get_texture_info("thi_painting")
-TEXTURE_ITHI_PAINTING  = get_texture_info("ithi_painting")
-TEXTURE_TTM_PAINTING   = get_texture_info("ttm_painting")
-TEXTURE_SL_PAINTING    = get_texture_info("sl_painting")
-TEXTURE_WDW_PAINTING   = get_texture_info("wdw_painting")
-TEXTURE_TTC_PAINTING   = get_texture_info("ttc_painting")
+TEXTURE_CG_PAINTING                    = get_texture_info("cg_painting")
+TEXTURE_BOB_PAINTING                   = get_texture_info("bob_painting")
+TEXTURE_WF_PAINTING                    = get_texture_info("wf_painting")
+TEXTURE_JRB_PAINTING                   = get_texture_info("jrb_painting")
+TEXTURE_CCM_PAINTING                   = get_texture_info("ccm_painting")
+TEXTURE_BITDW_PAINTING                 = get_texture_info("bitdw_painting")
+TEXTURE_BITFS_PAINTING                 = get_texture_info("bitfs_painting")
+TEXTURE_LLL_PAINTING                   = get_texture_info("lll_painting")
+TEXTURE_SSL_PAINTING                   = get_texture_info("ssl_painting")
+TEXTURE_ISSL_PAINTING                  = get_texture_info("issl_painting")
+TEXTURE_RR_PAINTING                    = get_texture_info("rr_painting")
+TEXTURE_THI_PAINTING                   = get_texture_info("thi_painting")
+TEXTURE_ITHI_PAINTING                  = get_texture_info("ithi_painting")
+TEXTURE_TTM_PAINTING                   = get_texture_info("ttm_painting")
+TEXTURE_SL_PAINTING                    = get_texture_info("sl_painting")
+TEXTURE_WDW_PAINTING                   = get_texture_info("wdw_painting")
+TEXTURE_TTC_PAINTING                   = get_texture_info("ttc_painting")
 
 -- globals and sync tables
 -- this is the round state, this variable tells you what current round it is
-gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+gGlobalSyncTable.roundState            = ROUND_WAIT_PLAYERS
 -- this is the currently selected modifier. If random modifiers are off (as in you've selected
 -- one manually) then MODIFIER_NONE = Disabled
-gGlobalSyncTable.modifier = MODIFIER_NONE
+gGlobalSyncTable.modifier              = MODIFIER_NONE
 -- dictates wether or not modifiers and gamemodes are random
-gGlobalSyncTable.randomModifiers = true
-gGlobalSyncTable.randomGamemode = true
+gGlobalSyncTable.randomModifiers       = true
+gGlobalSyncTable.randomGamemode        = true
 -- what the gamemode is
-gGlobalSyncTable.gamemode = TAG
+gGlobalSyncTable.gamemode              = TAG
 -- toggles for bljs, cnanons, and water
-gGlobalSyncTable.bljs = false
-gGlobalSyncTable.cannons = false
-gGlobalSyncTable.water = false
+gGlobalSyncTable.bljs                  = false
+gGlobalSyncTable.cannons               = false
+gGlobalSyncTable.water                 = false
 -- display timer, used for all sorts of timers, timers from the top
 -- of the screen, to timers in the vote menu
-gGlobalSyncTable.displayTimer = 1
+gGlobalSyncTable.displayTimer          = 1
 -- the current selected level. When romhacks are enabled, this is set to the actual level
 -- number (i.e LEVEL_BOB), otherwise, it's set to the level in the levels table (found below here)
-gGlobalSyncTable.selectedLevel = 1
+gGlobalSyncTable.selectedLevel         = 1
 -- juggernaut tags required. Since this changes depending on player count, make it a global variable
-gGlobalSyncTable.juggernautTagsReq = 15
+gGlobalSyncTable.juggernautTagsReq     = 15
 -- amount of time left in a round
-gGlobalSyncTable.amountOfTime = 120 * 30
+gGlobalSyncTable.amountOfTime          = 120 * 30
 -- ttc speed, because ttc syncing sucks
-gGlobalSyncTable.ttcSpeed = 0
+gGlobalSyncTable.ttcSpeed              = 0
 -- toggles elimination on death
-gGlobalSyncTable.eliminateOnDeath = true
+gGlobalSyncTable.eliminateOnDeath      = true
 -- toggles vote level system
-gGlobalSyncTable.doVoting = true
+gGlobalSyncTable.doVoting              = true
 -- all gamemode active timers
-gGlobalSyncTable.tagActiveTimer = 120 * 30
-gGlobalSyncTable.freezeTagActiveTimer = 180 * 30
-gGlobalSyncTable.infectionActiveTimer = 120 * 30
-gGlobalSyncTable.hotPotatoActiveTimer = 60 * 30
+gGlobalSyncTable.tagActiveTimer        = 120 * 30
+gGlobalSyncTable.freezeTagActiveTimer  = 180 * 30
+gGlobalSyncTable.infectionActiveTimer  = 120 * 30
+gGlobalSyncTable.hotPotatoActiveTimer  = 60 * 30
 gGlobalSyncTable.juggernautActiveTimer = 120 * 30
-gGlobalSyncTable.assassinsActiveTimer = 120 * 30
+gGlobalSyncTable.assassinsActiveTimer  = 120 * 30
 -- auto mode
-gGlobalSyncTable.autoMode = true
+gGlobalSyncTable.autoMode              = true
 -- enable tagger boosts or not
-gGlobalSyncTable.boosts = true
+gGlobalSyncTable.boosts                = true
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then
         -- the player's role
@@ -145,7 +145,7 @@ end
 
 -- server settings
 gServerSettings.playerInteractions = PLAYER_INTERACTIONS_SOLID -- force player attacks to be on
-gServerSettings.bubbleDeath = 0 -- just.... no
+gServerSettings.bubbleDeath = 0                                -- just.... no
 
 -- variables
 -- this is the local server timer used to set gGlobalSyncTable.displayTimer and other variables
@@ -163,7 +163,7 @@ prevLevel = 1 -- make it the same as the selected level so it selects a new leve
 -- These are levels that are failed to be warped to for romhacks
 badLevels = {}
 -- the global sound source, used for audio
-gGlobalSoundSource = {x = 0, y = 0, z = 0}
+gGlobalSoundSource = { x = 0, y = 0, z = 0 }
 -- if we are paused or not, for custom pause menu
 isPaused = false
 -- whether or not to use romhack cam
@@ -187,23 +187,23 @@ ACT_NOTHING = allocate_mario_action(ACT_FLAG_IDLE)
 
 -- this is the table for levels, pretty self explanitory.
 levels = {
-    {name = "cg",    level = LEVEL_CASTLE_GROUNDS, painting = TEXTURE_CG_PAINTING,    act = 0, area = 1, pipes = true, pipe1Pos = {x = -5979, y = 378, z = -1371},  pipe2Pos = {x = 1043, y = 3174, z = -5546}},
-    {name = "bob",   level = LEVEL_BOB,            painting = TEXTURE_BOB_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = -4694, y = 0, z = 6699},     pipe2Pos = {x = 5079, y = 3072, z = 655}},
-    {name = "rr",    level = LEVEL_RR,             painting = TEXTURE_RR_PAINTING,    act = 0, area = 1, pipes = true, pipe1Pos = {x = -4221, y = 6451, z = -5885}, pipe2Pos = {x = 2125, y = -1833, z = 2079}},
-    {name = "ccm",   level = LEVEL_CCM,            painting = TEXTURE_CCM_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = -1352, y = 2560, z = -1824}, pipe2Pos = {x = 5628, y = -4607, z = -28}},
-    {name = "issl",  level = LEVEL_SSL,            painting = TEXTURE_ISSL_PAINTING,  act = 0, area = 2, pipes = true, pipe1Pos = {x = -460, y = 0, z = 4247},      pipe2Pos = {x = 997, y = 3942, z = 1234}},
-    {name = "bitfs", level = LEVEL_BITFS,          painting = TEXTURE_BITFS_PAINTING, act = 0, area = 1, pipes = true, pipe1Pos = {x = -154, y = -2866, z = -102},  pipe2Pos = {x = 1205, y = 5478, z = 58}},
-    {name = "ttm",   level = LEVEL_TTM,            painting = TEXTURE_TTM_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = -1080, y = -4634, z = 4176}, pipe2Pos = {x = 1031, y = 2306, z = -198}},
-    {name = "ttc",   level = LEVEL_TTC,            painting = TEXTURE_TTC_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = 1361, y = -4822, z = 176},   pipe2Pos = {x = 1594, y = 5284, z = 1565}},
-    {name = "jrb",   level = LEVEL_JRB,            painting = TEXTURE_JRB_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = 3000, y = -5119, z = 2688},  pipe2Pos = {x = -6398, y = 1126, z = 191}},
-    {name = "wdw",   level = LEVEL_WDW,            painting = TEXTURE_WDW_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = {x = 3346, y = 154, z = 2918},    pipe2Pos = {x = -3342, y = 3584, z = -3353}},
-    {name = "wf",    level = LEVEL_WF,             painting = TEXTURE_WF_PAINTING,    act = 0, area = 1, pipes = false},
-    {name = "lll",   level = LEVEL_LLL,            painting = TEXTURE_LLL_PAINTING,   act = 0, area = 1, pipes = false},
-    {name = "ssl",   level = LEVEL_SSL,            painting = TEXTURE_SSL_PAINTING,   act = 0, area = 1, pipes = false},
-    {name = "thi",   level = LEVEL_THI,            painting = TEXTURE_THI_PAINTING,   act = 0, area = 1, pipes = false},
-    {name = "ithi",  level = LEVEL_THI,            painting = TEXTURE_ITHI_PAINTING,  act = 0, area = 3, pipes = false},
-    {name = "sl",    level = LEVEL_SL,             painting = TEXTURE_SL_PAINTING,    act = 0, area = 1, pipes = false},
-    {name = "arena", level = LEVEL_BOWSER_1,       painting = TEXTURE_BITDW_PAINTING, act = 0, area = 1, pipes = false},
+    { name = "cg",    level = LEVEL_CASTLE_GROUNDS, painting = TEXTURE_CG_PAINTING,    act = 0, area = 1, pipes = true, pipe1Pos = { x = -5979, y = 378, z = -1371 },  pipe2Pos = { x = 1043, y = 3174, z = -5546 } },
+    { name = "bob",   level = LEVEL_BOB,            painting = TEXTURE_BOB_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = -4694, y = 0, z = 6699 },     pipe2Pos = { x = 5079, y = 3072, z = 655 } },
+    { name = "rr",    level = LEVEL_RR,             painting = TEXTURE_RR_PAINTING,    act = 0, area = 1, pipes = true, pipe1Pos = { x = -4221, y = 6451, z = -5885 }, pipe2Pos = { x = 2125, y = -1833, z = 2079 } },
+    { name = "ccm",   level = LEVEL_CCM,            painting = TEXTURE_CCM_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = -1352, y = 2560, z = -1824 }, pipe2Pos = { x = 5628, y = -4607, z = -28 } },
+    { name = "issl",  level = LEVEL_SSL,            painting = TEXTURE_ISSL_PAINTING,  act = 0, area = 2, pipes = true, pipe1Pos = { x = -460, y = 0, z = 4247 },      pipe2Pos = { x = 997, y = 3942, z = 1234 } },
+    { name = "bitfs", level = LEVEL_BITFS,          painting = TEXTURE_BITFS_PAINTING, act = 0, area = 1, pipes = true, pipe1Pos = { x = -154, y = -2866, z = -102 },  pipe2Pos = { x = 1205, y = 5478, z = 58 } },
+    { name = "ttm",   level = LEVEL_TTM,            painting = TEXTURE_TTM_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = -1080, y = -4634, z = 4176 }, pipe2Pos = { x = 1031, y = 2306, z = -198 } },
+    { name = "ttc",   level = LEVEL_TTC,            painting = TEXTURE_TTC_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = 1361, y = -4822, z = 176 },   pipe2Pos = { x = 1594, y = 5284, z = 1565 } },
+    { name = "jrb",   level = LEVEL_JRB,            painting = TEXTURE_JRB_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = 3000, y = -5119, z = 2688 },  pipe2Pos = { x = -6398, y = 1126, z = 191 } },
+    { name = "wdw",   level = LEVEL_WDW,            painting = TEXTURE_WDW_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = 3346, y = 154, z = 2918 },    pipe2Pos = { x = -3342, y = 3584, z = -3353 } },
+    { name = "wf",    level = LEVEL_WF,             painting = TEXTURE_WF_PAINTING,    act = 0, area = 1, pipes = false },
+    { name = "lll",   level = LEVEL_LLL,            painting = TEXTURE_LLL_PAINTING,   act = 0, area = 1, pipes = false },
+    { name = "ssl",   level = LEVEL_SSL,            painting = TEXTURE_SSL_PAINTING,   act = 0, area = 1, pipes = false },
+    { name = "thi",   level = LEVEL_THI,            painting = TEXTURE_THI_PAINTING,   act = 0, area = 1, pipes = false },
+    { name = "ithi",  level = LEVEL_THI,            painting = TEXTURE_ITHI_PAINTING,  act = 0, area = 3, pipes = false },
+    { name = "sl",    level = LEVEL_SL,             painting = TEXTURE_SL_PAINTING,    act = 0, area = 1, pipes = false },
+    { name = "arena", level = LEVEL_BOWSER_1,       painting = TEXTURE_BITDW_PAINTING, act = 0, area = 1, pipes = false },
 }
 
 local function server_update()
@@ -299,25 +299,25 @@ local function server_update()
                 if selectModifier == 2 then
                     ::selectmodifier::
                     -- select a random modifier
-                    gGlobalSyncTable.modifier = math.random(MODIFIER_MIN + 1 , MODIFIER_MAX) -- select random modifier, exclude MODIFIER_NONE
+                    gGlobalSyncTable.modifier = math.random(MODIFIER_MIN + 1, MODIFIER_MAX) -- select random modifier, exclude MODIFIER_NONE
 
                     if gGlobalSyncTable.gamemode == JUGGERNAUT
-                    and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
-                    or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
+                        and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
+                            or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
                         goto selectmodifier
                     end
 
                     if gGlobalSyncTable.gamemode == ASSASSINS
-                    and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
-                    or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
+                        and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
+                            or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
                         goto selectmodifier
                     end
 
                     if (levels[gGlobalSyncTable.selectedLevel].name == "ithi"
-                    or levels[gGlobalSyncTable.selectedLevel].name == "lll"
-                    or levels[gGlobalSyncTable.selectedLevel].name == "bitfs")
-                    and not isRomhack
-                    and gGlobalSyncTable.modifier == MODIFIER_FOG then
+                            or levels[gGlobalSyncTable.selectedLevel].name == "lll"
+                            or levels[gGlobalSyncTable.selectedLevel].name == "bitfs")
+                        and not isRomhack
+                        and gGlobalSyncTable.modifier == MODIFIER_FOG then
                         goto selectmodifier
                     end
                 else
@@ -327,7 +327,7 @@ local function server_update()
 
             -- if we select a random gamemode, select that random gamemode now
             if gGlobalSyncTable.randomGamemode then
-                if numPlayers >= 3 then -- 3 is the minimum player count for random gamemodes
+                if numPlayers >= 3 then            -- 3 is the minimum player count for random gamemodes
                     gGlobalSyncTable.gamemode = -1 -- force popup to show
                     gGlobalSyncTable.gamemode = math.random(MIN_GAMEMODE, MAX_GAMEMODE)
                 else
@@ -347,7 +347,7 @@ local function server_update()
 
                 PLAYERS_NEEDED = 2
             elseif gGlobalSyncTable.gamemode == INFECTION then
-                 -- set infection timer
+                -- set infection timer
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.infectionActiveTimer
 
                 PLAYERS_NEEDED = 3
@@ -368,7 +368,8 @@ local function server_update()
                 PLAYERS_NEEDED = 3
             end
 
-            log_to_console("Tag: Modifier is set to " .. get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex())
+            log_to_console("Tag: Modifier is set to " ..
+                get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex())
         end
 
         for i = 0, MAX_PLAYERS - 1 do
@@ -382,13 +383,13 @@ local function server_update()
                 set_mario_action(m, ACT_IDLE, 0)
             end
 
-            gPlayerSyncTable[i].juggernautTags = 0 -- reset juggernaut tags
-            gPlayerSyncTable[i].assassinTarget = -1 -- reset assassin target
-            gPlayerSyncTable[i].amountOfTags = 0 -- reset amount of tags
+            gPlayerSyncTable[i].juggernautTags = 0       -- reset juggernaut tags
+            gPlayerSyncTable[i].assassinTarget = -1      -- reset assassin target
+            gPlayerSyncTable[i].amountOfTags = 0         -- reset amount of tags
             gPlayerSyncTable[i].amountOfTimeAsRunner = 0 -- reset amount of time as runner
         end
 
-        timer = timer - 1 -- subtract timer by one
+        timer = timer - 1                     -- subtract timer by one
         gGlobalSyncTable.displayTimer = timer -- set display timer to timer
 
         if timer <= 0 then
@@ -400,7 +401,7 @@ local function server_update()
                 -- set tag timer
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.tagActiveTimer
             elseif gGlobalSyncTable.gamemode == INFECTION then
-                 -- set infection timer
+                -- set infection timer
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.infectionActiveTimer
             elseif gGlobalSyncTable.gamemode == HOT_POTATO then
                 -- set hot potato timer
@@ -466,7 +467,7 @@ local function server_update()
             end
 
             if gGlobalSyncTable.gamemode == ASSASSINS then
-                for i = 0, MAX_PLAYERS-1 do
+                for i = 0, MAX_PLAYERS - 1 do
                     if gPlayerSyncTable[i].state ~= SPECTATOR then
                         gPlayerSyncTable[i].state = TAGGER
                     end
@@ -480,12 +481,13 @@ local function server_update()
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
         if timer > 0 then
             timer = timer - (1 * hotPotatoTimerMultiplier) -- subtract timer by one multiplied by hot potato multiplyer
-            gGlobalSyncTable.displayTimer = timer -- set display timer to timer
+            gGlobalSyncTable.displayTimer = timer          -- set display timer to timer
         end
 
         for i = 0, MAX_PLAYERS - 1 do
             if gPlayerSyncTable[i].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-                gPlayerSyncTable[i].amountOfTimeAsRunner = gPlayerSyncTable[i].amountOfTimeAsRunner + 1 -- increase amount of time as runner
+                gPlayerSyncTable[i].amountOfTimeAsRunner = gPlayerSyncTable[i].amountOfTimeAsRunner +
+                    1 -- increase amount of time as runner
             end
         end
 
@@ -507,7 +509,8 @@ local function server_update()
                     if gNetworkPlayers[i].connected then
                         if gPlayerSyncTable[i].state == TAGGER then
                             gMarioStates[i].health = 0
-                            spawn_sync_object(id_bhvExplosion, E_MODEL_EXPLOSION, gMarioStates[i].pos.x, gMarioStates[i].pos.y, gMarioStates[i].pos.z, function() end)
+                            spawn_sync_object(id_bhvExplosion, E_MODEL_EXPLOSION, gMarioStates[i].pos.x,
+                                gMarioStates[i].pos.y, gMarioStates[i].pos.z, function() end)
                             gPlayerSyncTable[i].state = ELIMINATED_OR_FROZEN
                             explosion_popup(i)
                         end
@@ -566,7 +569,6 @@ local function server_update()
         gGlobalSyncTable.displayTimer = timer
 
         if timer <= 0 then
-
             local currentConnectedCount = 0
 
             for i = 0, MAX_PLAYERS - 1 do
@@ -718,7 +720,7 @@ local function mario_update(m)
     m.peakHeight = m.pos.y -- disables fall damage
 
     -- disable hangable ceilings
-    if m.ceil.type == SURFACE_HANGABLE then
+    if m.ceil and m.ceil.type == SURFACE_HANGABLE then
         m.ceil.type = SURFACE_DEFAULT
     end
 
@@ -752,16 +754,16 @@ local function mario_update(m)
 
     -- set model state according to state
     if gPlayerSyncTable[m.playerIndex].state == TAGGER
-    and gGlobalSyncTable.gamemode ~= ASSASSINS
-    and ((gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO
-    or gPlayerSyncTable[0].state == TAGGER)
-    or m.playerIndex == 0) then
+        and gGlobalSyncTable.gamemode ~= ASSASSINS
+        and ((gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO
+                or gPlayerSyncTable[0].state == TAGGER)
+            or m.playerIndex == 0) then
         m.marioBodyState.modelState = MODEL_STATE_METAL
     elseif gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA -- vanish cap mario
     elseif gPlayerSyncTable[m.playerIndex].state == RUNNER
-    or (gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
-    and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) then
+        or (gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
+            and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) then
         m.marioBodyState.modelState = 0 -- normal
     end
 
@@ -785,11 +787,9 @@ local function mario_update(m)
                 end
             else
                 if np.currLevelNum ~= gGlobalSyncTable.selectedLevel or np.currActNum ~= 6 or np.currAreaIndex ~= 1 then
-
                     local warpSuccesful = warp_to_level(gGlobalSyncTable.selectedLevel, 1, 6)
 
                     if not warpSuccesful and network_is_server() then
-
                         -- try a common one
                         if warp_to_warpnode(gGlobalSyncTable.selectedLevel, 1, 6, 10) then
                             return
@@ -836,13 +836,15 @@ local function mario_update(m)
             -- make sure the level has pipes (found in level table), then check if they aren't spawned
             if selectedLevel.pipes and obj_get_first_with_behavior_id(id_bhvWarpPipe) == nil then
                 -- spawn pipes
-                spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe1Pos.x, selectedLevel.pipe1Pos.y, selectedLevel.pipe1Pos.z, function (o)
-                    o.oBehParams = 1
-                end)
+                spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe1Pos.x,
+                    selectedLevel.pipe1Pos.y, selectedLevel.pipe1Pos.z, function(o)
+                        o.oBehParams = 1
+                    end)
 
-                spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe2Pos.x, selectedLevel.pipe2Pos.y, selectedLevel.pipe2Pos.z, function (o)
-                    o.oBehParams = 2
-                end)
+                spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe2Pos.x,
+                    selectedLevel.pipe2Pos.y, selectedLevel.pipe2Pos.z, function(o)
+                        o.oBehParams = 2
+                    end)
             end
         end
 
@@ -918,7 +920,7 @@ local function mario_update(m)
             end
 
             m.freeze = 1
-        -- some m.freeze stuff and join timer shenenagins
+            -- some m.freeze stuff and join timer shenenagins
         elseif joinTimer > 0 and not network_is_server() then
             m.freeze = 1
         elseif network_is_server() then
@@ -961,7 +963,6 @@ end
 
 ---@param m MarioState
 local function before_phys(m)
-
     if m.playerIndex ~= 0 then return end
 
     -- handle speed boost
@@ -987,7 +988,6 @@ local function before_phys(m)
 end
 
 local function hud_round_status()
-
     -- if you want comments on the hud stuff, you ain't getting it, I barely undestand it
     -- but I understand it just enough to make the huds I make
 
@@ -1001,13 +1001,16 @@ local function hud_round_status()
             text = "Waiting for Host"
         end
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        text = "Time Remaining: " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+        text = "Time Remaining: " ..
+            math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
     elseif gGlobalSyncTable.roundState == ROUND_WAIT then
-        text = "Starting in " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+        text = "Starting in " ..
+            math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
     elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.state == ROUND_TAGGERS_WIN then
         text = "Starting new round"
     elseif gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
-        text = "Intermission: " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+        text = "Intermission: " ..
+            math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
     else
         return
     end
@@ -1074,7 +1077,6 @@ local function hud_modifier()
 end
 
 local function hud_boost()
-
     if gPlayerSyncTable[0].state ~= TAGGER then return end
     if not boosts_enabled() then return end
 
@@ -1084,12 +1086,12 @@ local function hud_boost()
     local screenWidth  = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 
-    local scale = 1
-    local width = 128 * scale
-    local height = 16 * scale
-    local x = math.floor((screenWidth - width) / 2)
-    local y = math.floor(screenHeight - height - 4 * scale)
-    local boostTime = speedBoostTimer / 30 / 20
+    local scale        = 1
+    local width        = 128 * scale
+    local height       = 16 * scale
+    local x            = math.floor((screenWidth - width) / 2)
+    local y            = math.floor(screenHeight - height - 4 * scale)
+    local boostTime    = speedBoostTimer / 30 / 20
 
     djui_hud_set_color(0, 0, 0, 128)
     djui_hud_render_rect(x, y, width, height)
@@ -1124,7 +1126,6 @@ local function hud_boost()
 end
 
 local function hud_bombs()
-
     if gPlayerSyncTable[0].state ~= TAGGER then return end
     if gGlobalSyncTable.modifier ~= MODIFIER_BOMBS then return end
 
@@ -1134,12 +1135,12 @@ local function hud_bombs()
     local screenWidth  = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 
-    local scale = 1
-    local width = 128 * scale
-    local height = 16 * scale
-    local x = math.floor((screenWidth - width) / 2)
-    local y = math.floor(screenHeight - height - 4 * scale)
-    local bombTime = bombCooldown / 30 / 2
+    local scale        = 1
+    local width        = 128 * scale
+    local height       = 16 * scale
+    local x            = math.floor((screenWidth - width) / 2)
+    local y            = math.floor(screenHeight - height - 4 * scale)
+    local bombTime     = bombCooldown / 30 / 2
 
     djui_hud_set_color(0, 0, 0, 128)
     djui_hud_render_rect(x, y, width, height)
@@ -1172,7 +1173,6 @@ local function hud_bombs()
 end
 
 local function hud_render()
-
     -- if we are hiding the hud as a spectator, don't render the hud
     if spectatorHideHud then return end
 
@@ -1182,7 +1182,7 @@ local function hud_render()
 
     -- render hud
     if gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN
-    and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN then
+        and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN then
         hud_round_status()
         hud_gamemode()
         hud_modifier()
@@ -1241,7 +1241,7 @@ local function allow_interact(m, o, intee)
 
                     pipeTimer = 0
 
-                    reset_camera(m.area.camera) -- reset camera
+                    reset_camera(m.area.camera)             -- reset camera
 
                     play_sound(SOUND_MENU_EXIT_PIPE, m.pos) -- play pipe sounds
 
@@ -1285,7 +1285,7 @@ function check_mods()
                     isRomhack = true
 
                     gGlobalSyncTable.water = true
-                -- check for nametags mod by looking at incompatible tag
+                    -- check for nametags mod by looking at incompatible tag
                 elseif string.match(gActiveMods[i].incompatible, "nametags") then
                     -- set nametagsEnabled to true
                     nametagsEnabled = true
@@ -1295,19 +1295,23 @@ function check_mods()
     end
 end
 
-hook_on_sync_table_change(gGlobalSyncTable, 'randomGamemode', gGlobalSyncTable.randomGamemode, function (tag, oldVal, newVal)
-    -- the only one of these awful sync table changes you will see, enjoy.
-    if oldVal ~= newVal then
-        local text = ""
+hook_on_sync_table_change(gGlobalSyncTable, 'randomGamemode', gGlobalSyncTable.randomGamemode,
+    function(tag, oldVal, newVal)
+        -- the only one of these awful sync table changes you will see, enjoy.
+        if oldVal ~= newVal then
+            local text = ""
 
-        if gGlobalSyncTable.randomGamemode then text = "random"
-        else text = "not random" end
+            if gGlobalSyncTable.randomGamemode then
+                text = "random"
+            else
+                text = "not random"
+            end
 
-        if text ~= "" then
-            djui_chat_message_create("Gamemode is " .. text)
+            if text ~= "" then
+                djui_chat_message_create("Gamemode is " .. text)
+            end
         end
-    end
-end)
+    end)
 
 -- runs once per frame (all game logic runs at 30fps)
 hook_event(HOOK_UPDATE, update)
@@ -1328,8 +1332,8 @@ hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
 -- this is for romhacks
 hook_event(HOOK_USE_ACT_SELECT, function() return false end)
 -- this hook allows us to walk on lava and quicksand
-hook_event(HOOK_ALLOW_HAZARD_SURFACE, function ()
-   return false
+hook_event(HOOK_ALLOW_HAZARD_SURFACE, function()
+    return false
 end)
 
 -- make ACT_NOTHING do something, wild ain't it
