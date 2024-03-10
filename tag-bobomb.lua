@@ -229,7 +229,7 @@ end
 ---@param m MarioState
 local function mario_update(m)
     if gPlayerSyncTable[0].state == TAGGER and gGlobalSyncTable.modifier == MODIFIER_BOMBS and bombCooldown >= 2 * 30 and m.playerIndex == 0 then
-        if m.controller.buttonDown & Y_BUTTON ~= 0 then
+        if m.controller.buttonDown & binds[BIND_BOMBS].btn ~= 0 then
             bombCooldown = 0
             mario_bobomb_use(m)
         end

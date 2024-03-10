@@ -6,14 +6,12 @@ blacklistAddRequest = false
 INPUT_A = 0
 INPUT_JOYSTICK = 1
 
-local showBlacklistSettings = false
-local showPlayerSettings = false
-local showStartSettings = false
 local scrollOffset = 0
 local joystickCooldown = 0
 local screenHeight = djui_hud_get_screen_height()
 local bgWidth = 525
 local selection = 1
+local awaitingInput = nil
 
 local function on_off_text(bool)
     if bool then return "On" else return "Off" end
@@ -219,6 +217,11 @@ local function set_time_limit(gamemode)
     -- I aint redoing it, cuz it works, but this is the most crappy piece of junk
     -- i've seen all day
 
+    -- Future me, it's March 10th, tag v2.2 is released, and i'm getting ready
+    -- to release 2.21. What the hell is this. This could've been optimized heavily.
+    -- I don't think the ranting I did above is justified, its not thaat bad.
+    -- If it ain't broke, don't fix it
+
     -- set variable based off of dir and speed
     if gamemode == TAG then
         if direction == CONT_LEFT then
@@ -387,6 +390,12 @@ local function get_rules(gamemode)
     end
 end
 
+local function wait_for_button(bindIndex)
+    if binds[bindIndex] == nil then return end
+
+    awaitingInput = bindIndex
+end
+
 -- default selections
 settingsEntries = {}
 -- gamemode entries
@@ -397,6 +406,8 @@ startEntries = {}
 playerEntries = {}
 -- blacklisted levels
 blacklistEntries = {}
+-- binds
+bindsEntries = {}
 
 -- help entries
 -- generate it here as it is never changed
@@ -601,6 +612,15 @@ local function reset_settings_selection()
         input = INPUT_A,
         func = function ()
             entries = blacklistEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- binds selection
+        {name = "Bindings",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = bindsEntries
             selection = 1
         end,
         valueText = ">",},
@@ -863,6 +883,51 @@ local function reset_blacklist_entries()
     end
 end
 
+local function reset_bind_entries()
+    local resetBindEntries = false
+
+    if entries == bindsEntries then
+        resetBindEntries = true
+    end
+
+    bindsEntries = {}
+
+    for i = 0, BIND_MAX do
+
+        local bind = binds[i]
+        local value = ""
+
+        if i == awaitingInput then
+            value = "Waiting for Press..."
+        else
+            value = button_to_text(bind.btn)
+        end
+
+        table.insert(bindsEntries,
+        {name = bind.name,
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            wait_for_button(i)
+        end,
+        valueText = value})
+    end
+
+    table.insert(bindsEntries,
+        {name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = settingsEntries
+            selection = 1
+        end}
+    )
+
+    if resetBindEntries then
+        entries = bindsEntries
+    end
+end
+
 local function hud_render()
 
     if not showSettings then
@@ -891,6 +956,7 @@ local function hud_render()
     reset_start_selection()
     reset_player_selection()
     reset_blacklist_entries()
+    reset_bind_entries()
 
     local height = 90
 
@@ -978,12 +1044,14 @@ local function mario_update(m)
         if selection < 1 then selection = #entries end
         play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
         joystickCooldown = 0.2 * 30
+        awaitingInput = nil
     elseif m.controller.buttonPressed & D_JPAD ~= 0
     or (m.controller.stickY < -0.5 and joystickCooldown <= 0) then
         selection = selection + 1
         if selection > #entries then selection = 1 end
         play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
         joystickCooldown = 0.2 * 30
+        awaitingInput = nil
     end
 
     if (m.controller.buttonPressed & R_JPAD ~= 0 or (m.controller.stickX > 0.5
@@ -1010,6 +1078,20 @@ local function mario_update(m)
         joystickCooldown = 0.2 * 30
     end
 
+    if joystickCooldown > 0 then joystickCooldown = joystickCooldown - 1 end
+
+    if awaitingInput ~= nil then
+        if m.controller.buttonPressed ~= 0 then
+            if button_to_text(m.controller.buttonPressed) == "" then return end
+            binds[awaitingInput].btn = m.controller.buttonPressed
+            mod_storage_save("bind_" .. tostring(awaitingInput), tostring(binds[awaitingInput].btn))
+
+            awaitingInput = nil
+        end
+
+        return
+    end
+
     if m.controller.buttonPressed & A_BUTTON ~= 0
     and entries[selection].input == INPUT_A then
         if has_permission(entries[selection].permission)
@@ -1021,8 +1103,6 @@ local function mario_update(m)
             play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         end
     end
-
-    if joystickCooldown > 0 then joystickCooldown = joystickCooldown - 1 end
 end
 
 hook_event(HOOK_ON_HUD_RENDER, hud_render)

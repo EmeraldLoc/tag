@@ -692,6 +692,50 @@ function linear_interpolation(input, minRange, maxRange, minInput, maxInput)
     return m * input + b
 end
 
+function button_to_text(btn)
+	if btn == A_BUTTON then
+		return "A"
+	elseif btn == B_BUTTON then
+		return "B"
+	elseif btn == X_BUTTON then
+		return "X"
+	elseif btn == Y_BUTTON then
+		return "Y"
+	elseif btn == L_TRIG then
+		return "L"
+	elseif btn == R_TRIG then
+		return "R"
+	elseif btn == Z_TRIG then
+		return "Z"
+	elseif btn == START_BUTTON then
+		return "Start"
+	elseif btn == U_CBUTTONS then
+		return "C-Up"
+	elseif btn == D_CBUTTONS then
+		return "C-Down"
+	elseif btn == L_CBUTTONS then
+		return "C-Left"
+	elseif btn == R_CBUTTONS then
+		return "C-Right"
+	elseif btn == U_JPAD then
+		return "D-Up"
+	elseif btn == D_JPAD then
+		return "D-Down"
+	elseif btn == L_JPAD then
+		return "D-Left"
+	elseif btn == R_JPAD then
+		return "D-Right"
+	end
+
+	return ""
+end
+
+function safetonumber(string, base)
+	if string == nil then return base end
+
+	return tonumber(string, base)
+end
+
 -- boost stuff
 ---@param o Object
 function boost_particle_init(o)

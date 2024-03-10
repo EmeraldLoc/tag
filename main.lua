@@ -76,6 +76,11 @@ TEXTURE_SL_PAINTING                    = get_texture_info("sl_painting")
 TEXTURE_WDW_PAINTING                   = get_texture_info("wdw_painting")
 TEXTURE_TTC_PAINTING                   = get_texture_info("ttc_painting")
 
+-- binds
+BIND_BOOST = 0
+BIND_BOMBS = 1
+BIND_MAX = 1
+
 -- globals and sync tables
 -- this is the round state, this variable tells you what current round it is
 gGlobalSyncTable.roundState            = ROUND_WAIT_PLAYERS
@@ -169,6 +174,22 @@ isPaused = false
 -- whether or not to use romhack cam
 useRomhackCam = true
 if mod_storage_load("useRomhackCam") == "false" then useRomhackCam = false end
+-- binds
+binds = {}
+
+-- boost bind
+binds[BIND_BOOST] = {name = "Boost", btn = Y_BUTTON}
+if mod_storage_load("bind_" .. tostring(BIND_BOOST)) ~= nil then
+    binds[BIND_BOOST].btn = tonumber(mod_storage_load("bind_" .. tostring(BIND_BOOST)))
+end
+
+-- bomb bind
+binds[BIND_BOMBS] = {name = "Bombs", btn = Y_BUTTON}
+if mod_storage_load("bind_" .. tostring(BIND_BOMBS)) ~= nil then
+    binds[BIND_BOMBS].btn = tonumber(mod_storage_load("bind_" .. tostring(BIND_BOMBS)))
+end
+
+
 -- speed boost timer handles boosting
 local speedBoostTimer = 0
 -- hot potato timer multiplier is when the timer is faster if there's more people in
@@ -902,7 +923,10 @@ local function mario_update(m)
         end
 
         -- handle speed boost, this is a fun if statement
-        if m.controller.buttonPressed & Y_BUTTON ~= 0 and speedBoostTimer >= 20 * 30 and gPlayerSyncTable[0].state == TAGGER and boosts_enabled() then
+        if m.controller.buttonPressed & binds[BIND_BOOST].btn ~= 0
+        and speedBoostTimer >= 20 * 30
+        and gPlayerSyncTable[0].state == TAGGER
+        and boosts_enabled() then
             speedBoostTimer = 0
         end
 
@@ -1109,7 +1133,7 @@ local function hud_boost()
     elseif speedBoostTimer >= 5 * 30 and speedBoostTimer < 20 * 30 then
         text = "Recharging"
     else
-        text = "Boost (Y)"
+        text = "Boost (" .. button_to_text(binds[BIND_BOOST].btn) .. ")"
     end
 
     scale = 0.25
@@ -1156,8 +1180,9 @@ local function hud_bombs()
     if bombCooldown < 2 * 30 then
         text = "Reloading"
     else
-        text = "Throw Bomb (Y)"
+        text = "Throw Bomb (" .. button_to_text(binds[BIND_BOMBS].btn) .. ")"
     end
+    text = "Throw Bomb (" .. button_to_text(binds[BIND_BOMBS].btn) .. ")"
 
     scale = 0.25
     width = djui_hud_measure_text(text) * scale
