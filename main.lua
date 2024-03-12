@@ -1,4 +1,4 @@
--- name: \\#316BE8\\Tag (v2.21)\\#dcdcdc\\
+-- name: \\#316BE8\\Tag (v2.3)\\#dcdcdc\\
 -- description: All Tag Related Gamemodes!\n\nThis mod contains Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and the good'ol Tag, with modifiers, and full romhack support!\n\nThis mod includes a blacklist command to blacklist bad levels in romhacks\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\ and\\#ff7f00\\ Agent X\\#dcdcdc\\\n\nPainting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi.
 -- incompatible: gamemode tag
 
@@ -545,6 +545,7 @@ local function server_update()
         check_round_status() -- check current round status
     elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
         timer = timer - 1
+        gGlobalSyncTable.displayTimer = timer
 
         if timer <= 0 then
             if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
@@ -1209,7 +1210,8 @@ local function hud_render()
 
     -- render hud
     if gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN
-        and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN then
+    and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN
+    and joinTimer <= 0 then
         hud_round_status()
         hud_gamemode()
         hud_modifier()

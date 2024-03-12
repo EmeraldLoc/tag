@@ -209,6 +209,20 @@ local function hud_leaderboard()
     end
 end
 
+local function hud_voting_begins_in()
+
+    local text = "Voting begins in " .. tostring(math.floor(gGlobalSyncTable.displayTimer / 30)) .. " seconds"
+
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(text)
+
+    local x = 40
+    local y = 20
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_text(text, x, y, 1)
+end
+
 local function hud_render()
     if (gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN) or joinTimer > 0 then
         fade = 0
@@ -240,6 +254,7 @@ local function hud_render()
     hud_black_bg()
     hud_winner_group_render()
     hud_leaderboard()
+    hud_voting_begins_in()
     hud_did_you_know(fade)
 end
 
