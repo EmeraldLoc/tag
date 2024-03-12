@@ -210,7 +210,15 @@ local function hud_leaderboard()
 end
 
 local function hud_voting_begins_in()
-    local text = "Voting begins in " .. tostring(math.floor(gGlobalSyncTable.displayTimer / 30)) .. " seconds"
+    local text = tostring(math.floor(gGlobalSyncTable.displayTimer / 30)) .. " seconds"
+
+    if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
+        text = "Voting begins in " .. text
+    elseif gGlobalSyncTable.autoMode then
+        text = "Next round in " .. text
+    else
+        text = "Returning to lobby in " .. text
+    end
 
     local x = 40
     local y = 20
@@ -218,6 +226,33 @@ local function hud_voting_begins_in()
     djui_hud_set_color(255, 255, 255, fade)
     djui_hud_print_text(text, x, y, 1)
 end
+
+local function hud_gamemode()
+    local text = "Gamemode is set to " .. get_gamemode_including_random()
+
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(text)
+
+    local x = screenWidth - width - 40
+    local y = 60
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_text(text, x, y, 1)
+end
+
+local function hud_modifier()
+    local text = "Modifier is set to " .. get_modifier_including_random()
+
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(text)
+
+    local x = screenWidth - width - 40
+    local y = 20
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_text(text, x, y, 1)
+end
+
 
 local function hud_render()
     if (gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN) or joinTimer > 0 then
@@ -227,8 +262,10 @@ local function hud_render()
             select_random_did_you_know()
         end
 
-        return
+        --return
     end
+
+    fade = 255
 
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
@@ -251,6 +288,8 @@ local function hud_render()
     hud_winner_group_render()
     hud_leaderboard()
     hud_voting_begins_in()
+    hud_gamemode()
+    hud_modifier()
     hud_did_you_know(fade)
 end
 
