@@ -1027,6 +1027,7 @@ local function hud_round_status()
     -- but I understand it just enough to make the huds I make
 
     local text = ""
+    local fade = hudFade
 
     -- set text
     if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
@@ -1038,6 +1039,13 @@ local function hud_round_status()
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
         text = "Time Remaining: " ..
             math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+
+        -- if auto hide hud is on, and we are less than 20 seconds away from the round ending, make fade hud peek
+        if math.floor(gGlobalSyncTable.displayTimer / 30) <= 20 then
+            fade = hudFade + linear_interpolation(clampf(gGlobalSyncTable.displayTimer / 30, 15, 20), 128, 0, 15, 20)
+
+            fade = clampf(fade, 0, 255)
+        end
     elseif gGlobalSyncTable.roundState == ROUND_WAIT then
         text = "Starting in " ..
             math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
@@ -1060,11 +1068,11 @@ local function hud_round_status()
     local y = 0
 
     -- render rect
-    djui_hud_set_color(0, 0, 0, hudFade / 2)
+    djui_hud_set_color(0, 0, 0, fade / 2)
     djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale))
 
     -- render text
-    djui_hud_set_color(255, 255, 255, hudFade)
+    djui_hud_set_color(255, 255, 255, fade)
     djui_hud_print_text(text, x, y, scale)
 end
 
