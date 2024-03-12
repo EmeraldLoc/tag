@@ -123,6 +123,8 @@ gGlobalSyncTable.assassinsActiveTimer  = 120 * 30
 gGlobalSyncTable.autoMode              = true
 -- enable tagger boosts or not
 gGlobalSyncTable.boosts                = true
+-- enable or disable hazardous surfaces
+gGlobalSyncTable.hazardSurfaces        = false
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then
         -- the player's role
@@ -1357,9 +1359,7 @@ hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
 -- this is for romhacks
 hook_event(HOOK_USE_ACT_SELECT, function() return false end)
 -- this hook allows us to walk on lava and quicksand
-hook_event(HOOK_ALLOW_HAZARD_SURFACE, function()
-    return false
-end)
+hook_event(HOOK_ALLOW_HAZARD_SURFACE, function() return gGlobalSyncTable.hazardSurfaces end)
 
 -- make ACT_NOTHING do something, wild ain't it
 ---@diagnostic disable-next-line: missing-parameter

@@ -185,6 +185,11 @@ local function toggle_boost()
     entries[selection].valueText = on_off_text(gGlobalSyncTable.boosts)
 end
 
+local function toggle_hazards()
+    gGlobalSyncTable.hazardSurfaces = not gGlobalSyncTable.hazardSurfaces
+    entries[selection].valueText = on_off_text(gGlobalSyncTable.hazardSurfaces)
+end
+
 local function toggle_romhack_cam()
     useRomhackCam = not useRomhackCam
     entries[selection].valueText = on_off_text(useRomhackCam)
@@ -582,6 +587,12 @@ local function reset_settings_selection()
         input = INPUT_JOYSTICK,
         func = toggle_boost,
         valueText = on_off_text(gGlobalSyncTable.boosts),},
+        -- hazard selection
+        {name = "Hazardous Surfaces",
+        permission = PERMISSION_SERVER,
+        input = INPUT_JOYSTICK,
+        func = toggle_hazards,
+        valueText = on_off_text(gGlobalSyncTable.hazardSurfaces),},
         -- romhack camera selection
         {name = "Romhack Camera",
         permission = PERMISSION_NONE,
