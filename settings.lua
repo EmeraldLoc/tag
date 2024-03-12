@@ -170,6 +170,12 @@ local function toggle_romhack_cam()
     mod_storage_save("useRomhackCam", tostring(useRomhackCam))
 end
 
+local function toggle_auto_hide_hud()
+    autoHideHud = not autoHideHud
+    entries[selection].valueText = on_off_text(autoHideHud)
+    mod_storage_save("autoHideHud", tostring(autoHideHud))
+end
+
 local function set_time_limit(gamemode)
     -- get which direction we are facing
     local m = gMarioStates[0]
@@ -573,6 +579,12 @@ local function reset_settings_selection()
         input = INPUT_JOYSTICK,
         func = toggle_romhack_cam,
         valueText = on_off_text(useRomhackCam),},
+        -- auto hide hud selection
+        {name = "Auto Hide Hud",
+        permission = PERMISSION_NONE,
+        input = INPUT_JOYSTICK,
+        func = toggle_auto_hide_hud,
+        valueText = on_off_text(autoHideHud),},
         -- gamemode settings selection
         {name = "Gamemode Settings",
         permission = PERMISSION_NONE,

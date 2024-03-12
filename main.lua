@@ -154,6 +154,9 @@ end
 gServerSettings.playerInteractions = PLAYER_INTERACTIONS_SOLID -- force player attacks to be on
 gServerSettings.bubbleDeath = 0                                -- just.... no
 
+-- level values
+gLevelValues.disableActs = true
+
 -- variables
 -- this is the local server timer used to set gGlobalSyncTable.displayTimer and other variables
 timer = 0
@@ -176,6 +179,9 @@ isPaused = false
 -- whether or not to use romhack cam
 useRomhackCam = true
 if mod_storage_load("useRomhackCam") == "false" then useRomhackCam = false end
+-- auto hide hud option
+autoHideHud = true
+if mod_storage_load("autoHideHud") == "false" then autoHideHud = false end
 -- binds
 binds = {}
 
@@ -200,6 +206,8 @@ local hotPotatoTimerMultiplier = 1
 -- pipe invinc vars
 local pipeTimer = 0
 local pipeUse = 0
+-- hud fade
+local hudFade = 255
 
 -- just some global variables, honestly idk why the second one is there but it is so.....
 _G.tagExists = true
@@ -1052,11 +1060,11 @@ local function hud_round_status()
     local y = 0
 
     -- render rect
-    djui_hud_set_color(0, 0, 0, 128)
+    djui_hud_set_color(0, 0, 0, hudFade / 2)
     djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale))
 
     -- render text
-    djui_hud_set_color(255, 255, 255, 255)
+    djui_hud_set_color(255, 255, 255, hudFade)
     djui_hud_print_text(text, x, y, scale)
 end
 
@@ -1073,11 +1081,11 @@ local function hud_gamemode()
     local r, g, b = get_gamemode_rgb_color()
 
     -- render rect
-    djui_hud_set_color(0, 0, 0, 128)
+    djui_hud_set_color(0, 0, 0, hudFade / 2)
     djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale))
 
     -- render text
-    djui_hud_set_color(r, g, b, 255)
+    djui_hud_set_color(r, g, b, hudFade)
     djui_hud_print_text(text, x, y, scale)
 end
 
@@ -1095,11 +1103,11 @@ local function hud_modifier()
     local r, g, b = get_modifier_rgb()
 
     -- render rect
-    djui_hud_set_color(0, 0, 0, 128)
+    djui_hud_set_color(0, 0, 0, hudFade / 2)
     djui_hud_render_rect(x, y, width + (24 * scale), (32 * scale))
 
     -- render text
-    djui_hud_set_color(r, g, b, 255)
+    djui_hud_set_color(r, g, b, hudFade)
     djui_hud_print_text(text, x + (8 * scale), y, scale)
 end
 
@@ -1208,6 +1216,15 @@ local function hud_render()
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
+    -- fade
+    if is_standing_still() or not autoHideHud then
+        hudFade = hudFade + 40
+    else
+        hudFade = hudFade - 40
+    end
+
+    hudFade = clampf(hudFade, 0, 255)
+
     -- render hud
     if gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN
     and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN
@@ -1239,7 +1256,8 @@ end
 ---@param intee InteractionType
 local function allow_interact(m, o, intee)
     -- check if intee is unwanted
-    if intee == INTERACT_STAR_OR_KEY or intee == INTERACT_KOOPA_SHELL or intee == INTERACT_WARP_DOOR then
+    if intee == INTERACT_STAR_OR_KEY
+    or intee == INTERACT_KOOPA_SHELL then
         return false
     end
 
@@ -1280,7 +1298,10 @@ local function allow_interact(m, o, intee)
         end
 
         return false
-    elseif intee == INTERACT_WARP then
+    elseif (intee == INTERACT_WARP
+    or intee == INTERACT_WARP_DOOR)
+    and gGlobalSyncTable.roundState ~= ROUND_WAIT_PLAYERS
+    and gGlobalSyncTable.roundState ~= ROUND_WAIT then
         -- disable warp interaction
         return false
     end
@@ -1299,7 +1320,7 @@ local function act_nothing(m)
     m.vel.z = 0
     m.slideVelX = 0
     m.slideVelZ = 0
-    -- this is to freeze mario's animation btw
+    -- this is to freeze mario's animation
     m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - 1
 end
 
@@ -1314,7 +1335,8 @@ function check_mods()
                     isRomhack = true
 
                     gGlobalSyncTable.water = true
-                    -- check for nametags mod by looking at incompatible tag
+
+                -- check for nametags mod by looking at incompatible tag
                 elseif string.match(gActiveMods[i].incompatible, "nametags") then
                     -- set nametagsEnabled to true
                     nametagsEnabled = true
@@ -1326,7 +1348,7 @@ end
 
 hook_on_sync_table_change(gGlobalSyncTable, 'randomGamemode', gGlobalSyncTable.randomGamemode,
     function(tag, oldVal, newVal)
-        -- the only one of these awful sync table changes you will see, enjoy.
+        -- the only one of these awful sync table changes you will see, savor this moment.
         if oldVal ~= newVal then
             local text = ""
 
@@ -1358,8 +1380,6 @@ hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 hook_event(HOOK_BEFORE_SET_MARIO_ACTION, before_set_mario_action)
 -- make sure the user can never pause exit
 hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
--- this is for romhacks
-hook_event(HOOK_USE_ACT_SELECT, function() return false end)
 -- this hook allows us to walk on lava and quicksand
 hook_event(HOOK_ALLOW_HAZARD_SURFACE, function() return gGlobalSyncTable.hazardSurfaces end)
 
