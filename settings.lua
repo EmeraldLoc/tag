@@ -29,32 +29,6 @@ local function get_b_from(r, g, b)
     return b
 end
 
-local function get_gamemode_including_random()
-    if gGlobalSyncTable.randomGamemode then return "Random" end
-    return get_gamemode_without_hex()
-end
-
-local function get_gamemode_rgb_inc_random()
-    if gGlobalSyncTable.randomGamemode then
-        return 220, 220, 220
-    end
-
-    return get_gamemode_rgb_color()
-end
-
-local function get_modifier_including_random()
-    if gGlobalSyncTable.randomModifiers then return "Random" end
-    return get_modifier_text_without_hex()
-end
-
-local function get_modifier_rgb_inc_random()
-    if gGlobalSyncTable.randomModifiers then
-        return 220, 220, 220
-    end
-
-    return get_modifier_rgb()
-end
-
 -- click functions
 local function set_gamemode()
     if (gMarioStates[0].controller.buttonPressed & R_JPAD ~= 0
@@ -525,7 +499,7 @@ local function reset_settings_selection()
         valueText = ">",},
         -- gamemode selection
         {name = "Gamemode",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = set_gamemode,
         valueText = get_gamemode_including_random(),
@@ -536,7 +510,7 @@ local function reset_settings_selection()
         },
         -- modifier selection
         {name = "Modifiers",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = set_modifier,
         valueText = get_modifier_including_random(),
@@ -547,49 +521,49 @@ local function reset_settings_selection()
         },
         -- blj selection
         {name = "Bljs",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = toggle_bljs,
         valueText = on_off_text(gGlobalSyncTable.bljs),},
         -- cannon selection
         {name = "Cannons",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = toggle_cannons,
         valueText = on_off_text(gGlobalSyncTable.cannons),},
         -- water selection
         {name = "Water",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = toggle_water,
         valueText = on_off_text(gGlobalSyncTable.water),},
         -- eliminate on death selection
         {name = "Eliminate On Death",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = toggle_eliminate_on_death,
         valueText = on_off_text(gGlobalSyncTable.eliminateOnDeath),},
         -- vote selection
         {name = "Voting",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = toggle_voting,
         valueText = on_off_text(gGlobalSyncTable.doVoting),},
         -- auto mode selection
         {name = "Auto Mode",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = toggle_auto_mode,
         valueText = on_off_text(gGlobalSyncTable.autoMode),},
         -- boost mode selection
         {name = "Boost",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = toggle_boost,
         valueText = on_off_text(gGlobalSyncTable.boosts),},
         -- hazard selection
         {name = "Hazardous Surfaces",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = toggle_hazards,
         valueText = on_off_text(gGlobalSyncTable.hazardSurfaces),},
@@ -619,7 +593,7 @@ local function reset_settings_selection()
         valueText = ">",},
         -- blacklist selection
         {name = "Blacklist",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_A,
         func = function ()
             entries = blacklistEntries
@@ -668,48 +642,48 @@ local function reset_gamemode_selection()
     gamemodeEntries = {
         -- time limit selection
         {name = "Time Limit",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(TAG) end,
         valueText = tostring(math.floor(gGlobalSyncTable.tagActiveTimer / 30)) .. "s",
         seperator = "Tag"}, -- this seperator seperates 2 sections. It goes above the button.
 
         {name = "Time Limit",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(FREEZE_TAG) end,
         valueText = tostring(math.floor(gGlobalSyncTable.freezeTagActiveTimer / 30)) .. "s",
         seperator = "Freeze Tag"},
 
         {name = "Frozen Health Drain",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = set_frozen_health_drain,
         valueText = tostring(gGlobalSyncTable.freezeHealthDrain / 10),},
 
         {name = "Time Limit",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(INFECTION) end,
         valueText = tostring(math.floor(gGlobalSyncTable.infectionActiveTimer / 30)) .. "s",
         seperator = "Infection"},
 
         {name = "Time Limit",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(HOT_POTATO) end,
         valueText = tostring(math.floor(gGlobalSyncTable.hotPotatoActiveTimer / 30)) .. "s",
         seperator = "Hot Potato"},
 
         {name = "Time Limit",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(JUGGERNAUT) end,
         valueText = tostring(math.floor(gGlobalSyncTable.juggernautActiveTimer / 30)) .. "s",
         seperator = "Juggernaut"},
 
         {name = "Time Limit",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(ASSASSINS) end,
         valueText = tostring(math.floor(gGlobalSyncTable.assassinsActiveTimer / 30)) .. "s",
@@ -740,7 +714,7 @@ local function reset_start_selection()
 
     startEntries = {
         {name = "Random",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_A,
         func = function () start_command("") end,}
     }
@@ -750,7 +724,7 @@ local function reset_start_selection()
             if not table.contains(blacklistedCourses, i) then
                 table.insert(startEntries,
                 {name = name_of_level(levels[i].level, levels[i].area),
-                permission = PERMISSION_SERVER,
+                permission = PERMISSION_MODERATORS,
                 input = INPUT_A,
                 func = function ()
                     start_command(levels[i].name)
@@ -762,7 +736,7 @@ local function reset_start_selection()
             if not level_is_vanilla_level(course_to_level(i)) and not table.contains(blacklistedCourses, i) then
                 table.insert(startEntries,
                 {name = name_of_level(course_to_level(i), 1),
-                permission = PERMISSION_SERVER,
+                permission = PERMISSION_MODERATORS,
                 input = INPUT_A,
                 func = function ()
                     start_command(tostring(i))
@@ -773,7 +747,7 @@ local function reset_start_selection()
 
     table.insert(startEntries,
     {name = "Stop Round",
-    permission = PERMISSION_SERVER,
+    permission = PERMISSION_MODERATORS,
     input = INPUT_A,
     disabled = stop_round_disabled,
     func = stop_round,
@@ -812,7 +786,7 @@ local function reset_player_selection()
 
             table.insert(playerEntries,
             {name = gNetworkPlayers[i].name,
-            permission = PERMISSION_SERVER,
+            permission = PERMISSION_MODERATORS,
             input = INPUT_JOYSTICK,
             func = function() set_player_role(i) end,
             valueText = get_role_name(gPlayerSyncTable[i].state),
@@ -846,7 +820,7 @@ local function reset_blacklist_entries()
 
     blacklistEntries = {
         {name = "Add",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_MODERATORS,
         input = INPUT_A,
         func = function ()
             blacklistAddRequest = true
@@ -857,7 +831,7 @@ local function reset_blacklist_entries()
         if isRomhack then
             table.insert(blacklistEntries,
             {name = name_of_level(course_to_level(blacklistedCourses[i]), 1),
-            permission = PERMISSION_SERVER,
+            permission = PERMISSION_MODERATORS,
             input = INPUT_A,
             func = function ()
                 table.remove(blacklistedCourses, i)
@@ -868,7 +842,7 @@ local function reset_blacklist_entries()
         else
             table.insert(blacklistEntries,
             {name = name_of_level(levels[blacklistedCourses[i]].level, levels[blacklistedCourses[i]].area),
-            permission = PERMISSION_SERVER,
+            permission = PERMISSION_MODERATORS,
             input = INPUT_A,
             func = function ()
                 table.remove(blacklistedCourses, i)

@@ -49,6 +49,37 @@ local function hud_status()
     djui_hud_print_text(text, x, y, scale)
 end
 
+local function hud_current_gamemode()
+    local text = "Current Gamemode is " .. get_gamemode_without_hex()
+
+    if gGlobalSyncTable.randomGamemode then
+        text = text .. " (Random)"
+    end
+
+    local x = 40
+    local y = 20
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_text(text, x, y, 1)
+end
+
+local function hud_current_modifier()
+    local text = "Current Modifier is " .. get_modifier_text_without_hex()
+
+    if gGlobalSyncTable.randomModifiers then
+        text = text .. " (Random)"
+    end
+
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(text)
+
+    local x = screenWidth - width - 40
+    local y = 20
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_text(text, x, y, 1)
+end
+
 local function hud_render()
 
     if joinTimer <= 0 then return end
@@ -76,6 +107,8 @@ local function hud_render()
     hud_black_bg()
     hud_join_text()
     hud_status()
+    hud_current_gamemode()
+    hud_current_modifier()
     hud_did_you_know(fade)
 end
 

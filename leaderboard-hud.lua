@@ -210,11 +210,7 @@ local function hud_leaderboard()
 end
 
 local function hud_voting_begins_in()
-
     local text = "Voting begins in " .. tostring(math.floor(gGlobalSyncTable.displayTimer / 30)) .. " seconds"
-
-    local screenWidth = djui_hud_get_screen_width()
-    local width = djui_hud_measure_text(text)
 
     local x = 40
     local y = 20

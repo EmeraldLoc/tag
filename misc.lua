@@ -28,7 +28,7 @@ function mario_health_float(m)
 	return returnValue
 end
 
--- credit to jsmorely
+-- credit to jsmorely on some forum site
 function hex_to_rgb(hex)
 	-- remove the # and the \\ from the hex so that we can convert it properly
 	hex = hex:gsub('#','')
@@ -277,6 +277,19 @@ function level_to_course(level)
 	return -1
 end
 
+-- permissions
+PERMISSION_NONE = 0
+PERMISSION_SERVER = 1
+PERMISSION_MODERATORS = 2
+
+function has_permission(perm)
+    if perm == PERMISSION_NONE then return true end
+    if perm == PERMISSION_SERVER and network_is_server() then return true end
+    if perm == PERMISSION_MODERATORS and (network_is_server() or network_is_moderator()) then return true end
+
+    return false
+end
+
 function name_of_level(level, area)
 	-- first check the area and see if we have a override name, if we don't, proceed as normal
 	if area > 1 and (level == LEVEL_SSL or level == LEVEL_THI) then
@@ -416,6 +429,32 @@ function get_modifier_rgb()
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
 		return 255, 255, 255
 	end
+end
+
+function get_gamemode_including_random()
+    if gGlobalSyncTable.randomGamemode then return "Random" end
+    return get_gamemode_without_hex()
+end
+
+function get_gamemode_rgb_inc_random()
+    if gGlobalSyncTable.randomGamemode then
+        return 220, 220, 220
+    end
+
+    return get_gamemode_rgb_color()
+end
+
+function get_modifier_including_random()
+    if gGlobalSyncTable.randomModifiers then return "Random" end
+    return get_modifier_text_without_hex()
+end
+
+function get_modifier_rgb_inc_random()
+    if gGlobalSyncTable.randomModifiers then
+        return 220, 220, 220
+    end
+
+    return get_modifier_rgb()
 end
 
 function get_gamemode_rgb_color()

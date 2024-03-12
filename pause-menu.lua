@@ -3,17 +3,6 @@
 local selection = 1
 local joystickCooldown = 0
 
--- permissions
-PERMISSION_NONE = 0
-PERMISSION_SERVER = 1
-
-function has_permission(perm)
-    if perm == PERMISSION_NONE then return true end
-    if perm == PERMISSION_SERVER and network_is_server() then return true end
-
-    return false
-end
-
 local function toggle_paused()
     isPaused = not isPaused
 end
