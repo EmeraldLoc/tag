@@ -3,11 +3,11 @@
 -- constants
 -- this is another player role, a custom one, you will notice it's set to the same thing
 -- as main.lua's WILDCARD_ROLE variable, this is intentional
-local ELIMINATED = 2
+local FINISHED = 2
 
 local function update()
     -- we do this in every function to ensure this only runs when the tag gamemode is active
-    if gGlobalSyncTable.gamemode ~= TAG then return end
+    if gGlobalSyncTable.gamemode ~= SARDINES then return end
 
     -- set network descriptions/the thing when you hold tab thats in the middle
     -- pretty self explanitory
@@ -15,9 +15,9 @@ local function update()
         if gPlayerSyncTable[i].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
             network_player_set_description(gNetworkPlayers[i], "Tagger", 232, 46, 46, 255)
         elseif gPlayerSyncTable[i].state == RUNNER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
-            network_player_set_description(gNetworkPlayers[i], "Runner", 49, 107, 232, 255)
-        elseif gPlayerSyncTable[i].state == ELIMINATED then
-            network_player_set_description(gNetworkPlayers[i], "Eliminated", 191, 54, 54, 255)
+            network_player_set_description(gNetworkPlayers[i], "Sardine", 187, 190, 161, 255)
+        elseif gPlayerSyncTable[i].state == FINISHED then
+            network_player_set_description(gNetworkPlayers[i], "Finished", 255, 191, 0, 255)
         end
     end
 end
@@ -25,11 +25,11 @@ end
 ---@param m MarioState
 local function mario_update(m)
 
-    if gGlobalSyncTable.gamemode ~= TAG then return end
+    if gGlobalSyncTable.gamemode ~= SARDINES then return end
 
     m.health = 0x880 -- set mario's health to full
-    
-    if gPlayerSyncTable[m.playerIndex].state == ELIMINATED then
+
+    if gPlayerSyncTable[m.playerIndex].state == FINISHED then
         -- set model state
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA -- vanish cap style
         -- make mario have vanish cap and wing cap (wait so why did I do the line above? Idk)
@@ -40,7 +40,7 @@ end
 
 local function hud_render()
 
-    if gGlobalSyncTable.gamemode ~= TAG then return end
+    if gGlobalSyncTable.gamemode ~= SARDINES then return end
 
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
@@ -60,34 +60,19 @@ local function hud_render()
     end
 end
 
----@param m MarioState
-local function on_death(m)
-
-    if gGlobalSyncTable.gamemode ~= TAG then return end
-    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
-    if not gGlobalSyncTable.eliminateOnDeath then return end
-    if m.playerIndex ~= 0 then return end
-
-    -- set us to eliminated
-    if gPlayerSyncTable[0].state == RUNNER then
-        gPlayerSyncTable[0].state = ELIMINATED
-        eliminated_popup(0)
-    end
-end
-
 ---@param a MarioState
 ---@param v MarioState
 local function allow_pvp(a, v)
-    if gGlobalSyncTable.gamemode ~= TAG then return end
+    if gGlobalSyncTable.gamemode ~= SARDINES then return end
 
     -- check if eliminated player is trying to perform a pvp attack
-    if gPlayerSyncTable[v.playerIndex].state == ELIMINATED or gPlayerSyncTable[a.playerIndex].state == ELIMINATED then return false end
+    if gPlayerSyncTable[v.playerIndex].state == FINISHED or gPlayerSyncTable[a.playerIndex].state == FINISHED then return false end
 end
 
 ---@param a MarioState
 ---@param v MarioState
 local function on_pvp(a, v)
-    if gGlobalSyncTable.gamemode ~= TAG then return end
+    if gGlobalSyncTable.gamemode ~= SARDINES then return end
 
     if v.playerIndex ~= 0 then return end
     -- handle pvp if we are the victim
@@ -96,16 +81,15 @@ end
 
 ---@param aI number
 ---@param vI number
-function tag_handle_pvp(aI, vI)
+function sardines_handle_pvp(aI, vI)
     -- this checks and sets our states
     local a = gPlayerSyncTable[aI]
     local v = gPlayerSyncTable[vI]
 
     -- check if tagger tagged runner
     if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        -- flip states
-        v.state = TAGGER
-        a.state = RUNNER
+        -- set us to be finished
+        a.state = FINISHED
 
         -- create popup
         tagged_popup(aI, vI)
@@ -119,14 +103,14 @@ end
 ---@param o Object
 ---@param intee InteractionType
 local function allow_interact(m, o, intee)
-    if gGlobalSyncTable.gamemode ~= TAG then return end
+    if gGlobalSyncTable.gamemode ~= SARDINES then return end
 
     -- check if player interacts with another player
     if intee == INTERACT_PLAYER then
         for i = 0, MAX_PLAYERS - 1 do
             if gNetworkPlayers[i].connected then
                 -- find the other player and check his state
-                if gMarioStates[i].marioObj == o and (gPlayerSyncTable[m.playerIndex].state == ELIMINATED or gPlayerSyncTable[i].state == ELIMINATED) then
+                if gMarioStates[i].marioObj == o and (gPlayerSyncTable[m.playerIndex].state == FINISHED or gPlayerSyncTable[i].state == FINISHED) then
                     -- don't allow the interaction
                     return false
                 end
@@ -141,4 +125,3 @@ hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ON_PVP_ATTACK, on_pvp)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
-hook_event(HOOK_ON_DEATH, on_death)

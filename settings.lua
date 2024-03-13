@@ -207,6 +207,11 @@ local function set_time_limit(gamemode)
     -- I don't think the ranting I did above is justified, its not thaat bad.
     -- If it ain't broke, don't fix it
 
+    -- Future me again, it's March 12th. Tag v2.21 is released, and I have a new gamemode im implementing as of 8 p.m CST.
+    -- I despise having to touch this code, above me should have fixed it.
+    -- I'm not gonna fix it, too lazy for that, but this is just stupid that
+    -- I've looked at this code 3 TIMES and haven't touched it ONCE... oh well...
+
     -- set variable based off of dir and speed
     if gamemode == TAG then
         if direction == CONT_LEFT then
@@ -280,7 +285,48 @@ local function set_time_limit(gamemode)
         end
 
         entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.assassinsActiveTimer / 30)) .. "s"
+    elseif gamemode == SARDINES then
+        if direction == CONT_LEFT then
+            gGlobalSyncTable.sardinesActiveTimer = gGlobalSyncTable.sardinesActiveTimer - (30 * speed)
+
+            if gGlobalSyncTable.sardinesActiveTimer <= 30 * 30 then
+                gGlobalSyncTable.sardinesActiveTimer = 30 * 30
+            end
+        else
+            gGlobalSyncTable.sardinesActiveTimer = gGlobalSyncTable.sardinesActiveTimer + (30 * speed)
+        end
+
+        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.sardinesActiveTimer / 30)) .. "s"
     end
+end
+
+local function set_sardines_hide_time()
+    -- get which direction we are facing
+    local m = gMarioStates[0]
+    local direction = CONT_LEFT
+
+    if m.controller.buttonPressed & R_JPAD ~= 0
+    or m.controller.stickX > 0.5 then direction = CONT_RIGHT end
+
+    -- get speed
+    local speed = 1
+
+    if m.controller.buttonPressed & R_JPAD ~= 0
+    or m.controller.buttonPressed & L_JPAD ~= 0 then
+        speed = 10
+    end
+
+    if direction == CONT_LEFT then
+        gGlobalSyncTable.sardinesActiveTimer = gGlobalSyncTable.sardinesActiveTimer - (30 * speed)
+
+        if gGlobalSyncTable.sardinesActiveTimer <= 20 * 30 then
+            gGlobalSyncTable.sardinesActiveTimer = 20 * 30
+        end
+    else
+        gGlobalSyncTable.sardinesActiveTimer = gGlobalSyncTable.sardinesActiveTimer + (30 * speed)
+    end
+
+    entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.sardinesActiveTimer / 30)) .. "s"
 end
 
 local function set_frozen_health_drain()
@@ -444,6 +490,13 @@ helpEntries = {
     input = INPUT_A,
     func = function ()
         get_rules(ASSASSINS)
+    end},
+
+    {name = "Sardines",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(SARDINES)
     end},
 
     {name = "Spectating",
@@ -700,6 +753,20 @@ local function reset_gamemode_selection()
         func = function () set_time_limit(ASSASSINS) end,
         valueText = tostring(math.floor(gGlobalSyncTable.assassinsActiveTimer / 30)) .. "s",
         seperator = "Assassins"},
+
+        {name = "Time Limit",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = function () set_time_limit(SARDINES) end,
+        valueText = tostring(math.floor(gGlobalSyncTable.sardinesActiveTimer / 30)) .. "s",
+        seperator = "Sardines"},
+
+        {name = "Picking Spot Time Limit",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = function () set_sardines_hide_time() end,
+        valueText = tostring(math.floor(gGlobalSyncTable.sardinesHidingTimer / 30)) .. "s",
+        seperator = "Sardines"},
 
         {name = "Back",
         permission = PERMISSION_NONE,

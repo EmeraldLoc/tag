@@ -10,7 +10,7 @@ local function packet_recieve(p)
     -- check that the assassins target is the victim
     if target == vI then
         -- kill the target
-        v.state = ELIMINATED_OR_FROZEN
+        v.state = WILDCARD_ROLE
         -- create popup
         tagged_popup(0, vI)
         -- increase amount of tags and set assassinTarget to -1 (none)

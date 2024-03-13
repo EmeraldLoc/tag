@@ -18,11 +18,12 @@ ROUND_TAGGERS_WIN                      = 3
 ROUND_RUNNERS_WIN                      = 4
 ROUND_HOT_POTATO_INTERMISSION          = 5
 ROUND_VOTING                           = 6
+ROUND_HIDING_SARDINES                  = 7
 
 -- roles (gamemode-specific roles specified in designated gamemode files)
 RUNNER                                 = 0
 TAGGER                                 = 1
-ELIMINATED_OR_FROZEN                   = 2
+WILDCARD_ROLE                   = 2
 SPECTATOR                              = 3
 
 -- gamemodes
@@ -33,7 +34,8 @@ INFECTION                              = 3
 HOT_POTATO                             = 4
 JUGGERNAUT                             = 5
 ASSASSINS                              = 6
-MAX_GAMEMODE                           = 6
+SARDINES                               = 7
+MAX_GAMEMODE                           = 7
 
 -- spectator states
 SPECTATOR_STATE_MARIO                  = 0
@@ -100,6 +102,8 @@ gGlobalSyncTable.infectionActiveTimer  = 120 * 30
 gGlobalSyncTable.hotPotatoActiveTimer  = 60 * 30
 gGlobalSyncTable.juggernautActiveTimer = 120 * 30
 gGlobalSyncTable.assassinsActiveTimer  = 120 * 30
+gGlobalSyncTable.sardinesActiveTimer   = 120 * 30
+gGlobalSyncTable.sardinesHidingTimer   = 30 * 30
 -- auto mode
 gGlobalSyncTable.autoMode              = true
 -- enable tagger boosts or not
@@ -299,17 +303,23 @@ local function server_update()
                         goto selectmodifier
                     end
 
-                    if gGlobalSyncTable.gamemode == ASSASSINS
-                        and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
-                            or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
+                    if (gGlobalSyncTable.gamemode == ASSASSINS
+                    or gGlobalSyncTable.gamemode == SARDINES)
+                    and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
+                    or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
                         goto selectmodifier
                     end
 
                     if (levels[gGlobalSyncTable.selectedLevel].name == "ithi"
-                            or levels[gGlobalSyncTable.selectedLevel].name == "lll"
-                            or levels[gGlobalSyncTable.selectedLevel].name == "bitfs")
-                        and not isRomhack
-                        and gGlobalSyncTable.modifier == MODIFIER_FOG then
+                    or levels[gGlobalSyncTable.selectedLevel].name == "lll"
+                    or levels[gGlobalSyncTable.selectedLevel].name == "bitfs")
+                    and not isRomhack
+                    and gGlobalSyncTable.modifier == MODIFIER_FOG then
+                        goto selectmodifier
+                    end
+
+                    if gGlobalSyncTable.gamemode == SARDINES
+                    and gGlobalSyncTable.modifier == MODIFIER_BOMBS then
                         goto selectmodifier
                     end
                 else
@@ -358,6 +368,9 @@ local function server_update()
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.assassinsActiveTimer
 
                 PLAYERS_NEEDED = 3
+            elseif gGlobalSyncTable.gamemode == SARDINES then
+                -- set sardines timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.sardinesActiveTimer
             end
 
             log_to_console("Tag: Modifier is set to " ..
@@ -404,9 +417,15 @@ local function server_update()
             elseif gGlobalSyncTable.gamemode == ASSASSINS then
                 -- set assassins timer
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.assassinsActiveTimer
+            elseif gGlobalSyncTable.gamemode == SARDINES then
+                -- set sardines timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.sardinesActiveTimer
             end
 
             timer = gGlobalSyncTable.amountOfTime -- set timer to amount of time in a round
+
+            -- set timer to sardines hiding timer if we are in the gamemode sardines
+            if gGlobalSyncTable.gamemode == SARDINES then timer = gGlobalSyncTable.sardinesHidingTimer end
 
             -- if we have custom roles, skip straight to actually starting the round
             local skipTaggerSelection = false
@@ -424,7 +443,7 @@ local function server_update()
                 if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
                     amountOfTaggersNeeded = 1 -- set amount of taggers to one if the modifier is one tagger
                 end
-                if gGlobalSyncTable.gamemode == JUGGERNAUT then
+                if gGlobalSyncTable.gamemode == JUGGERNAUT or gGlobalSyncTable.gamemode == SARDINES then
                     amountOfTaggersNeeded = numPlayers - 1
                 end
 
@@ -468,7 +487,18 @@ local function server_update()
 
             gGlobalSyncTable.roundState = ROUND_ACTIVE -- begin round
 
+            -- if the gamemode is sardines set round state to hiding sardines
+            if gGlobalSyncTable.gamemode == SARDINES then gGlobalSyncTable.roundState = ROUND_HIDING_SARDINES end
+
             log_to_console("Tag: Started the game")
+        end
+    elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
+        timer = timer - 1
+
+        if timer <= 0 then
+            timer = gGlobalSyncTable.amountOfTime
+
+            gGlobalSyncTable.roundState = ROUND_ACTIVE
         end
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
         if timer > 0 then
@@ -503,7 +533,7 @@ local function server_update()
                             gMarioStates[i].health = 0
                             spawn_sync_object(id_bhvExplosion, E_MODEL_EXPLOSION, gMarioStates[i].pos.x,
                                 gMarioStates[i].pos.y, gMarioStates[i].pos.z, function() end)
-                            gPlayerSyncTable[i].state = ELIMINATED_OR_FROZEN
+                            gPlayerSyncTable[i].state = WILDCARD_ROLE
                             explosion_popup(i)
                         end
                     end
@@ -564,7 +594,7 @@ local function server_update()
 
             for i = 0, MAX_PLAYERS - 1 do
                 if gNetworkPlayers[i].connected then
-                    if gPlayerSyncTable[i].state ~= SPECTATOR and gPlayerSyncTable[i].state ~= ELIMINATED_OR_FROZEN then
+                    if gPlayerSyncTable[i].state ~= SPECTATOR and gPlayerSyncTable[i].state ~= WILDCARD_ROLE then
                         currentConnectedCount = currentConnectedCount + 1
                     end
                 end
@@ -586,7 +616,7 @@ local function server_update()
                 -- select taggers
                 local randomIndex = math.random(0, MAX_PLAYERS - 1) -- select random index
 
-                if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= ELIMINATED_OR_FROZEN and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
+                if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= WILDCARD_ROLE and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
                     gPlayerSyncTable[randomIndex].state = TAGGER
 
                     log_to_console("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
@@ -743,16 +773,16 @@ local function mario_update(m)
 
     -- set model state according to state
     if gPlayerSyncTable[m.playerIndex].state == TAGGER
-        and gGlobalSyncTable.gamemode ~= ASSASSINS
-        and ((gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO
-                or gPlayerSyncTable[0].state == TAGGER)
-            or m.playerIndex == 0) then
+    and gGlobalSyncTable.gamemode ~= ASSASSINS
+    and ((gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO
+    or gPlayerSyncTable[0].state == TAGGER)
+    or m.playerIndex == 0) then
         m.marioBodyState.modelState = MODEL_STATE_METAL
     elseif gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA -- vanish cap mario
     elseif gPlayerSyncTable[m.playerIndex].state == RUNNER
         or (gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
-            and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) then
+            and gPlayerSyncTable[m.playerIndex].state ~= WILDCARD_ROLE) then
         m.marioBodyState.modelState = 0 -- normal
     end
 
@@ -883,8 +913,11 @@ local function mario_update(m)
         if joinTimer == 2 * 30 and not network_is_server() then
             -- this here sets our initial state
             if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
-                if gGlobalSyncTable.gamemode == TAG or gGlobalSyncTable.gamemode == INFECTION or gGlobalSyncTable.gamemode == HOT_POTATO or gGlobalSyncTable.gamemode == ASSASSINS then
-                    gPlayerSyncTable[0].state = ELIMINATED_OR_FROZEN
+                if gGlobalSyncTable.gamemode == TAG
+                or gGlobalSyncTable.gamemode == INFECTION
+                or gGlobalSyncTable.gamemode == HOT_POTATO
+                or gGlobalSyncTable.gamemode == ASSASSINS then
+                    gPlayerSyncTable[0].state = WILDCARD_ROLE
                 else
                     gPlayerSyncTable[0].state = TAGGER
                 end
@@ -981,6 +1014,17 @@ local function hud_round_status()
         -- if auto hide hud is on, and we are less than 20 seconds away from the round ending, make fade hud peek
         if math.floor(gGlobalSyncTable.displayTimer / 30) <= 20 then
             fade = hudFade + linear_interpolation(clampf(gGlobalSyncTable.displayTimer / 30, 15, 20), 128, 0, 15, 20)
+
+            fade = clampf(fade, 0, 255)
+        end
+    elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
+        text = "The Sardine is hiding, time remaining: " ..
+        math.floor(gGlobalSyncTable.sardinesHidingTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+
+        -- if auto hide hud is on, and we are less than 10 seconds away from the sardine hiding session ending, make fade hud peek
+        if math.floor(gGlobalSyncTable.sardinesHidingTimer / 30) <= 10
+        and gPlayerSyncTable[0].state == RUNNER then
+            fade = hudFade + linear_interpolation(clampf(gGlobalSyncTable.sardinesHidingTimer / 30, 7, 10), 128, 0, 7, 10)
 
             fade = clampf(fade, 0, 255)
         end
@@ -1210,7 +1254,7 @@ local function allow_interact(m, o, intee)
     -- check if we interacted with a pipe, if we did, do pipe shenenagins
     if intee == INTERACT_WARP and o.behavior == get_behavior_from_id(id_bhvWarpPipe) and not isRomhack then
         -- here we ensure our state isn't set to frozen
-        if (gGlobalSyncTable.gamemode == FREEZE_TAG and gPlayerSyncTable[m.playerIndex].state ~= ELIMINATED_OR_FROZEN) or gGlobalSyncTable.gamemode ~= FREEZE_TAG then
+        if (gGlobalSyncTable.gamemode == FREEZE_TAG and gPlayerSyncTable[m.playerIndex].state ~= WILDCARD_ROLE) or gGlobalSyncTable.gamemode ~= FREEZE_TAG then
             -- get second pipe
             local o2 = obj_get_first_with_behavior_id(id_bhvWarpPipe)
             while o2 ~= nil do

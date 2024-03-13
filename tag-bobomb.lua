@@ -23,7 +23,7 @@ function global_index_hurts_mario_state(globalIndex, m)
     local sVictim = gPlayerSyncTable[m.playerIndex]
 
     -- make sure eliminated or frozen dont get hit from bombs
-    if sVictim.state == ELIMINATED_OR_FROZEN or sAttacker.state == ELIMINATED_OR_FROZEN then return false end
+    if sVictim.state == WILDCARD_ROLE or sAttacker.state == WILDCARD_ROLE then return false end
 
     return true
 end
@@ -115,7 +115,7 @@ function bhv_tag_bobomb_expode(o)
                     tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
                     gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
                 elseif gGlobalSyncTable.gamemode == FREEZE_TAG then
-                    gPlayerSyncTable[m.playerIndex].state = ELIMINATED_OR_FROZEN
+                    gPlayerSyncTable[m.playerIndex].state = WILDCARD_ROLE
                     gGlobalSyncTable.frozenIndex = network_global_index_from_local(m.playerIndex)
                     freezed_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
                     gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
@@ -136,7 +136,7 @@ function bhv_tag_bobomb_expode(o)
                     if network_local_index_from_global(gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].assassinTarget) == 0 then
                         tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
                         gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
-                        gPlayerSyncTable[m.playerIndex].state = ELIMINATED_OR_FROZEN
+                        gPlayerSyncTable[m.playerIndex].state = WILDCARD_ROLE
                      else
                         return -- make nothing happen
                     end
@@ -144,7 +144,7 @@ function bhv_tag_bobomb_expode(o)
             end
         end
 
-        if gPlayerSyncTable[m.playerIndex].state == ELIMINATED_OR_FROZEN or gPlayerSyncTable[m.playerIndex].state == SPECTATOR then return end
+        if gPlayerSyncTable[m.playerIndex].state == WILDCARD_ROLE or gPlayerSyncTable[m.playerIndex].state == SPECTATOR then return end
 
         o.oDamageOrCoinValue = 3
         interact_damage(m, INTERACT_DAMAGE, o)

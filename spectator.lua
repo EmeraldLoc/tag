@@ -63,7 +63,7 @@ local function follow_idle(m)
 
     if (gPlayerSyncTable[m.playerIndex].state ~= SPECTATOR
     and (gPlayerSyncTable[m.playerIndex
-    ].state ~= ELIMINATED_OR_FROZEN
+    ].state ~= WILDCARD_ROLE
     or gGlobalSyncTable.gamemode == FREEZE_TAG))
     or gPlayerSyncTable[m.playerIndex].spectatorState ~= SPECTATOR_STATE_FOLLOW then
         return set_mario_action(m, ACT_IDLE, 0)
@@ -80,7 +80,7 @@ local function follow_idle(m)
 
     if not gNetworkPlayers[followTargetIndex].connected
     or gPlayerSyncTable[followTargetIndex].state == SPECTATOR
-    or (gPlayerSyncTable[followTargetIndex].state == ELIMINATED_OR_FROZEN
+    or (gPlayerSyncTable[followTargetIndex].state == WILDCARD_ROLE
     and gGlobalSyncTable.gamemode ~= FREEZE_TAG) then return 0 end
 
     local targetMario = gMarioStates[followTargetIndex]
@@ -98,7 +98,7 @@ local function mario_update(m)
     local s = gPlayerSyncTable[m.playerIndex]
 
     if (s.state == SPECTATOR
-    or (s.state == ELIMINATED_OR_FROZEN and gGlobalSyncTable.gamemode ~= FREEZE_TAG))
+    or (s.state == WILDCARD_ROLE and gGlobalSyncTable.gamemode ~= FREEZE_TAG))
     and s.spectatorState ~= SPECTATOR_STATE_MARIO then
         obj_set_model_extended(m.marioObj, E_MODEL_NONE)
     end
@@ -106,7 +106,7 @@ local function mario_update(m)
     if m.playerIndex ~= 0 then return end
 
     if s.state ~= SPECTATOR
-    and (s.state ~= ELIMINATED_OR_FROZEN
+    and (s.state ~= WILDCARD_ROLE
     or gGlobalSyncTable.gamemode == FREEZE_TAG) then
         s.spectatorState = SPECTATOR_STATE_MARIO
         spectatorHideHud = false
@@ -150,7 +150,7 @@ local function mario_update(m)
 
             while not gNetworkPlayers[followTargetIndex].connected
             or (gPlayerSyncTable[followTargetIndex].state == SPECTATOR
-            or (gPlayerSyncTable[followTargetIndex].state == ELIMINATED_OR_FROZEN
+            or (gPlayerSyncTable[followTargetIndex].state == WILDCARD_ROLE
             and gGlobalSyncTable.gamemode ~= FREEZE_TAG)) do
                 followTargetIndex = followTargetIndex + 1
 
@@ -167,7 +167,7 @@ local function mario_update(m)
 
             while not gNetworkPlayers[followTargetIndex].connected
             or gPlayerSyncTable[followTargetIndex].state == SPECTATOR
-            or (gPlayerSyncTable[followTargetIndex].state == ELIMINATED_OR_FROZEN
+            or (gPlayerSyncTable[followTargetIndex].state == WILDCARD_ROLE
             and gGlobalSyncTable.gamemode ~= FREEZE_TAG) do
                 followTargetIndex = followTargetIndex - 1
 
@@ -197,7 +197,7 @@ local function hud_bottom_render()
         for i = 1, MAX_PLAYERS - 1 do
             if gNetworkPlayers[i].connected
             and gPlayerSyncTable[i].state ~= SPECTATOR
-            and (gPlayerSyncTable[i].state ~= ELIMINATED_OR_FROZEN
+            and (gPlayerSyncTable[i].state ~= WILDCARD_ROLE
             or gGlobalSyncTable.gamemode == FREEZE_TAG) then
                 isPlayerConncted = true
                 break
@@ -231,7 +231,7 @@ end
 local function on_render()
     -- sanity checks
     if gPlayerSyncTable[0].state ~= SPECTATOR
-    and (gPlayerSyncTable[0].state ~= ELIMINATED_OR_FROZEN
+    and (gPlayerSyncTable[0].state ~= WILDCARD_ROLE
     or gGlobalSyncTable.gamemode == FREEZE_TAG) then return end
     if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
     or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
