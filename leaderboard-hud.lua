@@ -257,12 +257,11 @@ local function hud_modifier()
     djui_hud_print_text(text, x, y, 1)
 end
 
-
 local function hud_render()
     if (gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN) or joinTimer > 0 then
         fade = 0
         hudTimer = 15 * 30
-        if joinTimer <= 0 and desyncTimer >= 10 * 30 then
+        if joinTimer <= 0 and desyncTimer >= 10 * 30 and gGlobalSyncTable.roundState ~= ROUND_HIDING_SARDINES then
             select_random_did_you_know()
         end
 

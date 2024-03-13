@@ -317,16 +317,16 @@ local function set_sardines_hide_time()
     end
 
     if direction == CONT_LEFT then
-        gGlobalSyncTable.sardinesActiveTimer = gGlobalSyncTable.sardinesActiveTimer - (30 * speed)
+        gGlobalSyncTable.sardinesHidingTimer = gGlobalSyncTable.sardinesHidingTimer - (30 * speed)
 
-        if gGlobalSyncTable.sardinesActiveTimer <= 20 * 30 then
-            gGlobalSyncTable.sardinesActiveTimer = 20 * 30
+        if gGlobalSyncTable.sardinesHidingTimer <= 15 * 30 then
+            gGlobalSyncTable.sardinesHidingTimer = 15 * 30
         end
     else
-        gGlobalSyncTable.sardinesActiveTimer = gGlobalSyncTable.sardinesActiveTimer + (30 * speed)
+        gGlobalSyncTable.sardinesHidingTimer = gGlobalSyncTable.sardinesHidingTimer + (30 * speed)
     end
 
-    entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.sardinesActiveTimer / 30)) .. "s"
+    entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.sardinesHidingTimer / 30)) .. "s"
 end
 
 local function set_frozen_health_drain()
@@ -765,8 +765,7 @@ local function reset_gamemode_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_sardines_hide_time() end,
-        valueText = tostring(math.floor(gGlobalSyncTable.sardinesHidingTimer / 30)) .. "s",
-        seperator = "Sardines"},
+        valueText = tostring(math.floor(gGlobalSyncTable.sardinesHidingTimer / 30)) .. "s",},
 
         {name = "Back",
         permission = PERMISSION_NONE,
@@ -979,8 +978,16 @@ local function hud_render()
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
-    if selection >= 14 then
-        scrollOffset = 60 * (selection - 13)
+    -- get entry to start scrolling at
+    local scrollEntry = 14
+    for i = 1, #entries do
+        if entries[i].seperator ~= nil then
+            scrollEntry = scrollEntry - 0.5
+        end
+    end
+
+    if selection >= math.floor(scrollEntry) then
+        scrollOffset = 60 * (selection - scrollEntry + 1)
     else
         scrollOffset = 0
     end
@@ -1002,7 +1009,7 @@ local function hud_render()
             height = height + 45
 
             djui_hud_set_color(220, 220, 220, 255)
-            djui_hud_print_text(entries[i].seperator, 30, height + 4, 1)
+            djui_hud_print_text(entries[i].seperator, 30, height + 4 - scrollOffset, 1)
 
             height = height + 45
         else

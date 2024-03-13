@@ -494,6 +494,7 @@ local function server_update()
         end
     elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
         timer = timer - 1
+        gGlobalSyncTable.displayTimer = timer
 
         if timer <= 0 then
             timer = gGlobalSyncTable.amountOfTime
@@ -507,9 +508,11 @@ local function server_update()
         end
 
         for i = 0, MAX_PLAYERS - 1 do
-            if gPlayerSyncTable[i].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-                gPlayerSyncTable[i].amountOfTimeAsRunner = gPlayerSyncTable[i].amountOfTimeAsRunner +
-                    1 -- increase amount of time as runner
+            if gPlayerSyncTable[i].state == RUNNER
+            or (gGlobalSyncTable.gamemode == SARDINES
+            and gPlayerSyncTable[i].state == WILDCARD_ROLE)
+            and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+                gPlayerSyncTable[i].amountOfTimeAsRunner = gPlayerSyncTable[i].amountOfTimeAsRunner + 1 -- increase amount of time as runner
             end
         end
 
@@ -798,7 +801,10 @@ local function mario_update(m)
 
         -- check if mario is in the proper level, act, and area, if not, rewarp mario
         -- this is all warp shenenagins, and i'm waaay too lazy to do in depth comments, so, just wing it i guess
-        if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_WAIT or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
+        if gGlobalSyncTable.roundState == ROUND_ACTIVE
+        or gGlobalSyncTable.roundState == ROUND_WAIT
+        or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
+        or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
             if np.currLevelNum ~= selectedLevel.level or np.currActNum ~= selectedLevel.act or np.currAreaIndex ~= selectedLevel.area then
                 local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, 0)
 
@@ -1018,8 +1024,9 @@ local function hud_round_status()
             fade = clampf(fade, 0, 255)
         end
     elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
-        text = "The Sardine is hiding, time remaining: " ..
-        math.floor(gGlobalSyncTable.sardinesHidingTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+        text = "You have " ..
+        math.floor(gGlobalSyncTable.sardinesHidingTimer / 30)
+        .. " seconds to hide!" -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
 
         -- if auto hide hud is on, and we are less than 10 seconds away from the sardine hiding session ending, make fade hud peek
         if math.floor(gGlobalSyncTable.sardinesHidingTimer / 30) <= 10

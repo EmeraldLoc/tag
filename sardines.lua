@@ -5,6 +5,9 @@
 -- as main.lua's WILDCARD_ROLE variable, this is intentional
 local FINISHED = 2
 
+-- variables
+local fade = 0
+
 local function update()
     -- we do this in every function to ensure this only runs when the tag gamemode is active
     if gGlobalSyncTable.gamemode ~= SARDINES then return end
@@ -36,10 +39,107 @@ local function mario_update(m)
         m.flags = m.flags | MARIO_VANISH_CAP
         m.flags = m.flags | MARIO_WING_CAP
     end
+
+    if gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES
+    and gPlayerSyncTable[0].state ~= RUNNER then
+        m.freeze = 1
+    elseif gGlobalSyncTable.roundState == ROUND_ACTIVE
+    and gPlayerSyncTable[0].state == RUNNER then
+        m.freeze = 1
+    end
+end
+
+local function hud_black_bg()
+    local screenWidth = djui_hud_get_screen_width()
+    local screenHeight = djui_hud_get_screen_height()
+
+    djui_hud_set_color(28, 28, 30, fade)
+    djui_hud_render_rect(0, 0, screenWidth, screenHeight)
+end
+
+local function hud_waiting()
+
+    local text = "Time Remaining: " .. math.floor(gGlobalSyncTable.displayTimer / 30)
+
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(text)
+
+    local x = (screenWidth - width) / 2
+    local y = 20
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_text(text, x, y, 1)
+
+    text = "The Sardine is Hiding..."
+
+    -- get width of screen and text
+    local screenHeight = djui_hud_get_screen_height()
+    local height = 32
+
+    width = djui_hud_measure_text(text)
+    x = (screenWidth - width) * 0.5
+    y = (screenHeight - height) * 0.5
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_text(text, x, y, 1)
+end
+
+local function hud_gamemode()
+    local text = "Gamemode is set to " .. get_gamemode_including_random()
+
+    local x = 40
+    local y = 20
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_text(text, x, y, 1)
+end
+
+local function hud_current_sardine()
+
+    local sardine = 0
+    for i = 1, MAX_PLAYERS - 1 do
+        if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state == RUNNER then
+            sardine = i
+            break
+        end
+    end
+
+    local text = "The Sardine is " .. strip_hex(gNetworkPlayers[sardine].name)
+
+    local x = 40
+    local y = 60
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_text(text, x, y, 1)
+end
+
+local function hud_level()
+    local text = "Level is " .. name_of_level(gNetworkPlayers[0].currLevelNum, gNetworkPlayers[0].currAreaIndex)
+
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(text)
+
+    local x = screenWidth - width - 40
+    local y = 60
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_text(text, x, y, 1)
+end
+
+local function hud_modifier()
+    local text = "Modifier is set to " .. get_modifier_including_random()
+
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(text)
+
+    local x = screenWidth - width - 40
+    local y = 20
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_text(text, x, y, 1)
 end
 
 local function hud_render()
-
     if gGlobalSyncTable.gamemode ~= SARDINES then return end
 
     -- set djui font and resolution
@@ -52,12 +152,32 @@ local function hud_render()
         for i = 1, MAX_PLAYERS - 1 do
             if gNetworkPlayers[i].connected then
                 -- make sure the states line up
-                if gPlayerSyncTable[i].state == RUNNER and gPlayerSyncTable[0].state == TAGGER then -- check if we meet the checks to render the radar
+                if gPlayerSyncTable[0].state == RUNNER and gPlayerSyncTable[i].state == TAGGER then -- check if we meet the checks to render the radar
                     render_radar(gMarioStates[i], icon_radar[i], false) -- render radar on player
                 end
             end
         end
     end
+
+    if gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES
+    and gPlayerSyncTable[0].state ~= RUNNER then
+        fade = fade + 20
+    else
+        fade = fade - 20
+    end
+
+    fade = clampf(fade, 0, 255)
+
+    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_resolution(RESOLUTION_DJUI)
+
+    hud_black_bg()
+    hud_waiting()
+    hud_gamemode()
+    hud_current_sardine()
+    hud_level()
+    hud_modifier()
+    hud_did_you_know(fade)
 end
 
 ---@param a MarioState
@@ -76,7 +196,7 @@ local function on_pvp(a, v)
 
     if v.playerIndex ~= 0 then return end
     -- handle pvp if we are the victim
-    tag_handle_pvp(a.playerIndex, v.playerIndex)
+    sardines_handle_pvp(a.playerIndex, v.playerIndex)
 end
 
 ---@param aI number
