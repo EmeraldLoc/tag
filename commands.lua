@@ -10,59 +10,29 @@ function start_command(msg)
 
     if msg ~= "" then
         if tonumber(msg) ~= nil then
-            if not isRomhack then
-                for i, level in pairs(levels) do
-                    if level_to_course(level.level) == tonumber(msg) then
-                        timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
-                        gGlobalSyncTable.selectedLevel = i
-                        prevLevel = gGlobalSyncTable.selectedLevel
-                        gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+            for i, level in pairs(levels) do
+                if level_to_course(level.level) == tonumber(msg) then
+                    timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+                    gGlobalSyncTable.selectedLevel = i
+                    prevLevel = gGlobalSyncTable.selectedLevel
+                    gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
 
-                        djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area))
+                    djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area))
 
-                        return true
-                    end
-                end
-            else
-                for i = COURSE_MIN, COURSE_MAX do
-                    if tonumber(msg) == i then
-                        timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
-                        gGlobalSyncTable.selectedLevel = course_to_level(i)
-                        prevLevel = gGlobalSyncTable.selectedLevel
-                        gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
-
-                        djui_chat_message_create("Starting game in level " .. name_of_level(course_to_level(i), 1))
-
-                        return true
-                    end
+                    return true
                 end
             end
         else
-            if isRomhack then
-                for i = COURSE_MIN, COURSE_MAX do
-                    if msg:lower() == name_of_level(course_to_level(i), 1):lower() and (not level_is_vanilla_level(gGlobalSyncTable.selectedLevel) and level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_RR and level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_MIN - 1) then
-                        timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
-                        gGlobalSyncTable.selectedLevel = course_to_level(i)
-                        prevLevel = gGlobalSyncTable.selectedLevel
-                        gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+            for i, level in pairs(levels) do
+                if msg:lower() == level.name or msg:lower() == name_of_level(level.level, level.area):lower() then
+                    timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+                    gGlobalSyncTable.selectedLevel = i
+                    prevLevel = gGlobalSyncTable.selectedLevel
+                    gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
 
-                        djui_chat_message_create("Starting game in level " .. name_of_level(course_to_level(i), 1))
+                    djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area))
 
-                        return true
-                    end
-                end
-            else
-                for i, level in pairs(levels) do
-                    if msg:lower() == level.name or msg:lower() == name_of_level(level.level, level.area):lower() then
-                        timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
-                        gGlobalSyncTable.selectedLevel = i
-                        prevLevel = gGlobalSyncTable.selectedLevel
-                        gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
-
-                        djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area))
-
-                        return true
-                    end
+                    return true
                 end
             end
         end
@@ -70,16 +40,15 @@ function start_command(msg)
 
     timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
 
-    ---@diagnostic disable-next-line: param-type-mismatch
-    while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or gGlobalSyncTable.selectedLevel == prevLevel do
-        if isRomhack then
-            gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
-        else
-            gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+    local level = levels[gGlobalSyncTable.selectedLevel]
 
-            if levels[gGlobalSyncTable.selectedLevel].level == LEVEL_TTC then
-                gGlobalSyncTable.ttcSpeed = math.random(0, 3)
-            end
+    ---@diagnostic disable-next-line: param-type-mismatch
+    while table.contains(blacklistedCourses, level_to_course(level.level)) or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+        gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+        level = levels[gGlobalSyncTable.selectedLevel]
+
+        if level.level == LEVEL_TTC and not isRomhack then
+            gGlobalSyncTable.ttcSpeed = math.random(0, 3)
         end
     end
 
@@ -126,39 +95,20 @@ end
 function tag_command(msg)
     if blacklistAddRequest then
         if tonumber(msg) ~= nil then
-            if isRomhack then
-                for i = COURSE_MIN, COURSE_MAX do
-                    if tonumber(msg) == i then
-                        if not table.contains(blacklistedCourses, i) then
-                            table.insert(blacklistedCourses, i)
-                        else
-                            djui_chat_message_create("Course " ..
-                                name_of_level(course_to_level(i), 1) .. " is already blacklisted")
-                        end
-
-                        djui_chat_message_create("Blacklisted " .. name_of_level(course_to_level(i), 1))
-
-                        blacklistAddRequest = false
-
-                        return true
+            for i = 1, #levels do
+                if tonumber(msg) == level_to_course(levels[i].level) then
+                    if not table.contains(blacklistedCourses, i) then
+                        table.insert(blacklistedCourses, i)
+                    else
+                        djui_chat_message_create("Course " ..
+                            name_of_level(levels[i].level, levels[i].area) .. " is already blacklisted")
                     end
-                end
-            else
-                for i = 1, #levels do
-                    if tonumber(msg) == level_to_course(levels[i].level) then
-                        if not table.contains(blacklistedCourses, i) then
-                            table.insert(blacklistedCourses, i)
-                        else
-                            djui_chat_message_create("Course " ..
-                                name_of_level(levels[i].level, levels[i].area) .. " is already blacklisted")
-                        end
 
-                        djui_chat_message_create("Blacklisted " .. name_of_level(levels[i].level, levels[i].area))
+                    djui_chat_message_create("Blacklisted " .. name_of_level(levels[i].level, levels[i].area))
 
-                        blacklistAddRequest = false
+                    blacklistAddRequest = false
 
-                        return true
-                    end
+                    return true
                 end
             end
 
@@ -168,52 +118,26 @@ function tag_command(msg)
 
             return true
         else
-            if isRomhack then
-                for i = COURSE_MIN, COURSE_MAX do
-                    if msg:lower() == name_of_level(course_to_level(i), 1):lower() then
-                        if not table.contains(blacklistedCourses, i) then
-                            table.insert(blacklistedCourses, i)
-                        else
-                            djui_chat_message_create("Course " ..
-                                name_of_level(course_to_level(i), 1) .. " is already blacklisted")
-                        end
-
-                        djui_chat_message_create("Blacklisted " .. name_of_level(course_to_level(i), 1))
-
-                        blacklistAddRequest = false
-
-                        return true
-                    end
-                end
-
-                djui_chat_message_create("Course " .. msg .. " not found")
-
-                blacklistAddRequest = false
-
-                return true
-            else
-                for i = 1, #levels do
-                    if msg:lower() == levels[i].name then
-                        if not table.contains(blacklistedCourses, i) then
-                            table.insert(blacklistedCourses, i)
-                        else
-                            djui_chat_message_create("Course " .. levels[i].name .. " is already blacklisted")
-                        end
-
+            for i = 1, #levels do
+                if msg:lower() == levels[i].name then
+                    if not table.contains(blacklistedCourses, i) then
+                        table.insert(blacklistedCourses, i)
                         djui_chat_message_create("Blacklisted " .. levels[i].name)
-
-                        blacklistAddRequest = false
-
-                        return true
+                    else
+                        djui_chat_message_create("Course " .. levels[i].name .. " is already blacklisted")
                     end
+
+                    blacklistAddRequest = false
+
+                    return true
                 end
-
-                djui_chat_message_create("Course " .. msg .. " not found")
-
-                blacklistAddRequest = false
-
-                return true
             end
+
+            djui_chat_message_create("Course " .. msg .. " not found")
+
+            blacklistAddRequest = false
+
+            return true
         end
 
         blacklistAddRequest = false

@@ -66,7 +66,7 @@ local function hud_map_vote()
         djui_hud_set_color(220, 220, 220, fade) -- #dcdcdc
         djui_hud_print_text("?", x + ((128 - djui_hud_measure_text("?"))) - 16, y + 32, 5) -- don't ask #2
 
-        if not isRomhack or i == 4 then
+        if levels[voteRandomLevels[i]].painting == nil or i == 4 then
             djui_hud_set_color(255, 255, 255, fade)
             if i ~= 4 then
                 djui_hud_render_texture(levels[voteRandomLevels[i]].painting, x, y, 4, 4)
@@ -87,18 +87,7 @@ local function hud_map_vote()
         djui_hud_render_rect(x, y, 256, 35)
         djui_hud_set_color(255, 255, 255, fade)
         if i ~= 4 then
-            if not isRomhack then
-                if levels[voteRandomLevels[i]].level == LEVEL_SSL and levels[voteRandomLevels[i]].area == 2 then
-                    -- override for issl
-                    text = "Inside Shifting Sand Land: " .. tostring(votes)
-                elseif levels[voteRandomLevels[i]].level == LEVEL_BOWSER_1 then
-                    text = "Bowser 1: " .. tostring(votes)
-                else
-                    text = tostring(name_of_level(levels[voteRandomLevels[i]].level, levels[voteRandomLevels[i]].area)) .. ": " .. tostring(votes)
-                end
-            else
-                text = tostring(name_of_level(voteRandomLevels[i], 1)) .. ": " .. tostring(votes)
-            end
+            text = tostring(name_of_level(voteRandomLevels[i], 1)) .. ": " .. tostring(votes)
         else
             text = "Random: " .. tostring(votes)
         end
@@ -114,21 +103,8 @@ local function hud_map_vote()
         if currentMapWinner == 4 then
             text = "A Random Level has been selected!"
         else
-            if not isRomhack then
-                local level = levels[voteRandomLevels[currentMapWinner]]
-
-                if level.level == LEVEL_SSL and level.area == 2 then
-                    -- override for issl
-                    text = "Inside Shifting Sand Land has been selected!"
-                elseif level.level == LEVEL_BOWSER_1 then
-                    text = "Bowser 1 has been selected!"
-                else
-                    text = name_of_level(level.level, level.area) .. " has been selected!"
-                end
-            else
-                local level = voteRandomLevels[currentMapWinner]
-                text = name_of_level(level, 1) .. " has been selected!"
-            end
+            local level = voteRandomLevels[currentMapWinner]
+            text = name_of_level(level, 1) .. " has been selected!"
         end
     end
     djui_hud_set_color(220, 220, 220, fade)
@@ -149,11 +125,9 @@ local function on_render()
         if network_is_server() then
             while voteRandomLevels[3] == nil do
                 local randomLevel = 0
-                if isRomhack then randomLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
-                else randomLevel = math.random(1, #levels) end
-                while table.contains(voteRandomLevels, randomLevel) or table.contains(blacklistedCourses, level_to_course(randomLevel)) or (level_is_vanilla_level(randomLevel) and isRomhack) or randomLevel == gGlobalSyncTable.selectedLevel do
-                    if isRomhack then randomLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
-                    else randomLevel = math.random(1, #levels) end
+                randomLevel = math.random(1, #levels)
+                while table.contains(voteRandomLevels, randomLevel) or table.contains(blacklistedCourses, level_to_course(levels[randomLevel].level)) or randomLevel == gGlobalSyncTable.selectedLevel do
+                    randomLevel = math.random(1, #levels)
                 end
                 table.insert(voteRandomLevels, randomLevel)
             end

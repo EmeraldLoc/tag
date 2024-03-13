@@ -731,29 +731,15 @@ local function reset_start_selection()
         func = function () start_command("") end,}
     }
 
-    if not isRomhack then
-        for i = 1, #levels do
-            if not table.contains(blacklistedCourses, i) then
-                table.insert(startEntries,
-                {name = name_of_level(levels[i].level, levels[i].area),
-                permission = PERMISSION_MODERATORS,
-                input = INPUT_A,
-                func = function ()
-                    start_command(levels[i].name)
-                end})
-            end
-        end
-    else
-        for i = COURSE_BOB, COURSE_RR do
-            if not level_is_vanilla_level(course_to_level(i)) and not table.contains(blacklistedCourses, i) then
-                table.insert(startEntries,
-                {name = name_of_level(course_to_level(i), 1),
-                permission = PERMISSION_MODERATORS,
-                input = INPUT_A,
-                func = function ()
-                    start_command(tostring(i))
-                end})
-            end
+    for i = 1, #levels do
+        if not table.contains(blacklistedCourses, i) and not table.contains(badLevels, i) then
+            table.insert(startEntries,
+            {name = name_of_level(levels[i].level, levels[i].area),
+            permission = PERMISSION_MODERATORS,
+            input = INPUT_A,
+            func = function ()
+                start_command(levels[i].name)
+            end})
         end
     end
 
@@ -840,28 +826,15 @@ local function reset_blacklist_entries()
         end,}}
 
     for i = 1, #blacklistedCourses do
-        if isRomhack then
-            table.insert(blacklistEntries,
-            {name = name_of_level(course_to_level(blacklistedCourses[i]), 1),
-            permission = PERMISSION_MODERATORS,
-            input = INPUT_A,
-            func = function ()
-                table.remove(blacklistedCourses, i)
-            end,
-            valueText = tostring(blacklistedCourses[i]),
-            seperator = i == 1 and "Courses" or nil,
-            })
-        else
-            table.insert(blacklistEntries,
-            {name = name_of_level(levels[blacklistedCourses[i]].level, levels[blacklistedCourses[i]].area),
-            permission = PERMISSION_MODERATORS,
-            input = INPUT_A,
-            func = function ()
-                table.remove(blacklistedCourses, i)
-            end,
-            valueText = tostring(level_to_course(levels[blacklistedCourses[i]].level))
-            })
-        end
+        table.insert(blacklistEntries,
+        {name = name_of_level(levels[blacklistedCourses[i]].level, levels[blacklistedCourses[i]].area),
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_A,
+        func = function ()
+            table.remove(blacklistedCourses, i)
+        end,
+        valueText = tostring(level_to_course(levels[blacklistedCourses[i]].level))
+        })
     end
 
     table.insert(blacklistEntries,

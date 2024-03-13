@@ -57,25 +57,6 @@ MODIFIER_INCOGNITO                     = 8
 MODIFIER_HIGH_GRAVITY                  = 9
 MODIFIER_MAX                           = 9
 
--- paintings found in vote screen, this is for all vanilla levels.
-TEXTURE_CG_PAINTING                    = get_texture_info("cg_painting")
-TEXTURE_BOB_PAINTING                   = get_texture_info("bob_painting")
-TEXTURE_WF_PAINTING                    = get_texture_info("wf_painting")
-TEXTURE_JRB_PAINTING                   = get_texture_info("jrb_painting")
-TEXTURE_CCM_PAINTING                   = get_texture_info("ccm_painting")
-TEXTURE_BITDW_PAINTING                 = get_texture_info("bitdw_painting")
-TEXTURE_BITFS_PAINTING                 = get_texture_info("bitfs_painting")
-TEXTURE_LLL_PAINTING                   = get_texture_info("lll_painting")
-TEXTURE_SSL_PAINTING                   = get_texture_info("ssl_painting")
-TEXTURE_ISSL_PAINTING                  = get_texture_info("issl_painting")
-TEXTURE_RR_PAINTING                    = get_texture_info("rr_painting")
-TEXTURE_THI_PAINTING                   = get_texture_info("thi_painting")
-TEXTURE_ITHI_PAINTING                  = get_texture_info("ithi_painting")
-TEXTURE_TTM_PAINTING                   = get_texture_info("ttm_painting")
-TEXTURE_SL_PAINTING                    = get_texture_info("sl_painting")
-TEXTURE_WDW_PAINTING                   = get_texture_info("wdw_painting")
-TEXTURE_TTC_PAINTING                   = get_texture_info("ttc_painting")
-
 -- binds
 BIND_BOOST = 0
 BIND_BOMBS = 1
@@ -157,6 +138,9 @@ gServerSettings.bubbleDeath = 0                                -- just.... no
 -- level values
 gLevelValues.disableActs = true
 
+-- levels
+levels = {}
+
 -- variables
 -- this is the local server timer used to set gGlobalSyncTable.displayTimer and other variables
 timer = 0
@@ -216,27 +200,6 @@ _G.tagSettingsOpen = false
 -- just a action we can use, used for when the round ends and mario freezes
 ACT_NOTHING = allocate_mario_action(ACT_FLAG_IDLE)
 
--- this is the table for levels, pretty self explanitory.
-levels = {
-    { name = "cg",    level = LEVEL_CASTLE_GROUNDS, painting = TEXTURE_CG_PAINTING,    act = 0, area = 1, pipes = true, pipe1Pos = { x = -5979, y = 378, z = -1371 },  pipe2Pos = { x = 1043, y = 3174, z = -5546 } },
-    { name = "bob",   level = LEVEL_BOB,            painting = TEXTURE_BOB_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = -4694, y = 0, z = 6699 },     pipe2Pos = { x = 5079, y = 3072, z = 655 } },
-    { name = "rr",    level = LEVEL_RR,             painting = TEXTURE_RR_PAINTING,    act = 0, area = 1, pipes = true, pipe1Pos = { x = -4221, y = 6451, z = -5885 }, pipe2Pos = { x = 2125, y = -1833, z = 2079 } },
-    { name = "ccm",   level = LEVEL_CCM,            painting = TEXTURE_CCM_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = -1352, y = 2560, z = -1824 }, pipe2Pos = { x = 5628, y = -4607, z = -28 } },
-    { name = "issl",  level = LEVEL_SSL,            painting = TEXTURE_ISSL_PAINTING,  act = 0, area = 2, pipes = true, pipe1Pos = { x = -460, y = 0, z = 4247 },      pipe2Pos = { x = 997, y = 3942, z = 1234 } },
-    { name = "bitfs", level = LEVEL_BITFS,          painting = TEXTURE_BITFS_PAINTING, act = 0, area = 1, pipes = true, pipe1Pos = { x = -154, y = -2866, z = -102 },  pipe2Pos = { x = 1205, y = 5478, z = 58 } },
-    { name = "ttm",   level = LEVEL_TTM,            painting = TEXTURE_TTM_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = -1080, y = -4634, z = 4176 }, pipe2Pos = { x = 1031, y = 2306, z = -198 } },
-    { name = "ttc",   level = LEVEL_TTC,            painting = TEXTURE_TTC_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = 1361, y = -4822, z = 176 },   pipe2Pos = { x = 1594, y = 5284, z = 1565 } },
-    { name = "jrb",   level = LEVEL_JRB,            painting = TEXTURE_JRB_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = 3000, y = -5119, z = 2688 },  pipe2Pos = { x = -6398, y = 1126, z = 191 } },
-    { name = "wdw",   level = LEVEL_WDW,            painting = TEXTURE_WDW_PAINTING,   act = 0, area = 1, pipes = true, pipe1Pos = { x = 3346, y = 154, z = 2918 },    pipe2Pos = { x = -3342, y = 3584, z = -3353 } },
-    { name = "wf",    level = LEVEL_WF,             painting = TEXTURE_WF_PAINTING,    act = 0, area = 1, pipes = false },
-    { name = "lll",   level = LEVEL_LLL,            painting = TEXTURE_LLL_PAINTING,   act = 0, area = 1, pipes = false },
-    { name = "ssl",   level = LEVEL_SSL,            painting = TEXTURE_SSL_PAINTING,   act = 0, area = 1, pipes = false },
-    { name = "thi",   level = LEVEL_THI,            painting = TEXTURE_THI_PAINTING,   act = 0, area = 1, pipes = false },
-    { name = "ithi",  level = LEVEL_THI,            painting = TEXTURE_ITHI_PAINTING,  act = 0, area = 3, pipes = false },
-    { name = "sl",    level = LEVEL_SL,             painting = TEXTURE_SL_PAINTING,    act = 0, area = 1, pipes = false },
-    { name = "arena", level = LEVEL_BOWSER_1,       painting = TEXTURE_BITDW_PAINTING, act = 0, area = 1, pipes = false },
-}
-
 local function server_update()
     -- set some basic sync table vars
     for i = 0, MAX_PLAYERS - 1 do
@@ -288,17 +251,15 @@ local function server_update()
 
         timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
 
+        local level = levels[gGlobalSyncTable.selectedLevel]
+
         -- this long while loop is just to select a random level, ik, extremely hard to read
         ---@diagnostic disable-next-line: param-type-mismatch
-        while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel <= 0 or table.contains(blacklistedCourses, gGlobalSyncTable.selectedLevel) do
-            if isRomhack then
-                gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
-            else
-                gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+        while table.contains(blacklistedCourses, level_to_course(level.level)) or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+            gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
 
-                if levels[gGlobalSyncTable.selectedLevel].level == LEVEL_TTC and not isRomhack then
-                    gGlobalSyncTable.ttcSpeed = math.random(0, 3)
-                end
+            if level.level == LEVEL_TTC and isRomhack then
+                gGlobalSyncTable.ttcSpeed = math.random(0, 3)
             end
         end
 
@@ -575,16 +536,14 @@ local function server_update()
 
                 timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
 
-                ---@diagnostic disable-next-line: param-type-mismatch
-                while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or (voteRandomLevels[voteResult] == nil and gGlobalSyncTable.selectedLevel == prevLevel) do
-                    if isRomhack then
-                        gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
-                    else
-                        gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+                local level = levels[gGlobalSyncTable.selectedLevel]
 
-                        if levels[gGlobalSyncTable.selectedLevel].level == LEVEL_TTC then
-                            gGlobalSyncTable.ttcSpeed = math.random(0, 3)
-                        end
+                ---@diagnostic disable-next-line: param-type-mismatch
+                while table.contains(blacklistedCourses, level_to_course(level.level)) or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+                    gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+
+                    if level.level == LEVEL_TTC and isRomhack then
+                        gGlobalSyncTable.ttcSpeed = math.random(0, 3)
                     end
                 end
 
@@ -673,16 +632,14 @@ local function server_update()
                 gGlobalSyncTable.selectedLevel = voteRandomLevels[voteResult]
             end
 
-            ---@diagnostic disable-next-line: param-type-mismatch
-            while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or (voteRandomLevels[voteResult] == nil and gGlobalSyncTable.selectedLevel == prevLevel) do
-                if isRomhack then
-                    gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_RR))
-                else
-                    gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+            local level = levels[gGlobalSyncTable.selectedLevel]
 
-                    if levels[gGlobalSyncTable.selectedLevel].level == LEVEL_TTC then
-                        gGlobalSyncTable.ttcSpeed = math.random(0, 3)
-                    end
+            ---@diagnostic disable-next-line: param-type-mismatch
+            while table.contains(blacklistedCourses, level_to_course(level.level)) or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+                gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+
+                if level.level == LEVEL_TTC and isRomhack then
+                    gGlobalSyncTable.ttcSpeed = math.random(0, 3)
                 end
             end
 
@@ -812,48 +769,33 @@ local function mario_update(m)
         -- check if mario is in the proper level, act, and area, if not, rewarp mario
         -- this is all warp shenenagins, and i'm waaay too lazy to do in depth comments, so, just wing it i guess
         if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_WAIT or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
-            if not isRomhack then
-                if np.currLevelNum ~= selectedLevel.level or np.currActNum ~= selectedLevel.act or np.currAreaIndex ~= selectedLevel.area then
-                    ---@diagnostic disable-next-line: param-type-mismatch
-                    warp_to_level(selectedLevel.level, selectedLevel.area, selectedLevel.act)
-                end
-            else
-                if np.currLevelNum ~= gGlobalSyncTable.selectedLevel or np.currActNum ~= 6 or np.currAreaIndex ~= 1 then
-                    local warpSuccesful = warp_to_level(gGlobalSyncTable.selectedLevel, 1, 6)
+            if np.currLevelNum ~= selectedLevel.level or np.currActNum ~= selectedLevel.act or np.currAreaIndex ~= selectedLevel.area then
+                local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, 0)
 
-                    if not warpSuccesful and network_is_server() then
-                        -- try a common one
-                        if warp_to_warpnode(gGlobalSyncTable.selectedLevel, 1, 6, 10) then
+                if not warpSuccesful then
+                    -- try a common one
+                    if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, 10) then
+                        return
+                    end
+
+                    -- try randomly
+                    for i = 1, 100 do
+                        if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, i) then
                             return
                         end
+                    end
 
-                        -- try randomly
-                        for i = 1, 100 do
-                            if warp_to_warpnode(gGlobalSyncTable.selectedLevel, 1, 6, i) then
-                                return
-                            end
-                        end
-
+                    if network_is_server() then
                         table.insert(badLevels, gGlobalSyncTable.selectedLevel)
 
+                        local level = levels[gGlobalSyncTable.selectedLevel]
+            
                         ---@diagnostic disable-next-line: param-type-mismatch
-                        while ((level_is_vanilla_level(gGlobalSyncTable.selectedLevel) or table.contains(blacklistedCourses, level_to_course(gGlobalSyncTable.selectedLevel)) or table.contains(badLevels, gGlobalSyncTable.selectedLevel) or level_to_course(gGlobalSyncTable.selectedLevel) > COURSE_RR or level_to_course(gGlobalSyncTable.selectedLevel) < COURSE_MIN) and isRomhack) or prevLevel == gGlobalSyncTable.selectedLevel or gGlobalSyncTable.selectedLevel < 0 do
+                        while table.contains(blacklistedCourses, level_to_course(level.level)) or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
                             gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_MAX)) -- select a random level
                         end
 
                         prevLevel = gGlobalSyncTable.selectedLevel
-                    elseif not warpSuccesful then
-                        -- try a common one
-                        if warp_to_warpnode(gGlobalSyncTable.selectedLevel, 1, 6, 10) then
-                            return
-                        end
-
-                        -- try randomly
-                        for i = 1, 100 do
-                            if warp_to_warpnode(gGlobalSyncTable.selectedLevel, 1, 6, i) then
-                                return
-                            end
-                        end
                     end
                 end
             end
@@ -864,23 +806,21 @@ local function mario_update(m)
         end
 
         -- spawn pipes
-        if not isRomhack then
-            -- make sure the level has pipes (found in level table), then check if they aren't spawned
-            if selectedLevel.pipes and obj_get_first_with_behavior_id(id_bhvWarpPipe) == nil then
-                -- spawn pipes
-                spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe1Pos.x,
-                    selectedLevel.pipe1Pos.y, selectedLevel.pipe1Pos.z, function(o)
-                        o.oBehParams = 1
-                    end)
+        -- make sure the level has pipes (found in level table), then check if they aren't spawned
+        if selectedLevel.pipes and obj_get_first_with_behavior_id(id_bhvWarpPipe) == nil then
+            -- spawn pipes
+            spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe1Pos.x,
+                selectedLevel.pipe1Pos.y, selectedLevel.pipe1Pos.z, function(o)
+                    o.oBehParams = 1
+                end)
 
-                spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe2Pos.x,
-                    selectedLevel.pipe2Pos.y, selectedLevel.pipe2Pos.z, function(o)
-                        o.oBehParams = 2
-                    end)
-            end
+            spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe2Pos.x,
+                selectedLevel.pipe2Pos.y, selectedLevel.pipe2Pos.z, function(o)
+                    o.oBehParams = 2
+                end)
         end
 
-        -- delete unwanted pipes in Tiny Huge Island
+        -- delete unwanted pipes in Tiny Huge Island for vanilla
         if gNetworkPlayers[0].currLevelNum == LEVEL_THI and obj_get_first_with_behavior_id(id_bhvWarpPipe) ~= nil and not isRomhack then
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
         end
@@ -929,8 +869,6 @@ local function mario_update(m)
         if not isRomhack then
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvActivatedBackAndForthPlatform))
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvExclamationBox))
-        else
-            obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
         end
 
         -- handle speed boost, this is a fun if statement
@@ -1332,28 +1270,6 @@ local function act_nothing(m)
     m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - 1
 end
 
-function check_mods()
-    -- check thru 50 mods (if you have more than 50 mods enabled your crazy)
-    for i = 0, 50 do
-        if gActiveMods[i] ~= nil then
-            if gActiveMods[i].incompatible ~= nil then
-                -- check if it is a romhack by checking the incompatible tag
-                if string.match(gActiveMods[i].incompatible, "romhack") then
-                    -- set romhack to true and water by default to true
-                    isRomhack = true
-
-                    gGlobalSyncTable.water = true
-
-                -- check for nametags mod by looking at incompatible tag
-                elseif string.match(gActiveMods[i].incompatible, "nametags") then
-                    -- set nametagsEnabled to true
-                    nametagsEnabled = true
-                end
-            end
-        end
-    end
-end
-
 hook_on_sync_table_change(gGlobalSyncTable, 'randomGamemode', gGlobalSyncTable.randomGamemode,
     function(tag, oldVal, newVal)
         -- the only one of these awful sync table changes you will see, savor this moment.
@@ -1394,8 +1310,5 @@ hook_event(HOOK_ALLOW_HAZARD_SURFACE, function() return gGlobalSyncTable.hazardS
 -- make ACT_NOTHING do something, wild ain't it
 ---@diagnostic disable-next-line: missing-parameter
 hook_mario_action(ACT_NOTHING, act_nothing)
-
--- check for mods
-check_mods()
 
 -- Good job, you made it to the end of your file. I'd suggest heading over to tag.lua next!
