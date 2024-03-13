@@ -15,7 +15,7 @@ local function mario_update(m)
     end
 
     -- track how far the local player has moved recently
-    distMoved = distMoved - 0.25 + vec3f_dist(prevPos, m.pos) * 0.02
+    distMoved = distMoved - 0.25 + vec3f_dist(prevPos, m.pos) * 0.01
     vec3f_copy(prevPos, m.pos)
 
     -- clamp between 0 and 20
