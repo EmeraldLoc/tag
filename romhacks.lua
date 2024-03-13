@@ -47,6 +47,9 @@ romhacks = {
         },
     },
     -- romhacks go below this line
+    -- work for me slave I ain't doing this.
+    -- (you will be added to the credits when you add a hack,
+    -- just give me your username and hex code in the pr!)
 }
 
 local function calculate_romhack_levels()

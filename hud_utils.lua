@@ -96,6 +96,17 @@ function hud_did_you_know(fade)
         text = "Hate campers? Use this 1 simple trick: diving! Here's how it works:"
         text2 = "1. Hit B"
         text3 = "2. There is no step 2, it's that easy!!!"
+    elseif randomDidYouKnow == 28 then
+        text = "Don't like the auto hide hud feature? Turn it off in the settings!"
+    elseif randomDidYouKnow == 28 then
+        text = "Hate romhack cam? Turn it off in the settings!"
+    elseif randomDidYouKnow == 28 then
+        text = "Think I'm an idiot for picking Y as the button for boosts? Configure it in the settings!"
+    elseif randomDidYouKnow == 29 then
+        text = "You might wonder when I'm gonna add good romhack support."
+        text2 = "The thing is I'm wondering when YOU'RE gonna do it! The tools are there!"
+        text3 = "It's simple to add full romhack support, go to romhacks.lua for information."
+        text4 = "And yes it's simple, I'm just waay too lazy to do it, plus it's time consuming."
     end
 
     local scale = 1
