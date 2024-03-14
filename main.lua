@@ -508,9 +508,9 @@ local function server_update()
         end
 
         for i = 0, MAX_PLAYERS - 1 do
-            if gPlayerSyncTable[i].state == RUNNER
+            if (gPlayerSyncTable[i].state == RUNNER
             or (gGlobalSyncTable.gamemode == SARDINES
-            and gPlayerSyncTable[i].state == WILDCARD_ROLE)
+            and gPlayerSyncTable[i].state == WILDCARD_ROLE))
             and gGlobalSyncTable.roundState == ROUND_ACTIVE then
                 gPlayerSyncTable[i].amountOfTimeAsRunner = gPlayerSyncTable[i].amountOfTimeAsRunner + 1 -- increase amount of time as runner
             end
@@ -717,6 +717,7 @@ local function update()
             network_player_set_description(gNetworkPlayers[i], "None", 50, 50, 50, 255)
         elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
             -- love the color of this, idk why I like it so much but it's such a nice gray.
+            -- future me here, the gray's fine idk why I was praising it so much in the message above
             network_player_set_description(gNetworkPlayers[i], "Incognito", 103, 103, 103, 255)
         end
     end
@@ -734,7 +735,7 @@ local function mario_update(m)
     -- disable special triple jump
     m.specialTripleJump = 0
 
-    -- this ensures bljs are a no good, but hey, you can go as fast as a dive so
+    -- this ensures bljs are a no go, but hey, you can go as fast as a dive, so
     if not gGlobalSyncTable.bljs and m.forwardVel <= -48 and (m.action == ACT_LONG_JUMP or m.action == ACT_LONG_JUMP_LAND or m.action == ACT_LONG_JUMP_LAND_STOP) then
         m.forwardVel = -48 -- this is the dive speed
     end
@@ -784,8 +785,8 @@ local function mario_update(m)
     elseif gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA -- vanish cap mario
     elseif gPlayerSyncTable[m.playerIndex].state == RUNNER
-        or (gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
-            and gPlayerSyncTable[m.playerIndex].state ~= WILDCARD_ROLE) then
+    or (gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
+    and gPlayerSyncTable[m.playerIndex].state ~= WILDCARD_ROLE) then
         m.marioBodyState.modelState = 0 -- normal
     end
 
@@ -1025,13 +1026,13 @@ local function hud_round_status()
         end
     elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
         text = "You have " ..
-        math.floor(gGlobalSyncTable.sardinesHidingTimer / 30)
+        math.floor(gGlobalSyncTable.displayTimer / 30)
         .. " seconds to hide!" -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
 
         -- if auto hide hud is on, and we are less than 10 seconds away from the sardine hiding session ending, make fade hud peek
-        if math.floor(gGlobalSyncTable.sardinesHidingTimer / 30) <= 10
+        if math.floor(gGlobalSyncTable.displayTimer / 30) <= 10
         and gPlayerSyncTable[0].state == RUNNER then
-            fade = hudFade + linear_interpolation(clampf(gGlobalSyncTable.sardinesHidingTimer / 30, 7, 10), 128, 0, 7, 10)
+            fade = hudFade + linear_interpolation(clampf(gGlobalSyncTable.displayTimer / 30, 7, 10), 128, 0, 7, 10)
 
             fade = clampf(fade, 0, 255)
         end
@@ -1297,8 +1298,7 @@ local function allow_interact(m, o, intee)
         return false
     elseif (intee == INTERACT_WARP
     or intee == INTERACT_WARP_DOOR)
-    and gGlobalSyncTable.roundState ~= ROUND_WAIT_PLAYERS
-    and gGlobalSyncTable.roundState ~= ROUND_WAIT then
+    and gGlobalSyncTable.roundState ~= ROUND_WAIT_PLAYERS then
         -- disable warp interaction
         return false
     end

@@ -66,13 +66,11 @@ local function hud_map_vote()
         djui_hud_set_color(220, 220, 220, fade) -- #dcdcdc
         djui_hud_print_text("?", x + ((128 - djui_hud_measure_text("?"))) - 16, y + 32, 5) -- don't ask #2
 
-        if levels[voteRandomLevels[i]].painting == nil or i == 4 then
-            djui_hud_set_color(255, 255, 255, fade)
-            if i ~= 4 then
-                djui_hud_render_texture(levels[voteRandomLevels[i]].painting, x, y, 4, 4)
-            else
-                djui_hud_render_texture(TEXTURE_RANDOM_PAINTING, x, y, 1, 1)
-            end
+        djui_hud_set_color(255, 255, 255, fade)
+        if i ~= 4 and levels[voteRandomLevels[i]].painting ~= nil then
+            djui_hud_render_texture(levels[voteRandomLevels[i]].painting, x, y, 4, 4)
+        elseif i == 4 then
+            djui_hud_render_texture(TEXTURE_RANDOM_PAINTING, x, y, 1, 1)
         end
 
         y = (screenHeight + 200) / 2
@@ -87,7 +85,7 @@ local function hud_map_vote()
         djui_hud_render_rect(x, y, 256, 35)
         djui_hud_set_color(255, 255, 255, fade)
         if i ~= 4 then
-            text = tostring(name_of_level(voteRandomLevels[i], 1)) .. ": " .. tostring(votes)
+            text = tostring(name_of_level(levels[voteRandomLevels[i]].level, 1)) .. ": " .. tostring(votes)
         else
             text = "Random: " .. tostring(votes)
         end
@@ -103,7 +101,7 @@ local function hud_map_vote()
         if currentMapWinner == 4 then
             text = "A Random Level has been selected!"
         else
-            local level = voteRandomLevels[currentMapWinner]
+            local level = levels[voteRandomLevels[currentMapWinner]].level
             text = name_of_level(level, 1) .. " has been selected!"
         end
     end

@@ -185,18 +185,13 @@ end
 local function allow_pvp(a, v)
     if gGlobalSyncTable.gamemode ~= SARDINES then return end
 
-    -- check if eliminated player is trying to perform a pvp attack
-    if gPlayerSyncTable[v.playerIndex].state == FINISHED or gPlayerSyncTable[a.playerIndex].state == FINISHED then return false end
-end
+    -- use allow pvp instead of on pvp so that the sardine never takes kb (pvp hit reg isn't that important here)
 
----@param a MarioState
----@param v MarioState
-local function on_pvp(a, v)
-    if gGlobalSyncTable.gamemode ~= SARDINES then return end
-
-    if v.playerIndex ~= 0 then return end
+    if v.playerIndex ~= 0 then return false end
     -- handle pvp if we are the victim
     sardines_handle_pvp(a.playerIndex, v.playerIndex)
+
+    return false
 end
 
 ---@param aI number
@@ -212,7 +207,7 @@ function sardines_handle_pvp(aI, vI)
         a.state = FINISHED
 
         -- create popup
-        tagged_popup(aI, vI)
+        found_sardine_popup(aI)
         -- increase amount of tags and set invincibility timer to 1 second
         a.amountOfTags = a.amountOfTags + 1
         a.invincTimer = 1 * 30
@@ -242,6 +237,5 @@ end
 hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
-hook_event(HOOK_ON_PVP_ATTACK, on_pvp)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)

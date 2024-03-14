@@ -60,7 +60,18 @@ local function hud_leaderboard()
             if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
                 if gPlayerSyncTable[i].state ~= TAGGER or gPlayerSyncTable[i].amountOfTags <= 0 then goto continue end
             elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
-                if (gPlayerSyncTable[i].state ~= RUNNER and (gGlobalSyncTable.gamemode ~= FREEZE_TAG or gGlobalSyncTable.freezeHealthDrain == 0)) or (gPlayerSyncTable[i].state ~= WILDCARD_ROLE and gPlayerSyncTable[i].state ~= RUNNER and (gGlobalSyncTable.gamemode == FREEZE_TAG and gGlobalSyncTable.freezeHealthDrain > 0)) or gPlayerSyncTable[i].amountOfTimeAsRunner <= 0 then goto continue end
+                if (gPlayerSyncTable[i].state ~= RUNNER
+                and gGlobalSyncTable.gamemode ~= SARDINES
+                and (gGlobalSyncTable.gamemode ~= FREEZE_TAG
+                or gGlobalSyncTable.freezeHealthDrain == 0))
+                or (gPlayerSyncTable[i].state ~= WILDCARD_ROLE
+                and (gPlayerSyncTable[i].state ~= RUNNER
+                or gGlobalSyncTable.gamemode == SARDINES)
+                and ((gGlobalSyncTable.gamemode == FREEZE_TAG
+                and gGlobalSyncTable.freezeHealthDrain > 0)
+                or gGlobalSyncTable.gamemode == SARDINES))
+                or gPlayerSyncTable[i].amountOfTimeAsRunner <= 0
+                then goto continue end
             end
 
             table.insert(winners, i)
@@ -85,18 +96,12 @@ local function hud_leaderboard()
     for w = 1, #winners do
         local i = winners[w]
         if gNetworkPlayers[i].connected then
-            if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
-                if gPlayerSyncTable[i].state ~= TAGGER or gPlayerSyncTable[i].amountOfTags <= 0 then goto continue end
-            elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
-                if (gPlayerSyncTable[i].state ~= RUNNER and (gGlobalSyncTable.gamemode ~= FREEZE_TAG or gGlobalSyncTable.freezeHealthDrain == 0)) or (gPlayerSyncTable[i].state ~= WILDCARD_ROLE and gPlayerSyncTable[i].state ~= RUNNER and (gGlobalSyncTable.gamemode == FREEZE_TAG and gGlobalSyncTable.freezeHealthDrain > 0)) or gPlayerSyncTable[i].amountOfTimeAsRunner <= 0 then goto continue end
-            end
-
             local displayName = strip_hex(gNetworkPlayers[i].name)
 
             local text = displayName
 
             if text:len() > 17 then
-                text = string.sub(text, 1, 17)
+                text = string.sub(text, 1, 15)
 
                 text = text .. "..."
             end
@@ -174,6 +179,66 @@ local function hud_leaderboard()
 
             renderedIndex = renderedIndex + 1
         end
+    end
+
+    -- get sardine if our gamemode is set to sardines
+    if gGlobalSyncTable.gamemode == SARDINES then
+        local sardine = nil
+        for i = 0, MAX_PLAYERS - 1 do
+            if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state == RUNNER then
+                sardine = i
+            end
+        end
+
+        if sardine == nil then goto continue end
+
+        local screenWidth = djui_hud_get_screen_width()
+        local width = 450
+
+        local x = (screenWidth - 430) / 2
+        local y = 80 + (renderedIndex * 47)
+
+        djui_hud_print_text("Sardine", x, y, 1)
+
+        renderedIndex = renderedIndex + 1
+
+        local displayName = strip_hex(gNetworkPlayers[sardine].name)
+
+        local text = displayName
+
+        if text:len() > 17 then
+            text = string.sub(text, 1, 15)
+
+            text = text .. "..."
+        end
+
+        screenWidth = djui_hud_get_screen_width()
+        width = 450
+
+        x = (screenWidth - width) / 2
+        y = 80 + (renderedIndex * 47)
+
+        djui_hud_set_color(26, 26, 28, fade)
+        djui_hud_render_rect(x, y - 5, width + 15, 42)
+
+        local r, g, b = hex_to_rgb(network_get_player_text_color_string(sardine))
+        width = djui_hud_measure_text(text)
+        x = (screenWidth - 350) / 2
+
+        djui_hud_set_color(r, g, b, fade)
+        djui_hud_print_text(text, x, y, 1)
+
+        x = (screenWidth - 430) / 2
+
+        render_player_head(sardine, x, y, 1.9, 1.9)
+
+        text = "Time as runner: " .. math.floor(gPlayerSyncTable[sardine].amountOfTimeAsRunner / 30) .. "s"
+
+        width = djui_hud_measure_text(text)
+        x = ((screenWidth + 450 - ((width * 2))) / 2)
+
+        djui_hud_set_color(255, 255, 255, fade)
+        djui_hud_print_text(text, x, y, 1)
 
         ::continue::
     end

@@ -299,8 +299,8 @@ function name_of_level(level, area)
 			return "Inside of Tiny Huge Island"
 		end
 	end
-	-- now check for levels that get named "Peach's Castle"
 
+	-- now check for levels that get named "Peach's Castle"
 	if level == LEVEL_BOWSER_1 then
 		return "Bowser 1"
 	elseif level == LEVEL_CASTLE_GROUNDS then
@@ -618,6 +618,11 @@ function tagged_popup(tagger, runner)
 	else
 		djui_popup_create_global(get_player_name(tagger) .. " \\#24D636\\Infected\n" .. get_player_name(runner), 3)
 	end
+end
+
+---@param tagger integer
+function found_sardine_popup(tagger)
+	djui_popup_create_global(get_player_name(tagger) .. " \\#dcdcdc\\found the\n\\#BBBEA1\\Sardine", 3)
 end
 
 ---@param gamemode integer

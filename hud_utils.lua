@@ -2,7 +2,7 @@
 randomDidYouKnow = 0
 
 function select_random_did_you_know()
-    randomDidYouKnow = math.random(1, 23)
+    randomDidYouKnow = math.random(1, 29)
 end
 
 function hud_did_you_know(fade)
