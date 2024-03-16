@@ -658,7 +658,7 @@ function get_rules_for_gamemode(gamemode)
 	elseif gamemode == SARDINES then
 		return "Just like assassins, sardines is much different from the other gamemodes. One player is selected as the Sardine. This player has 30 seconds to pick a spot to hide in. After the 30 seconds are up, the taggers have 120 seconds to find the sardine. If you find the sardine, you become a sardine and hide with the sardine. You don't become eliminated on death. Leaderboards are based off of when you found the sardine (sooner = better)."
 	elseif gamemode == HUNT then
-		return "Hunt is similar to Tag. Runners each have 3 lives. You must remove all of the runners lives to become a runner yourself. Hunters must tag Runners in order to become Runners. Runners are eliminated on death, and, if no one was responsible, a random new runner is selected. If a hunter dies, they go back to the start of the level. Leaderboard works the same as in Tag."
+		return "Hunt is similar to Tag. Runners each have 3 lives. You must remove all of the runners lives to become a runner yourself. Hunters must tag Runners in order to become Runners. Runners lives get set to 1 on death. You never become eliminated on death. If a hunter dies, they go back to the start of the level. Leaderboard works the same as in Tag."
 	end
 end
 

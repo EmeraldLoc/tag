@@ -1,4 +1,3 @@
--- this will be the only gamemode file explained in-depth
 
 -- constants
 -- this is another player role, a custom one, you will notice it's set to the same thing

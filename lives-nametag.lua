@@ -63,7 +63,9 @@ local function djui_hud_print_outlined_text_interpolated(text, prevX, prevY, pre
 end
 
 local function on_hud_render()
-    if gGlobalSyncTable.gamemode ~= JUGGERNAUT or gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
+    if  gGlobalSyncTable.gamemode ~= JUGGERNAUT
+    and gGlobalSyncTable.gamemode ~= HUNT then return end
+    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
 
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_font(FONT_NORMAL)
