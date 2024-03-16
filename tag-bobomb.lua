@@ -58,7 +58,7 @@ function bhv_tag_bobomb_init(o)
     cur_obj_play_sound_2(SOUND_AIR_BOBOMB_LIT_FUSE)
     -- alright this section is kinda complex, lemme break it down, first, set the forward velocity
     o.oForwardVel = gMarioStates[o.oTagBobombGlobalOwner].forwardVel + 50
-    -- here, we use math.sin instead of sins because sins cant process negative numbers
+    -- here, we use math.sin instead of sins due to a bug on arm chips (I have an arm chip)
     -- math.sin takes in a radian, so, convert moveAngleYaw to a radian
     o.oVelX = math.sin(math.rad((o.oMoveAngleYaw / 65535) * 360)) * o.oForwardVel
     o.oVelY = 30
@@ -129,9 +129,7 @@ function bhv_tag_bobomb_expode(o)
                     tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
                     gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
                 elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-                    tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
-                    gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags = gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].amountOfTags + 1
-                    gPlayerSyncTable[m.playerIndex].juggernautTags = gPlayerSyncTable[m.playerIndex].juggernautTags + 1
+                    -- nothing, jut let the kb do it's work
                 elseif gGlobalSyncTable.gamemode == ASSASSINS then
                     if network_local_index_from_global(gPlayerSyncTable[network_local_index_from_global(o.oTagBobombGlobalOwner)].assassinTarget) == 0 then
                         tagged_popup(network_local_index_from_global(o.oTagBobombGlobalOwner), m.playerIndex)
@@ -140,6 +138,10 @@ function bhv_tag_bobomb_expode(o)
                      else
                         return -- make nothing happen
                     end
+                elseif gGlobalSyncTable.gamemode == SARDINES then
+                    -- do nothing, you get to nuke other players lol
+                elseif gGlobalSyncTable.gamemode == HUNT then
+
                 end
             end
         end
@@ -228,7 +230,15 @@ end
 
 ---@param m MarioState
 local function mario_update(m)
-    if gPlayerSyncTable[0].state == TAGGER and gGlobalSyncTable.modifier == MODIFIER_BOMBS and bombCooldown >= 2 * 30 and m.playerIndex == 0 then
+
+    if m.playerIndex ~= 0 then return end
+
+    if ((gPlayerSyncTable[0].state == TAGGER
+    and gGlobalSyncTable.gamemode ~= JUGGERNAUT)
+    or gPlayerSyncTable[0].state == RUNNER
+    and gGlobalSyncTable.gamemode == JUGGERNAUT)
+    and gGlobalSyncTable.modifier == MODIFIER_BOMBS
+    and bombCooldown >= 2 * 30 then
         if m.controller.buttonDown & binds[BIND_BOMBS].btn ~= 0 then
             bombCooldown = 0
             mario_bobomb_use(m)
@@ -242,7 +252,7 @@ local function update()
     end
 end
 
-id_bhvTagBobomb = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_tag_bobomb_init, bhv_tag_bobomb_loop, "tag bobomb")
+id_bhvTagBobomb = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_tag_bobomb_init, bhv_tag_bobomb_loop)
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_UPDATE, update)

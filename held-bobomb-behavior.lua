@@ -18,10 +18,14 @@ function held_bobomb_loop(o)
     cur_obj_become_intangible()
 
     -- enable or disable rendering depending on state and modifier
-    if gPlayerSyncTable[o.oTagHeldItemOwner].state ~= TAGGER or gGlobalSyncTable.modifier ~= MODIFIER_BOMBS or not gNetworkPlayers[o.oTagHeldItemOwner].connected then
-        cur_obj_disable_rendering()
-    else
+    if ((gPlayerSyncTable[o.oTagHeldItemOwner].state == TAGGER
+    and gGlobalSyncTable.gamemode ~= JUGGERNAUT)
+    or gPlayerSyncTable[o.oTagHeldItemOwner].state == RUNNER
+    and gGlobalSyncTable.gamemode == JUGGERNAUT)
+    and gGlobalSyncTable.modifier == MODIFIER_BOMBS then
         cur_obj_enable_rendering()
+    else
+        cur_obj_disable_rendering()
     end
 
     local m = gMarioStates[o.oTagHeldItemOwner]

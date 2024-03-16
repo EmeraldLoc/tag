@@ -297,6 +297,18 @@ local function set_time_limit(gamemode)
         end
 
         entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.sardinesActiveTimer / 30)) .. "s"
+    elseif gamemode == HUNT then
+        if direction == CONT_LEFT then
+            gGlobalSyncTable.huntActiveTimer = gGlobalSyncTable.huntActiveTimer - (30 * speed)
+
+            if gGlobalSyncTable.huntActiveTimer <= 30 * 30 then
+                gGlobalSyncTable.huntActiveTimer = 30 * 30
+            end
+        else
+            gGlobalSyncTable.huntActiveTimer = gGlobalSyncTable.huntActiveTimer + (30 * speed)
+        end
+
+        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.huntActiveTimer / 30)) .. "s"
     end
 end
 
@@ -497,6 +509,13 @@ helpEntries = {
     input = INPUT_A,
     func = function ()
         get_rules(SARDINES)
+    end},
+
+    {name = "Hunt",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(HUNT)
     end},
 
     {name = "Spectating",

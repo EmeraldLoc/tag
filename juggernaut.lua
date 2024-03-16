@@ -1,6 +1,5 @@
 
 local function update()
-
     if gGlobalSyncTable.gamemode ~= JUGGERNAUT then return end
 
     -- set network descriptions
@@ -8,11 +7,14 @@ local function update()
         if gPlayerSyncTable[i].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
             network_player_set_description(gNetworkPlayers[i], "Tagger", 232, 46, 46, 255)
         elseif gPlayerSyncTable[i].state == RUNNER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
-            network_player_set_description(gNetworkPlayers[i], "Runner", 49, 107, 232, 255)
+            -- can't call them the juggernaut cuz it's too many characters >:(
+            network_player_set_description(gNetworkPlayers[i], "The Jugger", 66, 176, 245, 255)
         end
     end
 
-    if gPlayerSyncTable[0].state == RUNNER and gPlayerSyncTable[0].juggernautTags > gGlobalSyncTable.juggernautTagsReq then
+    if  gPlayerSyncTable[0].state == RUNNER
+    and gPlayerSyncTable[0].tagLives <= 0
+    and gGlobalSyncTable.roundState == ROUND_ACTIVE then
         gPlayerSyncTable[0].state = TAGGER
     end
 end
@@ -47,7 +49,7 @@ local function hud_bottom_render()
         local height = 16 * scale
         local x = math.floor((screenWidth - width) / 2)
         local y = math.floor(screenHeight - height - 4 * scale)
-        local juggernautTags = linear_interpolation(gGlobalSyncTable.juggernautTagsReq - gPlayerSyncTable[0].juggernautTags, 0, 1, 0, gGlobalSyncTable.juggernautTagsReq)
+        local tagLives = linear_interpolation(gPlayerSyncTable[0].tagLives, 0, 1, 0, gGlobalSyncTable.tagMaxLives)
 
         djui_hud_set_color(0, 0, 0, 128)
         djui_hud_render_rect(x, y, width, height)
@@ -56,11 +58,11 @@ local function hud_bottom_render()
         y = y + 2 * scale
         width = width - 4 * scale
         height = height - 4 * scale
-        width = math.floor(width * juggernautTags)
+        width = math.floor(width * tagLives)
         djui_hud_set_color(66, 176, 245, 128)
         djui_hud_render_rect(x, y, width, height)
 
-        local text = "Tags Remaining: " .. tostring(gGlobalSyncTable.juggernautTagsReq - gPlayerSyncTable[0].juggernautTags)
+        local text = "Tags Remaining: " .. tostring(gPlayerSyncTable[0].tagLives)
 
         scale = 0.25
         width = djui_hud_measure_text(text) * scale
@@ -131,8 +133,8 @@ function juggernaut_handle_pvp(aI, vI)
 
     -- check if tagger tagged runner
     if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        -- increase juggernaut tags
-        v.juggernautTags = v.juggernautTags + 1
+        -- decrease tag lives
+        v.tagLives = v.tagLives - 1
         -- set inviniciblity to 3 seconds, and increase tag count 
         v.invincTimer = 3 * 30
         a.amountOfTags = a.amountOfTags + 1

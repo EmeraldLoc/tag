@@ -472,6 +472,8 @@ function get_gamemode_rgb_color()
 		return 255, 0, 0
 	elseif gGlobalSyncTable.gamemode == SARDINES then
 		return 187, 190, 161
+	elseif gGlobalSyncTable.gamemode == HUNT then
+		return 199, 68, 68
 	end
 end
 
@@ -490,6 +492,8 @@ function get_gamemode_hex_color()
 		return "\\#FF0000\\"
 	elseif gGlobalSyncTable.gamemode == SARDINES then
 		return "\\#BBBEA1\\"
+	elseif gGlobalSyncTable.gamemode == HUNT then
+		return "\\#C74444\\"
 	end
 end
 
@@ -507,7 +511,9 @@ function get_gamemode()
 	elseif gGlobalSyncTable.gamemode == ASSASSINS then
 		return "\\#FF0000\\Assassins\\#DCDCDC\\"
 	elseif gGlobalSyncTable.gamemode == SARDINES then
-		return "\\#BBBEA1\\#Sardines\\#DCDCDC\\"
+		return "\\#BBBEA1\\Sardines\\#DCDCDC\\"
+	elseif gGlobalSyncTable.gamemode == HUNT then
+		return "\\#C74444\\Hunt\\#DCDCDC\\"
 	end
 
 	return "Uhhhhhhhhhh"
@@ -534,6 +540,8 @@ function get_gamemode_without_hex()
 		return "Assassins"
 	elseif gGlobalSyncTable.gamemode == SARDINES then
 		return "Sardines"
+	elseif gGlobalSyncTable.gamemode == HUNT then
+		return "Hunt"
 	end
 end
 
@@ -547,12 +555,18 @@ function get_role_name(role)
 			return "Infected"
 		elseif gGlobalSyncTable.gamemode == ASSASSINS then
 			return "Assassin"
+		elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+			return "Juggernaut"
+		elseif gGlobalSyncTable.gamemode == HUNT then
+			return "Hunter"
 		else
 			return "Tagger"
 		end
-	elseif role == ELIMINATED_OR_FROZEN then
+	elseif role == WILDCARD_ROLE then
 		if gGlobalSyncTable.gamemode == FREEZE_TAG then
 			return "Frozen"
+		elseif gGlobalSyncTable.gamemode == SARDINES then
+			return "Finished"
 		else
 			return "Eliminated"
 		end
@@ -613,8 +627,10 @@ end
 ---@param runner integer
 function tagged_popup(tagger, runner)
 	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
-	if gGlobalSyncTable.gamemode ~= INFECTION then
+	if gGlobalSyncTable.gamemode ~= INFECTION and gGlobalSyncTable.gamemode ~= HUNT then
 		djui_popup_create_global(get_player_name(tagger) .. " \\#E82E2E\\Tagged\n" .. get_player_name(runner), 3)
+	elseif gGlobalSyncTable.gamemode ~= INFECTION then
+		djui_popup_create_global(get_player_name(tagger) .. " \\#C74444\\Killed\n" .. get_player_name(runner), 3)
 	else
 		djui_popup_create_global(get_player_name(tagger) .. " \\#24D636\\Infected\n" .. get_player_name(runner), 3)
 	end
@@ -641,6 +657,8 @@ function get_rules_for_gamemode(gamemode)
 		return "The Assassins gamemode is much more different from the rest. Everyone is an Assassin. An Assassin is given a target, you must chase down and tag that target. Note, multiple people can have the same target, this gets very chaotic and stressful! The leaderboard is based on how many tags you got. You do not become eliminated on death."
 	elseif gamemode == SARDINES then
 		return "Just like assassins, sardines is much different from the other gamemodes. One player is selected as the Sardine. This player has 30 seconds to pick a spot to hide in. After the 30 seconds are up, the taggers have 120 seconds to find the sardine. If you find the sardine, you become a sardine and hide with the sardine. You don't become eliminated on death. Leaderboards are based off of when you found the sardine (sooner = better)."
+	elseif gamemode == HUNT then
+		return "Hunt is similar to Tag. Runners each have 3 lives. You must remove all of the runners lives to become a runner yourself. Hunters must tag Runners in order to become Runners. Runners are eliminated on death, and, if no one was responsible, a random new runner is selected. If a hunter dies, they go back to the start of the level. Leaderboard works the same as in Tag."
 	end
 end
 
@@ -650,7 +668,7 @@ end
 
 function get_general_rules()
 	-- ack, long text
-	return "Tag is a set of 6 gamemodes, Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and Sardines. These gamemodes are selected randomly, or selected by the server. Modifiers are, well, modifiers that modify parts of a game. These are either selected by the server, or selected by random. During a round, you may have special abilities (indicated by a ui element at the bottom of your screen), hit whatever button is binded to Y to use these ablities. At the end of a round, you can see what placement you got via the leaderboards, this is pretty self explanitory. The voting system is a way to vote for a map to play on.\n\nThat's the general \"rules\" of Tag, enjoy!"
+	return "Tag is a set of 6 gamemodes, Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, Sardines, and Hunt. These gamemodes are selected randomly, or selected by the server. Modifiers are, well, modifiers that modify parts of a game. These are either selected by the server, or selected by random. During a round, you may have special abilities (indicated by a ui element at the bottom of your screen), hit whatever button is binded to Y to use these ablities. At the end of a round, you can see what placement you got via the leaderboards, this is pretty self explanitory. The voting system is a way to vote for a map to play on.\n\nThat's the general \"rules\" of Tag, enjoy!"
 end
 
 -- thanks for this one chatgpt, my knowledge ain't even close to getting that right

@@ -84,7 +84,7 @@ local function on_hud_render()
             scale = 0.5
             scale = scale + dist / 7000
             scale = clampf(1 - scale, 0, 0.32)
-            local text = tostring(gGlobalSyncTable.juggernautTagsReq - gPlayerSyncTable[i].juggernautTags) .. " Tags Remaining"
+            local text = tostring(gPlayerSyncTable[i].tagLives) .. " Tags Remaining"
             local color = { r = 162, g = 202, b = 234 }
             network_player_palette_to_color(gNetworkPlayers[i], SHIRT, color)
             color.r = color.r + 20

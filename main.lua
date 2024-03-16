@@ -1,5 +1,5 @@
 -- name: \\#316BE8\\Tag (v2.3)\\#dcdcdc\\
--- description: All Tag Related Gamemodes!\n\nThis mod contains Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and the good'ol Tag, with modifiers, and full romhack support!\n\nThis mod includes a blacklist command to blacklist bad levels in romhacks\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\ and\\#ff7f00\\ Agent X\\#dcdcdc\\\n\nPainting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi.
+-- description: All Tag Related Gamemodes!\n\nThis mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and more, with modifiers, and full romhack support!\n\nThis mod includes a blacklist command to blacklist bad levels in romhacks\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\ and\\#ff7f00\\ Agent X\\#dcdcdc\\\n\nPainting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi.
 -- incompatible: gamemode tag
 
 -- if your trying to learn this code, I hope i've done a good job.
@@ -35,7 +35,8 @@ HOT_POTATO                             = 4
 JUGGERNAUT                             = 5
 ASSASSINS                              = 6
 SARDINES                               = 7
-MAX_GAMEMODE                           = 7
+HUNT                                   = 8
+MAX_GAMEMODE                           = 8
 
 -- spectator states
 SPECTATOR_STATE_MARIO                  = 0
@@ -64,6 +65,12 @@ BIND_BOOST = 0
 BIND_BOMBS = 1
 BIND_MAX = 1
 
+if SM64COOPDX_VERSION ~= nil then
+    -- we are in coopdx, set override FONT_NORMAL var to FONT_ALIASED
+    -- the reason is the font scaling in FONT_NORMAL in coopdx is larger than in coop.
+    FONT_NORMAL = FONT_ALIASED
+end
+
 -- globals and sync tables
 -- this is the round state, this variable tells you what current round it is
 gGlobalSyncTable.roundState            = ROUND_WAIT_PLAYERS
@@ -85,8 +92,8 @@ gGlobalSyncTable.displayTimer          = 1
 -- the current selected level. When romhacks are enabled, this is set to the actual level
 -- number (i.e LEVEL_BOB), otherwise, it's set to the level in the levels table (found below here)
 gGlobalSyncTable.selectedLevel         = 1
--- juggernaut tags required. Since this changes depending on player count, make it a global variable
-gGlobalSyncTable.juggernautTagsReq     = 15
+-- max lives. Since this changes depending on player count, make it a global variable
+gGlobalSyncTable.tagMaxLives           = 15
 -- amount of time left in a round
 gGlobalSyncTable.amountOfTime          = 120 * 30
 -- ttc speed, because ttc syncing sucks
@@ -99,11 +106,13 @@ gGlobalSyncTable.doVoting              = true
 gGlobalSyncTable.tagActiveTimer        = 120 * 30
 gGlobalSyncTable.freezeTagActiveTimer  = 180 * 30
 gGlobalSyncTable.infectionActiveTimer  = 120 * 30
-gGlobalSyncTable.hotPotatoActiveTimer  = 60 * 30
+gGlobalSyncTable.hotPotatoActiveTimer  = 60  * 30
 gGlobalSyncTable.juggernautActiveTimer = 120 * 30
 gGlobalSyncTable.assassinsActiveTimer  = 120 * 30
 gGlobalSyncTable.sardinesActiveTimer   = 120 * 30
-gGlobalSyncTable.sardinesHidingTimer   = 30 * 30
+gGlobalSyncTable.huntActiveTimer       = 180 * 30
+-- other timers
+gGlobalSyncTable.sardinesHidingTimer   = 30  * 30
 -- auto mode
 gGlobalSyncTable.autoMode              = true
 -- enable tagger boosts or not
@@ -121,8 +130,8 @@ for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we a
         -- been a runner, this is for the leaderboard
         gPlayerSyncTable[i].amountOfTags = 0
         gPlayerSyncTable[i].amountOfTimeAsRunner = 0
-        -- juggernaut lives/tags
-        gPlayerSyncTable[i].juggernautTags = 0
+        -- amount of tags till death (used for juggernaut and hunt)
+        gPlayerSyncTable[i].tagLives = 0
         -- the assassins's target and stun timer (stun as the shock action)
         gPlayerSyncTable[i].assassinTarget = -1
         gPlayerSyncTable[i].assassinStunTimer = -1
@@ -175,13 +184,19 @@ binds = {}
 
 -- boost bind
 binds[BIND_BOOST] = {name = "Boost", btn = Y_BUTTON}
-if mod_storage_load("bind_" .. tostring(BIND_BOOST)) ~= nil then
+-- also check for empty string cuz coopdx :/ (loading doesnt work on coopdx for some reason, so we do that to avoid a script error)
+-- If you're making a mod for regular coop, just check for nil
+if  mod_storage_load("bind_" .. tostring(BIND_BOOST)) ~= nil
+and mod_storage_load("bind_" .. tostring(BIND_BOOST)) ~= "" then
     binds[BIND_BOOST].btn = tonumber(mod_storage_load("bind_" .. tostring(BIND_BOOST)))
 end
 
 -- bomb bind
 binds[BIND_BOMBS] = {name = "Bombs", btn = Y_BUTTON}
-if mod_storage_load("bind_" .. tostring(BIND_BOMBS)) ~= nil then
+-- also check for empty string cuz coopdx :/ (loading doesnt work on coopdx for some reason, so we do that to avoid a script error)
+-- If you're making a mod for regular coop, just check for nil
+if  mod_storage_load("bind_" .. tostring(BIND_BOMBS)) ~= nil
+and mod_storage_load("bind_" .. tostring(BIND_BOMBS)) ~= "" then
     binds[BIND_BOMBS].btn = tonumber(mod_storage_load("bind_" .. tostring(BIND_BOMBS)))
 end
 
@@ -197,7 +212,7 @@ local pipeUse = 0
 -- hud fade
 local hudFade = 255
 
--- just some global variables, honestly idk why the second one is there but it is so.....
+-- just some global variables, honestly idk why the second one is there but it is so, uh, enjoy?
 _G.tagExists = true
 _G.tagSettingsOpen = false
 
@@ -211,7 +226,7 @@ local function server_update()
             gPlayerSyncTable[i].state = -1
             gPlayerSyncTable[i].amountOfTimeAsRunner = 0
             gPlayerSyncTable[i].amountOfTags = 0
-            gPlayerSyncTable[i].juggernautTags = 0
+            gPlayerSyncTable[i].tagLives = 0
         end
     end
 
@@ -371,6 +386,13 @@ local function server_update()
             elseif gGlobalSyncTable.gamemode == SARDINES then
                 -- set sardines timer
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.sardinesActiveTimer
+
+                PLAYERS_NEEDED = 3
+            elseif gGlobalSyncTable.gamemode == HUNT then
+                -- set hunt timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.huntActiveTimer
+
+                PLAYERS_NEEDED = 3
             end
 
             log_to_console("Tag: Modifier is set to " ..
@@ -388,7 +410,7 @@ local function server_update()
                 set_mario_action(m, ACT_IDLE, 0)
             end
 
-            gPlayerSyncTable[i].juggernautTags = 0       -- reset juggernaut tags
+            gPlayerSyncTable[i].tagLives = 0             -- reset tag lives
             gPlayerSyncTable[i].assassinTarget = -1      -- reset assassin target
             gPlayerSyncTable[i].amountOfTags = 0         -- reset amount of tags
             gPlayerSyncTable[i].amountOfTimeAsRunner = 0 -- reset amount of time as runner
@@ -420,6 +442,9 @@ local function server_update()
             elseif gGlobalSyncTable.gamemode == SARDINES then
                 -- set sardines timer
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.sardinesActiveTimer
+            elseif gGlobalSyncTable.gamemode == HUNT then
+                -- set sardines timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.huntActiveTimer
             end
 
             timer = gGlobalSyncTable.amountOfTime -- set timer to amount of time in a round
@@ -431,7 +456,7 @@ local function server_update()
             local skipTaggerSelection = false
             for i = 0, MAX_PLAYERS - 1 do
                 if gNetworkPlayers[i].connected then
-                    if gPlayerSyncTable[i].state ~= RUNNER and gPlayerSyncTable[i].state ~= SPECTATOR then
+                    if gPlayerSyncTable[i].state == TAGGER then
                         skipTaggerSelection = true
                     end
                 end
@@ -439,11 +464,24 @@ local function server_update()
 
             local amountOfTaggersNeeded = math.floor(numPlayers / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
 
+            -- set tag max lives for gamemodes like juggernaut and hunt
+            gGlobalSyncTable.tagMaxLives = math.floor(numPlayers * 2.5)
+
+            if gGlobalSyncTable.tagMaxLives > 20 then gGlobalSyncTable.tagMaxLives = 20 end
+            -- hunt override
+            if gGlobalSyncTable.gamemode == HUNT then gGlobalSyncTable.tagMaxLives = 3 end
+
+            for i = 0, MAX_PLAYERS - 1 do
+                gPlayerSyncTable[i].tagLives = gGlobalSyncTable.tagMaxLives
+            end
+
             if not skipTaggerSelection then
                 if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
                     amountOfTaggersNeeded = 1 -- set amount of taggers to one if the modifier is one tagger
                 end
-                if gGlobalSyncTable.gamemode == JUGGERNAUT or gGlobalSyncTable.gamemode == SARDINES then
+
+                if gGlobalSyncTable.gamemode == JUGGERNAUT
+                or gGlobalSyncTable.gamemode == SARDINES then
                     amountOfTaggersNeeded = numPlayers - 1
                 end
 
@@ -458,16 +496,12 @@ local function server_update()
                     if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
                         gPlayerSyncTable[randomIndex].state = TAGGER
 
-                        log_to_console("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as Tagger or Infector")
+                        log_to_console("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as " .. get_role_name(TAGGER))
 
                         amountOfTaggers = amountOfTaggers + 1
                     end
                 end
             end
-
-            gGlobalSyncTable.juggernautTagsReq = math.floor(numPlayers * 2.5)
-
-            if gGlobalSyncTable.juggernautTagsReq > 20 then gGlobalSyncTable.juggernautTagsReq = 20 end
 
             if gGlobalSyncTable.gamemode == HOT_POTATO then
                 hotPotatoTimerMultiplier = amountOfTaggersNeeded

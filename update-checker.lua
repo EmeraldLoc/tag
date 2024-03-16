@@ -1,13 +1,20 @@
 
-version = "v2.3"
+version = "v2.2"
 local finishedChecking = false
 local updateFile = nil
 
-local function check_for_updates()
+local function check_for_updates_and_version()
     -- you may take this code for your own mods, no credit is required
-    if VERSION_NUMBER < 37 then return end -- only works in v37
 
     if not finishedChecking then
+        -- if we are using coopdx, warn the user
+        if SM64COOPDX_VERSION ~= nil then
+            djui_chat_message_create("\\#ffcc00\\Warning: Tag was not made with coopdx in mind, so expect bugs. For now, it is recommended to use the normal coop repo.\n\nKnown bugs:\nSave data fails to load\nRandom crashes happen on host")
+        end
+
+        finishedChecking = true
+
+        if VERSION_NUMBER < 37 then return end -- only works in v37
         -- attempt to load the current verion's audio file
         local url = "https://github.com/EmeraldLoc/Tag/raw/main/" .. version .. ".mp3"
         updateFile = audio_stream_load_url(url)
@@ -20,9 +27,7 @@ local function check_for_updates()
         else
             djui_chat_message_create("Tag is up to date!")
         end
-
-        finishedChecking = true
     end
 end
 
-hook_event(HOOK_MARIO_UPDATE, check_for_updates)
+hook_event(HOOK_MARIO_UPDATE, check_for_updates_and_version)
