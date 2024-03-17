@@ -18,7 +18,7 @@ local function mario_update(m)
         elseif m.controller.buttonDown & B_BUTTON ~= 0 then
             speed = speed - 1
         else
-            speed = speed - 0.6
+            speed = speed - 0.2
         end
 
         speed = clampf(speed, 20, maxSpeed)
@@ -45,7 +45,10 @@ local function hud_render()
     local y = screenHeight / 2 - (height / 2)
 
     djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x, y, width, height)
+    djui_hud_render_rect(x, y, width, height + 20)
+
+    djui_hud_set_color(220, 220, 220, 255)
+    djui_hud_print_text("A & B", x + (width), y + height - 10, 0.75)
 
     width = 25
     height = linear_interpolation(speed, 0, 275, 20, maxSpeed)

@@ -1420,6 +1420,8 @@ hook_event(HOOK_ON_WARP, on_warp)
 hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
 -- this hook allows us to walk on lava and quicksand
 hook_event(HOOK_ALLOW_HAZARD_SURFACE, function() return gGlobalSyncTable.hazardSurfaces end)
+-- disables dialogs
+hook_event(HOOK_ON_DIALOG, function () return false end)
 
 -- make ACT_NOTHING do something, wild ain't it
 ---@diagnostic disable-next-line: missing-parameter
