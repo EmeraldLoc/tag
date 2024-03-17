@@ -48,7 +48,7 @@ local function hud_render()
     djui_hud_render_rect(x, y, width, height + 20)
 
     djui_hud_set_color(220, 220, 220, 255)
-    djui_hud_print_text("A & B", x + (width), y + height - 10, 0.75)
+    djui_hud_print_text("A & B", x + 6.25, y + height - 10, 0.75)
 
     width = 25
     height = linear_interpolation(speed, 0, 275, 20, maxSpeed)

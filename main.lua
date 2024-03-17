@@ -23,7 +23,7 @@ ROUND_HIDING_SARDINES                  = 7
 -- roles (gamemode-specific roles specified in designated gamemode files)
 RUNNER                                 = 0
 TAGGER                                 = 1
-WILDCARD_ROLE                   = 2
+WILDCARD_ROLE                          = 2
 SPECTATOR                              = 3
 
 -- gamemodes
