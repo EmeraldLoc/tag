@@ -213,7 +213,7 @@ local pipeUse = 0
 local hudFade = 255
 
 -- just some global variables, honestly idk why the second one is there but it is so, uh, enjoy?
-_G.tagExists = true
+_G.tag = true
 _G.tagSettingsOpen = false
 
 -- just a action we can use, used for when the round ends and mario freezes
@@ -860,7 +860,7 @@ local function mario_update(m)
                         table.insert(badLevels, gGlobalSyncTable.selectedLevel)
 
                         local level = levels[gGlobalSyncTable.selectedLevel]
-            
+
                         ---@diagnostic disable-next-line: param-type-mismatch
                         while table.contains(blacklistedCourses, level_to_course(level.level)) or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
                             gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_MAX)) -- select a random level
@@ -1342,6 +1342,16 @@ local function allow_interact(m, o, intee)
     if gPlayerSyncTable[m.playerIndex].state == SPECTATOR then return false end
 end
 
+local function on_warp()
+    local m = gMarioStates[0]
+
+    local level = levels[gGlobalSyncTable.selectedLevel]
+
+    if level ~= nil and level.spawnLocation ~= nil then
+        vec3f_copy(m.pos, level.spawnLocation)
+    end
+end
+
 ---@param m MarioState
 local function act_nothing(m)
     -- great action am I right
@@ -1387,6 +1397,8 @@ hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 -- runs right before mario sets his action
 hook_event(HOOK_BEFORE_SET_MARIO_ACTION, before_set_mario_action)
+-- runs on warp
+hook_event(HOOK_ON_WARP, on_warp)
 -- make sure the user can never pause exit
 hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
 -- this hook allows us to walk on lava and quicksand

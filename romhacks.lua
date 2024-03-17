@@ -1,4 +1,6 @@
 
+local initializedRomhacks = false
+
 romhacks = {
     -- don't edit these
     {
@@ -47,6 +49,10 @@ romhacks = {
             { name = "rr",  level = LEVEL_RR,             painting = nil, act = 0, area = 1, pipes = false },
         },
     },
+    {
+        name = "Arena - Base Stages",
+        levels = {} -- empty table as stages are added at the end of the file
+    }
     -- romhacks go below this line
     -- work for me slave I ain't doing this.
     -- (you will be added to the credits when you add a hack,
@@ -69,10 +75,16 @@ local function calculate_romhack_levels()
 end
 
 local function configure_romhacks(modIndex)
-
     if modIndex == nil then
         -- vanilla, set level data to vanilla "romhack"
         levels = romhacks[1].levels
+
+        -- arena override
+        if romhacks[3].levels ~= {} then
+            for _, level in pairs(romhacks[3].levels) do
+                table.insert(levels, level)
+            end
+        end
 
         return
     end
@@ -87,7 +99,26 @@ local function configure_romhacks(modIndex)
             -- match, set our level data to that hack
             levels = romhack.levels
 
+            -- check arena stages
+            if romhacks[3].levels ~= {} then
+                local arenaHack = romhacks[3]
+                for level in pairs(arenaHack.levels) do
+                    table.insert(levels, level)
+                end
+                return
+            end
+
             return
+        end
+    end
+
+    -- arena override
+    if romhacks[3].levels ~= {} then
+        local romhack = romhacks[3]
+        levels = romhacks[1].levels
+        for level in pairs(romhack.levels) do
+            log_to_console("MONKE VANILLA")
+            table.insert(levels, level)
         end
     end
 
@@ -124,5 +155,26 @@ local function check_mods()
     end
 end
 
--- check for mods
-check_mods()
+-- arena map support
+-- recreate arena's add level
+_G.Arena = {}
+_G.Arena.add_level = function(level, name)
+    -- insert level into the arena stages
+    table.insert(romhacks[3].levels, {
+        name = name,
+        level = level,
+        painting = nil,
+        act = 0,
+        area = 1,
+        pipes = false
+    })
+end
+
+local function level_init()
+    if initializedRomhacks then return end
+    initializedRomhacks = true
+    -- check for mods
+    check_mods()
+end
+
+hook_event(HOOK_ON_LEVEL_INIT, level_init)
