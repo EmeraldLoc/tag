@@ -58,7 +58,8 @@ MODIFIER_FOG                           = 6
 MODIFIER_SPEED                         = 7
 MODIFIER_INCOGNITO                     = 8
 MODIFIER_HIGH_GRAVITY                  = 9
-MODIFIER_MAX                           = 9
+MODIFIER_FLY                           = 10
+MODIFIER_MAX                           = 10
 
 -- binds
 BIND_BOOST = 0
@@ -800,7 +801,11 @@ local function mario_update(m)
     -- | = add
     -- & ~ = subtract
     if gPlayerSyncTable[m.playerIndex].state ~= SPECTATOR then
-        m.flags = m.flags & ~MARIO_WING_CAP
+        if gGlobalSyncTable.modifier ~= MODIFIER_FLY then
+            m.flags = m.flags & ~MARIO_WING_CAP
+        else
+            m.flags = m.flags | MARIO_WING_CAP
+        end
         m.flags = m.flags & ~MARIO_METAL_CAP
         m.flags = m.flags & ~MARIO_VANISH_CAP
     elseif gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
