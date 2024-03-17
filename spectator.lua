@@ -114,6 +114,8 @@ local function mario_update(m)
         return
     end
 
+    if showSettings or isPaused then goto states end
+
     if m.controller.buttonPressed & D_JPAD ~= 0 then
         s.spectatorState = s.spectatorState - 1
         if s.spectatorState < SPECTATOR_STATE_MARIO then s.spectatorState = SPECTATOR_STATE_FOLLOW end
@@ -127,6 +129,8 @@ local function mario_update(m)
     if m.controller.buttonPressed & X_BUTTON ~= 0 then
         spectatorHideHud = not spectatorHideHud
     end
+
+    ::states::
 
     if s.spectatorState == SPECTATOR_STATE_FREECAM then
         -- set action to freecam action depending on if we are submerged or not
@@ -142,6 +146,8 @@ local function mario_update(m)
         else
             set_mario_action(m, ACT_FOLLOW_IDLE, 0)
         end
+
+        if isPaused or showSettings then return end
 
         -- follow index selection
         if m.controller.buttonPressed & R_JPAD ~= 0 or followTargetIndex == 0 then
