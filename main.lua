@@ -844,8 +844,12 @@ local function mario_update(m)
                 local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, 0)
 
                 if not warpSuccesful then
-                    -- try a common one
+                    -- try a few common ones
                     if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, 10) then
+                        return
+                    end
+
+                    if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, 0) then
                         return
                     end
 
@@ -1343,6 +1347,14 @@ local function allow_interact(m, o, intee)
 end
 
 local function on_warp()
+
+    -- get rid of water
+    if not gGlobalSyncTable.water then
+        for i = 1, 6 do
+            set_environment_region(i, -10000)
+        end
+    end
+
     local m = gMarioStates[0]
 
     local level = levels[gGlobalSyncTable.selectedLevel]

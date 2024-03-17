@@ -292,11 +292,13 @@ end
 
 function name_of_level(level, area)
 	-- first check the area and see if we have a override name, if we don't, proceed as normal
-	if area > 1 and (level == LEVEL_SSL or level == LEVEL_THI) then
+	if area > 1 and not isRomhack then
 		if level == LEVEL_SSL then
 			return "Inside of Shifting Sand Land"
 		elseif level == LEVEL_THI then
 			return "Inside of Tiny Huge Island"
+		elseif level == LEVEL_WDW then
+			return "Wet-dry Town"
 		end
 	end
 
