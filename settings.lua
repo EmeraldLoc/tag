@@ -451,6 +451,8 @@ playerEntries = {}
 blacklistEntries = {}
 -- binds
 bindsEntries = {}
+-- romhack entries
+romhackEntries = {}
 
 -- help entries
 -- generate it here as it is never changed
@@ -690,6 +692,15 @@ local function reset_settings_selection()
         input = INPUT_A,
         func = function ()
             entries = bindsEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- romhack selection
+        {name = "Romhacks",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_A,
+        func = function ()
+            entries = romhackEntries
             selection = 1
         end,
         valueText = ">",},
@@ -983,6 +994,47 @@ local function reset_bind_entries()
     end
 end
 
+local function reset_romhack_entries()
+    local resetRomhackEntries = false
+
+    if entries == romhackEntries then
+        resetRomhack = true
+    end
+
+    romhackEntries = {}
+
+    for i = 1, #romhacks do
+        local romhack = romhacks[i]
+        if romhack.shortName == "reg levels" then goto continue end
+
+        table.insert(romhackEntries,
+            {name = romhack.name,
+            permission = PERMISSION_SERVER,
+            input = INPUT_A,
+            func = function ()
+                -- set override level var
+                gGlobalSyncTable.romhackOverride = i
+            end}
+        )
+
+        ::continue::
+    end
+
+    table.insert(romhackEntries,
+        {name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = settingsEntries
+            selection = 1
+        end}
+    )
+
+    if resetRomhackEntries then
+        entries = romhackEntries
+    end
+end
+
 local function hud_render()
 
     if not showSettings then
@@ -1020,6 +1072,7 @@ local function hud_render()
     reset_player_selection()
     reset_blacklist_entries()
     reset_bind_entries()
+    reset_romhack_entries()
 
     local height = 90
 

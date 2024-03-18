@@ -120,6 +120,9 @@ gGlobalSyncTable.autoMode              = true
 gGlobalSyncTable.boosts                = true
 -- enable or disable hazardous surfaces
 gGlobalSyncTable.hazardSurfaces        = false
+-- override for romhacks
+gGlobalSyncTable.romhackOverride        = nil
+
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then
         -- the player's role
@@ -212,6 +215,8 @@ local pipeTimer = 0
 local pipeUse = 0
 -- hud fade
 local hudFade = 255
+-- previous romhack override
+local prevRomhackOverride = nil
 
 -- just some global variables, honestly idk why the second one is there but it is so, uh, enjoy?
 _G.tag = true
@@ -727,6 +732,29 @@ local function update()
         end
     end
 
+    -- handle romhack overrides
+    if  gGlobalSyncTable.romhackOverride ~= nil
+    and gGlobalSyncTable.romhackOverride ~= prevRomhackOverride then
+        -- get romhack
+        local romhack = romhacks[gGlobalSyncTable.romhackOverride]
+
+        -- set levels var to romhack override
+        levels = romhack.levels
+
+        -- check level reg stages
+        if romhacks[3].levels ~= {} then
+            for _, level in pairs(romhacks[3].levels) do
+                table.insert(levels, level)
+            end
+        end
+
+        -- popup
+        djui_popup_create("Set romhack to\n" .. romhack.name, 3)
+
+        -- set prev romhack override
+        prevRomhackOverride = gGlobalSyncTable.romhackOverride
+    end
+
     -- handle speed boost
     if speedBoostTimer < 20 * 30 and gPlayerSyncTable[0].state == TAGGER and boosts_enabled() then
         speedBoostTimer = speedBoostTimer + 1
@@ -845,7 +873,7 @@ local function mario_update(m)
         or gGlobalSyncTable.roundState == ROUND_WAIT
         or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
         or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
-            if np.currLevelNum ~= selectedLevel.level or np.currActNum ~= selectedLevel.act or np.currAreaIndex ~= selectedLevel.area then
+            if np.currLevelNum ~= selectedLevel.level or np.currAreaIndex ~= selectedLevel.area then
                 local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, 0)
 
                 if not warpSuccesful then
@@ -1361,6 +1389,7 @@ local function on_warp()
     end
 
     local m = gMarioStates[0]
+    set_mario_action(m, ACT_IDLE, 0)
 
     local level = levels[gGlobalSyncTable.selectedLevel]
 
