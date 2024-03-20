@@ -684,6 +684,7 @@ function warp_text(text, maxLength)
     local lines = {}
     local line = ""
 
+	-- black magic
     for word in text:gmatch("%S+") do
         if #line + #word < maxLength then
             line = line .. word .. " "
@@ -852,7 +853,7 @@ function crash()
 	crash() -- just incase the while loop fails
 end
 
-local beta = true
+local beta = false
 
 local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled (not secure, like at all, a really bad security system.... I need to learn how to compile lua code)

@@ -208,7 +208,7 @@ _G.tag.add_level = function (level, name, painting, area, pipes, spawnLocation)
     table.insert(romhacks[3].levels, {
         name = name,
         level = level,
-        painting = painting,
+        painting = get_texture_info(painting),
         area = area,
         pipes = pipes,
         spawnLocation = spawnLocation,

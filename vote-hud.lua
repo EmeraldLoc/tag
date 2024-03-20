@@ -56,7 +56,7 @@ local function hud_map_vote()
         end
 
         -- get positions
-        local x = (screenWidth - (256 * 4 + 40 * 3)) / 2 + (256 + 40) * (i - 1) -- don't ask
+        local x = (screenWidth - (256 * 4 + 100 * 3)) / 2 + (256 + 100) * (i - 1) -- don't ask
         local y = (screenHeight - 400) / 2
 
         -- render question mark if there's no painting assigned
@@ -82,14 +82,15 @@ local function hud_map_vote()
         else
             djui_hud_set_color(35, 35, 37, fade)
         end
-        djui_hud_render_rect(x, y, 256, 35)
+        x = (screenWidth - (256 * 4 + 100 * 3)) / 2 + (256 + 100) * (i - 1) - 18.125 -- help me
+        djui_hud_render_rect(x, y, 290, 50)
         djui_hud_set_color(255, 255, 255, fade)
         if i ~= 4 then
             text = tostring(name_of_level(levels[voteRandomLevels[i]].level, 1)) .. ": " .. tostring(votes)
         else
             text = "Random: " .. tostring(votes)
         end
-        djui_hud_print_text(text, x + 128 - (djui_hud_measure_text(text) / 2), y, 1)
+        djui_hud_print_text(text, x + 145 - (djui_hud_measure_text(text) / 2), y + 50 / 8, 1) -- why 50 / 8? idk it works (I hate hud math)
     end
 
     -- render bottom text

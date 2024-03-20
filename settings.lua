@@ -1090,7 +1090,9 @@ local function hud_render()
 
         if entries[i].text ~= nil then
             -- appreciate the free labor chatgpt (ok I did a little bit of cleanup)
-            local wrappedTextLines = warp_text(entries[i].text, 53)
+            local textAmount = 53
+            if usingCoopDX then textAmount = 50 end
+            local wrappedTextLines = warp_text(entries[i].text, textAmount)
 
             for j, line in ipairs(wrappedTextLines) do
                 if selection == i then

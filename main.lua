@@ -66,12 +66,6 @@ BIND_BOOST = 0
 BIND_BOMBS = 1
 BIND_MAX = 1
 
-if SM64COOPDX_VERSION ~= nil then
-    -- we are in coopdx, set override FONT_NORMAL var to FONT_ALIASED
-    -- the reason is the font scaling in FONT_NORMAL in coopdx is larger than in coop.
-    FONT_NORMAL = FONT_ALIASED
-end
-
 -- globals and sync tables
 -- this is the round state, this variable tells you what current round it is
 gGlobalSyncTable.roundState            = ROUND_WAIT_PLAYERS
@@ -158,6 +152,9 @@ gLevelValues.disableActs = true
 -- levels
 levels = {}
 
+-- if we are using coopdx or not
+usingCoopDX = SM64COOPDX_VERSION ~= nil
+
 -- variables
 -- this is the local server timer used to set gGlobalSyncTable.displayTimer and other variables
 timer = 0
@@ -219,7 +216,7 @@ local hudFade = 255
 local prevRomhackOverride = nil
 
 -- just some global variables, honestly idk why the second one is there but it is so, uh, enjoy?
-_G.tag = true
+_G.tag = {}
 _G.tagSettingsOpen = false
 
 -- just a action we can use, used for when the round ends and mario freezes
@@ -649,7 +646,7 @@ local function server_update()
                 amountOfTaggersNeeded = 1 -- set amount of taggers to one if the modifier is one tagger
             end
 
-            timer = 60 * 30
+            timer = gGlobalSyncTable.amountOfTime
 
             log_to_console("Tag: Assigning Players")
 

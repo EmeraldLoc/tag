@@ -100,14 +100,12 @@ local function hud_leaderboard()
 
             local text = displayName
 
-            if text:len() > 17 then
-                text = string.sub(text, 1, 15)
-
-                text = text .. "..."
+            if text:len() >= 21 then
+                text = string.sub(text, 1, 21 - 4) .. "..."
             end
 
             local screenWidth = djui_hud_get_screen_width()
-            local width = 450
+            local width = 550
 
             local x = (screenWidth - width) / 2
             local y = 80 + (renderedIndex * 50)
@@ -117,16 +115,16 @@ local function hud_leaderboard()
 
             local r, g, b = hex_to_rgb(network_get_player_text_color_string(i))
             width = djui_hud_measure_text(text)
-            x = (screenWidth - 265) / 2
+            x = (screenWidth - 390) / 2
 
             djui_hud_set_color(r, g, b, fade)
             djui_hud_print_text(text, x, y, 1)
 
-            x = (screenWidth - 350) / 2
+            x = (screenWidth - 470) / 2
 
             render_player_head(i, x, y, 1.9, 1.9)
 
-            x = (screenWidth - 430) / 2
+            x = (screenWidth - 530) / 2
 
             -- decide what position this player should be at. Don't use w variable to allow for ties as shown below
             if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN and w > 1 then
@@ -165,7 +163,7 @@ local function hud_leaderboard()
             end
 
             width = djui_hud_measure_text(text)
-            x = ((screenWidth + 450 - ((width * 2))) / 2)
+            x = ((screenWidth + 550 - ((width * 2))) / 2)
 
             if gPlayerSyncTable[i].amountOfTimeAsRunner / 30 < gGlobalSyncTable.amountOfTime / 30 or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
                 djui_hud_set_color(255, 255, 255, fade)
@@ -193,9 +191,9 @@ local function hud_leaderboard()
         if sardine == nil then goto continue end
 
         local screenWidth = djui_hud_get_screen_width()
-        local width = 450
+        local width = 550
 
-        local x = (screenWidth - 430) / 2
+        local x = (screenWidth - 530) / 2
         local y = 80 + (renderedIndex * 47)
 
         djui_hud_print_text("Sardine", x, y, 1)
@@ -206,14 +204,12 @@ local function hud_leaderboard()
 
         local text = displayName
 
-        if text:len() > 17 then
-            text = string.sub(text, 1, 15)
-
-            text = text .. "..."
+        if text:len() >= 21 then
+            text = string.sub(text, 1, 21 - 4) .. "..."
         end
 
         screenWidth = djui_hud_get_screen_width()
-        width = 450
+        width = 550
 
         x = (screenWidth - width) / 2
         y = 80 + (renderedIndex * 47)
@@ -223,19 +219,19 @@ local function hud_leaderboard()
 
         local r, g, b = hex_to_rgb(network_get_player_text_color_string(sardine))
         width = djui_hud_measure_text(text)
-        x = (screenWidth - 350) / 2
+        x = (screenWidth - 450) / 2
 
         djui_hud_set_color(r, g, b, fade)
         djui_hud_print_text(text, x, y, 1)
 
-        x = (screenWidth - 430) / 2
+        x = (screenWidth - 530) / 2
 
         render_player_head(sardine, x, y, 1.9, 1.9)
 
         text = "Time as runner: " .. math.floor(gPlayerSyncTable[sardine].amountOfTimeAsRunner / 30) .. "s"
 
         width = djui_hud_measure_text(text)
-        x = ((screenWidth + 450 - ((width * 2))) / 2)
+        x = ((screenWidth + 550 - ((width * 2))) / 2)
 
         djui_hud_set_color(255, 255, 255, fade)
         djui_hud_print_text(text, x, y, 1)

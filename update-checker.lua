@@ -3,15 +3,10 @@ version = "v2.2"
 local finishedChecking = false
 local updateFile = nil
 
-local function check_for_updates_and_version()
+local function check_for_updates()
     -- you may take this code for your own mods, no credit is required
 
     if not finishedChecking then
-        -- if we are using coopdx, warn the user
-        if SM64COOPDX_VERSION ~= nil then
-            djui_chat_message_create("\\#ffcc00\\Warning: Tag was not made with coopdx in mind, so expect bugs. For now, it is recommended to use the normal coop repo.\n\nKnown bugs:\nSave data fails to load\nRandom crashes happen on host")
-        end
-
         finishedChecking = true
 
         if VERSION_NUMBER < 37 then return end -- only works in v37
@@ -30,4 +25,4 @@ local function check_for_updates_and_version()
     end
 end
 
-hook_event(HOOK_MARIO_UPDATE, check_for_updates_and_version)
+hook_event(HOOK_MARIO_UPDATE, check_for_updates)

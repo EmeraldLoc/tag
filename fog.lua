@@ -39,7 +39,6 @@ end
 
 ---@param m MarioState
 local function mario_update(m)
-
     if m.playerIndex ~= 0 then return end
 
     if warpTimer > 0 then
