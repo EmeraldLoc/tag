@@ -2,5 +2,4 @@
 .DS_Store
 
 # .png files
-*.png
-*/*.png
+**.png
