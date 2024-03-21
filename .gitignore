@@ -3,3 +3,7 @@
 
 # .png files
 **.png
+
+# actor stuff
+actors/**
+!actors/*.bin

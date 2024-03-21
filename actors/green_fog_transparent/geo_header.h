@@ -1,7 +1,0 @@
-extern const GeoLayout green_fog_transparent_geo[];
-extern Lights1 green_fog_transparent_f3dlite_material_lights;
-extern Vtx green_fog_transparent_Cylinder_mesh_layer_5_vtx_0[155];
-extern Gfx green_fog_transparent_Cylinder_mesh_layer_5_tri_0[];
-extern Gfx mat_green_fog_transparent_f3dlite_material[];
-extern Gfx green_fog_transparent_Cylinder_mesh_layer_5[];
-extern Gfx green_fog_transparent_material_revert_render_settings[];
