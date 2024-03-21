@@ -62,9 +62,9 @@ MODIFIER_FLY                           = 10
 MODIFIER_MAX                           = 10
 
 -- binds
-BIND_BOOST                             = 0
-BIND_BOMBS                             = 1
-BIND_MAX                               = 1
+BIND_BOOST = 0
+BIND_BOMBS = 1
+BIND_MAX = 1
 
 -- globals and sync tables
 -- this is the round state, this variable tells you what current round it is
@@ -101,13 +101,13 @@ gGlobalSyncTable.doVoting              = true
 gGlobalSyncTable.tagActiveTimer        = 120 * 30
 gGlobalSyncTable.freezeTagActiveTimer  = 180 * 30
 gGlobalSyncTable.infectionActiveTimer  = 120 * 30
-gGlobalSyncTable.hotPotatoActiveTimer  = 60 * 30
+gGlobalSyncTable.hotPotatoActiveTimer  = 60  * 30
 gGlobalSyncTable.juggernautActiveTimer = 120 * 30
 gGlobalSyncTable.assassinsActiveTimer  = 120 * 30
 gGlobalSyncTable.sardinesActiveTimer   = 120 * 30
 gGlobalSyncTable.huntActiveTimer       = 180 * 30
 -- other timers
-gGlobalSyncTable.sardinesHidingTimer   = 30 * 30
+gGlobalSyncTable.sardinesHidingTimer   = 30  * 30
 -- auto mode
 gGlobalSyncTable.autoMode              = true
 -- enable tagger boosts or not
@@ -115,7 +115,7 @@ gGlobalSyncTable.boosts                = true
 -- enable or disable hazardous surfaces
 gGlobalSyncTable.hazardSurfaces        = false
 -- override for romhacks
-gGlobalSyncTable.romhackOverride       = nil
+gGlobalSyncTable.romhackOverride        = nil
 
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then
@@ -144,38 +144,38 @@ end
 
 -- server settings
 gServerSettings.playerInteractions = PLAYER_INTERACTIONS_SOLID -- force player attacks to be on
-gServerSettings.bubbleDeath        = 0                         -- just.... no
+gServerSettings.bubbleDeath = 0                                -- just.... no
 
 -- level values
-gLevelValues.disableActs           = true
+gLevelValues.disableActs = true
 
 -- levels
-levels                             = {}
+levels = {}
 
 -- if we are using coopdx or not
-usingCoopDX                        = SM64COOPDX_VERSION ~= nil
+usingCoopDX = SM64COOPDX_VERSION ~= nil
 
 -- variables
 -- this is the local server timer used to set gGlobalSyncTable.displayTimer and other variables
-timer                              = 0
+timer = 0
 -- if we are a romhack or not (checked in check_mods function)
-isRomhack                          = false
+isRomhack = false
 -- if nametags are enabled or not (checked in check_mods function)
-nametagsEnabled                    = false
+nametagsEnabled = false
 -- the name
-blacklistedCourses                 = {}
+blacklistedCourses = {}
 -- the join timer, this is what gives it time to sync
-joinTimer                          = 6 * 30
+joinTimer = 6 * 30
 -- the previous level, used for when the server selects levels to pick
-prevLevel                          = 1 -- make it the same as the selected level so it selects a new level
+prevLevel = 1 -- make it the same as the selected level so it selects a new level
 -- These are levels that are failed to be warped to for romhacks
-badLevels                          = {}
+badLevels = {}
 -- the global sound source, used for audio
-gGlobalSoundSource                 = { x = 0, y = 0, z = 0 }
+gGlobalSoundSource = { x = 0, y = 0, z = 0 }
 -- if we are paused or not, for custom pause menu
-isPaused                           = false
+isPaused = false
 -- whether or not to use romhack cam
-useRomhackCam                      = true
+useRomhackCam = true
 if mod_storage_load("useRomhackCam") == "false" then useRomhackCam = false end
 -- auto hide hud option
 autoHideHud = true
@@ -184,20 +184,20 @@ if mod_storage_load("autoHideHud") == "false" then autoHideHud = false end
 binds = {}
 
 -- boost bind
-binds[BIND_BOOST] = { name = "Boost", btn = Y_BUTTON }
+binds[BIND_BOOST] = {name = "Boost", btn = Y_BUTTON}
 -- also check for empty string cuz coopdx :/ (loading doesnt work on coopdx for some reason, so we do that to avoid a script error)
 -- If you're making a mod for regular coop, just check for nil
-if mod_storage_load("bind_" .. tostring(BIND_BOOST)) ~= nil
-    and mod_storage_load("bind_" .. tostring(BIND_BOOST)) ~= "" then
+if  mod_storage_load("bind_" .. tostring(BIND_BOOST)) ~= nil
+and mod_storage_load("bind_" .. tostring(BIND_BOOST)) ~= "" then
     binds[BIND_BOOST].btn = tonumber(mod_storage_load("bind_" .. tostring(BIND_BOOST)))
 end
 
 -- bomb bind
-binds[BIND_BOMBS] = { name = "Bombs", btn = Y_BUTTON }
+binds[BIND_BOMBS] = {name = "Bombs", btn = Y_BUTTON}
 -- also check for empty string cuz coopdx :/ (loading doesnt work on coopdx for some reason, so we do that to avoid a script error)
 -- If you're making a mod for regular coop, just check for nil
-if mod_storage_load("bind_" .. tostring(BIND_BOMBS)) ~= nil
-    and mod_storage_load("bind_" .. tostring(BIND_BOMBS)) ~= "" then
+if  mod_storage_load("bind_" .. tostring(BIND_BOMBS)) ~= nil
+and mod_storage_load("bind_" .. tostring(BIND_BOMBS)) ~= "" then
     binds[BIND_BOMBS].btn = tonumber(mod_storage_load("bind_" .. tostring(BIND_BOMBS)))
 end
 
@@ -322,22 +322,22 @@ local function server_update()
                     end
 
                     if (gGlobalSyncTable.gamemode == ASSASSINS
-                            or gGlobalSyncTable.gamemode == SARDINES)
-                        and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
-                            or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
+                    or gGlobalSyncTable.gamemode == SARDINES)
+                    and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
+                    or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
                         goto selectmodifier
                     end
 
                     if (levels[gGlobalSyncTable.selectedLevel].name == "ithi"
-                            or levels[gGlobalSyncTable.selectedLevel].name == "lll"
-                            or levels[gGlobalSyncTable.selectedLevel].name == "bitfs")
-                        and not isRomhack
-                        and gGlobalSyncTable.modifier == MODIFIER_FOG then
+                    or levels[gGlobalSyncTable.selectedLevel].name == "lll"
+                    or levels[gGlobalSyncTable.selectedLevel].name == "bitfs")
+                    and not isRomhack
+                    and gGlobalSyncTable.modifier == MODIFIER_FOG then
                         goto selectmodifier
                     end
 
                     if gGlobalSyncTable.gamemode == SARDINES
-                        and gGlobalSyncTable.modifier == MODIFIER_BOMBS then
+                    and gGlobalSyncTable.modifier == MODIFIER_BOMBS then
                         goto selectmodifier
                     end
                 else
@@ -484,7 +484,7 @@ local function server_update()
                 end
 
                 if gGlobalSyncTable.gamemode == JUGGERNAUT
-                    or gGlobalSyncTable.gamemode == SARDINES then
+                or gGlobalSyncTable.gamemode == SARDINES then
                     amountOfTaggersNeeded = numPlayers - 1
                 end
 
@@ -499,8 +499,7 @@ local function server_update()
                     if gPlayerSyncTable[randomIndex].state ~= TAGGER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
                         gPlayerSyncTable[randomIndex].state = TAGGER
 
-                        log_to_console("Tag: Assigned " ..
-                        gNetworkPlayers[randomIndex].name .. " as " .. get_role_name(TAGGER))
+                        log_to_console("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as " .. get_role_name(TAGGER))
 
                         amountOfTaggers = amountOfTaggers + 1
                     end
@@ -547,11 +546,10 @@ local function server_update()
 
         for i = 0, MAX_PLAYERS - 1 do
             if (gPlayerSyncTable[i].state == RUNNER
-                    or (gGlobalSyncTable.gamemode == SARDINES
-                        and gPlayerSyncTable[i].state == WILDCARD_ROLE))
-                and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-                gPlayerSyncTable[i].amountOfTimeAsRunner = gPlayerSyncTable[i].amountOfTimeAsRunner +
-                1                                                                                       -- increase amount of time as runner
+            or (gGlobalSyncTable.gamemode == SARDINES
+            and gPlayerSyncTable[i].state == WILDCARD_ROLE))
+            and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+                gPlayerSyncTable[i].amountOfTimeAsRunner = gPlayerSyncTable[i].amountOfTimeAsRunner + 1 -- increase amount of time as runner
             end
         end
 
@@ -732,8 +730,8 @@ local function update()
     end
 
     -- handle romhack overrides
-    if gGlobalSyncTable.romhackOverride ~= nil
-        and gGlobalSyncTable.romhackOverride ~= prevRomhackOverride then
+    if  gGlobalSyncTable.romhackOverride ~= nil
+    and gGlobalSyncTable.romhackOverride ~= prevRomhackOverride then
         -- get romhack
         local romhack = romhacks[gGlobalSyncTable.romhackOverride]
 
@@ -843,16 +841,16 @@ local function mario_update(m)
 
     -- set model state according to state
     if gPlayerSyncTable[m.playerIndex].state == TAGGER
-        and gGlobalSyncTable.gamemode ~= ASSASSINS
-        and ((gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO
-                or gPlayerSyncTable[0].state == TAGGER)
-            or m.playerIndex == 0) then
+    and gGlobalSyncTable.gamemode ~= ASSASSINS
+    and ((gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO
+    or gPlayerSyncTable[0].state == TAGGER)
+    or m.playerIndex == 0) then
         m.marioBodyState.modelState = MODEL_STATE_METAL
     elseif gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA -- vanish cap mario
     elseif gPlayerSyncTable[m.playerIndex].state == RUNNER
-        or (gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
-            and gPlayerSyncTable[m.playerIndex].state ~= WILDCARD_ROLE) then
+    or (gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
+    and gPlayerSyncTable[m.playerIndex].state ~= WILDCARD_ROLE) then
         m.marioBodyState.modelState = 0 -- normal
     end
 
@@ -869,9 +867,9 @@ local function mario_update(m)
         -- check if mario is in the proper level, act, and area, if not, rewarp mario
         -- this is all warp shenenagins, and i'm waaay too lazy to do in depth comments, so, just wing it i guess
         if gGlobalSyncTable.roundState == ROUND_ACTIVE
-            or gGlobalSyncTable.roundState == ROUND_WAIT
-            or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
-            or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
+        or gGlobalSyncTable.roundState == ROUND_WAIT
+        or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
+        or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
             if np.currLevelNum ~= selectedLevel.level or np.currAreaIndex ~= selectedLevel.area then
                 local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, 0)
 
@@ -980,9 +978,9 @@ local function mario_update(m)
 
         -- handle speed boost, this is a fun if statement
         if m.controller.buttonPressed & binds[BIND_BOOST].btn ~= 0
-            and speedBoostTimer >= 20 * 30
-            and gPlayerSyncTable[0].state == TAGGER
-            and boosts_enabled() then
+        and speedBoostTimer >= 20 * 30
+        and gPlayerSyncTable[0].state == TAGGER
+        and boosts_enabled() then
             speedBoostTimer = 0
         end
 
@@ -991,9 +989,9 @@ local function mario_update(m)
             -- this here sets our initial state
             if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
                 if gGlobalSyncTable.gamemode == TAG
-                    or gGlobalSyncTable.gamemode == INFECTION
-                    or gGlobalSyncTable.gamemode == HOT_POTATO
-                    or gGlobalSyncTable.gamemode == ASSASSINS then
+                or gGlobalSyncTable.gamemode == INFECTION
+                or gGlobalSyncTable.gamemode == HOT_POTATO
+                or gGlobalSyncTable.gamemode == ASSASSINS then
                     gPlayerSyncTable[0].state = WILDCARD_ROLE
                 else
                     gPlayerSyncTable[0].state = TAGGER
@@ -1096,12 +1094,12 @@ local function hud_round_status()
         end
     elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
         text = "You have " ..
-            math.floor(gGlobalSyncTable.displayTimer / 30)
-            .. " seconds to hide!" -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+        math.floor(gGlobalSyncTable.displayTimer / 30)
+        .. " seconds to hide!" -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
 
         -- if auto hide hud is on, and we are less than 10 seconds away from the sardine hiding session ending, make fade hud peek
         if math.floor(gGlobalSyncTable.displayTimer / 30) <= 10
-            and gPlayerSyncTable[0].state == RUNNER then
+        and gPlayerSyncTable[0].state == RUNNER then
             fade = hudFade + linear_interpolation(clampf(gGlobalSyncTable.displayTimer / 30, 7, 10), 128, 0, 7, 10)
 
             fade = clampf(fade, 0, 255)
@@ -1295,8 +1293,8 @@ local function hud_render()
 
     -- render hud
     if gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN
-        and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN
-        and joinTimer <= 0 then
+    and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN
+    and joinTimer <= 0 then
         hud_round_status()
         hud_gamemode()
         hud_modifier()
@@ -1325,7 +1323,7 @@ end
 local function allow_interact(m, o, intee)
     -- check if intee is unwanted
     if intee == INTERACT_STAR_OR_KEY
-        or intee == INTERACT_KOOPA_SHELL then
+    or intee == INTERACT_KOOPA_SHELL then
         return false
     end
 
@@ -1367,8 +1365,8 @@ local function allow_interact(m, o, intee)
 
         return false
     elseif (intee == INTERACT_WARP
-            or intee == INTERACT_WARP_DOOR)
-        and gGlobalSyncTable.roundState ~= ROUND_WAIT_PLAYERS then
+    or intee == INTERACT_WARP_DOOR)
+    and gGlobalSyncTable.roundState ~= ROUND_WAIT_PLAYERS then
         -- disable warp interaction
         return false
     end
@@ -1379,6 +1377,7 @@ local function allow_interact(m, o, intee)
 end
 
 local function on_warp()
+
     -- get rid of water
     if not gGlobalSyncTable.water then
         for i = 1, 6 do
@@ -1448,7 +1447,7 @@ hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
 -- this hook allows us to walk on lava and quicksand
 hook_event(HOOK_ALLOW_HAZARD_SURFACE, function() return gGlobalSyncTable.hazardSurfaces end)
 -- disables dialogs
-hook_event(HOOK_ON_DIALOG, function() return false end)
+hook_event(HOOK_ON_DIALOG, function () return false end)
 
 -- make ACT_NOTHING do something, wild ain't it
 ---@diagnostic disable-next-line: missing-parameter
