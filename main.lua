@@ -209,7 +209,8 @@ local speedBoostTimer = 0
 local hotPotatoTimerMultiplier = 1
 -- pipe invinc vars
 local pipeTimer = 0
-local pipeUse = 0
+-- ik this isnt local, idc
+pipeUse = 0
 -- hud fade
 local hudFade = 255
 -- previous romhack override
@@ -912,22 +913,19 @@ local function mario_update(m)
 
         -- spawn pipes
         -- make sure the level has pipes (found in level table), then check if they aren't spawned
-        if selectedLevel.pipes and obj_get_first_with_behavior_id(id_bhvWarpPipe) == nil then
+        if selectedLevel.pipes ~= nil
+        and obj_get_first_with_behavior_id(id_bhvPipe) == nil
+        and np.currLevelNum == selectedLevel.level then
             -- spawn pipes
-            spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe1Pos.x,
-                selectedLevel.pipe1Pos.y, selectedLevel.pipe1Pos.z, function(o)
-                    o.oBehParams = 1
-                end)
-
-            spawn_non_sync_object(id_bhvWarpPipe, E_MODEL_BITS_WARP_PIPE, selectedLevel.pipe2Pos.x,
-                selectedLevel.pipe2Pos.y, selectedLevel.pipe2Pos.z, function(o)
-                    o.oBehParams = 2
-                end)
-        end
-
-        -- delete unwanted pipes in Tiny Huge Island for vanilla
-        if gNetworkPlayers[0].currLevelNum == LEVEL_THI and obj_get_first_with_behavior_id(id_bhvWarpPipe) ~= nil and not isRomhack then
-            obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
+            for pipesIndex, pipes in pairs(selectedLevel.pipes) do
+                for _, pipe in pairs(pipes) do
+                    spawn_non_sync_object(id_bhvPipe, E_MODEL_BITS_WARP_PIPE,
+                    pipe.x, pipe.y, pipe.z, function (o)
+                        o.oPipesLevel = gGlobalSyncTable.selectedLevel
+                        o.oPipesIndex = pipesIndex -- our pipes index
+                    end)
+                end
+            end
         end
 
         -- handle pipe invinc timers and such, too lazy to write what this does
@@ -936,7 +934,7 @@ local function mario_update(m)
             pipeUse = 0
         end
 
-        -- get rid of unwated behaviors
+        -- get rid of unwated behaviors (no better way to do it other than this block of text)
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhv1Up))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBubba))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvOneCoin))
@@ -964,6 +962,7 @@ local function mario_update(m)
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWingCap))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvMetalCap))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvVanishCap))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
 
         -- water level diamond breaks water being disabled, so just get rid of it
         if not gGlobalSyncTable.water then
@@ -1328,44 +1327,7 @@ local function allow_interact(m, o, intee)
     end
 
     -- check if we interacted with a pipe, if we did, do pipe shenenagins
-    if intee == INTERACT_WARP and o.behavior == get_behavior_from_id(id_bhvWarpPipe) and not isRomhack then
-        -- here we ensure our state isn't set to frozen
-        if (gGlobalSyncTable.gamemode == FREEZE_TAG and gPlayerSyncTable[m.playerIndex].state ~= WILDCARD_ROLE) or gGlobalSyncTable.gamemode ~= FREEZE_TAG then
-            -- get second pipe
-            local o2 = obj_get_first_with_behavior_id(id_bhvWarpPipe)
-            while o2 ~= nil do
-                if o2 == o then
-                    o2 = obj_get_next_with_same_behavior_id(o2)
-                else
-                    -- pretty much teleport to the pipe and set invincibility
-                    m.pos.x = o2.oPosX
-                    m.pos.y = o2.oPosY + 200
-                    m.pos.z = o2.oPosZ
-
-                    set_mario_action(m, ACT_JUMP, 0)
-
-                    m.vel.y = 60
-                    m.forwardVel = 15
-
-                    if m.invincTimer < 2 * 30 and pipeUse < 3 then
-                        gPlayerSyncTable[m.playerIndex].invincTimer = 2 * 30 -- 2 seconds
-                        pipeUse = pipeUse + 1
-                    end
-
-                    pipeTimer = 0
-
-                    reset_camera(m.area.camera)             -- reset camera
-
-                    play_sound(SOUND_MENU_EXIT_PIPE, m.pos) -- play pipe sounds
-
-                    break
-                end
-            end
-        end
-
-        return false
-    elseif (intee == INTERACT_WARP
-    or intee == INTERACT_WARP_DOOR)
+    if (intee == INTERACT_WARP or intee == INTERACT_WARP_DOOR)
     and gGlobalSyncTable.roundState ~= ROUND_WAIT_PLAYERS then
         -- disable warp interaction
         return false
