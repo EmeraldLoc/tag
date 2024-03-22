@@ -67,8 +67,8 @@ romhacks = {
         levels = {
             { name = "mm",  level = LEVEL_BOB, painting = get_texture_info("painting_sapphire_mm"), area = 1, pipes = { { { x = 81, y = 793, z = -5259 },  { x = 3275, y = 4456, z = -3997 } }, { { x = 6041, y = 3656, z = -5866 },  { x = 5840, y = 518, z = -3149 } }, { { x = 1250, y = 2098, z = -11382 },  { x = -3388, y = -4007, z = -12408  } } } },
             { name = "pp",  level = LEVEL_WF,  painting = get_texture_info("painting_sapphire_pp"), area = 1, pipes = nil },
-            { name = "ll",  level = LEVEL_JRB, painting = get_texture_info("painting_sapphire_ll"), area = 1, pipes = { { { x = 4594, y = 243, z = -5992, }, { x = 12881, y = 114, z = -7182, } } } },
-            { name = "tt",  level = LEVEL_CCM, painting = get_texture_info("painting_sapphire_tt"), area = 1, pipes = nil },
+            { name = "ll",  level = LEVEL_JRB, painting = get_texture_info("painting_sapphire_ll"), area = 1, pipes = { { { x = 4594, y = 243, z = -5992 }, { x = 12881, y = 114, z = -7182 } } } },
+            { name = "tt",  level = LEVEL_CCM, painting = get_texture_info("painting_sapphire_tt"), area = 1, pipes = { { { x = 155, y = -350, z = -18718 }, { x = 4434, y = -350, z = -8335 } } } },
         }
     },
     {
@@ -76,10 +76,10 @@ romhacks = {
         name = "Royal Legacy",
         shortName = "rl",
         levels = {
-            { name = "bb",     level = LEVEL_BOB, painting = get_texture_info("painting_rl_bb"),     area = 1, pipes = nil },
-            { name = "tt",     level = LEVEL_WF,  painting = get_texture_info("painting_rl_tt"),     area = 1, pipes = nil },
-            { name = "bbanks", level = LEVEL_JRB, painting = get_texture_info("painting_rl_bbanks"), area = 1, pipes = nil },
-            { name = "dd",     level = LEVEL_CCM, painting = get_texture_info("painting_rl_dd"),     area = 1, pipes = nil },
+            { name = "bb",     level = LEVEL_BOB, painting = get_texture_info("painting_rl_bb"),     area = 1, pipes = { { { x = 4203, y = 92, z = -1896 }, { x = 4523, y = -3369, z = -5704 } } } },
+            { name = "tt",     level = LEVEL_WF,  painting = get_texture_info("painting_rl_tt"),     area = 1, pipes = { { { x = -7891, y = 4210, z = -1108 }, { x = -13667, y = 3727, z = -3591 } }, { { x = -4494, y = 2320, z = 2478 }, { x = -5700, y = 4215, z = 805 } }, { { x = -1851, y = 2977, z = -1312 }, { x = -3371, y = 2320, z = 1840 } } } },
+            { name = "bbanks", level = LEVEL_JRB, painting = get_texture_info("painting_rl_bbanks"), area = 1, pipes = { { { x = 9381, y = 486, z = -4980 }, { x = -1006, y = 3852, z = -1382 } } } },
+            { name = "dd",     level = LEVEL_CCM, painting = get_texture_info("painting_rl_dd"),     area = 1, pipes = { { { x = 263, y = 600, z = -3725 }, { x = 232, y = 600, z = -10796 } } } },
         }
     },
     {
