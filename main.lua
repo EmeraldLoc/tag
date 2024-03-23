@@ -1227,54 +1227,6 @@ local function hud_boost()
     djui_hud_print_text(text, x, y, scale)
 end
 
-local function hud_bombs()
-    if gPlayerSyncTable[0].state ~= TAGGER then return end
-    if gGlobalSyncTable.modifier ~= MODIFIER_BOMBS then return end
-
-    djui_hud_set_font(FONT_NORMAL)
-    djui_hud_set_resolution(RESOLUTION_N64)
-
-    local screenWidth  = djui_hud_get_screen_width()
-    local screenHeight = djui_hud_get_screen_height()
-
-    local scale        = 1
-    local width        = 128 * scale
-    local height       = 16 * scale
-    local x            = math.floor((screenWidth - width) / 2)
-    local y            = math.floor(screenHeight - height - 4 * scale)
-    local bombTime     = bombCooldown / 30 / 2
-
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x, y, width, height)
-
-    x = x + 2 * scale
-    y = y + 2 * scale
-    width = width - 4 * scale
-    height = height - 4 * scale
-    width = math.floor(width * bombTime)
-    djui_hud_set_color(242, 143, 36, 128)
-    djui_hud_render_rect(x, y, width, height)
-
-    if bombCooldown < 2 * 30 then
-        text = "Reloading"
-    else
-        text = "Throw Bomb (" .. button_to_text(binds[BIND_BOMBS].btn) .. ")"
-    end
-    text = "Throw Bomb (" .. button_to_text(binds[BIND_BOMBS].btn) .. ")"
-
-    scale = 0.25
-    width = djui_hud_measure_text(text) * scale
-    height = 32 * scale
-    x = (screenWidth - width) / 2
-    y = screenHeight - 28
-
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x - 6, y, width + 12, height)
-
-    djui_hud_set_color(242, 143, 36, 128)
-    djui_hud_print_text(text, x, y, scale)
-end
-
 local function hud_render()
     -- if we are hiding the hud as a spectator, don't render the hud
     if spectatorHideHud then return end
@@ -1300,7 +1252,6 @@ local function hud_render()
         hud_gamemode()
         hud_modifier()
         hud_boost()
-        hud_bombs()
     end
 
     -- hide hud

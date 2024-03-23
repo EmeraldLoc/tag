@@ -599,11 +599,15 @@ function get_role_name(role)
 end
 
 function boosts_enabled()
-	if gGlobalSyncTable.boosts and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST and gGlobalSyncTable.modifier ~= MODIFIER_BOMBS and gGlobalSyncTable.modifier ~= MODIFIER_SPEED then
+	if  gGlobalSyncTable.boosts
+	and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST
+	and gGlobalSyncTable.modifier ~= MODIFIER_BOMBS
+	and gGlobalSyncTable.modifier ~= MODIFIER_SPEED then
 		return true
 	end
 
-	if not gGlobalSyncTable.boosts and gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
+	if  not gGlobalSyncTable.boosts
+	and gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
 		return true
 	end
 

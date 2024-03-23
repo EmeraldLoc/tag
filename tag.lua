@@ -101,7 +101,8 @@ function tag_handle_pvp(aI, vI)
     local v = gPlayerSyncTable[vI]
 
     -- check if tagger tagged runner
-    if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+    if  v.state == RUNNER and a.state == TAGGER
+    and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
         -- flip states
         v.state = TAGGER
         a.state = RUNNER
