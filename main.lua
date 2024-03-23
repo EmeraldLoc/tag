@@ -176,45 +176,28 @@ gGlobalSoundSource = { x = 0, y = 0, z = 0 }
 isPaused = false
 -- whether or not to use romhack cam
 useRomhackCam = true
-if mod_storage_load("useRomhackCam") == "false" then useRomhackCam = false end
 -- auto hide hud option
 autoHideHud = true
-if mod_storage_load("autoHideHud") == "false" then autoHideHud = false end
 -- binds
 binds = {}
-
 -- boost bind
 binds[BIND_BOOST] = {name = "Boost", btn = Y_BUTTON}
--- also check for empty string cuz coopdx :/ (loading doesnt work on coopdx for some reason, so we do that to avoid a script error)
--- If you're making a mod for regular coop, just check for nil
-if  mod_storage_load("bind_" .. tostring(BIND_BOOST)) ~= nil
-and mod_storage_load("bind_" .. tostring(BIND_BOOST)) ~= "" then
-    binds[BIND_BOOST].btn = tonumber(mod_storage_load("bind_" .. tostring(BIND_BOOST)))
-end
-
 -- bomb bind
 binds[BIND_BOMBS] = {name = "Bombs", btn = Y_BUTTON}
--- also check for empty string cuz coopdx :/ (loading doesnt work on coopdx for some reason, so we do that to avoid a script error)
--- If you're making a mod for regular coop, just check for nil
-if  mod_storage_load("bind_" .. tostring(BIND_BOMBS)) ~= nil
-and mod_storage_load("bind_" .. tostring(BIND_BOMBS)) ~= "" then
-    binds[BIND_BOMBS].btn = tonumber(mod_storage_load("bind_" .. tostring(BIND_BOMBS)))
-end
-
 
 -- speed boost timer handles boosting
 local speedBoostTimer = 0
 -- hot potato timer multiplier is when the timer is faster if there's more people in
 -- hot potato
 local hotPotatoTimerMultiplier = 1
--- pipe invinc vars
+-- how long it has been since we last entered a pipe
 local pipeTimer = 0
--- ik this isnt local, idc
-pipeUse = 0
 -- hud fade
 local hudFade = 255
 -- previous romhack override
 local prevRomhackOverride = nil
+-- initialized save data
+local initializedSaveData = false
 
 -- just some global variables, honestly idk why the second one is there but it is so, uh, enjoy?
 _G.tag = {}
@@ -255,7 +238,6 @@ local function server_update()
             gGlobalSyncTable.amountOfTime = gGlobalSyncTable.tagActiveTimer
 
             PLAYERS_NEEDED = 2
-
             log_to_console("Tag: Attempted to keep tag going by setting the gamemode to tag")
         end
     elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
@@ -727,6 +709,24 @@ local function update()
     if joinTimer <= 0 then -- check this so the user has time to sync up
         if gPlayerSyncTable[0].invincTimer > 0 then
             gPlayerSyncTable[0].invincTimer = gPlayerSyncTable[0].invincTimer - 1
+        end
+    end
+
+    -- load save data if we haven't
+    if not initializedSaveData then
+        initializedSaveData = true
+        -- booleans
+        if load_bool("useRomhackCam") == false then useRomhackCam = false end
+        if load_bool("autoHideHud") == false then autoHideHud = false end
+        -- binds
+        for i = 0, BIND_MAX do
+            if load_int("bind_" .. tostring(i)) ~= nil then
+                binds[i].btn = load_int("bind_" .. tostring(i))
+            end
+
+            if load_int("bind_" .. tostring(i)) ~= nil then
+                binds[i].btn = load_int("bind_" .. tostring(i))
+            end
         end
     end
 

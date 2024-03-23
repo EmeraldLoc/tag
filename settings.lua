@@ -167,13 +167,13 @@ end
 local function toggle_romhack_cam()
     useRomhackCam = not useRomhackCam
     entries[selection].valueText = on_off_text(useRomhackCam)
-    mod_storage_save("useRomhackCam", tostring(useRomhackCam))
+    save_boolean("useRomhackCam", useRomhackCam)
 end
 
 local function toggle_auto_hide_hud()
     autoHideHud = not autoHideHud
     entries[selection].valueText = on_off_text(autoHideHud)
-    mod_storage_save("autoHideHud", tostring(autoHideHud))
+    save_boolean("autoHideHud", autoHideHud)
 end
 
 local function set_time_limit(gamemode)
@@ -1202,7 +1202,7 @@ local function mario_update(m)
         if m.controller.buttonPressed ~= 0 then
             if button_to_text(m.controller.buttonPressed) == "" then return end
             binds[awaitingInput].btn = m.controller.buttonPressed
-            mod_storage_save("bind_" .. tostring(awaitingInput), tostring(binds[awaitingInput].btn))
+            save_int("bind_" .. tostring(awaitingInput), binds[awaitingInput].btn)
 
             awaitingInput = nil
         end

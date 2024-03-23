@@ -18,6 +18,19 @@ function table.contains(table, element)
 	return false
 end
 
+---@param str string
+function tobool(str)
+	if str == "true" or str == "1" then
+		return true
+	end
+
+	if str == "false" or str == "0" then
+		return false
+	end
+
+	return nil
+end
+
 function mario_health_float(m)
 	-- fancy maths code that djoslin0 made
     local returnValue = (m.health - 255) / (2176 - 255)
