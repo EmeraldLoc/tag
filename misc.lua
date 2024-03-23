@@ -866,7 +866,7 @@ function crash()
 	crash() -- just incase the while loop fails
 end
 
-local beta = false
+local beta = true
 
 local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled (not secure, like at all, a really bad security system.... I need to learn how to compile lua code)
