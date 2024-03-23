@@ -178,6 +178,8 @@ isPaused = false
 useRomhackCam = true
 -- auto hide hud option
 autoHideHud = true
+-- amount of times the pipe has been used
+pipeUse = 0
 -- binds
 binds = {}
 -- boost bind
