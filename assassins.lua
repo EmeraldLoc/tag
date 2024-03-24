@@ -89,9 +89,7 @@ local function hud_side_panel_render()
     local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assassinTarget)
 
     if targetIndex >= 0 and targetIndex <= MAX_PLAYERS then
-        local r, g, b = hex_to_rgb(network_get_player_text_color_string(targetIndex))
-        djui_hud_set_color(r, g, b, 255)
-        djui_hud_print_text(strip_hex(gNetworkPlayers[targetIndex].name), x + 10, y + 28, 1)
+        djui_hud_print_colored_text(get_player_name(targetIndex), x + 10, y + 28, 1)
     end
 end
 

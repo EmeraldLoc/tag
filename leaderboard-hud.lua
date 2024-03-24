@@ -96,7 +96,7 @@ local function hud_leaderboard()
     for w = 1, #winners do
         local i = winners[w]
         if gNetworkPlayers[i].connected then
-            local displayName = network_get_player_text_color_string(i) .. gNetworkPlayers[i].name
+            local displayName = get_player_name(i)
 
             local text = displayName
 
@@ -197,7 +197,7 @@ local function hud_leaderboard()
 
         renderedIndex = renderedIndex + 1
 
-        local displayName = network_get_player_text_color_string(sardine) .. gNetworkPlayers[sardine].name
+        local displayName = get_player_name(sardine)
 
         local text = displayName
 

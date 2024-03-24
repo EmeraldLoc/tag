@@ -866,7 +866,7 @@ local function reset_player_selection()
     for i = 0, MAX_PLAYERS - 1 do
         if gNetworkPlayers[i].connected then
             table.insert(playerEntries,
-            {name = network_get_player_text_color_string(i) .. gNetworkPlayers[i].name,
+            {name = get_player_name(i),
             permission = PERMISSION_MODERATORS,
             input = INPUT_JOYSTICK,
             func = function() set_player_role(i) end,
@@ -1078,7 +1078,7 @@ local function hud_render()
             -- appreciate the free labor chatgpt (ok I did a little bit of cleanup)
             local textAmount = 53
             if usingCoopDX then textAmount = 50 end
-            local wrappedTextLines = warp_text(entries[i].text, textAmount)
+            local wrappedTextLines = wrap_text(entries[i].text, textAmount)
 
             for j, line in ipairs(wrappedTextLines) do
                 if selection == i then
@@ -1115,6 +1115,7 @@ local function hud_render()
         djui_hud_print_colored_text(entries[i].name, 30, height + 4 - scrollOffset, 1)
 
         if entries[i].valueText ~= nil then
+            djui_hud_set_color(220, 220, 220, 255)
             djui_hud_print_colored_text(entries[i].valueText, bgWidth - 30 - djui_hud_measure_text(strip_hex(entries[i].valueText)), height + 4 - scrollOffset, 1)
         end
 

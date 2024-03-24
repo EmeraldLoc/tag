@@ -28,7 +28,7 @@ local function toggle_spectating()
         elseif i == 4 then
             djui_chat_message_create("Is it hard to wait until the round ends?")
         elseif i == 5 then
-            djui_chat_message_create(network_get_player_text_color_string(0) .. gNetworkPlayers[i].name .. "\\#FFFFFF\\, why do you try this thing when you know deep down it won't work?")
+            djui_chat_message_create(get_player_name(i) .. "\\#FFFFFF\\, why do you try this thing when you know deep down it won't work?")
         end
 
         if showRareMessage == 777 then

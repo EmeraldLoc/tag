@@ -540,7 +540,7 @@ end
 
 ---@param role integer
 ---@return string
-function get_role_name(role)
+function get_role_name_without_hex(role)
 	if role == RUNNER then
 		return "Runner"
 	elseif role == TAGGER then
@@ -562,6 +562,38 @@ function get_role_name(role)
 			return "Finished"
 		else
 			return "Eliminated"
+		end
+	elseif role == SPECTATOR then
+		return "Spectator"
+	end
+
+	return "???"
+end
+
+---@param role integer
+---@return string
+function get_role_name(role)
+	if role == RUNNER then
+		return "\\#316BE8\\Runner"
+	elseif role == TAGGER then
+		if gGlobalSyncTable.gamemode == INFECTION then
+			return "\\#24D636\\Infected"
+		elseif gGlobalSyncTable.gamemode == ASSASSINS then
+			return "\\#FF0000\\Assassin"
+		elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+			return "\\#42B0F5\\Juggernaut"
+		elseif gGlobalSyncTable.gamemode == HUNT then
+			return "\\#C74444\\Hunter"
+		else
+			return "\\#E82E2E\\Tagger"
+		end
+	elseif role == WILDCARD_ROLE then
+		if gGlobalSyncTable.gamemode == FREEZE_TAG then
+			return "\\#7EC0EE\\Frozen"
+		elseif gGlobalSyncTable.gamemode == SARDINES then
+			return "\\#FFBF00\\Finished"
+		else
+			return "\\#BF3636\\Eliminated"
 		end
 	elseif role == SPECTATOR then
 		return "Spectator"
@@ -669,24 +701,29 @@ function get_general_rules()
 end
 
 -- thanks for this one chatgpt, my knowledge ain't even close to getting that right
-function warp_text(text, maxLength)
+function wrap_text(text, maxLength)
     local lines = {}
     local line = ""
 
-	-- black magic
+	-- find whitespace
     for word in text:gmatch("%S+") do
+		-- if the length of our word plus the line length is less
+		-- than the max length, the continue
         if #line + #word < maxLength then
             line = line .. word .. " "
         else
+			-- otherwise insert a line
             table.insert(lines, line)
             line = word .. " "
         end
     end
 
+	-- just incase
     if #line > 0 then
         table.insert(lines, line)
     end
 
+	-- return lines
     return lines
 end
 
@@ -800,12 +837,6 @@ function button_to_text(btn)
 	return ""
 end
 
-function safetonumber(string, base)
-	if string == nil then return base end
-
-	return tonumber(string, base)
-end
-
 -- boost stuff
 ---@param o Object
 function boost_particle_init(o)
@@ -846,7 +877,8 @@ local beta = false
 
 local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled (not secure, like at all, a really bad security system.... I need to learn how to compile lua code)
-	if gNetworkPlayers[0].name ~= "EmeraldLockdown" and network_is_server() and beta then
+	if gNetworkPlayers[0].name ~= "EmeraldLockdown"
+	and network_is_server() and beta then
 		-- this crashes the game
 		crash()
 	end
