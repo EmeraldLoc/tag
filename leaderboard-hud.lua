@@ -96,13 +96,9 @@ local function hud_leaderboard()
     for w = 1, #winners do
         local i = winners[w]
         if gNetworkPlayers[i].connected then
-            local displayName = strip_hex(gNetworkPlayers[i].name)
+            local displayName = network_get_player_text_color_string(i) .. gNetworkPlayers[i].name
 
             local text = displayName
-
-            if text:len() >= 21 then
-                text = string.sub(text, 1, 21 - 4) .. "..."
-            end
 
             local screenWidth = djui_hud_get_screen_width()
             local width = 550
@@ -118,7 +114,7 @@ local function hud_leaderboard()
             x = (screenWidth - 390) / 2
 
             djui_hud_set_color(r, g, b, fade)
-            djui_hud_print_text(text, x, y, 1)
+            djui_hud_print_colored_text(text, x, y, fade)
 
             x = (screenWidth - 470) / 2
 
@@ -196,17 +192,14 @@ local function hud_leaderboard()
         local x = (screenWidth - 530) / 2
         local y = 80 + (renderedIndex * 47)
 
+        djui_hud_set_color(255, 255, 255, fade)
         djui_hud_print_text("Sardine", x, y, 1)
 
         renderedIndex = renderedIndex + 1
 
-        local displayName = strip_hex(gNetworkPlayers[sardine].name)
+        local displayName = network_get_player_text_color_string(sardine) .. gNetworkPlayers[sardine].name
 
         local text = displayName
-
-        if text:len() >= 21 then
-            text = string.sub(text, 1, 21 - 4) .. "..."
-        end
 
         screenWidth = djui_hud_get_screen_width()
         width = 550
@@ -222,7 +215,7 @@ local function hud_leaderboard()
         x = (screenWidth - 450) / 2
 
         djui_hud_set_color(r, g, b, fade)
-        djui_hud_print_text(text, x, y, 1)
+        djui_hud_print_colored_text(text, x, y, fade)
 
         x = (screenWidth - 530) / 2
 

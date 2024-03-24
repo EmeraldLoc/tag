@@ -1136,24 +1136,21 @@ local function hud_round_status()
 end
 
 local function hud_gamemode()
-    local text = get_gamemode_without_hex()
+    local text = get_gamemode()
     local scale = 1
 
     -- get width of screen and text
-    local width = djui_hud_measure_text(text) * scale
+    local width = djui_hud_measure_text(strip_hex(text)) * scale
 
     local x = 12 * scale
     local y = 0
-
-    local r, g, b = get_gamemode_rgb_color()
 
     -- render rect
     djui_hud_set_color(0, 0, 0, hudFade / 2)
     djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale))
 
     -- render text
-    djui_hud_set_color(r, g, b, hudFade)
-    djui_hud_print_text(text, x, y, scale)
+    djui_hud_print_colored_text(text, x, y, scale, hudFade)
 end
 
 local function hud_modifier()
@@ -1162,7 +1159,7 @@ local function hud_modifier()
 
     -- get width of screen and text
     local screenWidth = djui_hud_get_screen_width()
-    local width = djui_hud_measure_text(text) * scale
+    local width = djui_hud_measure_text(strip_hex(text)) * scale
 
     local x = screenWidth - width - (12 * scale)
     local y = 0
@@ -1175,7 +1172,7 @@ local function hud_modifier()
 
     -- render text
     djui_hud_set_color(r, g, b, hudFade)
-    djui_hud_print_text(text, x + (8 * scale), y, scale)
+    djui_hud_print_colored_text(text, x + (8 * scale), y, scale, hudFade)
 end
 
 local function hud_boost()

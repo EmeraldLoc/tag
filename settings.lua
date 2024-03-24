@@ -582,23 +582,13 @@ local function reset_settings_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = set_gamemode,
-        valueText = get_gamemode_including_random(),
-        valueTextColor = {
-            r = get_r_from(get_gamemode_rgb_inc_random()),
-            g = get_g_from(get_gamemode_rgb_inc_random()),
-            b = get_b_from(get_gamemode_rgb_inc_random())}
-        },
+        valueText = get_gamemode_including_random()},
         -- modifier selection
         {name = "Modifiers",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = set_modifier,
-        valueText = get_modifier_including_random(),
-        valueTextColor = {
-            r = get_r_from(get_modifier_rgb_inc_random()),
-            g = get_g_from(get_modifier_rgb_inc_random()),
-            b = get_b_from(get_modifier_rgb_inc_random())}
-        },
+        valueText = get_modifier_including_random()},
         -- blj selection
         {name = "Bljs",
         permission = PERMISSION_MODERATORS,
@@ -875,16 +865,12 @@ local function reset_player_selection()
 
     for i = 0, MAX_PLAYERS - 1 do
         if gNetworkPlayers[i].connected then
-
-            local playerR, playerG, playerB = hex_to_rgb(network_get_player_text_color_string(i))
-
             table.insert(playerEntries,
-            {name = gNetworkPlayers[i].name,
+            {name = network_get_player_text_color_string(i) .. gNetworkPlayers[i].name,
             permission = PERMISSION_MODERATORS,
             input = INPUT_JOYSTICK,
             func = function() set_player_role(i) end,
-            valueText = get_role_name(gPlayerSyncTable[i].state),
-            color = {r = playerR, g = playerG, b = playerB},})
+            valueText = get_role_name(gPlayerSyncTable[i].state)})
         end
     end
 
@@ -1081,7 +1067,7 @@ local function hud_render()
             height = height + 45
 
             djui_hud_set_color(220, 220, 220, 255)
-            djui_hud_print_text(entries[i].seperator, 30, height + 4 - scrollOffset, 1)
+            djui_hud_print_colored_text(entries[i].seperator, 30, height + 4 - scrollOffset, 1)
 
             height = height + 45
         else
@@ -1119,28 +1105,17 @@ local function hud_render()
 
         djui_hud_render_rect(20, height - scrollOffset, bgWidth - 40, 40)
 
-        if (not has_permission(entries[i].permission)
-        or (entries[i].disabled ~= nil and entries[i].disabled()))
-        and entries[i].color == nil then
+        if not has_permission(entries[i].permission)
+        or (entries[i].disabled ~= nil and entries[i].disabled()) then
             djui_hud_set_color(150, 150, 150, 255)
-        else
-            if entries[i].color == nil then
-                djui_hud_set_color(220, 220, 220, 255)
-            else
-                djui_hud_set_color(entries[i].color.r, entries[i].color.g, entries[i].color.b, 255)
-            end
-        end
-
-        djui_hud_print_text(entries[i].name, 30, height + 4 - scrollOffset, 1)
-
-        if entries[i].valueTextColor ~= nil then
-            djui_hud_set_color(entries[i].valueTextColor.r, entries[i].valueTextColor.g, entries[i].valueTextColor.b, 255)
         else
             djui_hud_set_color(220, 220, 220, 255)
         end
 
+        djui_hud_print_colored_text(entries[i].name, 30, height + 4 - scrollOffset, 1)
+
         if entries[i].valueText ~= nil then
-            djui_hud_print_text(entries[i].valueText, bgWidth - 30 - djui_hud_measure_text(entries[i].valueText), height + 4 - scrollOffset, 1)
+            djui_hud_print_colored_text(entries[i].valueText, bgWidth - 30 - djui_hud_measure_text(strip_hex(entries[i].valueText)), height + 4 - scrollOffset, 1)
         end
 
         ::continue::

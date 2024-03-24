@@ -454,20 +454,12 @@ end
 
 function get_gamemode_including_random()
     if gGlobalSyncTable.randomGamemode then return "Random" end
-    return get_gamemode_without_hex()
-end
-
-function get_gamemode_rgb_inc_random()
-    if gGlobalSyncTable.randomGamemode then
-        return 220, 220, 220
-    end
-
-    return get_gamemode_rgb_color()
+    return get_gamemode()
 end
 
 function get_modifier_including_random()
     if gGlobalSyncTable.randomModifiers then return "Random" end
-    return get_modifier_text_without_hex()
+    return get_modifier_text()
 end
 
 function get_modifier_rgb_inc_random()
@@ -476,26 +468,6 @@ function get_modifier_rgb_inc_random()
     end
 
     return get_modifier_rgb()
-end
-
-function get_gamemode_rgb_color()
-	if gGlobalSyncTable.gamemode == TAG then
-		return 49, 107, 232
-	elseif gGlobalSyncTable.gamemode == FREEZE_TAG then
-		return 126, 192, 238
-	elseif gGlobalSyncTable.gamemode == INFECTION then
-		return 36, 214, 54
-	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
-		return 252, 144, 3
-	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-		return 66, 176, 245
-	elseif gGlobalSyncTable.gamemode == ASSASSINS then
-		return 255, 0, 0
-	elseif gGlobalSyncTable.gamemode == SARDINES then
-		return 187, 190, 161
-	elseif gGlobalSyncTable.gamemode == HUNT then
-		return 199, 68, 68
-	end
 end
 
 function get_gamemode_hex_color()
@@ -870,7 +842,7 @@ function crash()
 	crash() -- just incase the while loop fails
 end
 
-local beta = true
+local beta = false
 
 local function update()
 	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled (not secure, like at all, a really bad security system.... I need to learn how to compile lua code)

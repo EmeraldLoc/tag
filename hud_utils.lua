@@ -1,5 +1,120 @@
 
+SPRITE_INDEX_START_CHAR = string.byte('!')
+
 randomDidYouKnow = 0
+
+-- dw I didnt spend a lifetime doing this, I just copied it from
+-- the source code lol. Thats why it's so ugly
+local font_normal_widths = {
+--        !        "        #        $        %        &        '        (        )        *        +        ,        -        .        /       
+            7,      12,      14,      12,      14,      16,       8,      10,      10,      12,      14,       8,      12,       8,      10,
+--        0        1        2        3        4        5        6        7        8        9        */
+            14,      12,      13,      14,      14,      14,      14,      13,      14,      14,
+--        :        ;        <        =        >        ?        @         */
+            6,       8,      10,      12,      10,      11,      18,
+--        A        B        C        D        E        F        G        H        I        J        K        L        M        N        O        P        Q        R        S        T        U        V        W        X        Y        Z        */
+            12,      12,      12,      12,      11,      10,      12,      12,       9,      12,      12,      10,      16,      16,      12,      11,      12,      12,      12,      10,      12,      10,      16,      14,      12,      12,
+--        [        \        ]        ^        _        `        */
+            10,      10,      10,      12,      12,       8,
+--        a        b        c        d        e        f        g        h        i        j        k        l        m        n        o        p        q        r        s        t        u        v        w        x        y        z        */
+            10,      10,      10,      10,       9,       8,      12,      10,       7,       9,      10,       4,      13,      10,       9,       9,      10,       9,      10,       9,      10,       9,      14,      12,      10,      10,
+--        {        |        }        ~      DEL        */
+            10,       8,      10,      16,      10,
+}
+
+if SM64COOPDX_VERSION ~= nil then
+    -- do you think I care about formatting?
+    -- no, I dont
+    -- this is what you get
+    -- I cant  be bothered
+    -- I had to remove f
+    -- from every letter
+    -- help
+    font_normal_widths = {
+    --        !        "        #        $        %        &        '        (        )        *        +        ,        -        .        /        */
+        0.3125, 0.3750, 0.4375, 0.3750, 0.4375, 0.5000, 0.2500, 0.3125, 0.3125, 0.3750, 0.4375, 0.2500, 0.3750, 0.2500, 0.3125,
+    --        0        1        2        3        4        5        6        7        8        9        */
+        0.4375, 0.4375, 0.4375, 0.4375, 0.4375, 0.4375, 0.4375, 0.4375, 0.4375, 0.4375,
+    --        :        ;        <        =        >        ?        @         */
+        0.2500, 0.2500, 0.3125, 0.3750, 0.3125, 0.4375, 0.5750,
+    --        A        B        C        D        E                G        H        I        J        K        L        M        N        O        P        Q        R        S        T        U        V        W        X        Y        Z        */
+            0.3750, 0.3750, 0.3750, 0.3750, 0.3750, 0.3750, 0.3750, 0.3750, 0.3125, 0.3750, 0.3750, 0.3125, 0.5000, 0.5000, 0.3750, 0.3750, 0.3750, 0.3750, 0.3750, 0.3125, 0.3750, 0.3750, 0.5000, 0.4375, 0.3750, 0.3750,
+    --        [        \        ]        ^        _        `        */
+        0.3125, 0.3125, 0.3125, 0.3750, 0.3750, 0.2500,
+    --        a        b        c        d        e      f          g        h        i        j        k        l        m        n        o        p        q        r        s        t        u        v        w        x        y        z        */
+        0.3750, 0.3125, 0.3125, 0.3750, 0.3125, 0.3125, 0.3750, 0.3125, 0.2500, 0.3125, 0.3125, 0.1875, 0.4375, 0.3125, 0.3125, 0.3125, 0.3750, 0.3125, 0.3125, 0.3125, 0.3125, 0.3125, 0.4375, 0.4375, 0.3125, 0.3125,
+    --        {        |        }        ~      DEL        */
+        0.3125, 0.2500, 0.3125, 0.5000, 0.5000
+    }
+end
+
+-- recreated from source code
+---@param text string
+---@return integer
+function count_bytes_for_char(text)
+    local bytes = 0
+    local mask = 1 << 7
+    while text & mask ~= 0 do
+        bytes = bytes + 1
+        mask = mask >> 1
+    end
+    if bytes then return bytes else return 1 end
+end
+
+---@param text string
+---@return integer
+function convert_unicode_char_to_u64(text)
+    local bytes = count_bytes_for_char(text)
+    local value = text:byte()
+
+    -- HACK: we only support up to 4 bytes per character
+    if bytes > 4 then return 0 end
+
+    bytes = bytes - 1
+    while bytes > 0 do
+        value = value << 8;
+        value = value | text:sub(2):byte()
+        bytes = bytes - 1
+        text = text:sub(2)
+    end
+    return value
+end
+
+---@param text string
+---@param font_widths table
+---@return integer
+function djui_unicode_get_sprite_width(text, font_widths)
+    if text == nil then return 0 end
+
+    -- rambling incoming:
+    -- coopdx why do you do this
+    -- there was no purpose
+    -- it was nicer dividing it by 32
+    local coopdxMultiplier = 1
+    if usingCoopDX then
+        coopdxMultiplier = 32
+    end
+
+    -- check for ASCI
+    if text:byte() < 128 then
+        -- override for space char
+        if text:sub(1, 1) == " " then
+            if usingCoopDX then return 0.30 * 32 end
+            return 6
+        end
+
+        -- make sure it's in the valid range
+        if (text:byte() < SPRITE_INDEX_START_CHAR) then
+            return font_widths[(string.byte("?") - SPRITE_INDEX_START_CHAR) + 1] * coopdxMultiplier
+        end
+
+        -- output the ASCII width
+        return font_widths[(text:byte() - SPRITE_INDEX_START_CHAR) + 1] * coopdxMultiplier
+    end
+
+    -- return default value
+    return font_widths[(string.byte('?') - SPRITE_INDEX_START_CHAR) + 1] * coopdxMultiplier
+end
 
 function select_random_did_you_know()
     randomDidYouKnow = math.random(1, 29)
@@ -141,4 +256,44 @@ function hud_did_you_know(fade)
     x = (screenWidth - width) / 2
     y = y + 30
     djui_hud_print_text(text4, x, y, scale)
+end
+
+---@param text string
+---@param x integer
+---@param y integer
+---@param scale integer
+function djui_hud_print_colored_text(text, x, y, scale, opacity)
+    local s = ''
+	local inSlash = false
+    local hex = ""
+    if opacity == nil then opacity = 255 end
+
+	-- loop thru each character in the string and render that char
+	for i = 1, #text do
+        -- get character
+		local c = text:sub(i,i)
+        -- if character is a backslash, then switch inslash
+		if c == "\\" then
+			-- we are now in (or out) of the slash, set variable accordingly
+			inSlash = not inSlash
+            -- reset hex if needed
+            if inSlash then
+                hex = ""
+            end
+        elseif inSlash then
+            -- set hex var
+            hex = hex .. c
+		elseif not inSlash then
+            if hex:len() == 7 then
+                -- get rgb
+                local r, g, b = hex_to_rgb(hex)
+                -- set color to rgb
+                djui_hud_set_color(r, g, b, opacity)
+            end
+            -- print character
+            djui_hud_print_text(c, x, y, scale)
+            -- increase position
+            x = x + djui_unicode_get_sprite_width(c, font_normal_widths)
+		end
+	end
 end
