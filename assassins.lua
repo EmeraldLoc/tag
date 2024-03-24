@@ -4,15 +4,6 @@ local ELIMINATED = 2
 local function update()
     if gGlobalSyncTable.gamemode ~= ASSASSINS then return end
 
-    -- set network descriptions and state
-    for i = 0, MAX_PLAYERS - 1 do
-        if (gPlayerSyncTable[i].state == TAGGER or gPlayerSyncTable[i].state == RUNNER) and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
-            network_player_set_description(gNetworkPlayers[i], "Assassin", 232, 46, 46, 255)
-        elseif gPlayerSyncTable[i].state == ELIMINATED then
-            network_player_set_description(gNetworkPlayers[i], "Eliminated", 191, 54, 54, 255)
-        end
-    end
-
     if gGlobalSyncTable.roundState == ROUND_ACTIVE then
         -- get target index
         local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assassinTarget)

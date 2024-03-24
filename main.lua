@@ -774,15 +774,9 @@ local function update()
 
     -- set network descriptions
     for i = 0, MAX_PLAYERS - 1 do
-        if gPlayerSyncTable[i].state == SPECTATOR then
-            network_player_set_description(gNetworkPlayers[i], "Spectator", 100, 100, 100, 255)
-        elseif gPlayerSyncTable[i].state == -1 then
-            network_player_set_description(gNetworkPlayers[i], "None", 50, 50, 50, 255)
-        elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
-            -- love the color of this, idk why I like it so much but it's such a nice gray.
-            -- future me here, the gray's fine idk why I was praising it so much in the message above
-            network_player_set_description(gNetworkPlayers[i], "Incognito", 103, 103, 103, 255)
-        end
+        local np = gNetworkPlayers[i]
+        local s = gPlayerSyncTable[i]
+        network_player_set_description(np, get_role_name(s.state), 255, 255, 255, 255)
     end
 end
 

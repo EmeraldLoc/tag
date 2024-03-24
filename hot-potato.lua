@@ -1,22 +1,6 @@
 -- constants
 local ELIMINATED = 2
 
-local function update()
-
-    if gGlobalSyncTable.gamemode ~= HOT_POTATO then return end
-
-    -- set network descriptions
-    for i = 0, MAX_PLAYERS - 1 do
-        if gPlayerSyncTable[i].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
-            network_player_set_description(gNetworkPlayers[i], "Tagger", 232, 46, 46, 255)
-        elseif gPlayerSyncTable[i].state == RUNNER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
-            network_player_set_description(gNetworkPlayers[i], "Runner", 49, 107, 232, 255)
-        elseif gPlayerSyncTable[i].state == ELIMINATED then
-            network_player_set_description(gNetworkPlayers[i], "Eliminated", 191, 54, 54, 255)
-        end
-    end
-end
-
 ---@param m MarioState
 local function mario_update(m)
 
@@ -127,7 +111,6 @@ local function allow_interact(m, o, intee)
     end
 end
 
-hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ON_PVP_ATTACK, on_pvp)

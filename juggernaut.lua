@@ -2,16 +2,6 @@
 local function update()
     if gGlobalSyncTable.gamemode ~= JUGGERNAUT then return end
 
-    -- set network descriptions
-    for i = 0, MAX_PLAYERS - 1 do
-        if gPlayerSyncTable[i].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
-            network_player_set_description(gNetworkPlayers[i], "Tagger", 232, 46, 46, 255)
-        elseif gPlayerSyncTable[i].state == RUNNER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
-            -- can't call them the juggernaut cuz it's too many characters >:(
-            network_player_set_description(gNetworkPlayers[i], "The Jugger", 66, 176, 245, 255)
-        end
-    end
-
     if  gPlayerSyncTable[0].state == RUNNER
     and gPlayerSyncTable[0].tagLives <= 0
     and gGlobalSyncTable.roundState == ROUND_ACTIVE then

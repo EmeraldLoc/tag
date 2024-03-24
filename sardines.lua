@@ -7,23 +7,6 @@ local FINISHED = 2
 -- variables
 local fade = 0
 
-local function update()
-    -- we do this in every function to ensure this only runs when the tag gamemode is active
-    if gGlobalSyncTable.gamemode ~= SARDINES then return end
-
-    -- set network descriptions/the thing when you hold tab thats in the middle
-    -- pretty self explanitory
-    for i = 0, MAX_PLAYERS - 1 do
-        if gPlayerSyncTable[i].state == TAGGER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
-            network_player_set_description(gNetworkPlayers[i], "Tagger", 232, 46, 46, 255)
-        elseif gPlayerSyncTable[i].state == RUNNER and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
-            network_player_set_description(gNetworkPlayers[i], "Sardine", 187, 190, 161, 255)
-        elseif gPlayerSyncTable[i].state == FINISHED then
-            network_player_set_description(gNetworkPlayers[i], "Finished", 255, 191, 0, 255)
-        end
-    end
-end
-
 ---@param m MarioState
 local function mario_update(m)
 
@@ -233,7 +216,6 @@ local function allow_interact(m, o, intee)
     end
 end
 
-hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)

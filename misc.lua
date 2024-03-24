@@ -542,6 +542,12 @@ end
 ---@return string
 function get_role_name_without_hex(role)
 	if role == RUNNER then
+		if gGlobalSyncTable.gamemode == ASSASSINS then
+			return "Assassin"
+		elseif gGlobalSyncTable.gamemode == SARDINES then
+			return "Sardine"
+		end
+
 		return "Runner"
 	elseif role == TAGGER then
 		if gGlobalSyncTable.gamemode == INFECTION then
@@ -552,17 +558,17 @@ function get_role_name_without_hex(role)
 			return "Juggernaut"
 		elseif gGlobalSyncTable.gamemode == HUNT then
 			return "Hunter"
-		else
-			return "Tagger"
 		end
+
+		return "Tagger"
 	elseif role == WILDCARD_ROLE then
 		if gGlobalSyncTable.gamemode == FREEZE_TAG then
 			return "Frozen"
 		elseif gGlobalSyncTable.gamemode == SARDINES then
 			return "Finished"
-		else
-			return "Eliminated"
 		end
+
+		return "Eliminated"
 	elseif role == SPECTATOR then
 		return "Spectator"
 	end
@@ -574,6 +580,12 @@ end
 ---@return string
 function get_role_name(role)
 	if role == RUNNER then
+		if gGlobalSyncTable.gamemode == ASSASSINS then
+			return "\\#FF0000\\Assassin"
+		elseif gGlobalSyncTable.gamemode == SARDINES then
+			return "\\#BBBEA1\\Sardine"
+		end
+
 		return "\\#316BE8\\Runner"
 	elseif role == TAGGER then
 		if gGlobalSyncTable.gamemode == INFECTION then
