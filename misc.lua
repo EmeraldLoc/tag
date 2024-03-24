@@ -304,22 +304,27 @@ function has_permission(perm)
 end
 
 function name_of_level(level, area)
-	-- first check the area and see if we have a override name, if we don't, proceed as normal
-	if area > 1 and not isRomhack then
-		if level == LEVEL_SSL then
-			return "Inside of Shifting Sand Land"
-		elseif level == LEVEL_THI then
-			return "Inside of Tiny Huge Island"
-		elseif level == LEVEL_WDW then
-			return "Wet-dry Town"
+	-- first see if we can find the level data
+	for _, lvl in pairs(levels) do
+		if lvl.level == level and lvl.area == area then
+			-- search for an override name
+			if lvl.overrideName ~= nil then return lvl.overrideName end
 		end
 	end
 
-	-- now check for levels that get named "Peach's Castle"
+	-- check for levels that get named "Peach's Castle"
 	if level == LEVEL_BOWSER_1 then
 		return "Bowser 1"
+	elseif level == LEVEL_BOWSER_2 then
+		return "Bowser 2"
+	elseif level == LEVEL_BOWSER_3 then
+		return "Bowser 3"
 	elseif level == LEVEL_CASTLE_GROUNDS then
 		return "Castle Grounds"
+	elseif level == LEVEL_CASTLE then
+		return "The Castle"
+	elseif level == LEVEL_CASTLE_COURTYARD then
+		return "Castle Courtyard"
 	end
 
 	-- we don't have an override, so use normal sm64 function
