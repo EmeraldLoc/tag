@@ -30,7 +30,7 @@ Anything with /nil in it means it's optional, and you don't have to include it. 
 
 ### Paintings
 
-(painting template goes here)
+![painting_template](https://github.com/EmeraldLoc/tag-dev/assets/86802223/771dd2a2-6bc7-4d07-9799-02b4dd0166b9)
 
 Paintings typically contain a main attraction. Think of sl's snowman head, the wiggler, or the eyerock as gold examples of paintings. You can use that painting template to easily create a painting, so long as you have a little bit of knowledge on how to use a photo editor. Also, if the romhack already has painting for levels, go grab those instead. They will probably have to be stiched together from multiple files, but that would be ideal.
 
