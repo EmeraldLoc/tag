@@ -7,7 +7,7 @@ This mod is a collection of multiple gamemodes all in one mod! The mod contains 
 - Does this support sm64ex-coop/sm64coopdx
   - Yes, this mod supports both repos. I try to test both, however if there's a bug with a specific one, [make an issue](https://github.com/EmeraldLoc/tag/issues) so I can fix the problem.
 - Does this support romhacks?
-  - Yes, tag supports romhack. If you wanna add paintings and such to romhacks, you can make what I call an official hack, you can see how to do that [here]. It also contains a blacklist so that you can remove levels that don't work with it.
+  - Yes, tag supports romhack. If you wanna add paintings and such to romhacks, you can make what I call an official hack, you can see how to do that [here](./romhacks.md). It also contains a blacklist so that you can remove levels that don't work with it.
 - Can I use code contained in this mod for my own mods?
   - Usually yes, credit is not required, just make sure you understand how the code your copying works, and that you aren't just copying massive blobs of code, and I'm fine with it.
 - Can I publish custom versions of this mod?
