@@ -2,7 +2,7 @@
 
 Before beginning, this guide assumes you have some lua experience, experience with photo editors, and experience with git/github.
 
-First, head to `romhacks.lua`, there is a table called `romhacks`.
+First, head to `romhacks.lua`. There should be a table called `romhacks` in that file.
 
 The table `romhacks` is a table containing:
 
