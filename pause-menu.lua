@@ -8,7 +8,9 @@ local function toggle_paused()
 end
 
 local function toggle_spectating()
-    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then
+    if (gGlobalSyncTable.roundState ~= ROUND_ACTIVE
+    and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION)
+    or gPlayerSyncTable[0].state ~= SPECTATOR then
         if gPlayerSyncTable[0].state ~= SPECTATOR then
             gPlayerSyncTable[0].state = SPECTATOR
         else
@@ -18,6 +20,11 @@ local function toggle_spectating()
     else
         local i = math.random(1, 5)
         local showRareMessage = math.random(1, 1000000)
+
+        if showRareMessage == 777 then
+            djui_chat_message_create("1 in 1000000 chance of this message appearing. One time EmilyEmmi proved all my messages wrong and unspectated during a round :(")
+            return
+        end
 
         if i == 1 then
             djui_chat_message_create("Did you actually think I was dumb enough not to prevent this?")
@@ -29,10 +36,6 @@ local function toggle_spectating()
             djui_chat_message_create("Is it hard to wait until the round ends?")
         elseif i == 5 then
             djui_chat_message_create(get_player_name(i) .. "\\#FFFFFF\\, why do you try this thing when you know deep down it won't work?")
-        end
-
-        if showRareMessage == 777 then
-            djui_chat_message_create("1 in 1000000 chance of this message appearing. One time EmilyEmmi proved all my messages wrong and unspectated during a round :(")
         end
     end
 end
