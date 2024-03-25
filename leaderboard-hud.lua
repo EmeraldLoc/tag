@@ -81,7 +81,7 @@ local function hud_leaderboard()
     end
 
     -- sort
-    if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
+    if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN or gGlobalSyncTable.gamemode == FREEZE_TAG then
         table.sort(winners, function (a, b)
             return gPlayerSyncTable[a].amountOfTags > gPlayerSyncTable[b].amountOfTags
         end)
@@ -123,7 +123,7 @@ local function hud_leaderboard()
             x = (screenWidth - 530) / 2
 
             -- decide what position this player should be at. Don't use w variable to allow for ties as shown below
-            if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN and w > 1 then
+            if (gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN or gGlobalSyncTable.gamemode == FREEZE_TAG) and w > 1 then
                 -- check the previous index and see if they tie, if they don't, increase position
                 if gPlayerSyncTable[i].amountOfTags ~= gPlayerSyncTable[winners[w - 1]].amountOfTags then
                     position = position + 1
@@ -149,7 +149,11 @@ local function hud_leaderboard()
             djui_hud_print_text(text, x, y, 1)
 
             if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
-                text = "Time as runner: " .. math.floor(gPlayerSyncTable[i].amountOfTimeAsRunner / 30) .. "s"
+                if gGlobalSyncTable.gamemode ~= FREEZE_TAG then
+                    text = "Time as runner: " .. math.floor(gPlayerSyncTable[i].amountOfTimeAsRunner / 30) .. "s"
+                else
+                    text = "Saves: " .. gPlayerSyncTable[i].amountOfTags
+                end
             else
                 if gGlobalSyncTable.gamemode ~= INFECTION then
                     text = "Tags: " .. gPlayerSyncTable[i].amountOfTags

@@ -182,6 +182,8 @@ function freeze_tag_handle_pvp(aI, vI)
         v.state = RUNNER
         -- 2 second invincibility
         v.invincTimer = 2 * 30
+        -- increase tag count
+        a.amountOfTags = a.amountOfTags + 1
         -- create popup
         unfreezed_popup(aI, vI)
     end

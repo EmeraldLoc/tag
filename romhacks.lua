@@ -14,7 +14,7 @@ romhacks = {
             { name = "bob",      level = LEVEL_BOB,            painting = get_texture_info("bob_painting"),   area = 1, pipes = { { { x = -4694, y = 0, z = 6699 },     { x = 5079, y = 3072, z = 655 } } } },
             { name = "rr",       level = LEVEL_RR,             painting = get_texture_info("rr_painting"),    area = 1, pipes = { { { x = -4221, y = 6451, z = -5885 }, { x = 2125, y = -1833, z = 2079 } } } },
             { name = "ccm",      level = LEVEL_CCM,            painting = get_texture_info("ccm_painting"),   area = 1, pipes = { { { x = -1352, y = 2560, z = -1824 }, { x = 5628, y = -4607, z = -28 } } } },
-            { name = "issl",     level = LEVEL_SSL,            painting = get_texture_info("issl_painting"),  area = 2, pipes = { { { x = -460, y = 0, z = 4247 },      { x = 997, y = 3942, z = 1234 } } }, overrideName = "Inside the Pyramid"},
+            { name = "issl",     level = LEVEL_SSL,            painting = get_texture_info("issl_painting"),  area = 2, pipes = { { { x = -460, y = 0, z = 4247 },      { x = 997, y = 3942, z = 1234 } } }, overrideName = "Inside The Pyramid"},
             { name = "bitfs",    level = LEVEL_BITFS,          painting = get_texture_info("bitfs_painting"), area = 1, pipes = { { { x = -154, y = -2866, z = -102 },  { x = 1205, y = 5478, z = 58 } } } },
             { name = "ttm",      level = LEVEL_TTM,            painting = get_texture_info("ttm_painting"),   area = 1, pipes = { { { x = -1080, y = -4634, z = 4176 }, { x = 1031, y = 2306, z = -198 } } } },
             { name = "ttc",      level = LEVEL_TTC,            painting = get_texture_info("ttc_painting"),   area = 1, pipes = { { { x = 1361, y = -4822, z = 176 },   { x = 1594, y = 5284, z = 1565 } } } },

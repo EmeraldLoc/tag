@@ -306,6 +306,8 @@ local function server_update()
                         goto selectmodifier
                     end
 
+                    if gGlobalSyncTable.modifier == MODIFIER_FLY then goto selectmodifier end
+
                     if (gGlobalSyncTable.gamemode == ASSASSINS
                     or gGlobalSyncTable.gamemode == SARDINES)
                     and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
@@ -453,7 +455,7 @@ local function server_update()
             local amountOfTaggersNeeded = math.floor(numPlayers / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
 
             -- set tag max lives for gamemodes like juggernaut and hunt
-            gGlobalSyncTable.tagMaxLives = math.floor(numPlayers * 2.5)
+            gGlobalSyncTable.tagMaxLives = math.floor(numPlayers * 2)
 
             if gGlobalSyncTable.tagMaxLives > 20 then gGlobalSyncTable.tagMaxLives = 20 end
             -- hunt override

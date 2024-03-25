@@ -94,8 +94,8 @@ local function hud_map_vote()
     end
 
     -- render bottom text
-    if math.floor(gGlobalSyncTable.displayTimer / 30) > 15 then
-        text = "You may begin voting in " .. math.floor(gGlobalSyncTable.displayTimer / 30) - 15
+    if math.floor(gGlobalSyncTable.displayTimer / 30) > 10 then
+        text = "You may begin voting in " .. math.floor(gGlobalSyncTable.displayTimer / 30) - 10
     elseif math.floor(gGlobalSyncTable.displayTimer / 30) > 5 then
         text = "You have " .. tostring(math.floor(gGlobalSyncTable.displayTimer / 30) - 5) .. " seconds remaining"
     else
@@ -187,7 +187,10 @@ local function mario_update(m)
         end
     end
 
-    if m.controller.buttonPressed & A_BUTTON ~= 0 and gPlayerSyncTable[0].votingNumber == 0 and math.floor(gGlobalSyncTable.displayTimer / 30) > 5 and math.floor(gGlobalSyncTable.displayTimer / 30) <= 15 then
+    if m.controller.buttonPressed & A_BUTTON ~= 0
+    and gPlayerSyncTable[0].votingNumber == 0
+    and math.floor(gGlobalSyncTable.displayTimer / 30) > 5
+    and math.floor(gGlobalSyncTable.displayTimer / 30) <= 10 then
         gPlayerSyncTable[0].votingNumber = selectedLevel
         play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
     end
