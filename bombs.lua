@@ -23,31 +23,10 @@ local function can_hold_bomb(i)
     if s.state ~= RUNNER and gGlobalSyncTable.gamemode == JUGGERNAUT then return false end
     if s.state ~= TAGGER and gGlobalSyncTable.gamemode ~= JUGGERNAUT then return false end
 
-    return true
-end
+    -- check round state
+    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return false end
 
--- handle bomb pvp
----@param aI integer
----@param vI integer
-local function handle_bomb_pvp(aI, vI)
-    -- run handle pvp function based off of gamemode (if we run anything at all)
-    if gGlobalSyncTable.gamemode == TAG then
-        tag_handle_pvp(aI, vI)
-    elseif gGlobalSyncTable.gamemode == FREEZE_TAG then
-        freeze_tag_handle_pvp(aI, vI)
-    elseif gGlobalSyncTable.gamemode == INFECTION then
-        infection_handle_pvp(aI, vI)
-    elseif gGlobalSyncTable.gamemode == HOT_POTATO then
-        hot_potato_handle_pvp(aI, vI)
-    elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-        -- do nothing, purely for kb and protection
-    elseif gGlobalSyncTable.gamemode == ASSASSINS then
-        assassins_handle_pvp(aI, vI) -- TODO: maybe better networking?
-    elseif gGlobalSyncTable.gamemode == SARDINES then
-        -- do nothing, purely for chaos
-    elseif gGlobalSyncTable.gamemode == HUNT then
-        hunt_handle_pvp(aI, vI)
-    end
+    return true
 end
 
 -- bomb explosion
@@ -94,7 +73,7 @@ local function bomb_explosion_loop(o)
     if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
         if m.playerIndex == localBombOwner then goto interactset end
         -- run handle_player_pvp for designated gamemode
-        handle_bomb_pvp(localBombOwner, m.playerIndex)
+        handle_projectile_pvp(localBombOwner, m.playerIndex)
 
         ::interactset::
 
@@ -313,7 +292,7 @@ local function hud_bombs()
     local bombTime     = bombCooldown / 30 / 2
 
     if gGlobalSyncTable.gamemode == JUGGERNAUT then
-        y = y + 20
+        y = y - 32
     end
 
     djui_hud_set_color(0, 0, 0, 128)
@@ -339,6 +318,10 @@ local function hud_bombs()
     height = 32 * scale
     x = (screenWidth - width) / 2
     y = screenHeight - 28
+
+    if gGlobalSyncTable.gamemode == JUGGERNAUT then
+        y = y - 32
+    end
 
     djui_hud_set_color(0, 0, 0, 128)
     djui_hud_render_rect(x - 6, y, width + 12, height)

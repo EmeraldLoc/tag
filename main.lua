@@ -64,7 +64,8 @@ MODIFIER_MAX                           = 10
 -- binds
 BIND_BOOST = 0
 BIND_BOMBS = 1
-BIND_MAX = 1
+BIND_GUN = 2
+BIND_MAX = 2
 
 -- globals and sync tables
 -- this is the round state, this variable tells you what current round it is
@@ -186,6 +187,8 @@ binds = {}
 binds[BIND_BOOST] = {name = "Boost", btn = Y_BUTTON}
 -- bomb bind
 binds[BIND_BOMBS] = {name = "Bombs", btn = Y_BUTTON}
+-- gun bind
+binds[BIND_GUN] = {name = "Gun", btn = X_BUTTON}
 
 -- speed boost timer handles boosting
 local speedBoostTimer = 0
@@ -305,8 +308,6 @@ local function server_update()
                             or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
                         goto selectmodifier
                     end
-
-                    if gGlobalSyncTable.modifier == MODIFIER_FLY then goto selectmodifier end
 
                     if (gGlobalSyncTable.gamemode == ASSASSINS
                     or gGlobalSyncTable.gamemode == SARDINES)
