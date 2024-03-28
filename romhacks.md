@@ -2,6 +2,13 @@
 
 Before beginning, this guide assumes you have some lua experience, experience with photo editors, and experience with git/github.
 
+### Some Recommended Mods
+
+[Noclip](https://mods.sm64coopdx.com/mods/noclip.30/)
+[Position Display](https://github.com/Agent-11/agent-ex-coop-mods/blob/main/mods/pos-display.lua)
+
+### Actually Beggining
+
 First, head to `romhacks.lua`. There should be a table called `romhacks` in that file.
 
 The table `romhacks` is a table containing:
@@ -32,7 +39,7 @@ Anything with /nil in it means it's optional, and you don't have to include it. 
 
 ![painting_template](https://github.com/EmeraldLoc/tag-dev/assets/86802223/771dd2a2-6bc7-4d07-9799-02b4dd0166b9)
 
-Paintings typically contain a main attraction. Think of sl's snowman head, the wiggler, or the eyerock as gold examples of paintings. You can use that painting template to easily create a painting, so long as you have a little bit of knowledge on how to use a photo editor. Also, if the romhack already has painting for levels, go grab those instead. They will probably have to be stiched together from multiple files, but that would be ideal.
+Paintings typically contain a main attraction. Think of sl's snowman head, the wiggler, or the eyerock as gold examples of paintings. You can use that painting template to easily create a painting, so long as you have a little bit of knowledge on how to use a photo editor. Also, if the romhack already has painting for levels, go grab those instead. They will probably have to be stiched together from multiple files, but that would be ideal. Also I'd recommend the Noclip mod for getting the shot.
 
 Once you finish getting all your paintings, name them with this naming scheme:
 
@@ -72,7 +79,7 @@ pipes = {
 }
 ```
 
-Except do that on one line. Now get a mod that renders mario's position, and go to the place you want your first pipe to go. Now plug in the position values into the first pipe, and do the same for the second, and that's it! You can have as many pairs of pipes as you want.
+Except do that on one line. Now get a mod that renders mario's position (I recommend Pos Display), and go to the place you want your first pipe to go. Now plug in the position values into the first pipe, and do the same for the second, and that's it! You can have as many pairs of pipes as you want.
 
 ### Contributing
 
