@@ -1,9 +1,6 @@
 # I love macos
 .DS_Store
 
-# .png files
-**.png
-
 # actor stuff
 actors/**
 !actors/*.bin
