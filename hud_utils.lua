@@ -263,7 +263,6 @@ end
 ---@param y integer
 ---@param scale integer
 function djui_hud_print_colored_text(text, x, y, scale, opacity)
-    local s = ''
 	local inSlash = false
     local hex = ""
     if opacity == nil then opacity = 255 end

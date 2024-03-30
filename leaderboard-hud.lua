@@ -114,7 +114,7 @@ local function hud_leaderboard()
             x = (screenWidth - 390) / 2
 
             djui_hud_set_color(r, g, b, fade)
-            djui_hud_print_colored_text(text, x, y, fade)
+            djui_hud_print_colored_text(text, x, y, 1, fade)
 
             x = (screenWidth - 470) / 2
 
@@ -219,7 +219,7 @@ local function hud_leaderboard()
         x = (screenWidth - 450) / 2
 
         djui_hud_set_color(r, g, b, fade)
-        djui_hud_print_colored_text(text, x, y, fade)
+        djui_hud_print_colored_text(text, x, y, 1, fade)
 
         x = (screenWidth - 530) / 2
 
@@ -323,8 +323,9 @@ local function hud_render()
             select_random_did_you_know()
         end
 
-        return
+        --return
     end
+    fade = 255
 
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
