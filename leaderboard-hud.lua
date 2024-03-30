@@ -323,9 +323,8 @@ local function hud_render()
             select_random_did_you_know()
         end
 
-        --return
+        return
     end
-    fade = 255
 
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
