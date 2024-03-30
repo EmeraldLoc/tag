@@ -9,6 +9,7 @@ local function bullet_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE
     o.hitboxRadius = 100
     o.hitboxHeight = 100
+    o.oDamageOrCoinValue = 2
     obj_set_billboard(o)
     local localOwner = network_local_index_from_global(o.oBulletOwner)
     local m = gMarioStates[localOwner]
@@ -39,6 +40,8 @@ local function bullet_loop(o)
 
     if dist_between_objects(o, m.marioObj) < 200 and m.playerIndex ~= localOwner then
         handle_projectile_pvp(localOwner, m.playerIndex)
+        -- kb
+        take_damage_and_knock_back(m, o)
 
         obj_mark_for_deletion(o)
     end
