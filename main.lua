@@ -1033,7 +1033,13 @@ end
 local function before_set_mario_action(m, action)
     if m.playerIndex == 0 then
         -- cancel any unwanted action
-        if action == ACT_WAITING_FOR_DIALOG or action == ACT_READING_SIGN or action == ACT_READING_AUTOMATIC_DIALOG or action == ACT_READING_NPC_DIALOG or action == ACT_JUMBO_STAR_CUTSCENE or action == ACT_LAVA_BOOST or action == ACT_QUICKSAND_DEATH or action == ACT_BURNING_FALL or action == ACT_BURNING_JUMP then
+        if action == ACT_WAITING_FOR_DIALOG
+        or action == ACT_READING_SIGN
+        or action == ACT_READING_AUTOMATIC_DIALOG
+        or action == ACT_READING_NPC_DIALOG
+        or action == ACT_JUMBO_STAR_CUTSCENE
+        or action == ACT_BURNING_FALL
+        or action == ACT_BURNING_JUMP then
             return 1
         end
     end
