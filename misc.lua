@@ -308,7 +308,6 @@ function name_of_level(level, area)
 	for _, lvl in pairs(levels) do
 		if lvl.level == level and lvl.area == area then
 			-- search for an override name
-			djui_chat_message_create("Found")
 			if lvl.overrideName ~= nil then return lvl.overrideName end
 		end
 	end
@@ -547,11 +546,18 @@ end
 ---@param role integer
 ---@return string
 function get_role_name_without_hex(role)
+
+	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+		return "Incognito"
+	end
+
 	if role == RUNNER then
 		if gGlobalSyncTable.gamemode == ASSASSINS then
 			return "Assassin"
 		elseif gGlobalSyncTable.gamemode == SARDINES then
 			return "Sardine"
+		elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+			return "Juggernaut"
 		end
 
 		return "Runner"
@@ -560,8 +566,6 @@ function get_role_name_without_hex(role)
 			return "Infected"
 		elseif gGlobalSyncTable.gamemode == ASSASSINS then
 			return "Assassin"
-		elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-			return "Juggernaut"
 		elseif gGlobalSyncTable.gamemode == HUNT then
 			return "Hunter"
 		end
@@ -585,11 +589,17 @@ end
 ---@param role integer
 ---@return string
 function get_role_name(role)
+	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+		return "\\#4A4A4A\\Incognito"
+	end
+
 	if role == RUNNER then
 		if gGlobalSyncTable.gamemode == ASSASSINS then
 			return "\\#FF0000\\Assassin"
 		elseif gGlobalSyncTable.gamemode == SARDINES then
 			return "\\#BBBEA1\\Sardine"
+		elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+			return "\\#42B0F5\\The Jugger"
 		end
 
 		return "\\#316BE8\\Runner"
@@ -598,8 +608,6 @@ function get_role_name(role)
 			return "\\#24D636\\Infected"
 		elseif gGlobalSyncTable.gamemode == ASSASSINS then
 			return "\\#FF0000\\Assassin"
-		elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-			return "\\#42B0F5\\Juggernaut"
 		elseif gGlobalSyncTable.gamemode == HUNT then
 			return "\\#C74444\\Hunter"
 		else
@@ -614,10 +622,10 @@ function get_role_name(role)
 			return "\\#BF3636\\Eliminated"
 		end
 	elseif role == SPECTATOR then
-		return "Spectator"
+		return "\\#4A4A4A\\Spectator"
 	end
 
-	return "???"
+	return "\\#4A4A4A\\???"
 end
 
 function boosts_enabled()
@@ -816,3 +824,39 @@ function boost_particle_loop(o)
 end
 
 id_bhvBoostParticle = hook_behavior(nil, OBJ_LIST_DEFAULT, false, boost_particle_init, boost_particle_loop, "Boost Particle")
+
+function toggle_spectator()
+	if gGlobalSyncTable.roundState ~= ROUND_ACTIVE
+    and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then
+        if gPlayerSyncTable[0].state ~= SPECTATOR then
+            gPlayerSyncTable[0].state = SPECTATOR
+        else
+			if gGlobalSyncTable.gamemode == SARDINES then
+				gPlayerSyncTable[0].state = TAGGER
+			else
+            	gPlayerSyncTable[0].state = RUNNER
+			end
+            warp_to_level(LEVEL_VCUTM, 1, 0) -- hehehehe
+        end
+    else
+        local i = math.random(1, 5)
+        local showRareMessage = math.random(1, 1000000)
+
+        if showRareMessage == 777 then
+            djui_chat_message_create("1 in 1000000 chance of this message appearing. One time EmilyEmmi proved all my messages wrong and unspectated during a round :(")
+            return
+        end
+
+        if i == 1 then
+            djui_chat_message_create("Did you actually think I was dumb enough not to prevent this?")
+        elseif i == 2 then
+            djui_chat_message_create("Pathetic, just pathetic.")
+        elseif i == 3 then
+            djui_chat_message_create("Have some patience, sheeeesh.")
+        elseif i == 4 then
+            djui_chat_message_create("Is it hard to wait until the round ends?")
+        elseif i == 5 then
+            djui_chat_message_create(get_player_name(i) .. "\\#FFFFFF\\, why do you try this thing when you know deep down it won't work?")
+        end
+    end
+end

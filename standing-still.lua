@@ -39,5 +39,9 @@ function is_standing_still()
     return standingStill
 end
 
+function reset_standing_still()
+    initializedLevel = true
+end
+
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_LEVEL_INIT, level_init)

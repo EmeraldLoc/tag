@@ -70,24 +70,7 @@ function on_version_command(msg)
 end
 
 function spectator_command(msg)
-    if msg == "yes" or msg == "on" or msg == "enable" then
-        djui_chat_message_create("You are now a spectator")
-        gPlayerSyncTable[0].state = SPECTATOR
-        return true
-    elseif (msg == "no" or msg == "off" or msg == "disable") and gGlobalSyncTable.roundState ~= ROUND_ACTIVE and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then
-        djui_chat_message_create("You are no longer a spectator")
-        gPlayerSyncTable[0].state = RUNNER
-        warp_to_level(LEVEL_VCUTM, 1, 0) -- Enter spectator in singleplayer and see what happens >:)
-        return true
-    elseif msg == "no" or msg == "off" or msg == "disable" then
-        djui_chat_message_create("You must wait for the game to end to no longer be a spectator")
-    else
-        if gPlayerSyncTable[0].state == SPECTATOR then
-            djui_chat_message_create("You are a spectator")
-        else
-            djui_chat_message_create("You are not a spectator")
-        end
-    end
+    toggle_spectator()
 
     return true
 end
@@ -142,20 +125,8 @@ function tag_command(msg)
 
         blacklistAddRequest = false
     else
-        if _G.swearExists then
-            if not _G.swearSettingsOpened then
-                showSettings = not showSettings
-                _G.tagSettingsOpen = showSettings
-                play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
-            else
-                play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-                djui_chat_message_create("Tag: Swear Filter settings menu is already opened!")
-            end
-        else
-            showSettings = not showSettings
-            _G.tagSettingsOpen = showSettings
-            play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
-        end
+        showSettings = not showSettings
+        play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
     end
     return true
 end
@@ -166,5 +137,5 @@ if network_is_server() then
 else
     hook_chat_command("tag", "View tag settings", tag_command)
 end
-hook_chat_command("spectate", "[on|off] Be a spectator", spectator_command)
+hook_chat_command("spectate", "Toggle spectating", spectator_command)
 hook_chat_command("version", "Get current version of Tag", on_version_command)

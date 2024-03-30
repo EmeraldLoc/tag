@@ -101,20 +101,14 @@ end
 ---@param o Object
 ---@param rad integer
 local function bobomb_intersects_player(o, rad)
-    -- get owner network player
-    local ownerNp = network_player_from_global_index(o.oBombOwner)
     -- return value
     local ret = false
-    for i = 0, MAX_PLAYERS - 1 do
+    for i = 1, MAX_PLAYERS - 1 do
         local np = gNetworkPlayers[i]
         if not np.connected
         or not np.currAreaSyncValid then goto continue end
 
         local m = gMarioStates[i]
-        -- get lag compensation mario state
-        if m.playerIndex == 0 and ownerNp.localIndex ~= 0 then
-            m = lag_compensation_get_local_state(ownerNp)
-        end
 
         -- convert positions to vec3f
         local pos =   { x = o.oPosX, y = o.oPosY,       z = o.oPosZ }

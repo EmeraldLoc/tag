@@ -206,7 +206,6 @@ local initializedSaveData = false
 
 -- just some global variables, honestly idk why the second one is there but it is so, uh, enjoy?
 _G.tag = {}
-_G.tagSettingsOpen = false
 
 -- just a action we can use, used for when the round ends and mario freezes
 ACT_NOTHING = allocate_mario_action(ACT_FLAG_IDLE)
@@ -991,6 +990,8 @@ local function mario_update(m)
                 or gGlobalSyncTable.gamemode == HOT_POTATO
                 or gGlobalSyncTable.gamemode == ASSASSINS then
                     gPlayerSyncTable[0].state = WILDCARD_ROLE
+                elseif gGlobalSyncTable.gamemode == SARDINES then
+                    gPlayerSyncTable[0].state = RUNNER
                 else
                     gPlayerSyncTable[0].state = TAGGER
                 end
@@ -1019,7 +1020,7 @@ local function mario_update(m)
             -- yea idk what this is this looks awful, not changing it though since it somehow works
             if showSettings or isPaused then
                 m.freeze = 1
-            elseif (_G.swearExists and not _G.swearSettingsOpened) or _G.swearExists == nil then
+            else
                 m.freeze = 0
             end
         end
@@ -1301,6 +1302,8 @@ local function on_warp()
 
     if level ~= nil and level.spawnLocation ~= nil then
         vec3f_copy(m.pos, level.spawnLocation)
+
+        reset_standing_still()
     end
 end
 
