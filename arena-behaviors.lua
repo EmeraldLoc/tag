@@ -1,6 +1,12 @@
 
 ---@param o Object
 function arena_spawn_init(o)
+    -- if we find a flag, delete this object
+    if obj_get_first_with_behavior_id(id_bhvArenaFlag) ~= nil then
+        obj_mark_for_deletion(o)
+        return
+    end
+
     -- set level spawn data and mario's pos if it doesn't exist
     if levels[gGlobalSyncTable.selectedLevel].spawnLocation == nil then
         levels[gGlobalSyncTable.selectedLevel].spawnLocation = {x = o.oPosX, y = o.oPosY, z = o.oPosZ}
@@ -10,11 +16,22 @@ function arena_spawn_init(o)
     obj_mark_for_deletion(o)
 end
 
-id_bhvArenaSpawn = hook_behavior(nil, OBJ_LIST_LEVEL, false, arena_spawn_init, nil, "bhvArenaSpawn")
+---@param o Object
+function arena_flag_spawn_init(o)
+    -- set level spawn data and mario's pos if it doesn't exist
+    if levels[gGlobalSyncTable.selectedLevel].spawnLocation == nil then
+        levels[gGlobalSyncTable.selectedLevel].spawnLocation = {x = o.oPosX, y = o.oPosY, z = o.oPosZ}
+        vec3f_copy(gMarioStates[0].pos, levels[gGlobalSyncTable.selectedLevel].spawnLocation)
+    end
+    -- delete object
+    obj_mark_for_deletion(o)
+end
+
+id_bhvArenaSpawn =      hook_behavior(nil, OBJ_LIST_LEVEL, false, arena_spawn_init, nil, "bhvArenaSpawn")
+id_bhvArenaFlag =       hook_behavior(nil, OBJ_LIST_LEVEL, false, arena_flag_spawn_init, nil, "bhvArenaFlag")
 
 -- get rid of all these behaviors (no better way of doing it then this block of text)
-id_bhvArenaSpring =     hook_behavior(nil, OBJ_LIST_LEVEL, false, obj_mark_for_deletion, nil, "bhvSpring")
-id_bhvArenaFlag =       hook_behavior(nil, OBJ_LIST_LEVEL, false, obj_mark_for_deletion, nil, "bhvFlag")
+id_bhvArenaSpring =     hook_behavior(nil, OBJ_LIST_LEVEL, false, obj_mark_for_deletion, nil, "bhvArenaSpring")
 id_bhvArenaItem =       hook_behavior(nil, OBJ_LIST_LEVEL, false, obj_mark_for_deletion, nil, "bhvArenaItem")
 id_bhvArenaKoth =       hook_behavior(nil, OBJ_LIST_LEVEL, false, obj_mark_for_deletion, nil, "bhvArenaKoth")
 id_bhvArenaItemHeld =   hook_behavior(nil, OBJ_LIST_LEVEL, false, obj_mark_for_deletion, nil, "bhvArenaItemHeld")
