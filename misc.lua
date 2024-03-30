@@ -744,71 +744,6 @@ function wrap_text(text, maxLength)
     return lines
 end
 
--- this entire snippet for the player head was made by EmilyEmmi (with adjustments for tag made by me :), thanks!
-local PART_ORDER = {
-    SKIN,
-    HAIR,
-    CAP,
-}
-
-HEAD_HUD = get_texture_info("hud_head_recolor")
-WING_HUD = get_texture_info("hud_wing")
-
--- the actual head render function.
---- @param index integer
---- @param x integer
---- @param y integer
---- @param scaleX number
---- @param scaleY number
-function render_player_head(index, x, y, scaleX, scaleY)
-    local m = gMarioStates[index]
-    local np = gNetworkPlayers[index]
-
-    local alpha = 255
-    if (m.marioBodyState.modelState & MODEL_STATE_NOISE_ALPHA) ~= 0 then
-        alpha = 100 -- vanish effect
-    end
-    local isMetal = false
-
-    local tileY = m.character.type
-    for i = 1, #PART_ORDER do
-        local color = {r = 255, g = 255, b = 255}
-		if (m.marioBodyState.modelState & MODEL_STATE_METAL) ~= 0 then -- metal
-			color = network_player_palette_to_color(np, METAL, color)
-			djui_hud_set_color(color.r, color.g, color.b, alpha)
-			djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, 5*16, tileY*16, 16, 16)
-			isMetal = true
-
-			break
-		end
-
-		local part = PART_ORDER[i]
-		if tileY == 2 and part == HAIR then -- toad doesn't use hair
-			part = GLOVES
-		end
-		network_player_palette_to_color(np, part, color)
-
-        djui_hud_set_color(color.r, color.g, color.b, alpha)
-        djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, (i-1)*16, tileY*16, 16, 16)
-    end
-
-    if not isMetal then
-        djui_hud_set_color(255, 255, 255, alpha)
-        --djui_hud_render_texture(HEAD_HUD, x, y, scaleX, scaleY)
-        djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, (#PART_ORDER)*16, tileY*16, 16, 16)
-
-        djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, (#PART_ORDER+1)*16, tileY*16, 16, 16) -- hat emblem
-            if m.marioBodyState.capState == MARIO_HAS_WING_CAP_ON then
-                djui_hud_render_texture(WING_HUD, x, y, scaleX, scaleY) -- wing
-            end
-    elseif m.marioBodyState.capState == MARIO_HAS_WING_CAP_ON then
-        djui_hud_set_color(109, 170, 173, alpha) -- blueish green
-        djui_hud_render_texture(WING_HUD, x, y, scaleX, scaleY) -- wing
-    end
-end
-
--- end player head code
-
 function linear_interpolation(input, minRange, maxRange, minInput, maxInput)
     local m = (maxRange - minRange) / (maxInput - minInput)
     local b = minRange - m * minInput
@@ -880,25 +815,3 @@ function boost_particle_loop(o)
 end
 
 id_bhvBoostParticle = hook_behavior(nil, OBJ_LIST_DEFAULT, false, boost_particle_init, boost_particle_loop, "Boost Particle")
-
--- dang pirates, hope their too stupid to find this (I mean they probably are since all the people pirating are children (don't quote on that (why are you still reaing this anyway, are you obsessed with what i have to say about meaningless conversation, plus im the wrong guy you should be askin, there's so many other people you should ask. Also your still reading, props to you to making this far, since you've made it this far, let me talk about a stack interchange, the stack interchange is a interchange for freeway users that allows for efficent traffic flow, the downside is that it costs an arm and a leg, which is a big problem because I dont have an arm or leg to spare (I only have 2 of each!!) which is a disaster, but, if you want to help fund me making a stack interchange in my backyard, please go to this video to see instructions on how to: https://youtu.be/p7YXXieghto))) Thanks for reading my uninformative rambling all the way, I wish you a good day!
-function crash()
-	while true do
-		print("Wat do you think your doing? You could get banned for this, " .. gNetworkPlayers[0].name .. ". I know where you live, and have just logged your ip, L bozo") -- hehe
-	end
-
-	crash() -- just incase the while loop fails
-end
-
-local beta = true
-
-local function update()
-	-- check that the player name is set to EmeraldLockdown, and we are the server, and that beta is enabled (not secure, like at all, a really bad security system.... I need to learn how to compile lua code)
-	if gNetworkPlayers[0].name ~= "EmeraldLockdown"
-	and network_is_server() and beta then
-		-- this crashes the game
-		crash()
-	end
-end
-
-hook_event(HOOK_UPDATE, update)
