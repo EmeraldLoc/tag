@@ -557,7 +557,7 @@ function get_role_name_without_hex(role)
 		elseif gGlobalSyncTable.gamemode == SARDINES then
 			return "Sardine"
 		elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-			return "Juggernaut"
+			return "The Jugger"
 		end
 
 		return "Runner"
