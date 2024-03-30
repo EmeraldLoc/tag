@@ -308,6 +308,7 @@ function name_of_level(level, area)
 	for _, lvl in pairs(levels) do
 		if lvl.level == level and lvl.area == area then
 			-- search for an override name
+			djui_chat_message_create("Found")
 			if lvl.overrideName ~= nil then return lvl.overrideName end
 		end
 	end

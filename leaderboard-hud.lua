@@ -293,26 +293,26 @@ local function hud_gamemode()
     local text = "Gamemode is set to " .. get_gamemode_including_random()
 
     local screenWidth = djui_hud_get_screen_width()
-    local width = djui_hud_measure_text(text)
+    local width = djui_hud_measure_text(strip_hex(text))
 
     local x = screenWidth - width - 40
     local y = 60
 
     djui_hud_set_color(255, 255, 255, fade)
-    djui_hud_print_text(text, x, y, 1)
+    djui_hud_print_colored_text(text, x, y, 1)
 end
 
 local function hud_modifier()
     local text = "Modifier is set to " .. get_modifier_including_random()
 
     local screenWidth = djui_hud_get_screen_width()
-    local width = djui_hud_measure_text(text)
+    local width = djui_hud_measure_text(strip_hex(text))
 
     local x = screenWidth - width - 40
     local y = 20
 
     djui_hud_set_color(255, 255, 255, fade)
-    djui_hud_print_text(text, x, y, 1)
+    djui_hud_print_colored_text(text, x, y, 1)
 end
 
 local function hud_render()
