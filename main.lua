@@ -990,8 +990,6 @@ local function mario_update(m)
                 or gGlobalSyncTable.gamemode == HOT_POTATO
                 or gGlobalSyncTable.gamemode == ASSASSINS then
                     gPlayerSyncTable[0].state = WILDCARD_ROLE
-                elseif gGlobalSyncTable.gamemode == SARDINES then
-                    gPlayerSyncTable[0].state = RUNNER
                 else
                     gPlayerSyncTable[0].state = TAGGER
                 end
