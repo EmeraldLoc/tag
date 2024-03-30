@@ -48,6 +48,7 @@ local function mario_update(m)
 end
 
 local function hud_bullet()
+
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_N64)
 
@@ -61,8 +62,12 @@ local function hud_bullet()
     local y            = math.floor(screenHeight - height - 4 * scale)
     local gunTime      = gunCooldown / 30
 
-    if gPlayerSyncTable[0].state == TAGGER
-    and boosts_enabled() then
+    if  (gPlayerSyncTable[0].state == TAGGER
+    and boosts_enabled())
+    or  (gPlayerSyncTable[0].state == RUNNER
+    and gGlobalSyncTable.roundState == ROUND_ACTIVE
+    and (gGlobalSyncTable.gamemode == JUGGERNAUT
+    or  gGlobalSyncTable.gamemode == HUNT)) then
         y = y - 32
     end
 
@@ -90,8 +95,12 @@ local function hud_bullet()
     x = (screenWidth - width) / 2
     y = screenHeight - 28
 
-    if gPlayerSyncTable[0].state == TAGGER
-    and boosts_enabled() then
+    if  (gPlayerSyncTable[0].state == TAGGER
+    and boosts_enabled())
+    or  (gPlayerSyncTable[0].state == RUNNER
+    and gGlobalSyncTable.roundState == ROUND_ACTIVE
+    and (gGlobalSyncTable.gamemode == JUGGERNAUT
+    or  gGlobalSyncTable.gamemode == HUNT)) then
         y = y - 32
     end
 
