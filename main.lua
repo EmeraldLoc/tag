@@ -59,7 +59,8 @@ MODIFIER_SPEED                         = 7
 MODIFIER_INCOGNITO                     = 8
 MODIFIER_HIGH_GRAVITY                  = 9
 MODIFIER_FLY                           = 10
-MODIFIER_MAX                           = 10
+MODIFIER_BLASTER                       = 11
+MODIFIER_MAX                           = 11
 
 -- binds
 BIND_BOOST = 0
@@ -1158,7 +1159,7 @@ local function hud_gamemode()
 end
 
 local function hud_modifier()
-    local text = get_modifier_text_without_hex()
+    local text = get_modifier_text()
     local scale = 1
 
     -- get width of screen and text
@@ -1168,14 +1169,12 @@ local function hud_modifier()
     local x = screenWidth - width - (12 * scale)
     local y = 0
 
-    local r, g, b = get_modifier_rgb()
-
     -- render rect
     djui_hud_set_color(0, 0, 0, hudFade / 2)
     djui_hud_render_rect(x, y, width + (24 * scale), (32 * scale))
 
     -- render text
-    djui_hud_set_color(r, g, b, hudFade)
+    djui_hud_set_color(220, 220, 220, hudFade)
     djui_hud_print_colored_text(text, x + (8 * scale), y, scale, hudFade)
 end
 

@@ -198,7 +198,7 @@ local function bomb_held_loop(o)
     local np = gNetworkPlayers[o.oBombOwner]
     local m = gMarioStates[np.localIndex]
 
-    -- check wether or not this bomb should be rendered
+    -- check whether or not this bomb should be rendered
     if np.currLevelNum ~= gNetworkPlayers[0].currLevelNum
     or not np.connected or not np.currAreaSyncValid
     or not can_hold_bomb(o.oBombOwner) then

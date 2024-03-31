@@ -383,6 +383,8 @@ function get_modifier_text()
 		text = "\\#BE6f4A\\High Gravity"
 	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
 		text = "\\#FF0000\\Fly"
+	elseif gGlobalSyncTable.modifier == MODIFIER_BLASTER then
+		text = "\\#0099FF\\Blaster"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
@@ -421,6 +423,8 @@ function get_modifier_text_without_hex()
 		text = "High Gravity"
 	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
 		text = "Fly"
+	elseif gGlobalSyncTable.modifier == MODIFIER_BLASTER then
+		text = "Blaster"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
 		text = "None"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
@@ -431,32 +435,6 @@ function get_modifier_text_without_hex()
 	return text
 end
 
-function get_modifier_rgb()
-	if gGlobalSyncTable.modifier == MODIFIER_BOMBS then
-		return 232, 46, 46
-	elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
-		return 103, 103, 103
-	elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
-		return 255, 0, 0
-	elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
-		return 0, 153, 255
-	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
-		return 49, 107, 232
-	elseif gGlobalSyncTable.modifier == MODIFIER_FOG then
-		return 122, 206, 245
-	elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
-		return 0, 153, 255
-	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
-		return 103, 103, 103
-	elseif gGlobalSyncTable.modifier == MODIFIER_HIGH_GRAVITY then
-		return 190, 111, 74
-	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
-		return 255, 0, 0
-	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
-		return 255, 255, 255
-	end
-end
-
 function get_gamemode_including_random()
     if gGlobalSyncTable.randomGamemode then return "Random" end
     return get_gamemode()
@@ -465,14 +443,6 @@ end
 function get_modifier_including_random()
     if gGlobalSyncTable.randomModifiers then return "Random" end
     return get_modifier_text()
-end
-
-function get_modifier_rgb_inc_random()
-    if gGlobalSyncTable.randomModifiers then
-        return 220, 220, 220
-    end
-
-    return get_modifier_rgb()
 end
 
 function get_gamemode_hex_color()
