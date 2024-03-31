@@ -38,7 +38,10 @@ local function bullet_loop(o)
     local localOwner = network_local_index_from_global(o.oBulletOwner)
     local m = nearest_mario_state_to_object(o)
 
-    if dist_between_objects(o, m.marioObj) < 200 and m.playerIndex ~= localOwner then
+    -- if we get hit, and we are the owner, handle pvp
+    if dist_between_objects(o, m.marioObj) < 200
+    and m.playerIndex ~= localOwner
+    and localOwner == 0 then
         handle_projectile_pvp(localOwner, m.playerIndex)
         -- kb
         take_damage_and_knock_back(m, o)

@@ -1,4 +1,4 @@
--- an easy to use mod storage system
+-- an easy to use mod storage system, cross compatible with ex-coop and coopdx
 ----------------------
 -- saving functions --
 ----------------------
