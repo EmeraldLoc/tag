@@ -167,7 +167,8 @@ local function hud_leaderboard()
 
             if gPlayerSyncTable[i].amountOfTimeAsRunner / 30 < gGlobalSyncTable.amountOfTime / 30 or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
                 djui_hud_set_color(255, 255, 255, fade)
-            elseif gPlayerSyncTable[i].amountOfTimeAsRunner / 30 >= gGlobalSyncTable.amountOfTime / 30 and gGlobalSyncTable.gamemode ~= HOT_POTATO then
+            elseif gPlayerSyncTable[i].amountOfTimeAsRunner / 30 >= gGlobalSyncTable.amountOfTime / 30
+            and gGlobalSyncTable.gamemode ~= HOT_POTATO and gGlobalSyncTable.gamemode ~= FREEZE_TAG then
                 djui_hud_set_color(255, 215, 0, fade)
             else
                 djui_hud_set_color(255, 255, 255, fade)

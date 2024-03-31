@@ -984,7 +984,9 @@ local function mario_update(m)
         -- handle if just join
         if joinTimer == 2 * 30 and not network_is_server() then
             -- this here sets our initial state
-            if gGlobalSyncTable.roundState == ROUND_ACTIVE or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
+            if gGlobalSyncTable.roundState == ROUND_ACTIVE
+            or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
+            or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
                 if gGlobalSyncTable.gamemode == TAG
                 or gGlobalSyncTable.gamemode == INFECTION
                 or gGlobalSyncTable.gamemode == HOT_POTATO

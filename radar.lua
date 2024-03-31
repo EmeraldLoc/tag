@@ -36,7 +36,7 @@ function render_radar(m, hudIcon, isObj)
 	if not isObj then
 		local np = gNetworkPlayers[m.playerIndex]
 		local playercolor = network_get_player_text_color_string(np.localIndex)
-		r,g,b = convert_color(playercolor)
+		r, g, b = hex_to_rgb(playercolor)
 	else
 		r = pos.x % 255 + 1
 		g = pos.y % 255 + 1
@@ -62,51 +62,4 @@ function render_radar(m, hudIcon, isObj)
 
 	hudIcon.prevX = dX
 	hudIcon.prevY = dY
-end
-
-function convert_color(text)
-	text = text:sub(3,-2)
-	local rstring = text:sub(1,2) or "ff"
-	local gstring = text:sub(3,4) or "ff"
-	local bstring = text:sub(5,6) or "ff"
-	local r = 0
-	local g = 0
-	local b = 0
-	for i=1,rstring:len() do
-		local char = rstring:sub(i,i)
-		local value = tonumber(char)
-		if value == nil then
-		value = char:byte() - 87
-		end
-		if i == 1 then
-		r = r + value * 16
-		else
-		r = r + value
-		end
-	end
-	for i=1,gstring:len() do
-		local char = gstring:sub(i,i)
-		local value = tonumber(char)
-		if value == nil then
-		value = char:byte() - 87
-		end
-		if i == 1 then
-		g = g + value * 16
-		else
-		g = g + value
-		end
-	end
-	for i=1,bstring:len() do
-		local char = bstring:sub(i,i)
-		local value = tonumber(char)
-		if value == nil then
-		value = char:byte() - 87
-		end
-		if i == 1 then
-		b = b + value * 16
-		else
-		b = b + value
-		end
-	end
-	return r,g,b
 end

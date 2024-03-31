@@ -57,7 +57,6 @@ end
 ---@param m MarioState
 local function on_set_mario_action(m)
     if m.action == ACT_LAVA_BOOST then
-        djui_chat_message_create("Called")
         set_mario_action(m, ACT_CUSTOM_LAVA_BOOST, m.actionArg)
     end
 end
