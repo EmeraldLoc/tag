@@ -17,9 +17,10 @@ The table `romhacks` is a table containing:
 | ----- | ---- | ----- |
 | `name`|`string`|Name of the romhack.
 | `shortName`|`string`|The short name/abbreviated name of the romhack.
+| `water`|`boolean`|The default value for the water variable.
 | `levels`|`table`|The table of levels in the romhack.
 
-The first 2 fields are rather simple, the 3rd one is where the fun begins.
+The first 3 fields are rather simple, the 4th one is where the fun begins.
 
 A `levels` table contains the following fields:
 

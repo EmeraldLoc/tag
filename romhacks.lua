@@ -7,6 +7,7 @@ romhacks = {
         -- name of the hack
         name = "Vanilla",
         shortName = "vanilla",
+        water = false,
         -- level data
         levels = {
             -- name is the abbreviated level name, level is the level, painting is the image file, act is the act, area is the area, pipe stuff is for pipe positions
@@ -33,6 +34,7 @@ romhacks = {
     {
         name = "Unknown",
         shortName = "unknown",
+        water = true,
         levels = {
             { name = "cg",  level = LEVEL_CASTLE_GROUNDS, painting = nil, area = 1, pipes = nil },
             { name = "bob", level = LEVEL_BOB,            painting = nil, area = 1, pipes = nil },
@@ -64,6 +66,7 @@ romhacks = {
         -- ported to tag by EmeraldLockdown
         name = "SM64 Sapphire",
         shortName = "sapphire",
+        water = false,
         levels = {
             { name = "mm",  level = LEVEL_BOB, painting = get_texture_info("painting_sapphire_mm"), area = 1, pipes = { { { x = 81, y = 793, z = -5259 },  { x = 3275, y = 4456, z = -3997 } }, { { x = 6041, y = 3656, z = -5866 },  { x = 5840, y = 518, z = -3149 } }, { { x = 1250, y = 2098, z = -11382 },  { x = -3388, y = -4007, z = -12408  } } } },
             { name = "pp",  level = LEVEL_WF,  painting = get_texture_info("painting_sapphire_pp"), area = 1, pipes = nil },
@@ -75,6 +78,7 @@ romhacks = {
         -- ported to tag by EmeraldLockdown
         name = "Royal Legacy",
         shortName = "rl",
+        water = false,
         levels = {
             { name = "bb",     level = LEVEL_BOB, painting = get_texture_info("painting_rl_bb"),     area = 1, pipes = { { { x = 4203, y = 92, z = -1896 }, { x = 4523, y = -3369, z = -5704 } } } },
             { name = "tt",     level = LEVEL_WF,  painting = get_texture_info("painting_rl_tt"),     area = 1, pipes = { { { x = -7891, y = 4210, z = -1108 }, { x = -13667, y = 3727, z = -3591 } }, { { x = -4494, y = 2320, z = 2478 }, { x = -5700, y = 4215, z = 805 } }, { { x = -1851, y = 2977, z = -1312 }, { x = -3371, y = 2320, z = 1840 } } } },
@@ -86,6 +90,7 @@ romhacks = {
         -- ported to tag by EmeraldLockdown
         name = "Super Mario 64 Trouble Town",
         shortName = "ttown",
+        water = false,
         levels = {
             { name = "cg",     level = LEVEL_CASTLE_GROUNDS, painting = get_texture_info("painting_ttown_cg"),  area = 1, pipes = nil, spawnLocation = { x = 3058, y = -87,  z = 5127 }},
             { name = "mmh",    level = LEVEL_BOB,            painting = get_texture_info("painting_ttown_mmh"), area = 1, pipes = nil, spawnLocation = { x = 48,   y = 1215, z = -537 } },
@@ -97,7 +102,8 @@ romhacks = {
 }
 
 local function calculate_romhack_levels()
-    levels = romhacks[2].levels -- unknwon levels
+    levels = romhacks[2].levels -- unknown levels
+    gGlobalSyncTable.water = romhacks[2].water -- set water var
 
     -- loop thru all levels and remove indexes if they are vanilla levels
     -- do it backwards so automatic formatting doesn't affect for loop
@@ -141,6 +147,9 @@ function configure_romhacks(mod)
                 end
             end
 
+            -- set water var
+            gGlobalSyncTable.water = romhack.water
+
             djui_popup_create("Found romhack " .. romhack.name, 3)
 
             return
@@ -168,7 +177,6 @@ local function check_mods()
                 if string.match(gActiveMods[i].incompatible, "romhack") then
                     -- set romhack to true and water by default to true
                     isRomhack = true
-                    gGlobalSyncTable.water = true
 
                     -- configure romhack
                     configure_romhacks(gActiveMods[i])
