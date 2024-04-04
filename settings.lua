@@ -17,18 +17,6 @@ local function on_off_text(bool)
     if bool then return "On" else return "Off" end
 end
 
-local function get_r_from(r, g, b)
-    return r
-end
-
-local function get_g_from(r, g, b)
-    return g
-end
-
-local function get_b_from(r, g, b)
-    return b
-end
-
 -- click functions
 local function set_gamemode()
     if (gMarioStates[0].controller.buttonPressed & R_JPAD ~= 0

@@ -57,6 +57,7 @@ romhacks = {
     {
         name = "Registered Levels",
         shortName = "reg levels",
+        water = false,
         levels = {} -- empty table as levels are added at the end of the file
     },
     -- romhacks go below this line
@@ -72,6 +73,34 @@ romhacks = {
             { name = "pp",  level = LEVEL_WF,  painting = get_texture_info("painting_sapphire_pp"), area = 1, pipes = nil },
             { name = "ll",  level = LEVEL_JRB, painting = get_texture_info("painting_sapphire_ll"), area = 1, pipes = { { { x = 4594, y = 243, z = -5992 }, { x = 12881, y = 114, z = -7182 } } } },
             { name = "tt",  level = LEVEL_CCM, painting = get_texture_info("painting_sapphire_tt"), area = 1, pipes = { { { x = 155, y = -350, z = -18718 }, { x = 4434, y = -350, z = -8335 } } } },
+        }
+    },
+    {
+        -- ported to tag by Murioz
+        name = "Star Road",
+        shortName = "sr",
+        water = false,
+        levels = {
+            { name = "cg",      level = LEVEL_CASTLE_GROUNDS, painting = get_texture_info("painting_sr_cg"), area = 1, pipes = { { { x = -7517, y = 1784, z = 2992 }, { x = 2948, y = 6385, z = -891 } } } },
+            { name = "fh",      level = LEVEL_CASTLE,         painting = get_texture_info("painting_sr_fh"), area = 1, pipes = { { { x = -7754, y = 571, z = -6663 }, { x = 3299, y = 153, z = -2633 } } }, overrideName = "Final Hub" },
+            { name = "boi",     level = LEVEL_BOB, painting = get_texture_info("painting_sr_boi"), area = 1, pipes = { { { x = 5157, y = 1623, z = 4206 }, { x = -831, y = -1807, z = -3773 } } } },
+            { name = "slr",     level = LEVEL_WF, painting = get_texture_info("painting_sr_slr"), area = 1, pipes = { { { x = 1386, y = -2166, z = -1005 }, { x = 394, y = 2448, z = -2257 } } } },
+            { name = "ppp",     level = LEVEL_JRB, painting = get_texture_info("painting_sr_ppp"), area = 1, pipes = { { { x = -820, y = -151, z = -81 }, { x = 5756, y = 2633, z = 4822 } } } },
+            { name = "ch",      level = LEVEL_CCM, painting = get_texture_info("painting_sr_ch"), area = 1, pipes = { { { x = 4540, y = 701, z = 4291 }, { x = 3393, y = 3501, z = -3721 } } } },
+            { name = "mm",      level = LEVEL_PSS, painting = get_texture_info("painting_sr_mm"), area = 1, pipes = { { { x = 3874, y = -679, z = -4063 }, { x = -4269, y = 4585, z = 2805 } } } },
+            { name = "sss",     level = LEVEL_SA, painting = get_texture_info("painting_sr_sss"), area = 1, pipes = { { { x = 4227, y = 3532, z = 2296 },  { x = 5688, y = -6010, z = -5545 } }, { { x = -4812, y = 1267, z = 3239 }, { x = 6144, y = 1123, z = -3292 } } } },
+            { name = "gg",      level = LEVEL_BBH, painting = get_texture_info("painting_sr_gg"), area = 1, pipes = { { { x = -6790, y = -751, z = 2655 }, { x = 4376, y = 2632, z = -4535 } } } },
+            { name = "bss",     level = LEVEL_BITDW, painting = get_texture_info("painting_sr_bss"), area = 1, pipes = { { { x = 3252, y = -890, z = 1743 }, { x = 414, y = 2324, z = 226 } } } },
+            { name = "b1",      level = LEVEL_BOWSER_1,  painting = get_texture_info("cg_painting"), area = 1, pipes = nil },
+            { name = "b3",      level = LEVEL_BOWSER_3,  painting = get_texture_info("cg_painting"), area = 1, pipes = nil },
+            { name = "kc",      level = LEVEL_LLL, painting = get_texture_info("cg_painting"), area = 1, pipes = { { { x = -6169, y = -1996, z = -1872 }, { x = 5580, y = 19, z = 5189 } } } },
+            { name = "llf",     level = LEVEL_SSL, painting = get_texture_info("painting_sr_llf"), area = 1, pipes = { { { x = 1158, y = 3336, z = 3333 }, { x = 3, y = -529, z = -4816 } } } },
+            { name = "mmm",     level = LEVEL_DDD, painting = get_texture_info("cg_painting"), area = 1, pipes = { { { x = 361, y = 2235, z = -3679 }, { x = -1347, y = -2299, z = -4495 } } } },
+            { name = "bitfs",   level = LEVEL_BITFS, painting = get_texture_info("cg_painting"), area = 1, pipes = { { { x = 3928, y = -415, z = -39 }, { x = 3076, y = 584, z = 4523 } } } },
+            { name = "wdw",     level = LEVEL_WDW, painting = get_texture_info("cg_painting"), area = 1, pipes = { { { x = -4430, y = -485, z = -5427 },  { x = 5091, y = 2900, z = 3727 } }, { { x = -1304, y = -1596, z = -331 }, { x = 1207, y = 4253, z = -863 } } } },
+            { name = "msp",     level = LEVEL_SL, painting = get_texture_info("painting_sr_msp"), area = 1, pipes = { { { x = -4637, y = 1778, z = 4505 }, { x = 4505, y = 3709, z = 3203 } } } },
+            { name = "fff",     level = LEVEL_THI, painting = get_texture_info("painting_sr_fff"), area = 1, pipes = { { { x = 3818, y = -1310, z = -192 }, { x = -4810, y = 1115, z = -192 } } } },
+            { name = "bobf",    level = LEVEL_TTC, painting = get_texture_info("painting_sr_bobf"), area = 1, pipes = { { { x = 1673, y = -1224, z = 5004 }, { x = 1688, y = 3425, z = 2016 } } } },
         }
     },
     {
@@ -102,7 +131,7 @@ romhacks = {
 }
 
 local function calculate_romhack_levels()
-    levels = romhacks[2].levels -- unknown levels
+    levels = romhacks[2].levels -- unknwon levels
     gGlobalSyncTable.water = romhacks[2].water -- set water var
 
     -- loop thru all levels and remove indexes if they are vanilla levels
@@ -139,6 +168,8 @@ function configure_romhacks(mod)
         if romhack.name == strip_hex(mod.name) then
             -- match, set our level data to that hack
             levels = romhack.levels
+            -- set water var
+            gGlobalSyncTable.water = romhack.water
 
             -- check level reg stages
             if romhacks[3].levels ~= {} then
@@ -146,9 +177,6 @@ function configure_romhacks(mod)
                     table.insert(levels, level)
                 end
             end
-
-            -- set water var
-            gGlobalSyncTable.water = romhack.water
 
             djui_popup_create("Found romhack " .. romhack.name, 3)
 
