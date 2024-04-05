@@ -81,26 +81,30 @@ romhacks = {
         shortName = "sr",
         water = false,
         levels = {
-            { name = "cg",      level = LEVEL_CASTLE_GROUNDS, painting = get_texture_info("painting_sr_cg"), area = 1, pipes = { { { x = -7517, y = 1784, z = 2992 }, { x = 2948, y = 6385, z = -891 } } } },
-            { name = "fh",      level = LEVEL_CASTLE,         painting = get_texture_info("painting_sr_fh"), area = 1, pipes = { { { x = -7754, y = 571, z = -6663 }, { x = 3299, y = 153, z = -2633 } } }, overrideName = "Final Hub" },
-            { name = "boi",     level = LEVEL_BOB, painting = get_texture_info("painting_sr_boi"), area = 1, pipes = { { { x = 5157, y = 1623, z = 4206 }, { x = -831, y = -1807, z = -3773 } } } },
-            { name = "slr",     level = LEVEL_WF, painting = get_texture_info("painting_sr_slr"), area = 1, pipes = { { { x = 1386, y = -2166, z = -1005 }, { x = 394, y = 2448, z = -2257 } } } },
-            { name = "ppp",     level = LEVEL_JRB, painting = get_texture_info("painting_sr_ppp"), area = 1, pipes = { { { x = -820, y = -151, z = -81 }, { x = 5756, y = 2633, z = 4822 } } } },
-            { name = "ch",      level = LEVEL_CCM, painting = get_texture_info("painting_sr_ch"), area = 1, pipes = { { { x = 4540, y = 701, z = 4291 }, { x = 3393, y = 3501, z = -3721 } } } },
-            { name = "mm",      level = LEVEL_PSS, painting = get_texture_info("painting_sr_mm"), area = 1, pipes = { { { x = 3874, y = -679, z = -4063 }, { x = -4269, y = 4585, z = 2805 } } } },
-            { name = "sss",     level = LEVEL_SA, painting = get_texture_info("painting_sr_sss"), area = 1, pipes = { { { x = 4227, y = 3532, z = 2296 },  { x = 5688, y = -6010, z = -5545 } }, { { x = -4812, y = 1267, z = 3239 }, { x = 6144, y = 1123, z = -3292 } } } },
-            { name = "gg",      level = LEVEL_BBH, painting = get_texture_info("painting_sr_gg"), area = 1, pipes = { { { x = -6790, y = -751, z = 2655 }, { x = 4376, y = 2632, z = -4535 } } } },
-            { name = "bss",     level = LEVEL_BITDW, painting = get_texture_info("painting_sr_bss"), area = 1, pipes = { { { x = 3252, y = -890, z = 1743 }, { x = 414, y = 2324, z = 226 } } } },
-            { name = "b1",      level = LEVEL_BOWSER_1,  painting = get_texture_info("cg_painting"), area = 1, pipes = nil },
-            { name = "b3",      level = LEVEL_BOWSER_3,  painting = get_texture_info("cg_painting"), area = 1, pipes = nil },
-            { name = "kc",      level = LEVEL_LLL, painting = get_texture_info("cg_painting"), area = 1, pipes = { { { x = -6169, y = -1996, z = -1872 }, { x = 5580, y = 19, z = 5189 } } } },
-            { name = "llf",     level = LEVEL_SSL, painting = get_texture_info("painting_sr_llf"), area = 1, pipes = { { { x = 1158, y = 3336, z = 3333 }, { x = 3, y = -529, z = -4816 } } } },
-            { name = "mmm",     level = LEVEL_DDD, painting = get_texture_info("cg_painting"), area = 1, pipes = { { { x = 361, y = 2235, z = -3679 }, { x = -1347, y = -2299, z = -4495 } } } },
-            { name = "bitfs",   level = LEVEL_BITFS, painting = get_texture_info("cg_painting"), area = 1, pipes = { { { x = 3928, y = -415, z = -39 }, { x = 3076, y = 584, z = 4523 } } } },
-            { name = "wdw",     level = LEVEL_WDW, painting = get_texture_info("cg_painting"), area = 1, pipes = { { { x = -4430, y = -485, z = -5427 },  { x = 5091, y = 2900, z = 3727 } }, { { x = -1304, y = -1596, z = -331 }, { x = 1207, y = 4253, z = -863 } } } },
-            { name = "msp",     level = LEVEL_SL, painting = get_texture_info("painting_sr_msp"), area = 1, pipes = { { { x = -4637, y = 1778, z = 4505 }, { x = 4505, y = 3709, z = 3203 } } } },
-            { name = "fff",     level = LEVEL_THI, painting = get_texture_info("painting_sr_fff"), area = 1, pipes = { { { x = 3818, y = -1310, z = -192 }, { x = -4810, y = 1115, z = -192 } } } },
-            { name = "bobf",    level = LEVEL_TTC, painting = get_texture_info("painting_sr_bobf"), area = 1, pipes = { { { x = 1673, y = -1224, z = 5004 }, { x = 1688, y = 3425, z = 2016 } } } },
+            { name = "cg",    level = LEVEL_CASTLE_GROUNDS, painting = get_texture_info("painting_sr_cg"),     area = 1, pipes = { { { x = -7517, y = 1784, z = 2992 }, { x = 2948, y = 6385, z = -891 } } }, spawnLocation = { x = -6743, y = 2031, z = 2626 }, overrideSurfaceType = {[SURFACE_DEFAULT] = SURFACE_HARD_NOT_SLIPPERY} },
+            { name = "f-hub", level = LEVEL_CASTLE,         painting = get_texture_info("painting_sr_castle"), area = 1, pipes = { { { x = -7754, y = 571, z = -6663 }, { x = 3299, y = 125, z = -2633 } } }, overrideName = "The Final Hub" },
+            { name = "boi",   level = LEVEL_BOB,            painting = get_texture_info("painting_sr_boi"),    area = 1, pipes = { { { x = 5157, y = 1623, z = 4206 }, { x = -831, y = -1807, z = -3773 } } } },
+            { name = "slr",   level = LEVEL_WF,             painting = get_texture_info("painting_sr_slr"),    area = 1, pipes = { { { x = 1386, y = -2166, z = -1005 }, { x = 394, y = 2448, z = -2257 } } } },
+            { name = "ppp",   level = LEVEL_JRB,            painting = get_texture_info("painting_sr_ppp"),    area = 1, pipes = { { { x = -820, y = -151, z = -81 }, { x = 5756, y = 2633, z = 4822 } } } },
+            { name = "ch",    level = LEVEL_CCM,            painting = get_texture_info("painting_sr_ch"),     area = 1, pipes = { { { x = 4540, y = 701, z = 4291 }, { x = 3393, y = 3501, z = -3721 } }, { { x = 2032, y = -4163, z = 1834 }, { x = 1435, y = 329, z = 101 } } } },
+            { name = "mm",    level = LEVEL_PSS,            painting = get_texture_info("painting_sr_mm"),     area = 1, pipes = { { { x = 3874, y = -679, z = -4063 }, { x = -4269, y = 4585, z = 2805 } } } },
+            { name = "sss",   level = LEVEL_SA,             painting = get_texture_info("painting_sr_sss"),    area = 1, pipes = { { { x = 4227, y = 3532, z = 2296 },  { x = 5688, y = -6010, z = -5545 } }, { { x = -4812, y = 1267, z = 3239 }, { x = 6144, y = 1123, z = -3292 } } } },
+            { name = "gg",    level = LEVEL_BBH,            painting = get_texture_info("painting_sr_gg"),     area = 1, pipes = { { { x = -6790, y = -751, z = 2655 }, { x = 4376, y = 2632, z = -4535 } } } },
+            { name = "bss",   level = LEVEL_BITDW,          painting = get_texture_info("painting_sr_bss"),    area = 1, pipes = { { { x = 3252, y = -890, z = 1743 }, { x = 414, y = 2324, z = 226 } } } },
+            { name = "b1",    level = LEVEL_BOWSER_1,       painting = get_texture_info("painting_sr_b1"),     area = 1, pipes = nil },
+            { name = "b3",    level = LEVEL_BOWSER_3,       painting = get_texture_info("painting_sr_b3"),     area = 1, pipes = nil },
+            { name = "kc",    level = LEVEL_LLL,            painting = get_texture_info("painting_sr_kc"),     area = 1, pipes = { { { x = -6169, y = -1996, z = -1872 }, { x = 5580, y = 19, z = 5189 } } } },
+            { name = "llf",   level = LEVEL_SSL,            painting = get_texture_info("painting_sr_llf"),    area = 1, pipes = { { { x = 1158, y = 3336, z = 3333 }, { x = 3, y = -529, z = -4816 } }, { { x = -259, y = -2213, z = 2789 }, { x = 654, y = -751, z = 893 } } } },
+            { name = "mmm",   level = LEVEL_DDD,            painting = get_texture_info("painting_sr_mmm"),    area = 1, pipes = { { { x = 361, y = 2235, z = -3679 }, { x = -1347, y = -2299, z = 4495 } } } },
+            { name = "rrc",   level = LEVEL_BITFS,          painting = get_texture_info("painting_sr_bitfs"),  area = 1, pipes = { { { x = 3928, y = -415, z = -39 }, { x = 3076, y = 584, z = 4523 } } } },
+            { name = "ccc",   level = LEVEL_WDW,            painting = get_texture_info("painting_sr_ccc"),    area = 1, pipes = { { { x = -4430, y = -485, z = -5427 },  { x = 5091, y = 2900, z = 3727 } }, { { x = -1304, y = -1596, z = -331 }, { x = 1207, y = 4253, z = -863 } } } },
+            { name = "msp",   level = LEVEL_SL,             painting = get_texture_info("painting_sr_msp"),    area = 1, pipes = { { { x = -4713, y = 1778, z = 518 }, { x = 4505, y = 3709, z = 3203 } } } },
+            { name = "fff",   level = LEVEL_THI,            painting = get_texture_info("painting_sr_fff"),    area = 1, pipes = { { { x = 3818, y = -1310, z = -192 }, { x = -4810, y = 1115, z = -192 } } } },
+            { name = "bobf",  level = LEVEL_TTC,            painting = get_texture_info("painting_sr_bobf"),   area = 1, pipes = { { { x = 1673, y = -1224, z = 5004 }, { x = 1688, y = 3425, z = 2016 } } } },
+            { name = "sr",    level = LEVEL_RR,             painting = get_texture_info("painting_sr_sr"),     area = 1, pipes = { { { x = 3162, y = -5767, z = -6163 },  { x = -1549, y = -1255, z = -5164 } }, { { x = 4902, y = 11056, z = 428 }, { x = -2196, y = 2344, z = -5477 } } } },
+            { name = "totwc", level = LEVEL_TOTWC,          painting = get_texture_info("painting_sr_totwc"),  area = 1, pipes = { { { x = -4199, y = 4635, z = 1886 }, { x = 2564, y = -1947, z = -1647 } } } },
+            { name = "potvc", level = LEVEL_VCUTM,          painting = get_texture_info("painting_sr_potvc"),  area = 1, pipes = { { { x = 6972, y = 422, z = -3110 }, { x = -5155, y = -77, z = 545 } } } },
+            { name = "hpf",   level = LEVEL_WMOTR,          painting = get_texture_info("painting_sr_hpf"),    area = 1, pipes = { { { x = 1360, y = -1135, z = -2636 }, { x = 4994, y = 3989, z = 701 } } } },
         }
     },
     {
@@ -131,7 +135,7 @@ romhacks = {
 }
 
 local function calculate_romhack_levels()
-    levels = romhacks[2].levels -- unknwon levels
+    levels = romhacks[2].levels -- unknown levels
     gGlobalSyncTable.water = romhacks[2].water -- set water var
 
     -- loop thru all levels and remove indexes if they are vanilla levels

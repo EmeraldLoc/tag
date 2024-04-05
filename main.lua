@@ -962,6 +962,7 @@ local function mario_update(m)
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvMetalCap))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvVanishCap))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
+        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBoo))
 
         -- water level diamond breaks water being disabled, so just get rid of it
         if not gGlobalSyncTable.water then
@@ -1029,6 +1030,12 @@ local function mario_update(m)
         -- sync tick tock clock speed
         if get_ttc_speed_setting() ~= gGlobalSyncTable.ttcSpeed then
             set_ttc_speed_setting(gGlobalSyncTable.ttcSpeed)
+        end
+
+        -- handle level surface
+        if levels[gGlobalSyncTable.selectedLevel].overrideSurfaceType ~= nil
+        and levels[gGlobalSyncTable.selectedLevel].overrideSurfaceType[m.floor.type] ~= nil then
+            m.floor.type = levels[gGlobalSyncTable.selectedLevel].overrideSurfaceType[m.floor.type]
         end
     end
 end
