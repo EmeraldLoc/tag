@@ -865,16 +865,16 @@ local function mario_update(m)
         local selectedLevel = levels[gGlobalSyncTable.selectedLevel] -- get currently selected level
 
         -- check if mario is in the proper level, act, and area, if not, rewarp mario
-        -- this is all warp shenenagins, and i'm waaay too lazy to do in depth comments, so, just wing it i guess
         if gGlobalSyncTable.roundState == ROUND_ACTIVE
         or gGlobalSyncTable.roundState == ROUND_WAIT
         or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
         or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
             if np.currLevelNum ~= selectedLevel.level or np.currAreaIndex ~= selectedLevel.area then
+                -- attempt to warp to stage
                 local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, 0)
 
                 if not warpSuccesful then
-                    -- try a few common ones
+                    -- warping failed, so try a few common warp nodes
                     if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, 10) then
                         return
                     end
@@ -883,7 +883,7 @@ local function mario_update(m)
                         return
                     end
 
-                    -- try randomly
+                    -- try randomly warping to warp nodes
                     for i = 1, 100 do
                         if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, i) then
                             return
@@ -891,6 +891,7 @@ local function mario_update(m)
                     end
 
                     if network_is_server() then
+                        -- if it failed and we are the server, assign it to the bad levels table
                         table.insert(badLevels, gGlobalSyncTable.selectedLevel)
 
                         local level = levels[gGlobalSyncTable.selectedLevel]
@@ -906,7 +907,7 @@ local function mario_update(m)
             end
         elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS and not gGlobalSyncTable.autoMode then
             if np.currLevelNum ~= LEVEL_CASTLE_GROUNDS then
-                warp_to_level(LEVEL_CASTLE_GROUNDS, 1, 0)
+                warp_to_start_level()
             end
         end
 
@@ -1308,8 +1309,6 @@ local function on_warp()
     end
 
     local m = gMarioStates[0]
-    set_mario_action(m, ACT_IDLE, 0)
-
     local level = levels[gGlobalSyncTable.selectedLevel]
 
     if level ~= nil and level.spawnLocation ~= nil then
