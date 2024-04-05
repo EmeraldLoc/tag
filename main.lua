@@ -1295,7 +1295,8 @@ local function allow_interact(m, o, intee)
     end
 
     -- dont allow spectator to interact with objects, L
-    -- they are allowed to interact with pipes because that is handled above, so that's awesome!
+    -- they are allowed to interact with pipes because that is handled with distance,
+    -- and not interaction, so such restrictions would be handled on the behavior
     if gPlayerSyncTable[m.playerIndex].state == SPECTATOR then return false end
 end
 
