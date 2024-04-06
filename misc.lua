@@ -117,7 +117,9 @@ function check_round_status()
 		return
 	end
 
-	if not hasRunner and gGlobalSyncTable.gamemode ~= ASSASSINS then
+	if  not hasRunner
+	and gGlobalSyncTable.gamemode ~= ASSASSINS
+	and gGlobalSyncTable.gamemode ~= DEATHMATCH then
 		timer = 15 * 30 -- 15 seconds
 
 		gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
@@ -125,7 +127,9 @@ function check_round_status()
 		return
 	end
 
-	if taggerCount == 1 and gGlobalSyncTable.gamemode == ASSASSINS then
+	if  taggerCount == 1
+	and (gGlobalSyncTable.gamemode == ASSASSINS
+	or  gGlobalSyncTable.gamemode == DEATHMATCH) then
 		timer = 15 * 30 -- 15 seconds
 
 		gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
@@ -462,6 +466,8 @@ function get_gamemode_hex_color()
 		return "\\#BBBEA1\\"
 	elseif gGlobalSyncTable.gamemode == HUNT then
 		return "\\#C74444\\"
+	elseif gGlobalSyncTable.gamemode == DEATHMATCH then
+		return "\\#B83333\\"
 	end
 end
 
@@ -482,6 +488,8 @@ function get_gamemode()
 		return "\\#BBBEA1\\Sardines\\#DCDCDC\\"
 	elseif gGlobalSyncTable.gamemode == HUNT then
 		return "\\#C74444\\Hunt\\#DCDCDC\\"
+	elseif gGlobalSyncTable.gamemode == DEATHMATCH then
+		return "\\#B83333\\Deathmatch\\#DCDCDC\\"
 	end
 
 	return "Uhhhhhhhhhh"
@@ -510,6 +518,8 @@ function get_gamemode_without_hex()
 		return "Sardines"
 	elseif gGlobalSyncTable.gamemode == HUNT then
 		return "Hunt"
+	elseif gGlobalSyncTable.gamemode == DEATHMATCH then
+		return "Deathmatch"
 	end
 end
 
@@ -652,7 +662,9 @@ end
 ---@param runner integer
 function tagged_popup(tagger, runner)
 	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
-	if gGlobalSyncTable.gamemode ~= INFECTION and gGlobalSyncTable.gamemode ~= HUNT then
+	if  gGlobalSyncTable.gamemode ~= INFECTION
+	and gGlobalSyncTable.gamemode ~= HUNT
+	and gGlobalSyncTable.gamemode ~= DEATHMATCH then
 		djui_popup_create_global(get_player_name(tagger) .. " \\#E82E2E\\Tagged\n" .. get_player_name(runner), 3)
 	elseif gGlobalSyncTable.gamemode ~= INFECTION then
 		djui_popup_create_global(get_player_name(tagger) .. " \\#C74444\\Killed\n" .. get_player_name(runner), 3)
@@ -684,6 +696,9 @@ function get_rules_for_gamemode(gamemode)
 		return "Just like assassins, sardines is much different from the other gamemodes. One player is selected as the Sardine. This player has 30 seconds to pick a spot to hide in. After the 30 seconds are up, the taggers have 120 seconds to find the sardine. If you find the sardine, you become a sardine and hide with the sardine. You don't become eliminated on death. Leaderboards are based off of when you found the sardine (sooner = better)."
 	elseif gamemode == HUNT then
 		return "Hunt is similar to Tag. Runners each have 3 lives. You must remove all of the runners lives to become a runner yourself. Hunters must tag Runners in order to become Runners. Runners lives get set to 1 on death. You never become eliminated on death. If a hunter dies, they go back to the start of the level. Leaderboard works the same as in Tag."
+	elseif gamemode == DEATHMATCH then
+		-- TODO: Add rules here
+		return ""
 	end
 end
 

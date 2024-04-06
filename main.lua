@@ -36,7 +36,8 @@ JUGGERNAUT                             = 5
 ASSASSINS                              = 6
 SARDINES                               = 7
 HUNT                                   = 8
-MAX_GAMEMODE                           = 8
+DEATHMATCH                             = 9
+MAX_GAMEMODE                           = 9
 
 -- spectator states
 SPECTATOR_STATE_MARIO                  = 0
@@ -103,11 +104,12 @@ gGlobalSyncTable.doVoting              = true
 gGlobalSyncTable.tagActiveTimer        = 120 * 30
 gGlobalSyncTable.freezeTagActiveTimer  = 180 * 30
 gGlobalSyncTable.infectionActiveTimer  = 120 * 30
-gGlobalSyncTable.hotPotatoActiveTimer  = 60  * 30
+gGlobalSyncTable.hotPotatoActiveTimer  = 45  * 30
 gGlobalSyncTable.juggernautActiveTimer = 120 * 30
 gGlobalSyncTable.assassinsActiveTimer  = 120 * 30
 gGlobalSyncTable.sardinesActiveTimer   = 120 * 30
 gGlobalSyncTable.huntActiveTimer       = 180 * 30
+gGlobalSyncTable.deathmatchActiveTimer       = 180 * 30
 -- other timers
 gGlobalSyncTable.sardinesHidingTimer   = 30  * 30
 -- auto mode
@@ -384,6 +386,11 @@ local function server_update()
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.huntActiveTimer
 
                 PLAYERS_NEEDED = 3
+            elseif gGlobalSyncTable.gamemode == DEATHMATCH then
+                -- set deathmatch timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.deathmatchActiveTimer
+
+                PLAYERS_NEEDED = 3
             end
 
             log_to_console("Tag: Modifier is set to " ..
@@ -434,8 +441,11 @@ local function server_update()
                 -- set sardines timer
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.sardinesActiveTimer
             elseif gGlobalSyncTable.gamemode == HUNT then
-                -- set sardines timer
+                -- set hunt timer
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.huntActiveTimer
+            elseif gGlobalSyncTable.gamemode == DEATHMATCH then
+                -- set deathmatch timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.deathmatchActiveTimer
             end
 
             timer = gGlobalSyncTable.amountOfTime -- set timer to amount of time in a round
@@ -459,8 +469,9 @@ local function server_update()
             gGlobalSyncTable.tagMaxLives = math.floor(numPlayers * 2)
 
             if gGlobalSyncTable.tagMaxLives > 20 then gGlobalSyncTable.tagMaxLives = 20 end
-            -- hunt override
+            -- hunt and deathmatch override
             if gGlobalSyncTable.gamemode == HUNT then gGlobalSyncTable.tagMaxLives = 3 end
+            if gGlobalSyncTable.gamemode == DEATHMATCH then gGlobalSyncTable.tagMaxLives = 5 end
 
             for i = 0, MAX_PLAYERS - 1 do
                 gPlayerSyncTable[i].tagLives = gGlobalSyncTable.tagMaxLives
@@ -502,7 +513,8 @@ local function server_update()
                 hotPotatoTimerMultiplier = 1
             end
 
-            if gGlobalSyncTable.gamemode == ASSASSINS then
+            if gGlobalSyncTable.gamemode == ASSASSINS
+            or gGlobalSyncTable.gamemode == DEATHMATCH then
                 for i = 0, MAX_PLAYERS - 1 do
                     if gPlayerSyncTable[i].state ~= SPECTATOR then
                         gPlayerSyncTable[i].state = TAGGER
@@ -545,7 +557,8 @@ local function server_update()
             if gGlobalSyncTable.gamemode ~= HOT_POTATO then
                 timer = 15 * 30 -- 15 seconds
 
-                if gGlobalSyncTable.gamemode == ASSASSINS then
+                if gGlobalSyncTable.gamemode == ASSASSINS
+                or gGlobalSyncTable.gamemode == DEATHMATCH then
                     gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN -- end round
                 else
                     gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN -- end round
@@ -842,6 +855,7 @@ local function mario_update(m)
     -- set model state according to state
     if gPlayerSyncTable[m.playerIndex].state == TAGGER
     and gGlobalSyncTable.gamemode ~= ASSASSINS
+    and gGlobalSyncTable.gamemode ~= DEATHMATCH
     and ((gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO
     or gPlayerSyncTable[0].state == TAGGER)
     or m.playerIndex == 0) then
@@ -1272,7 +1286,8 @@ local function allow_pvp(a, v)
     -- check if 2 runners are trying to attack eachother
     if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == RUNNER then return false end
     -- check if 2 taggers are trying to attack eachother
-    if gPlayerSyncTable[v.playerIndex].state == TAGGER and gPlayerSyncTable[a.playerIndex].state == TAGGER and gGlobalSyncTable.gamemode ~= ASSASSINS then return false end
+    if gPlayerSyncTable[v.playerIndex].state == TAGGER and gPlayerSyncTable[a.playerIndex].state == TAGGER
+    and gGlobalSyncTable.gamemode ~= ASSASSINS and gGlobalSyncTable.gamemode ~= DEATHMATCH then return false end
     -- don't allow spectators to attack players, vice versa
     if gPlayerSyncTable[v.playerIndex].state == SPECTATOR or gPlayerSyncTable[a.playerIndex].state == SPECTATOR then return false end
 end

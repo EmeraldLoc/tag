@@ -297,6 +297,18 @@ local function set_time_limit(gamemode)
         end
 
         entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.huntActiveTimer / 30)) .. "s"
+    elseif gamemode == DEATHMATCH then
+        if direction == CONT_LEFT then
+            gGlobalSyncTable.deathmatchActiveTimer = gGlobalSyncTable.deathmatchActiveTimer - (30 * speed)
+
+            if gGlobalSyncTable.deathmatchActiveTimer <= 30 * 30 then
+                gGlobalSyncTable.deathmatchActiveTimer = 30 * 30
+            end
+        else
+            gGlobalSyncTable.deathmatchActiveTimer = gGlobalSyncTable.deathmatchActiveTimer + (30 * speed)
+        end
+
+        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.deathmatchActiveTimer / 30)) .. "s"
     end
 end
 
@@ -506,6 +518,13 @@ helpEntries = {
     input = INPUT_A,
     func = function ()
         get_rules(HUNT)
+    end},
+
+    {name = "Deathmatch",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(DEATHMATCH)
     end},
 
     {name = "Spectating",

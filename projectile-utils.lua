@@ -20,5 +20,7 @@ function handle_projectile_pvp(aI, vI)
         -- do nothing, purely for chaos
     elseif gGlobalSyncTable.gamemode == HUNT then
         hunt_handle_pvp(aI, vI)
+    elseif gGlobalSyncTable.gamemode == DEATHMATCH then
+        deathmatch_handle_pvp(aI, vI)
     end
 end

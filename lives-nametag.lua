@@ -64,6 +64,7 @@ end
 
 local function on_hud_render()
     if  gGlobalSyncTable.gamemode ~= JUGGERNAUT
+    and gGlobalSyncTable.gamemode ~= DEATHMATCH
     and gGlobalSyncTable.gamemode ~= HUNT then return end
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
 
@@ -71,7 +72,8 @@ local function on_hud_render()
     djui_hud_set_font(FONT_NORMAL)
 
     for i = 1, MAX_PLAYERS - 1 do
-        if gPlayerSyncTable[i].state ~= RUNNER then goto continue end
+        if  gPlayerSyncTable[i].state ~= RUNNER
+        and gGlobalSyncTable.gamemode ~= DEATHMATCH then goto continue end
 
         local m = gMarioStates[i]
         local out = { x = 0, y = 0, z = 0 }
