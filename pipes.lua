@@ -29,8 +29,10 @@ local function pipe_loop(o)
         return
     end
 
-    -- if mario is within range, initiate the pipe
-    if dist_between_objects(o, m.marioObj) <= 50 then
+    -- if mario is within range, and we aren't frozen, initiate the pipe
+    if  dist_between_objects(o, m.marioObj) <= 50
+    and (gGlobalSyncTable.gamemode ~= FREEZE_TAG
+    or gPlayerSyncTable[m.playerIndex].state ~= WILDCARD_ROLE) then
         -- get pipes (includes this pipe)
         local pipes = levels[gGlobalSyncTable.selectedLevel].pipes[o.oPipesIndex]
         -- sanity check
