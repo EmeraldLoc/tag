@@ -697,8 +697,7 @@ function get_rules_for_gamemode(gamemode)
 	elseif gamemode == HUNT then
 		return "Hunt is similar to Tag. Runners each have 3 lives. You must remove all of the runners lives to become a runner yourself. Hunters must tag Runners in order to become Runners. Runners lives get set to 1 on death. You never become eliminated on death. If a hunter dies, they go back to the start of the level. Leaderboard works the same as in Tag."
 	elseif gamemode == DEATHMATCH then
-		-- TODO: Add rules here
-		return ""
+		return "Deathmatch is pretty much Hunt but free for all. Every player is assigned 5 lives. When you tag a player, they lose a life. Last one standing wins. You lose a life on death if elimination on death is on."
 	end
 end
 

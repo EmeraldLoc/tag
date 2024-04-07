@@ -794,6 +794,20 @@ local function reset_gamemode_selection()
         func = function () set_sardines_hide_time() end,
         valueText = tostring(math.floor(gGlobalSyncTable.sardinesHidingTimer / 30)) .. "s",},
 
+        {name = "Time Limit",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = function () set_time_limit(HUNT) end,
+        valueText = tostring(math.floor(gGlobalSyncTable.huntActiveTimer / 30)) .. "s",
+        seperator = "Hunt"},
+
+        {name = "Deathmatch",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = function () set_time_limit(DEATHMATCH) end,
+        valueText = tostring(math.floor(gGlobalSyncTable.deathmatchActiveTimer / 30)) .. "s",
+        seperator = "Deathmatch"},
+
         {name = "Back",
         permission = PERMISSION_NONE,
         input = INPUT_A,
