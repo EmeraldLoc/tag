@@ -803,6 +803,8 @@ local function update()
         -- get romhack
         local romhack = romhacks[gGlobalSyncTable.romhackOverride]
 
+        if romhack == nil then return end
+
         -- set levels var to romhack override
         levels = romhack.levels
 
