@@ -359,39 +359,43 @@ function generate_boost_trail()
 	end
 end
 
-function get_modifier_text()
+function get_modifier_text(m)
+
+	if m == nil then m = gGlobalSyncTable.modifier end
+
 	local text = ''
 
 	-- set modifier text depending on current modifier
-	if gGlobalSyncTable.modifier == MODIFIER_BOMBS then
+	if m == MODIFIER_BOMBS then
 		text = "\\#E82E2E\\Bombs"
-	elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
+	elseif m == MODIFIER_LOW_GRAVITY then
 		text = "\\#676767\\Low Gravity"
-	elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
+	elseif m == MODIFIER_NO_RADAR then
 		text = "\\#E82E2E\\No Radar"
-	elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
+	elseif m == MODIFIER_NO_BOOST then
 		if gGlobalSyncTable.boosts then
 			text = "\\#0099FF\\No Boost"
 		else
 			text = "\\#0099FF\\Boosts"
 		end
-	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
+	elseif m == MODIFIER_ONE_TAGGER then
 		text = "\\#316BE8\\One Tagger"
-	elseif gGlobalSyncTable.modifier == MODIFIER_FOG then
+	elseif m == MODIFIER_FOG then
 		text = "\\#7ACEF5\\Fog"
-	elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
+	elseif m == MODIFIER_SPEED then
 		text = "\\#0099FF\\Speed"
-	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+	elseif m == MODIFIER_INCOGNITO then
 		text = "\\#676767\\Incognito"
-	elseif gGlobalSyncTable.modifier == MODIFIER_HIGH_GRAVITY then
+	elseif m == MODIFIER_HIGH_GRAVITY then
 		text = "\\#BE6f4A\\High Gravity"
-	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
+	elseif m == MODIFIER_FLY then
 		text = "\\#FF0000\\Fly"
-	elseif gGlobalSyncTable.modifier == MODIFIER_BLASTER then
+	elseif m == MODIFIER_BLASTER then
 		text = "\\#0099FF\\Blaster"
-	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
+	elseif m == MODIFIER_NONE
+	and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
-	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
+	elseif m == MODIFIER_NONE then
 		text = "\\#FFFFFF\\Disabled"
 	end
 
@@ -439,9 +443,9 @@ function get_modifier_text_without_hex()
 	return text
 end
 
-function get_gamemode_including_random()
+function get_gamemode_including_random(g)
     if gGlobalSyncTable.randomGamemode then return "Random" end
-    return get_gamemode()
+    return get_gamemode(g)
 end
 
 function get_modifier_including_random()
@@ -449,46 +453,46 @@ function get_modifier_including_random()
     return get_modifier_text()
 end
 
-function get_gamemode_hex_color()
-	if gGlobalSyncTable.gamemode == TAG then
+function get_gamemode_hex_color(g)
+	if g == TAG then
 		return "\\#316BE8\\"
-	elseif gGlobalSyncTable.gamemode == FREEZE_TAG then
+	elseif g == FREEZE_TAG then
 		return "\\#7EC0EE\\"
-	elseif gGlobalSyncTable.gamemode == INFECTION then
+	elseif g == INFECTION then
 		return "\\#24D636\\"
-	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+	elseif g == HOT_POTATO then
 		return "\\#FC9003\\"
-	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+	elseif g == JUGGERNAUT then
 		return "\\#42B0F5\\"
-	elseif gGlobalSyncTable.gamemode == ASSASSINS then
+	elseif g == ASSASSINS then
 		return "\\#FF0000\\"
-	elseif gGlobalSyncTable.gamemode == SARDINES then
+	elseif g == SARDINES then
 		return "\\#BBBEA1\\"
-	elseif gGlobalSyncTable.gamemode == HUNT then
+	elseif g == HUNT then
 		return "\\#C74444\\"
-	elseif gGlobalSyncTable.gamemode == DEATHMATCH then
+	elseif g == DEATHMATCH then
 		return "\\#B83333\\"
 	end
 end
 
-function get_gamemode()
-	if gGlobalSyncTable.gamemode == TAG then
+function get_gamemode(g)
+	if g == TAG then
 		return "\\#316BE8\\Tag\\#DCDCDC\\"
-	elseif gGlobalSyncTable.gamemode == FREEZE_TAG then
+	elseif g == FREEZE_TAG then
 		return "\\#7EC0EE\\Freeze Tag\\#DCDCDC\\"
-	elseif gGlobalSyncTable.gamemode == INFECTION then
+	elseif g == INFECTION then
 		return "\\#24D636\\Infection\\#DCDCDC\\"
-	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+	elseif g == HOT_POTATO then
 		return "\\#FC9003\\Hot Potato\\#DCDCDC\\"
-	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+	elseif g == JUGGERNAUT then
 		return "\\#42B0F5\\Juggernaut\\#DCDCDC\\"
-	elseif gGlobalSyncTable.gamemode == ASSASSINS then
+	elseif g == ASSASSINS then
 		return "\\#FF0000\\Assassins\\#DCDCDC\\"
-	elseif gGlobalSyncTable.gamemode == SARDINES then
+	elseif g == SARDINES then
 		return "\\#BBBEA1\\Sardines\\#DCDCDC\\"
-	elseif gGlobalSyncTable.gamemode == HUNT then
+	elseif g == HUNT then
 		return "\\#C74444\\Hunt\\#DCDCDC\\"
-	elseif gGlobalSyncTable.gamemode == DEATHMATCH then
+	elseif g == DEATHMATCH then
 		return "\\#B83333\\Deathmatch\\#DCDCDC\\"
 	end
 
@@ -501,24 +505,24 @@ function get_player_name(localIndex)
 	return network_get_player_text_color_string(localIndex) .. gNetworkPlayers[localIndex].name
 end
 
-function get_gamemode_without_hex()
-	if gGlobalSyncTable.gamemode == TAG then
+function get_gamemode_without_hex(g)
+	if g == TAG then
 		return "Tag"
-	elseif gGlobalSyncTable.gamemode == FREEZE_TAG then
+	elseif g == FREEZE_TAG then
 		return "Freeze Tag"
-	elseif gGlobalSyncTable.gamemode == INFECTION then
+	elseif g == INFECTION then
 		return "Infection"
-	elseif gGlobalSyncTable.gamemode == HOT_POTATO then
+	elseif g == HOT_POTATO then
 		return "Hot Potato"
-	elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
+	elseif g == JUGGERNAUT then
 		return "Juggernaut"
-	elseif gGlobalSyncTable.gamemode == ASSASSINS then
+	elseif g == ASSASSINS then
 		return "Assassins"
-	elseif gGlobalSyncTable.gamemode == SARDINES then
+	elseif g == SARDINES then
 		return "Sardines"
-	elseif gGlobalSyncTable.gamemode == HUNT then
+	elseif g == HUNT then
 		return "Hunt"
-	elseif gGlobalSyncTable.gamemode == DEATHMATCH then
+	elseif g == DEATHMATCH then
 		return "Deathmatch"
 	end
 end
@@ -715,7 +719,7 @@ function wrap_text(text, maxLength)
     local lines = {}
     local line = ""
 
-	-- find whitespace
+	-- find whitespace/space character
     for word in text:gmatch("%S+") do
 		-- if the length of our word plus the line length is less
 		-- than the max length, the continue

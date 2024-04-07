@@ -50,7 +50,7 @@ local function hud_status()
 end
 
 local function hud_current_gamemode()
-    local text = "Current Gamemode is " .. get_gamemode_without_hex()
+    local text = "Current Gamemode is " .. get_gamemode_without_hex(gGlobalSyncTable.gamemode)
 
     if gGlobalSyncTable.randomGamemode then
         text = text .. " (Random)"

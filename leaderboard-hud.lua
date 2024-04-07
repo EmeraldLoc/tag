@@ -291,7 +291,7 @@ local function hud_voting_begins_in()
 end
 
 local function hud_gamemode()
-    local text = "Gamemode is set to " .. get_gamemode_including_random()
+    local text = "Gamemode is set to " .. get_gamemode_including_random(gGlobalSyncTable.gamemode)
 
     local screenWidth = djui_hud_get_screen_width()
     local width = djui_hud_measure_text(strip_hex(text))

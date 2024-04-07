@@ -447,8 +447,43 @@ gamemodeEntries = {}
 startEntries = {}
 -- players
 playerEntries = {}
--- blacklisted levels
-blacklistEntries = {}
+-- blacklisted level entries
+blacklistLevelEntries = {}
+-- blacklisted gamemode entries
+blacklistGamemodeEntries = {}
+-- blacklisted modifier entries
+blacklistModifierEntries = {}
+-- blacklisted entries
+blacklistEntries = {
+    {name = "Levels",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        entries = blacklistLevelEntries
+        selection = 1
+    end,},
+    {name = "Gamemodes",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        entries = blacklistGamemodeEntries
+        selection = 1
+    end,},
+    {name = "Modifiers",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        entries = blacklistModifierEntries
+        selection = 1
+    end,},
+    {name = "Back",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        entries = settingsEntries
+        selection = 1
+    end,},
+}
 -- binds
 bindsEntries = {}
 -- romhack entries
@@ -589,7 +624,7 @@ local function reset_settings_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = set_gamemode,
-        valueText = get_gamemode_including_random()},
+        valueText = get_gamemode_including_random(gGlobalSyncTable.gamemode)},
         -- modifier selection
         {name = "Modifiers",
         permission = PERMISSION_MODERATORS,
@@ -911,15 +946,15 @@ local function reset_player_selection()
     end
 end
 
-local function reset_blacklist_entries()
+local function reset_blacklist_levels_entries()
 
     local resetEntryVariable = false
 
-    if entries == blacklistEntries then
+    if entries == blacklistLevelEntries then
         resetEntryVariable = true
     end
 
-    blacklistEntries = {
+    blacklistLevelEntries = {
         {name = "Add",
         permission = PERMISSION_MODERATORS,
         input = INPUT_A,
@@ -929,7 +964,7 @@ local function reset_blacklist_entries()
         end,}}
 
     for i = 1, #blacklistedCourses do
-        table.insert(blacklistEntries,
+        table.insert(blacklistLevelEntries,
         {name = name_of_level(levels[blacklistedCourses[i]].level, levels[blacklistedCourses[i]].area),
         permission = PERMISSION_MODERATORS,
         input = INPUT_A,
@@ -940,19 +975,84 @@ local function reset_blacklist_entries()
         })
     end
 
-    table.insert(blacklistEntries,
+    table.insert(blacklistLevelEntries,
     {name = "Back",
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
-        entries = settingsEntries
+        entries = blacklistEntries
         selection = 1
     end,})
 
     if resetEntryVariable then
-        entries = blacklistEntries
+        entries = blacklistLevelEntries
 
         if selection > #entries then selection = #entries end
+    end
+end
+
+local function reset_blacklist_gamemode_entries()
+
+    resetEntryVariable = entries == blacklistGamemodeEntries
+
+    blacklistGamemodeEntries = {}
+
+    for i = MIN_GAMEMODE, MAX_GAMEMODE do
+        table.insert(blacklistGamemodeEntries, {
+            name = get_gamemode(i),
+            permission = PERMISSION_NONE,
+            input = INPUT_JOYSTICK,
+            valueText = on_off_text(not blacklistedGamemodes[i]),
+            func = function ()
+                blacklistedGamemodes[i] = not blacklistedGamemodes[i]
+            end,
+        })
+    end
+
+    table.insert(blacklistGamemodeEntries, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = blacklistEntries
+            selection = 1
+        end,
+    })
+
+    if resetEntryVariable then
+        entries = blacklistGamemodeEntries
+    end
+end
+
+local function reset_blacklist_modifier_entries()
+    local resetEntryVariable = entries == blacklistModifierEntries
+
+    blacklistModifierEntries = {}
+
+    for i = MODIFIER_MIN + 1, MODIFIER_MAX do
+        table.insert(blacklistModifierEntries, {
+            name = get_modifier_text(i),
+            permission = PERMISSION_NONE,
+            input = INPUT_JOYSTICK,
+            valueText = on_off_text(not blacklistedModifiers[i]),
+            func = function ()
+                blacklistedModifiers[i] = not blacklistedModifiers[i]
+            end,
+        })
+    end
+
+    table.insert(blacklistModifierEntries, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = blacklistEntries
+            selection = 1
+        end,
+    })
+
+    if resetEntryVariable then
+        entries = blacklistModifierEntries
     end
 end
 
@@ -1077,7 +1177,9 @@ local function hud_render()
     reset_gamemode_selection()
     reset_start_selection()
     reset_player_selection()
-    reset_blacklist_entries()
+    reset_blacklist_levels_entries()
+    reset_blacklist_gamemode_entries()
+    reset_blacklist_modifier_entries()
     reset_bind_entries()
     reset_romhack_entries()
 

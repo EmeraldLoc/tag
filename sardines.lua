@@ -67,7 +67,7 @@ local function hud_waiting()
 end
 
 local function hud_gamemode()
-    local text = "Gamemode is set to " .. get_gamemode_including_random()
+    local text = "Gamemode is set to " .. get_gamemode_including_random(gGlobalSyncTable.gamemode)
 
     local x = 40
     local y = 20

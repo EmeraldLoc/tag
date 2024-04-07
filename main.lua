@@ -166,8 +166,33 @@ timer = 0
 isRomhack = false
 -- if nametags are enabled or not (checked in check_mods function)
 nametagsEnabled = false
--- the name
+-- blacklisted courses, gamemodes, and modifiers
 blacklistedCourses = {}
+blacklistedGamemodes = {
+    [TAG] = false,
+    [FREEZE_TAG] = false,
+    [INFECTION] = false,
+    [HOT_POTATO] = false,
+    [JUGGERNAUT] = false,
+    [ASSASSINS] = false,
+    [SARDINES] = false,
+    [HUNT] = false,
+    [DEATHMATCH] = false,
+}
+blacklistedModifiers = {
+    [MODIFIER_BOMBS] = false,
+    [MODIFIER_LOW_GRAVITY] = false,
+    [MODIFIER_NO_RADAR] = false,
+    [MODIFIER_NO_BOOST] = false,
+    [MODIFIER_ONE_TAGGER] = false,
+    [MODIFIER_FOG] = false,
+    [MODIFIER_BOMBS] = false,
+    [MODIFIER_SPEED] = false,
+    [MODIFIER_INCOGNITO] = false,
+    [MODIFIER_HIGH_GRAVITY] = false,
+    [MODIFIER_FLY] = false,
+    [MODIFIER_BLASTER] = false,
+}
 -- the join timer, this is what gives it time to sync
 joinTimer = 6 * 30
 -- the previous level, used for when the server selects levels to pick
@@ -330,6 +355,11 @@ local function server_update()
                     and gGlobalSyncTable.modifier == MODIFIER_BOMBS then
                         goto selectmodifier
                     end
+
+                    -- don't know if explicit check for true is needed
+                    if blacklistedModifiers[gGlobalSyncTable.modifier] == true then
+                        goto selectmodifier
+                    end
                 else
                     gGlobalSyncTable.modifier = MODIFIER_NONE -- set the modifier to none
                 end
@@ -337,15 +367,34 @@ local function server_update()
 
             -- if we select a random gamemode, select that random gamemode now
             if gGlobalSyncTable.randomGamemode then
-                if numPlayers >= 3 then            -- 3 is the minimum player count for random gamemodes
+                if numPlayers >= 3 then -- 3 is the minimum player count for random gamemodes
+                    -- check if we have all gamemodes blacklisted
+                    local gamemodesBlacklisted = MIN_GAMEMODE - 1
+                    for i = MIN_GAMEMODE, MAX_GAMEMODE do
+                        if blacklistedGamemodes[i] == true then
+                            gamemodesBlacklisted = gamemodesBlacklisted + 1
+                        end
+                    end
+
+                    -- if they all are, skip setting gamemode
+                    if gamemodesBlacklisted == MAX_GAMEMODE then
+                        goto amountoftime
+                    end
+
+                    ::selectgamemode::
                     gGlobalSyncTable.gamemode = -1 -- force popup to show
                     gGlobalSyncTable.gamemode = math.random(MIN_GAMEMODE, MAX_GAMEMODE)
+
+                    if blacklistedGamemodes[gGlobalSyncTable.gamemode] == true then -- don't if it explicit check for true is needed here
+                        goto selectgamemode
+                    end
                 else
                     gGlobalSyncTable.gamemode = TAG -- set to tag explicitly
                 end
             end
 
             -- set the amount of time var and players needed var
+            ::amountoftime::
             if gGlobalSyncTable.gamemode == FREEZE_TAG then
                 -- set freeze tag timer
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.freezeTagActiveTimer
@@ -394,7 +443,7 @@ local function server_update()
             end
 
             log_to_console("Tag: Modifier is set to " ..
-                get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex())
+                get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex(gGlobalSyncTable.gamemode))
         end
 
         for i = 0, MAX_PLAYERS - 1 do
@@ -1163,7 +1212,7 @@ local function hud_round_status()
 end
 
 local function hud_gamemode()
-    local text = get_gamemode()
+    local text = get_gamemode(gGlobalSyncTable.gamemode)
     local scale = 1
 
     -- get width of screen and text
