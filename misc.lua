@@ -639,7 +639,7 @@ end
 ---@param frozen integer
 function unfreezed_popup(runner, frozen)
 	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
-	djui_popup_create_global(get_player_name(runner) .. "\\#7EC0EE\\ Unfroze\n" .. get_player_name(frozen), 3)
+	djui_popup_create_global(get_player_name(runner) .. "\\#7EC0EE\\ Saved\n" .. get_player_name(frozen), 3)
 end
 
 ---@param eliminatedIndex integer
@@ -785,33 +785,6 @@ function button_to_text(btn)
 
 	return ""
 end
-
--- boost stuff
----@param o Object
-function boost_particle_init(o)
-	-- set basic init vars
-	o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
-	o.oFaceAnglePitch = 0
-	o.oFaceAngleYaw = 90
-	o.oFaceAngleRoll = 0
-	o.oAnimState = 2
-	-- set scale to be very small compared to original object size
-	obj_scale(o, 0.15)
-	-- make sure the object faces the camera
-	obj_set_billboard(o)
-end
-
----@param o Object
-function boost_particle_loop(o)
-	-- increase timer, and after it goes over 0.6 seconds, delte the object
-	o.oTimer = o.oTimer + 1
-
-	if o.oTimer >= 0.6 * 30 then
-		o.activeFlags = ACTIVE_FLAG_DEACTIVATED
-	end
-end
-
-id_bhvBoostParticle = hook_behavior(nil, OBJ_LIST_DEFAULT, false, boost_particle_init, boost_particle_loop, "Boost Particle")
 
 function toggle_spectator()
 	if gGlobalSyncTable.roundState ~= ROUND_ACTIVE
