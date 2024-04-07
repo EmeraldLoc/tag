@@ -77,6 +77,24 @@ romhacks = {
     },
     {
         -- ported to tag by Murioz
+        name = "Super Mario 74 (+EE)",
+        shortName = "sm74",
+        water = false,
+        levels = {
+            { name = "cc",    level = LEVEL_CASTLE_COURTYARD, painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = -1701, y = -441, z = 825 },  { x = 3957, y = 1147, z = -5545 } } } },
+            { name = "bob",   level = LEVEL_BOB,              painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = 4066, y = -1014, z = -1968 },  { x = -1061, y = 1742, z = -1475 } } } },
+            { name = "wf",    level = LEVEL_WF,               painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = -4770, y = 2571, z = 830 },  { x = 466, y = -3174, z = -1439 } } } },
+            { name = "ccm",   level = LEVEL_CCM,              painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = 4271, y = -894, z = -4988 },  { x = -5825, y = 737, z = -1065 } } } },
+            { name = "sa",    level = LEVEL_SA,               painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = 119, y = 1778, z = -1989 },  { x = 2082, y = -1640, z = 1542 } } } },
+            { name = "bbh",   level = LEVEL_BBH,              painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = 2376, y = -1094, z = 1838 },  { x = 88, y = 3458, z = 345 } } } },
+            { name = "bitdw", level = LEVEL_BITDW,            painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = 263, y = 600, z = -3725 }, { x = 232, y = 600, z = -10796 } } } },
+            { name = "lll",   level = LEVEL_LLL,              painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = -1068, y = -2779, z = -5432 }, { x = 1091, y = 11934, z = 579 } } } },
+            { name = "ssl",   level = LEVEL_SSL,              painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = -1467, y = 3763, z = 5607 }, { x = -5109, y = -1298, z = -1876 } } } },
+            { name = "hmc",   level = LEVEL_HMC,              painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = 2636, y = 243, z = 3280 }, { x = 177, y = 2672, z = 4133 } } } },
+        }
+    },
+    {
+        -- ported to tag by Murioz
         name = "Star Road",
         shortName = "sr",
         water = false,
