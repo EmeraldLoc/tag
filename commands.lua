@@ -43,7 +43,7 @@ function start_command(msg)
     local level = levels[gGlobalSyncTable.selectedLevel]
 
     ---@diagnostic disable-next-line: param-type-mismatch
-    while table.contains(blacklistedCourses, level_to_course(level.level)) or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+    while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
         gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
         level = levels[gGlobalSyncTable.selectedLevel]
 
@@ -76,58 +76,8 @@ function spectator_command(msg)
 end
 
 function tag_command(msg)
-    if blacklistAddRequest then
-        if tonumber(msg) ~= nil then
-            for i = 1, #levels do
-                if tonumber(msg) == level_to_course(levels[i].level) then
-                    if not table.contains(blacklistedCourses, i) then
-                        table.insert(blacklistedCourses, i)
-                    else
-                        djui_chat_message_create("Course " ..
-                            name_of_level(levels[i].level, levels[i].area) .. " is already blacklisted")
-                    end
-
-                    djui_chat_message_create("Blacklisted " .. name_of_level(levels[i].level, levels[i].area))
-
-                    blacklistAddRequest = false
-
-                    return true
-                end
-            end
-
-            djui_chat_message_create("Course " .. msg .. " not found")
-
-            blacklistAddRequest = false
-
-            return true
-        else
-            for i = 1, #levels do
-                if msg:lower() == levels[i].name then
-                    if not table.contains(blacklistedCourses, i) then
-                        table.insert(blacklistedCourses, i)
-                        djui_chat_message_create("Blacklisted " .. levels[i].name)
-                    else
-                        djui_chat_message_create("Course " .. levels[i].name .. " is already blacklisted")
-                    end
-
-                    blacklistAddRequest = false
-
-                    return true
-                end
-            end
-
-            djui_chat_message_create("Course " .. msg .. " not found")
-
-            blacklistAddRequest = false
-
-            return true
-        end
-
-        blacklistAddRequest = false
-    else
-        showSettings = not showSettings
-        play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
-    end
+    showSettings = not showSettings
+    play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
     return true
 end
 

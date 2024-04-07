@@ -874,14 +874,15 @@ local function reset_start_selection()
     }
 
     for i = 1, #levels do
-        if not table.contains(blacklistedCourses, i) and not table.contains(badLevels, i) then
-            table.insert(startEntries,
-            {name = name_of_level(levels[i].level, levels[i].area),
-            permission = PERMISSION_MODERATORS,
-            input = INPUT_A,
-            func = function ()
-                start_command(levels[i].name)
-            end})
+        if not table.contains(badLevels, i) then
+            table.insert(startEntries, {
+                name = name_of_level(levels[i].level, levels[i].area),
+                permission = PERMISSION_MODERATORS,
+                input = INPUT_A,
+                func = function ()
+                    start_command(levels[i].name)
+                end
+            })
         end
     end
 
@@ -948,30 +949,19 @@ end
 
 local function reset_blacklist_levels_entries()
 
-    local resetEntryVariable = false
+    local resetEntryVariable = entries == blacklistLevelEntries
 
-    if entries == blacklistLevelEntries then
-        resetEntryVariable = true
-    end
+    blacklistLevelEntries = {}
 
-    blacklistLevelEntries = {
-        {name = "Add",
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_A,
-        func = function ()
-            blacklistAddRequest = true
-            djui_chat_message_create("Please run /tag course_name/course_index. To cancel, exit the blacklist menu")
-        end,}}
-
-    for i = 1, #blacklistedCourses do
-        table.insert(blacklistLevelEntries,
-        {name = name_of_level(levels[blacklistedCourses[i]].level, levels[blacklistedCourses[i]].area),
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_A,
-        func = function ()
-            table.remove(blacklistedCourses, i)
-        end,
-        valueText = tostring(level_to_course(levels[blacklistedCourses[i]].level))
+    for i = 1, #levels do
+        table.insert(blacklistLevelEntries, {
+            name = name_of_level(levels[i].level, levels[i].area),
+            permission = PERMISSION_MODERATORS,
+            input = INPUT_JOYSTICK,
+            func = function ()
+                blacklistedCourses[i] = not blacklistedCourses[i]
+            end,
+            valueText = on_off_text(not blacklistedCourses[i])
         })
     end
 

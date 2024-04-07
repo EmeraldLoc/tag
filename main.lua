@@ -292,7 +292,7 @@ local function server_update()
 
         -- this long while loop is just to select a random level, ik, extremely hard to read
         ---@diagnostic disable-next-line: param-type-mismatch
-        while table.contains(blacklistedCourses, level_to_course(level.level)) or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+        while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
             gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
 
             if level.level == LEVEL_TTC and isRomhack then
@@ -659,7 +659,7 @@ local function server_update()
                 local level = levels[gGlobalSyncTable.selectedLevel]
 
                 ---@diagnostic disable-next-line: param-type-mismatch
-                while table.contains(blacklistedCourses, level_to_course(level.level)) or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+                while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
                     gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
 
                     if level.level == LEVEL_TTC and isRomhack then
@@ -755,7 +755,7 @@ local function server_update()
             local level = levels[gGlobalSyncTable.selectedLevel]
 
             ---@diagnostic disable-next-line: param-type-mismatch
-            while table.contains(blacklistedCourses, level_to_course(level.level)) or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+            while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
                 gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
 
                 if level.level == LEVEL_TTC and isRomhack then
@@ -960,7 +960,7 @@ local function mario_update(m)
                         local level = levels[gGlobalSyncTable.selectedLevel]
 
                         ---@diagnostic disable-next-line: param-type-mismatch
-                        while table.contains(blacklistedCourses, level_to_course(level.level)) or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+                        while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
                             gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_MAX)) -- select a random level
                         end
 

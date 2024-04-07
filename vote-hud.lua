@@ -126,7 +126,7 @@ local function on_render()
             while voteRandomLevels[3] == nil do
                 local randomLevel = 0
                 randomLevel = math.random(1, #levels)
-                while table.contains(voteRandomLevels, randomLevel) or table.contains(blacklistedCourses, level_to_course(levels[randomLevel].level)) or randomLevel == gGlobalSyncTable.selectedLevel do
+                while table.contains(voteRandomLevels, randomLevel) or blacklistedCourses[randomLevel] == true or randomLevel == gGlobalSyncTable.selectedLevel do
                     randomLevel = math.random(1, #levels)
                 end
                 table.insert(voteRandomLevels, randomLevel)
