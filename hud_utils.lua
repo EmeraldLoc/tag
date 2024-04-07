@@ -117,7 +117,7 @@ function djui_unicode_get_sprite_width(text, font_widths)
 end
 
 function select_random_did_you_know()
-    randomDidYouKnow = math.random(1, 29)
+    randomDidYouKnow = math.random(1, 34)
 end
 
 function hud_did_you_know(fade)
@@ -127,7 +127,7 @@ function hud_did_you_know(fade)
     local text3 = ""
     local text4 = ""
 
-    -- I had way too much fun with this
+    -- I have way too much fun with this
     if randomDidYouKnow == 1 then
         text = "Did you know that Taggers can use a Boost?"
         text2 = "To do this, while you're a tagger, make sure the blue bar is filled up, then hit Y."
@@ -145,10 +145,7 @@ function hud_did_you_know(fade)
         text2 = "Levels can be blacklisted with the blacklist command if theres a bad level you dont want to play on,"
         text3 = "especially if there's water in it..."
     elseif randomDidYouKnow == 5 then
-        text = "Do you know who the author of this mod is?"
-        text2 = "It's EmeraldLockdown, a modder who's been modding since 2022 (dang time moves fast)!"
-        text3 = "EmeraldLockdown, also known as Emerald, has made many contributions to the project, and modding community."
-        text4 = "If your wondering, yes, this is a plug to my other mods :D"
+        text = "The author of this mod is EmeraldLockdown."
     elseif randomDidYouKnow == 6 then
         text = "Did you know that you suck at the game?"
     elseif randomDidYouKnow == 7 then
@@ -173,7 +170,7 @@ function hud_did_you_know(fade)
         text = "Wanna contribute? Search \"tag mod sm64 github,\" it'll be like the 3rd result. Help get it"
         text2 = "to the top, or no cookie for you >:("
     elseif randomDidYouKnow == 15 then
-        text = "As of January 23 2024, 6:11 pm, I'm having good fun writing these."
+        text = "As of January 23 2024, 6:11 pm CT, I'm having good fun writing these."
     elseif randomDidYouKnow == 16 then
         text = "I am not responsible for any grammer mistakes found in this text, dangit you're."
     elseif randomDidYouKnow == 17 then
@@ -222,6 +219,19 @@ function hud_did_you_know(fade)
         text2 = "The thing is I'm wondering when YOU'RE gonna do it! The tools are there!"
         text3 = "It's simple to add full romhack support, go to romhacks.lua for information."
         text4 = "And yes it's simple, I'm just waay too lazy to do it, plus it's time consuming."
+    elseif randomDidYouKnow == 30 then
+        text = "Chances are, if there's something you don't like, you can fix it in the settings"
+        text2 = "Some settings may be server/moderator only though, so yeaaa..."
+    elseif randomDidYouKnow == 31 then
+        text = "Check out Arena Bitforts, a super dope level made by Chilly!"
+    elseif randomDidYouKnow == 32 then
+        text = "Check out Shine Thief, a Mario Kart style game of Shine Thief, items and all!"
+        text2 = "Made by EmilyEmmi"
+    elseif randomDidYouKnow == 33 then
+        text = "A mod you should check out is Duels. It's pretty much in the title of what the mod does."
+        text2 = "Made by EmilyEmmi, the mod is a blast and really test's your skills!"
+    elseif randomDidYouKnow == 34 then
+        text = "Romhack not showing up? Try going to the tag settings and seeing if the hack is there."
     end
 
     local scale = 1
