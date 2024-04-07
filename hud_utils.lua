@@ -139,7 +139,7 @@ function hud_did_you_know(fade)
     elseif randomDidYouKnow == 3 then
         text = "Did you know that tag was actually made in 2022 by the same author, EmeraldLockdown, as this mod?"
         text2 = "The old tag mod was much worse and was more buggy than this version."
-        text3 = "If you wanna check it out, you can at 'sm64ex-coopmods.com'."
+        text3 = "If you wanna check it out, you may be able to on the sm64ex-coop discord server."
     elseif randomDidYouKnow == 4 then
         text = "Did you know that this mod fully supports romhacks right out the gate?"
         text2 = "Levels can be blacklisted with the blacklist command if theres a bad level you dont want to play on,"
@@ -176,7 +176,11 @@ function hud_did_you_know(fade)
     elseif randomDidYouKnow == 17 then
         text = "When next tag version?!?!?!?"
     elseif randomDidYouKnow == 18 then
-        text = "When coop v" .. VERSION_NUMBER + 1
+        if usingCoopDX then
+            text = "When coopdx v" .. SM64COOPDX_VERSION + 0.1
+        else
+            text = "When coop v" .. VERSION_NUMBER + 1
+        end
     elseif randomDidYouKnow == 19 then
         text = "Ya know what, a great mod you should download is MarioHunt. Really good mod, made by EmilyEmmi."
     elseif randomDidYouKnow == 20 then
