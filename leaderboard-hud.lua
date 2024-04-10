@@ -60,6 +60,7 @@ local function hud_leaderboard()
             if gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
                 if gPlayerSyncTable[i].state ~= TAGGER or gPlayerSyncTable[i].amountOfTags <= 0 then goto continue end
             elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
+                -- cursed
                 if (gPlayerSyncTable[i].state ~= RUNNER
                 and gGlobalSyncTable.gamemode ~= SARDINES
                 and (gGlobalSyncTable.gamemode ~= FREEZE_TAG
