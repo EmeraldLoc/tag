@@ -524,63 +524,63 @@ helpEntries = {
         get_rules(nil)
     end,},
 
-    {name = "Tag",
+    {name = get_gamemode(TAG),
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
         get_rules(TAG)
     end},
 
-    {name = "Freeze Tag",
+    {name = get_gamemode(FREEZE_TAG),
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
         get_rules(FREEZE_TAG)
     end},
 
-    {name = "Infection",
+    {name = get_gamemode(INFECTION),
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
         get_rules(INFECTION)
     end},
 
-    {name = "Hot Potato",
+    {name = get_gamemode(HOT_POTATO),
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
         get_rules(HOT_POTATO)
     end},
 
-    {name = "Juggernaut",
+    {name = get_gamemode(JUGGERNAUT),
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
         get_rules(JUGGERNAUT)
     end},
 
-    {name = "Assassins",
+    {name = get_gamemode(ASSASSINS),
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
         get_rules(ASSASSINS)
     end},
 
-    {name = "Sardines",
+    {name = get_gamemode(SARDINES),
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
         get_rules(SARDINES)
     end},
 
-    {name = "Hunt",
+    {name = get_gamemode(HUNT),
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
         get_rules(HUNT)
     end},
 
-    {name = "Deathmatch",
+    {name = get_gamemode(DEATHMATCH),
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
@@ -828,14 +828,14 @@ local function reset_gamemode_selection()
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(TAG) end,
         valueText = tostring(math.floor(gGlobalSyncTable.tagActiveTimer / 30)) .. "s",
-        seperator = "Tag"}, -- this seperator seperates 2 sections. It goes above the button.
+        seperator = get_gamemode(TAG)}, -- this seperator seperates 2 sections. It goes above the button.
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(FREEZE_TAG) end,
         valueText = tostring(math.floor(gGlobalSyncTable.freezeTagActiveTimer / 30)) .. "s",
-        seperator = "Freeze Tag"},
+        seperator = get_gamemode(FREEZE_TAG)},
 
         {name = "Frozen Health Drain",
         permission = PERMISSION_MODERATORS,
@@ -848,35 +848,35 @@ local function reset_gamemode_selection()
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(INFECTION) end,
         valueText = tostring(math.floor(gGlobalSyncTable.infectionActiveTimer / 30)) .. "s",
-        seperator = "Infection"},
+        seperator = get_gamemode(INFECTION)},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(HOT_POTATO) end,
         valueText = tostring(math.floor(gGlobalSyncTable.hotPotatoActiveTimer / 30)) .. "s",
-        seperator = "Hot Potato"},
+        seperator = get_gamemode(HOT_POTATO)},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(JUGGERNAUT) end,
         valueText = tostring(math.floor(gGlobalSyncTable.juggernautActiveTimer / 30)) .. "s",
-        seperator = "Juggernaut"},
+        seperator = get_gamemode(JUGGERNAUT)},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(ASSASSINS) end,
         valueText = tostring(math.floor(gGlobalSyncTable.assassinsActiveTimer / 30)) .. "s",
-        seperator = "Assassins"},
+        seperator = get_gamemode(ASSASSINS)},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(SARDINES) end,
         valueText = tostring(math.floor(gGlobalSyncTable.sardinesActiveTimer / 30)) .. "s",
-        seperator = "Sardines"},
+        seperator = get_gamemode(SARDINES)},
 
         {name = "Picking Spot Time Limit",
         permission = PERMISSION_MODERATORS,
@@ -889,14 +889,14 @@ local function reset_gamemode_selection()
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(HUNT) end,
         valueText = tostring(math.floor(gGlobalSyncTable.huntActiveTimer / 30)) .. "s",
-        seperator = "Hunt"},
+        seperator = get_gamemode(HUNT)},
 
         {name = "Deathmatch",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(DEATHMATCH) end,
         valueText = tostring(math.floor(gGlobalSyncTable.deathmatchActiveTimer / 30)) .. "s",
-        seperator = "Deathmatch"},
+        seperator = get_gamemode(DEATHMATCH)},
 
         {name = "Back",
         permission = PERMISSION_NONE,
