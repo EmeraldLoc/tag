@@ -439,8 +439,10 @@ local function wait_for_button(bindIndex)
     awaitingInput = bindIndex
 end
 
--- default selections
-settingsEntries = {}
+-- main selections
+mainEntries = {}
+-- general selections
+generalEntries = {}
 -- gamemode entries
 gamemodeEntries = {}
 -- start round selections
@@ -480,7 +482,7 @@ blacklistEntries = {
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
-        entries = settingsEntries
+        entries = mainEntries
         selection = 1
     end,},
 }
@@ -583,12 +585,12 @@ helpEntries = {
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
-        entries = settingsEntries
+        entries = mainEntries
         selection = 1
     end,}
 }
 
-entries = settingsEntries
+entries = mainEntries
 
 local function background()
     djui_hud_set_color(0, 0, 0, 128)
@@ -603,13 +605,9 @@ end
 
 local function reset_settings_selection()
 
-    local resetSettingsEntries = false
+    local resetSettingsEntries = entries == mainEntries
 
-    if entries == settingsEntries then
-        resetSettingsEntries = true
-    end
-
-    settingsEntries = {
+    mainEntries = {
         -- start selection
         {name = "Start",
         permission = PERMISSION_NONE,
@@ -619,6 +617,86 @@ local function reset_settings_selection()
             selection = 1
         end,
         valueText = ">",},
+        -- general settings selection
+        {name = "General",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = generalEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- gamemode settings selection
+        {name = "Gamemode Settings",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = gamemodeEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- players selection
+        {name = "Players",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = playerEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- blacklist selection
+        {name = "Blacklist",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_A,
+        func = function ()
+            entries = blacklistEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- binds selection
+        {name = "Bindings",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = bindsEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- romhack selection
+        {name = "Romhacks",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_A,
+        func = function ()
+            entries = romhackEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- help selection
+        {name = "Help",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = helpEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- done selection
+        {name = "Done",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function () showSettings = not showSettings end,
+        valueText = nil,},
+    }
+
+    if resetSettingsEntries then
+        entries = mainEntries
+    end
+end
+
+local function reset_general_selection()
+    local resetGeneralEntries = entries == generalEntries
+
+    generalEntries = {
         -- gamemode selection
         {name = "Gamemode",
         permission = PERMISSION_MODERATORS,
@@ -691,70 +769,18 @@ local function reset_settings_selection()
         input = INPUT_JOYSTICK,
         func = toggle_auto_hide_hud,
         valueText = on_off_text(autoHideHud),},
-        -- gamemode settings selection
-        {name = "Gamemode Settings",
+        -- back selection
+        {name = "Back",
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
-            entries = gamemodeEntries
+            entries = mainEntries
             selection = 1
-        end,
-        valueText = ">",},
-        -- players selection
-        {name = "Players",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        func = function ()
-            entries = playerEntries
-            selection = 1
-        end,
-        valueText = ">",},
-        -- blacklist selection
-        {name = "Blacklist",
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_A,
-        func = function ()
-            entries = blacklistEntries
-            selection = 1
-        end,
-        valueText = ">",},
-        -- binds selection
-        {name = "Bindings",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        func = function ()
-            entries = bindsEntries
-            selection = 1
-        end,
-        valueText = ">",},
-        -- romhack selection
-        {name = "Romhacks",
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_A,
-        func = function ()
-            entries = romhackEntries
-            selection = 1
-        end,
-        valueText = ">",},
-        -- help selection
-        {name = "Help",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        func = function ()
-            entries = helpEntries
-            selection = 1
-        end,
-        valueText = ">",},
-        -- done selection
-        {name = "Done",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        func = function () showSettings = not showSettings end,
-        valueText = nil,},
+        end,},
     }
 
-    if resetSettingsEntries then
-        entries = settingsEntries
+    if resetGeneralEntries then
+        entries = generalEntries
     end
 end
 
@@ -847,7 +873,7 @@ local function reset_gamemode_selection()
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
-            entries = settingsEntries
+            entries = mainEntries
             selection = 1
         end,
         seperator = ""} -- empty seperator is just spacing,
@@ -899,7 +925,7 @@ local function reset_start_selection()
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
-        entries = settingsEntries
+        entries = mainEntries
         selection = 1
     end,})
 
@@ -936,7 +962,7 @@ local function reset_player_selection()
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
-        entries = settingsEntries
+        entries = mainEntries
         selection = 1
     end,})
 
@@ -1081,7 +1107,7 @@ local function reset_bind_entries()
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
-            entries = settingsEntries
+            entries = mainEntries
             selection = 1
         end}
     )
@@ -1122,7 +1148,7 @@ local function reset_romhack_entries()
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
-            entries = settingsEntries
+            entries = mainEntries
             selection = 1
         end}
     )
@@ -1135,7 +1161,7 @@ end
 local function hud_render()
 
     if not showSettings then
-        entries = settingsEntries
+        entries = mainEntries
         selection = 1
         scrollOffset = 0
         return
@@ -1164,6 +1190,7 @@ local function hud_render()
     settings_text()
     -- reconstruct tables
     reset_settings_selection()
+    reset_general_selection()
     reset_gamemode_selection()
     reset_start_selection()
     reset_player_selection()
