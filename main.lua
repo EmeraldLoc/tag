@@ -109,7 +109,7 @@ gGlobalSyncTable.juggernautActiveTimer = 120 * 30
 gGlobalSyncTable.assassinsActiveTimer  = 120 * 30
 gGlobalSyncTable.sardinesActiveTimer   = 120 * 30
 gGlobalSyncTable.huntActiveTimer       = 180 * 30
-gGlobalSyncTable.deathmatchActiveTimer       = 180 * 30
+gGlobalSyncTable.deathmatchActiveTimer = 180 * 30
 -- other timers
 gGlobalSyncTable.sardinesHidingTimer   = 30  * 30
 -- auto mode
@@ -783,8 +783,16 @@ local function update()
     if not initializedSaveData then
         initializedSaveData = true
         -- booleans
-        if load_bool("useRomhackCam") == false then useRomhackCam = false end
-        if load_bool("autoHideHud") == false then autoHideHud = false end
+        if load_bool("bljs") ~= nil then gGlobalSyncTable.bljs = load_bool("bljs") end
+        if load_bool("cannons") ~= nil then gGlobalSyncTable.cannons = load_bool("cannons") end
+        if load_bool("water") ~= nil then gGlobalSyncTable.water = load_bool("water") end
+        if load_bool("eliminateOnDeath") ~= nil then gGlobalSyncTable.eliminateOnDeath = load_bool("eliminateOnDeath") end
+        if load_bool("voting") ~= nil then gGlobalSyncTable.voting = load_bool("voting") end
+        if load_bool("autoMode") ~= nil then gGlobalSyncTable.autoMode = load_bool("autoMode") end
+        if load_bool("boost") ~= nil then gGlobalSyncTable.boosts = load_bool("boost") end
+        if load_bool("hazardSurfaces") ~= nil then gGlobalSyncTable.hazardSurfaces = load_bool("hazardSurfaces") end
+        if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
+        if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
         -- binds
         for i = 0, BIND_MAX do
             if load_int("bind_" .. tostring(i)) ~= nil then

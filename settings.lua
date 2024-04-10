@@ -114,54 +114,77 @@ end
 
 local function toggle_bljs()
     gGlobalSyncTable.bljs = not gGlobalSyncTable.bljs
-    entries[selection].valueText = on_off_text(gGlobalSyncTable.bljs)
+    save_bool("bljs", gGlobalSyncTable.bljs)
 end
 
 local function toggle_cannons()
     gGlobalSyncTable.cannons = not gGlobalSyncTable.cannons
-    entries[selection].valueText = on_off_text(gGlobalSyncTable.cannons)
+    save_bool("cannons", gGlobalSyncTable.cannons)
 end
 
 local function toggle_water()
     gGlobalSyncTable.water = not gGlobalSyncTable.water
-    entries[selection].valueText = on_off_text(gGlobalSyncTable.water)
+    save_bool("water", gGlobalSyncTable.water)
 end
 
 local function toggle_eliminate_on_death()
     gGlobalSyncTable.eliminateOnDeath = not gGlobalSyncTable.eliminateOnDeath
-    entries[selection].valueText = on_off_text(gGlobalSyncTable.eliminateOnDeath)
+    save_bool("eliminateOnDeath", gGlobalSyncTable.eliminateOnDeath)
 end
 
 local function toggle_voting()
     gGlobalSyncTable.doVoting = not gGlobalSyncTable.doVoting
-    entries[selection].valueText = on_off_text(gGlobalSyncTable.doVoting)
+    save_bool("voting", gGlobalSyncTable.voting)
 end
 
 local function toggle_auto_mode()
     gGlobalSyncTable.autoMode = not gGlobalSyncTable.autoMode
-    entries[selection].valueText = on_off_text(gGlobalSyncTable.autoMode)
+    save_bool("autoMode", gGlobalSyncTable.autoMode)
 end
 
 local function toggle_boost()
     gGlobalSyncTable.boosts = not gGlobalSyncTable.boosts
-    entries[selection].valueText = on_off_text(gGlobalSyncTable.boosts)
+    save_bool("boost", gGlobalSyncTable.boosts)
 end
 
 local function toggle_hazards()
     gGlobalSyncTable.hazardSurfaces = not gGlobalSyncTable.hazardSurfaces
-    entries[selection].valueText = on_off_text(gGlobalSyncTable.hazardSurfaces)
+    save_bool("hazardSurfaces", gGlobalSyncTable.hazardSurfaces)
 end
 
 local function toggle_romhack_cam()
     useRomhackCam = not useRomhackCam
-    entries[selection].valueText = on_off_text(useRomhackCam)
-    save_boolean("useRomhackCam", useRomhackCam)
+    save_bool("useRomhackCam", useRomhackCam)
 end
 
 local function toggle_auto_hide_hud()
     autoHideHud = not autoHideHud
-    entries[selection].valueText = on_off_text(autoHideHud)
-    save_boolean("autoHideHud", autoHideHud)
+    save_bool("autoHideHud", autoHideHud)
+end
+
+local function reset_general_settings()
+    if network_is_server()
+    or network_is_moderator() then
+        gGlobalSyncTable.bljs = false
+        save_bool("bljs", false)
+        gGlobalSyncTable.cannons = false
+        save_bool("cannons", false)
+        gGlobalSyncTable.water = false
+        save_bool("water", false)
+        gGlobalSyncTable.eliminateOnDeath = false
+        save_bool("eliminateOnDeath", false)
+        gGlobalSyncTable.voting = true
+        save_bool("voting", true)
+        gGlobalSyncTable.autoMode = true
+        save_bool("autoMode", true)
+        gGlobalSyncTable.boosts = true
+        save_bool("boosts", true)
+    end
+
+    useRomhackCam = true
+    save_bool("useRomhackCam", true)
+    autoHideHud = true
+    save_bool("autoHideHud", true)
 end
 
 local function set_time_limit(gamemode)
@@ -608,6 +631,19 @@ local function reset_settings_selection()
     local resetSettingsEntries = entries == mainEntries
 
     mainEntries = {
+        -- have gamemode and modifiers here as they are the most used settings
+        -- gamemode selection
+        {name = "Gamemode",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = set_gamemode,
+        valueText = get_gamemode_including_random(gGlobalSyncTable.gamemode)},
+        -- modifier selection
+        {name = "Modifiers",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = set_modifier,
+        valueText = get_modifier_including_random()},
         -- start selection
         {name = "Start",
         permission = PERMISSION_NONE,
@@ -697,18 +733,6 @@ local function reset_general_selection()
     local resetGeneralEntries = entries == generalEntries
 
     generalEntries = {
-        -- gamemode selection
-        {name = "Gamemode",
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_JOYSTICK,
-        func = set_gamemode,
-        valueText = get_gamemode_including_random(gGlobalSyncTable.gamemode)},
-        -- modifier selection
-        {name = "Modifiers",
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_JOYSTICK,
-        func = set_modifier,
-        valueText = get_modifier_including_random()},
         -- blj selection
         {name = "Bljs",
         permission = PERMISSION_MODERATORS,
@@ -769,6 +793,11 @@ local function reset_general_selection()
         input = INPUT_JOYSTICK,
         func = toggle_auto_hide_hud,
         valueText = on_off_text(autoHideHud),},
+        -- reset settings selection
+        {name = "Reset Settings",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = reset_general_settings,},
         -- back selection
         {name = "Back",
         permission = PERMISSION_NONE,

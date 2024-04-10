@@ -11,7 +11,7 @@ end
 
 ---@param key string
 ---@param value boolean
-function save_boolean(key, value)
+function save_bool(key, value)
     -- convert value to string
     local strValue = tostring(value)
     -- add tag_bool_ to the beggining
