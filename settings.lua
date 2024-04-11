@@ -1253,8 +1253,8 @@ local function hud_render()
             height = height + 45
         else
             height = height + 60
-            if i > scrollEntry + scrollOffset / 60
-            or i < (scrollOffset / 60) - 1 then goto continue end
+            if i > math.ceil(scrollEntry + scrollOffset / 60)
+            or i < math.floor((scrollOffset / 60) - 1) then goto continue end
         end
 
         if entries[i].text ~= nil then
