@@ -5,7 +5,7 @@ E_MODEL_BOOST_TRAIL = smlua_model_util_get_id("boost_trail_geo")
 ---@param table table
 ---@param element any
 function table.contains(table, element)
-	-- we check each value in the table
+	-- check each value in the table
     for _, value in pairs(table) do
 		-- check if that value is equal to the element
       	if value == element then
@@ -14,8 +14,24 @@ function table.contains(table, element)
       	end
     end
 
-	-- if we finish the loop, we did'nt find the entry in the table, so return false
+	-- if we finish the loop, we didn't find the entry in the table, so return false
 	return false
+end
+
+---@param table table
+---@param element any
+function table.pos_of_element(table, element)
+	-- check each value in the table
+    for i, value in pairs(table) do
+		-- check if that value is equal to the element
+      	if value == element then
+			-- if so, return that index
+        	return i
+      	end
+    end
+
+	-- if we finish the loop, we didn't find the entry in the table, so return nil
+	return nil
 end
 
 ---@param str string

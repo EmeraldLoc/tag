@@ -86,7 +86,7 @@ local function hud_render()
         for i = 1, MAX_PLAYERS - 1 do
             if gNetworkPlayers[i].connected then
                 -- make sure the states line up
-                if gPlayerSyncTable[i].state == RUNNER and gPlayerSyncTable[0].state == TAGGER then -- check if we meet the checks to render the radar
+                if gPlayerSyncTable[i].state == TAGGER and gPlayerSyncTable[0].state == TAGGER then -- check if we meet the checks to render the radar
                     render_radar(gMarioStates[i], icon_radar[i], false) -- render radar on player
                 end
             end
@@ -103,7 +103,7 @@ local function on_death(m)
     if m.playerIndex ~= 0 then return end
 
     -- subtract lives by 1 with a cap of 1
-    if gPlayerSyncTable[0].state == RUNNER then
+    if gPlayerSyncTable[0].state == TAGGER then
         gPlayerSyncTable[0].tagLives = gPlayerSyncTable[0].tagLives - 1
         if gPlayerSyncTable[0].tagLives < 1 then gPlayerSyncTable[0].tagLives = 1 end
     end

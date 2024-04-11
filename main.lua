@@ -72,14 +72,14 @@ BIND_MAX = 2
 -- globals and sync tables
 -- this is the round state, this variable tells you what current round it is
 gGlobalSyncTable.roundState            = ROUND_WAIT_PLAYERS
+-- what the current gamemode is
+gGlobalSyncTable.gamemode              = TAG
 -- this is the currently selected modifier. If random modifiers are off (as in you've selected
 -- one manually) then MODIFIER_NONE = Disabled
 gGlobalSyncTable.modifier              = MODIFIER_NONE
--- dictates wether or not modifiers and gamemodes are random
-gGlobalSyncTable.randomModifiers       = true
+-- dictates whether or not modifiers and gamemodes are random
 gGlobalSyncTable.randomGamemode        = true
--- what the gamemode is
-gGlobalSyncTable.gamemode              = TAG
+gGlobalSyncTable.randomModifiers       = true
 -- toggles for bljs, cnanons, and water
 gGlobalSyncTable.bljs                  = false
 gGlobalSyncTable.cannons               = false
@@ -217,6 +217,19 @@ binds[BIND_BOOST] = {name = "Boost", btn = Y_BUTTON}
 binds[BIND_BOMBS] = {name = "Bombs", btn = Y_BUTTON}
 -- gun bind
 binds[BIND_GUN] = {name = "Gun", btn = X_BUTTON}
+-- stats
+stats = {
+    globalStats = {
+        playTime = 0,
+        totalTags = 0,
+        totalTimeAsRunner = 0,
+        runnerVictories = 0,
+        taggerVictories = 0,
+    },
+    [TAG] = {
+
+    }
+}
 
 -- speed boost timer handles boosting
 local speedBoostTimer = 0

@@ -13,6 +13,8 @@ local bgHeight = djui_hud_get_screen_height() - 80
 local selection = 1
 local awaitingInput = nil
 local scrollEntry = 12
+local statGroupIndex = 0
+local statIndex = 0
 
 local function on_off_text(bool)
     if bool then return "On" else return "Off" end
@@ -172,8 +174,8 @@ local function reset_general_settings()
         save_bool("cannons", false)
         gGlobalSyncTable.water = false
         save_bool("water", false)
-        gGlobalSyncTable.eliminateOnDeath = false
-        save_bool("eliminateOnDeath", false)
+        gGlobalSyncTable.eliminateOnDeath = true
+        save_bool("eliminateOnDeath", true)
         gGlobalSyncTable.voting = true
         save_bool("voting", true)
         gGlobalSyncTable.autoMode = true
@@ -614,6 +616,11 @@ helpEntries = {
     end,}
 }
 
+-- stat entries
+statPlayerSelectionEntries = {}
+statGroupEntries = {}
+statEntries = {}
+
 entries = mainEntries
 
 local function background()
@@ -636,7 +643,7 @@ local function settings_text()
     djui_hud_print_text(text, x + (bgWidth / 2) - (djui_hud_measure_text(text) / 2), y + 105 - scrollOffset, 1)
 end
 
-local function reset_settings_selection()
+local function reset_main_selections()
 
     local resetSettingsEntries = entries == mainEntries
 
@@ -723,6 +730,15 @@ local function reset_settings_selection()
         input = INPUT_A,
         func = function ()
             entries = helpEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- stats selection
+        {name = "Stats",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = statPlayerSelectionEntries
             selection = 1
         end,
         valueText = ">",},
@@ -1197,6 +1213,115 @@ local function reset_romhack_entries()
     end
 end
 
+local function reset_stat_player_selections_entries()
+    local resetStatEntries = entries == statPlayerSelectionEntries
+    statPlayerSelectionEntries = {}
+
+    for i = 0, MAX_PLAYERS - 1 do
+        if not gNetworkPlayers[i].connected then goto continue end
+        local name = network_get_player_text_color_string(i) .. gNetworkPlayers[i].name
+        table.insert(statPlayerSelectionEntries, {
+            name = name,
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = statGroupEntries
+                statIndex = 0
+                selection = 1
+            end
+        })
+
+        ::continue::
+    end
+
+    table.insert(statPlayerSelectionEntries, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = mainEntries
+            selection = 1
+        end
+    })
+
+    if resetStatEntries then
+        entries = statPlayerSelectionEntries
+    end
+end
+
+local function reset_stat_group_entries()
+    local resetStatEntries = entries == statGroupEntries
+
+    statGroupEntries = {
+        {name = "Global Stats",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = statEntries
+            statGroupIndex = -1
+            selection = 1
+        end,},
+    }
+
+    for i = MIN_GAMEMODE, MAX_GAMEMODE do
+        table.insert(statGroupEntries, {
+            {name = get_gamemode(i),
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = statEntries
+                statGroupIndex = i
+                selection = 1
+            end,}
+        })
+    end
+
+    table.insert(statGroupEntries, {
+        {name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = statPlayerSelectionEntries
+            selection = 1
+        end,}
+    })
+
+    if resetStatEntries then
+        entries = statGroupEntries
+    end
+end
+
+local function reset_stat_entries()
+
+    resetStatEntries = entries == statEntries
+    statEntries = {
+        {name = "Play Time",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        valueText = stats.globalStats.playTime},
+        {name = "Runner Victories",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        valueText = stats.globalStats.runnerVictories},
+        {name = "Tagger Victories",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        valueText = stats.globalStats.taggerVictories},
+        {name = "Total Time As Runner",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        valueText = stats.globalStats.totalTimeAsRunner},
+        {name = "Total Tags",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        valueText = stats.globalStats.totalTags},
+    }
+
+    if resetStatEntries then
+        entries = statEntries
+    end
+end
+
 local function hud_render()
 
     if not showSettings then
@@ -1226,7 +1351,7 @@ local function hud_render()
     background()
     settings_text()
     -- reconstruct tables
-    reset_settings_selection()
+    reset_main_selections()
     reset_general_selection()
     reset_gamemode_selection()
     reset_start_selection()
@@ -1236,6 +1361,9 @@ local function hud_render()
     reset_blacklist_modifier_entries()
     reset_bind_entries()
     reset_romhack_entries()
+    reset_stat_player_selections_entries()
+    reset_stat_group_entries()
+    reset_stat_entries()
 
     local height = 90
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
@@ -1306,7 +1434,7 @@ local function hud_render()
 
         if entries[i].valueText ~= nil then
             djui_hud_set_color(220, 220, 220, 255)
-            djui_hud_print_colored_text(entries[i].valueText, x + (bgWidth - 30) - djui_hud_measure_text(strip_hex(entries[i].valueText)), y + height + 4 - scrollOffset, 1)
+            djui_hud_print_colored_text(tostring(entries[i].valueText), x + (bgWidth - 30) - djui_hud_measure_text(strip_hex(tostring(entries[i].valueText))), y + height + 4 - scrollOffset, 1)
         end
 
         ::continue::
@@ -1342,8 +1470,10 @@ local function mario_update(m)
     and joystickCooldown <= 0))
     and entries[selection].input == INPUT_JOYSTICK then
         if has_permission(entries[selection].permission) then
-            entries[selection].func()
-            play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
+            if entries[selection].func ~= nil then
+                entries[selection].func()
+                play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
+            end
         else
             play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         end
@@ -1353,8 +1483,10 @@ local function mario_update(m)
     and joystickCooldown <= 0))
     and entries[selection].input == INPUT_JOYSTICK then
         if has_permission(entries[selection].permission) then
-            entries[selection].func()
-            play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
+            if entries[selection].func ~= nil then
+                entries[selection].func()
+                play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
+            end
         else
             play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         end
@@ -1381,8 +1513,10 @@ local function mario_update(m)
         if has_permission(entries[selection].permission)
         and (entries[selection].disabled == nil or
         (entries[selection].disabled ~= nil and not entries[selection].disabled())) then
-            entries[selection].func()
-            play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
+            if entries[selection].func ~= nil then
+                entries[selection].func()
+                play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
+            end
         else
             play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         end
