@@ -9,7 +9,7 @@ INPUT_JOYSTICK = 1
 local scrollOffset = 0
 local joystickCooldown = 0
 local screenHeight = djui_hud_get_screen_height()
-local bgWidth = 525
+local bgWidth = 600
 local selection = 1
 local awaitingInput = nil
 
@@ -616,14 +616,16 @@ helpEntries = {
 entries = mainEntries
 
 local function background()
+    local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(0, 0, bgWidth, screenHeight)
+    djui_hud_render_rect(x, 0, bgWidth, screenHeight)
 end
 
 local function settings_text()
     local text = "Tag Settings"
+    local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     djui_hud_set_color(220, 220, 220, 255)
-    djui_hud_print_text(text, (bgWidth / 2) - djui_hud_measure_text(text), 50 - scrollOffset, 2)
+    djui_hud_print_text(text, x + ((bgWidth / 2) - djui_hud_measure_text(text)), 50 - scrollOffset, 2)
 end
 
 local function reset_settings_selection()
@@ -1230,13 +1232,14 @@ local function hud_render()
     reset_romhack_entries()
 
     local height = 90
+    local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
 
     for i = 1, #entries do
         if entries[i].seperator ~= nil then
             height = height + 45
 
             djui_hud_set_color(220, 220, 220, 255)
-            djui_hud_print_colored_text(entries[i].seperator, 30, height + 4 - scrollOffset, 1)
+            djui_hud_print_colored_text(entries[i].seperator, x + 30, height + 4 - scrollOffset, 1)
 
             height = height + 45
         else
@@ -1245,7 +1248,7 @@ local function hud_render()
 
         if entries[i].text ~= nil then
             -- appreciate the free labor chatgpt (ok I did a little bit of cleanup)
-            local textAmount = 53
+            local textAmount = 64
             if usingCoopDX then textAmount = 50 end
             local wrappedTextLines = wrap_text(entries[i].text, textAmount)
 
@@ -1256,7 +1259,7 @@ local function hud_render()
                     djui_hud_set_color(200, 200, 200, 255)
                 end
 
-                djui_hud_print_text(line, 20, height - scrollOffset + (j - 1) * 28, 1)
+                djui_hud_print_text(line, x + 20, height - scrollOffset + (j - 1) * 28, 1)
             end
 
             for _ = 1, #wrappedTextLines do
@@ -1272,7 +1275,7 @@ local function hud_render()
             djui_hud_set_color(32, 32, 34, 128)
         end
 
-        djui_hud_render_rect(20, height - scrollOffset, bgWidth - 40, 40)
+        djui_hud_render_rect(x + 20, height - scrollOffset, bgWidth - 40, 40)
 
         if not has_permission(entries[i].permission)
         or (entries[i].disabled ~= nil and entries[i].disabled()) then
@@ -1281,11 +1284,11 @@ local function hud_render()
             djui_hud_set_color(220, 220, 220, 255)
         end
 
-        djui_hud_print_colored_text(entries[i].name, 30, height + 4 - scrollOffset, 1)
+        djui_hud_print_colored_text(entries[i].name, x + 30, height + 4 - scrollOffset, 1)
 
         if entries[i].valueText ~= nil then
             djui_hud_set_color(220, 220, 220, 255)
-            djui_hud_print_colored_text(entries[i].valueText, bgWidth - 30 - djui_hud_measure_text(strip_hex(entries[i].valueText)), height + 4 - scrollOffset, 1)
+            djui_hud_print_colored_text(entries[i].valueText, x + (bgWidth - 30) - djui_hud_measure_text(strip_hex(entries[i].valueText)), height + 4 - scrollOffset, 1)
         end
 
         ::continue::
