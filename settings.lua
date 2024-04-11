@@ -624,7 +624,7 @@ local function background()
 end
 
 local function settings_text()
-    if scrollOffset / 60 > 1 then return end
+    if scrollOffset / 60 > 1.5 then return end
     local text = "Tag Settings"
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     local y = (djui_hud_get_screen_height() - bgHeight) / 2
@@ -1240,7 +1240,7 @@ local function hud_render()
     for i = 1, #entries do
         if entries[i].seperator ~= nil then
             if i > math.ceil(scrollEntry + scrollOffset / 60)
-            or i < math.ceil((scrollOffset / 60) - 1) then
+            or i < math.floor((scrollOffset / 60) - 1) then
                 height = height + 60
                 goto continue
             end
