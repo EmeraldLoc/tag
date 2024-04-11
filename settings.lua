@@ -656,7 +656,7 @@ local function reset_settings_selection()
         end,
         valueText = ">",},
         -- general settings selection
-        {name = "General",
+        {name = "General Settings",
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
@@ -1249,7 +1249,7 @@ local function hud_render()
         if entries[i].text ~= nil then
             -- appreciate the free labor chatgpt (ok I did a little bit of cleanup)
             local textAmount = 64
-            if usingCoopDX then textAmount = 50 end
+            if usingCoopDX then textAmount = 55 end
             local wrappedTextLines = wrap_text(entries[i].text, textAmount)
 
             for j, line in ipairs(wrappedTextLines) do
