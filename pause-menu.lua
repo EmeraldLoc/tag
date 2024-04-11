@@ -93,12 +93,12 @@ local function mario_update(m)
         joystickCooldown = 0
     end
 
-    if m.controller.stickY > 0.5 and joystickCooldown <= 0 then
+    if m.controller.buttonPressed & U_JPAD ~= 0 or (m.controller.stickY > 0.5 and joystickCooldown <= 0) then
         selection = selection - 1
         if selection < 1 then selection = #pauseEntries end
         play_sound(SOUND_MENU_CHANGE_SELECT, gGlobalSoundSource)
         joystickCooldown = 0.2 * 30
-    elseif m.controller.stickY < -0.5 and joystickCooldown <= 0 then
+    elseif m.controller.buttonPressed & D_JPAD ~= 0 or (m.controller.stickY < -0.5 and joystickCooldown <= 0) then
         selection = selection + 1
         if selection > #pauseEntries then selection = 1 end
         play_sound(SOUND_MENU_CHANGE_SELECT, gGlobalSoundSource)
