@@ -8,10 +8,11 @@ INPUT_JOYSTICK = 1
 
 local scrollOffset = 0
 local joystickCooldown = 0
-local screenHeight = djui_hud_get_screen_height()
 local bgWidth = 600
+local bgHeight = djui_hud_get_screen_height() - 80
 local selection = 1
 local awaitingInput = nil
+local scrollEntry = 12
 
 local function on_off_text(bool)
     if bool then return "On" else return "Off" end
@@ -617,15 +618,18 @@ entries = mainEntries
 
 local function background()
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x, 0, bgWidth, screenHeight)
+    local y = djui_hud_get_screen_height() - bgHeight
+    djui_hud_set_color(20, 20, 22, 250)
+    djui_hud_render_rect_outlined(x, y / 2, bgWidth, bgHeight, 45, 45, 47, 10)
 end
 
 local function settings_text()
+    if scrollOffset / 60 > 1 then return end
     local text = "Tag Settings"
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
+    local y = (djui_hud_get_screen_height() - bgHeight) / 2
     djui_hud_set_color(220, 220, 220, 255)
-    djui_hud_print_text(text, x + ((bgWidth / 2) - djui_hud_measure_text(text)), 50 - scrollOffset, 2)
+    djui_hud_print_text(text, x + ((bgWidth / 2) - djui_hud_measure_text(text)), y + 50 - scrollOffset, 2)
 end
 
 local function reset_settings_selection()
@@ -1198,21 +1202,19 @@ local function hud_render()
         return
     end
 
-    screenHeight = djui_hud_get_screen_height()
-
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
     -- get entry to start scrolling at
-    local scrollEntry = 14
+    scrollEntry = 12
     for i = 1, #entries do
         if entries[i].seperator ~= nil then
-            scrollEntry = scrollEntry - 0.5
+            scrollEntry = scrollEntry - 0.4
         end
     end
 
-    if selection >= math.floor(scrollEntry) then
-        scrollOffset = 60 * (selection - scrollEntry + 1)
+    if selection >= math.ceil(scrollEntry) then
+        scrollOffset = 60 * (selection - scrollEntry)
     else
         scrollOffset = 0
     end
@@ -1233,17 +1235,26 @@ local function hud_render()
 
     local height = 90
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
+    local y = (djui_hud_get_screen_height() - bgHeight) / 2
 
     for i = 1, #entries do
         if entries[i].seperator ~= nil then
+            if i > math.ceil(scrollEntry + scrollOffset / 60)
+            or i < math.ceil((scrollOffset / 60) - 1) then
+                height = height + 60
+                goto continue
+            end
             height = height + 45
 
+
             djui_hud_set_color(220, 220, 220, 255)
-            djui_hud_print_colored_text(entries[i].seperator, x + 30, height + 4 - scrollOffset, 1)
+            djui_hud_print_colored_text(entries[i].seperator, x + 30, y + height + 4 - scrollOffset, 1)
 
             height = height + 45
         else
             height = height + 60
+            if i > scrollEntry + scrollOffset / 60
+            or i < (scrollOffset / 60) - 1 then goto continue end
         end
 
         if entries[i].text ~= nil then
@@ -1259,7 +1270,7 @@ local function hud_render()
                     djui_hud_set_color(200, 200, 200, 255)
                 end
 
-                djui_hud_print_text(line, x + 20, height - scrollOffset + (j - 1) * 28, 1)
+                djui_hud_print_text(line, x + 20, y + height - scrollOffset + (j - 1) * 28, 1)
             end
 
             for _ = 1, #wrappedTextLines do
@@ -1269,13 +1280,16 @@ local function hud_render()
             goto continue
         end
 
+        local outlineColor = 50
+
         if selection == i then
-            djui_hud_set_color(32, 32, 34, 225)
+            djui_hud_set_color(40, 40, 40, 215)
+            outlineColor = 60
         else
-            djui_hud_set_color(32, 32, 34, 128)
+            djui_hud_set_color(32, 32, 32, 200)
         end
 
-        djui_hud_render_rect(x + 20, height - scrollOffset, bgWidth - 40, 40)
+        djui_hud_render_rect_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor, outlineColor, outlineColor, 3)
 
         if not has_permission(entries[i].permission)
         or (entries[i].disabled ~= nil and entries[i].disabled()) then
@@ -1284,11 +1298,11 @@ local function hud_render()
             djui_hud_set_color(220, 220, 220, 255)
         end
 
-        djui_hud_print_colored_text(entries[i].name, x + 30, height + 4 - scrollOffset, 1)
+        djui_hud_print_colored_text(entries[i].name, x + 30, y + height + 4 - scrollOffset, 1)
 
         if entries[i].valueText ~= nil then
             djui_hud_set_color(220, 220, 220, 255)
-            djui_hud_print_colored_text(entries[i].valueText, x + (bgWidth - 30) - djui_hud_measure_text(strip_hex(entries[i].valueText)), height + 4 - scrollOffset, 1)
+            djui_hud_print_colored_text(entries[i].valueText, x + (bgWidth - 30) - djui_hud_measure_text(strip_hex(entries[i].valueText)), y + height + 4 - scrollOffset, 1)
         end
 
         ::continue::

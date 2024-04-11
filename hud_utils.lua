@@ -196,6 +196,17 @@ function djui_hud_print_colored_text(text, x, y, scale, opacity)
 	end
 end
 
+function djui_hud_render_rect_outlined(x, y, width, height, oR, oG, oB, thickness)
+    -- render main rect
+    djui_hud_render_rect(x, y, width, height)
+    -- set outline color to, well, outline color
+    djui_hud_set_color(oR, oG, oB, 255)
+    -- render rect outside of each side
+    djui_hud_render_rect(x - thickness, y - thickness, thickness, height + thickness * 2)
+    djui_hud_render_rect(x + (width - thickness) + thickness, y, thickness, height + thickness)
+    djui_hud_render_rect(x, y - thickness, width + thickness, thickness)
+    djui_hud_render_rect(x, y + (height - thickness) + thickness, width + thickness, thickness)
+end
 
 -- this entire snippet for the player head was made by EmilyEmmi (with adjustments for tag made by me :), thanks!
 local PART_ORDER = {
