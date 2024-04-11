@@ -77,7 +77,12 @@ end
 
 function tag_command(msg)
     showSettings = not showSettings
-    play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
+    if not isPaused then
+        isPaused = true
+        play_sound(SOUND_MENU_PAUSE, gGlobalSoundSource)
+    else
+        play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
+    end
     return true
 end
 
