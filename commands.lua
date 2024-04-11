@@ -62,13 +62,6 @@ function start_command(msg)
     return true
 end
 
----@param msg string
-function on_version_command(msg)
-    djui_chat_message_create("Current \\#316BE8\\Tag \\#FFFFFF\\Version: " .. version)
-
-    return true
-end
-
 function spectator_command(msg)
     toggle_spectator()
 
@@ -86,11 +79,11 @@ function tag_command(msg)
     return true
 end
 
-if network_is_server() then
-    hook_chat_command("tag", "View and change tag settings", tag_command)
+if network_is_server()
+or network_is_moderator() then
+    hook_chat_command("tag", "View tag options", tag_command)
     hook_chat_command("start", "[name|index] Starts round in a random or specific level", start_command)
 else
-    hook_chat_command("tag", "View tag settings", tag_command)
+    hook_chat_command("tag", "View tag options", tag_command)
 end
 hook_chat_command("spectate", "Toggle spectating", spectator_command)
-hook_chat_command("version", "Get current version of Tag", on_version_command)
