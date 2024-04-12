@@ -33,12 +33,11 @@ local function retrieve_key_table()
     return references
 end
 
----@param str string
-function encrypt_string(str)
-    if str == nil then return "" end
+function generate_key()
     -- retrieve key if it exists
     if  mod_storage_load("encryptionKey1") ~= nil
-    and mod_storage_load("encryptionKey2") ~= nil then
+    and mod_storage_load("encryptionKey2") ~= nil
+    and encryptionKey == "" then
         encryptionKey = mod_storage_load("encryptionKey1") .. mod_storage_load("encryptionKey2")
     end
 
@@ -67,6 +66,12 @@ function encrypt_string(str)
         mod_storage_save("encryptionKey1", encryptionKey:sub(1, encryptionKey:len() / 2))
         mod_storage_save("encryptionKey2", encryptionKey:sub(encryptionKey:len() / 2 + 1, encryptionKey:len()))
     end
+end
+
+---@param str string
+function encrypt_string(str)
+    if str == nil then return "" end
+    generate_key()
 
     -- get key into table
     local references = retrieve_key_table()
@@ -90,6 +95,7 @@ end
 
 function decrypt_string(str)
     if str == nil then return nil end
+    generate_key()
     -- get key into table
     local references = retrieve_key_table()
 
