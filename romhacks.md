@@ -82,6 +82,12 @@ pipes = {
 
 Except do that on one line. Now get a mod that renders mario's position (I recommend Pos Display), and go to the place you want your first pipe to go. Now plug in the position values into the first pipe, and do the same for the second, and that's it! You can have as many pairs of pipes as you want.
 
+### Contributing
+
+Once you do all this, fork the tag repo, put your changes into that repo, and make a pull request. Put in the name you would like to be credited with and I will make sure to credit you.
+
+That's it!
+
 # Adding Your Level to Tag
 
 Firstly, if your level already works in Arena, then it should work in tag as well, however no pipes will be added. If you want to add pipes, then you can using the official way to add levels to tag. Here's what that looks like:
@@ -93,9 +99,3 @@ _G.tag.add_level(level, name, painting, area, pipes, spawnLocation)
 If you read the guide above, it should be clear what needs to be done.
 
 Note for painting: You can only use painintgs already in tag, if a paintnig doesn't exist, you can't add one to tag. If you find a way to accomplish this that I don't know of, you can contact me at the modding site, or make an issue in the tag repo.
-
-### Contributing
-
-Once you do all this, fork the tag repo, put your changes into that repo, and make a pull request. Put in the name you would like to be credited with and I will make sure to credit you.
-
-That's it!
