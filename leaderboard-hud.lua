@@ -173,10 +173,12 @@ local function hud_leaderboard()
                 and gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
                 and position == 1 then
                     stat.runnerVictories = stat.runnerVictories + 1
+                    stats.globalStats.runnerVictories = stats.globalStats.runnerVictories + 1
                 elseif stat.taggerVictories ~= nil
                 and gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
                 and position == 1 then
                     stat.taggerVictories = stat.taggerVictories + 1
+                    stats.globalStats.taggerVictories = stats.globalStats.taggerVictories + 1
                 elseif stat.victories ~= nil
                 and position == 1 then
                     stat.victories = stat.victories + 1
@@ -184,14 +186,16 @@ local function hud_leaderboard()
 
                 if stat.totalTimeAsRunner ~= nil then
                     stat.totalTimeAsRunner = gPlayerSyncTable[i].amountOfTimeAsRunner
+                    stats.globalStats.totalTimeAsRunner = stats.globalStats.totalTimeAsRunner + stat.totalTimeAsRunner
                 end
 
                 if stat.totalTags ~= nil then
-                    stat.totalTags = gPlayerSyncTable[i].amountOfTags
+                    stat.totalTags = stat.totalTags + gPlayerSyncTable[i].amountOfTags
+                    stats.globalStats.totalTags = stats.globalStats.totalTags + gPlayerSyncTable[i].amountOfTags
                 end
 
                 if stat.totalTimeAsSardine ~= nil then
-                    stat.totalTimeAsSardine = gPlayerSyncTable[i].amountOfTimeAsRunner
+                    stat.totalTimeAsSardine = stat.totalTimeAsSardine + gPlayerSyncTable[i].amountOfTimeAsRunner
                 end
             end
 
