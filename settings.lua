@@ -1383,7 +1383,8 @@ local function reset_stat_entries()
         end
         if scopeStats.taggerVictories ~= nil then
             local name = "Tagger Victories"
-            if statGroupIndex == ASSASSINS then name = "Victories" end
+            if statGroupIndex == ASSASSINS
+            or statGroupIndex == DEATHMATCH then name = "Victories" end
             table.insert(statEntries, {
                 name = name,
                 permission = PERMISSION_NONE,
@@ -1391,15 +1392,19 @@ local function reset_stat_entries()
             })
         end
         if scopeStats.totalTimeAsRunner ~= nil then
+            local name = "Total Time As Runner"
+            if statGroupIndex == SARDINES then name = "Total Time As Sardine" end
             table.insert(statEntries, {
-                name = "Total Time As Runner",
+                name = name,
                 permission = PERMISSION_NONE,
                 valueText = math.floor(scopeStats.totalTimeAsRunner / 30) .. "s"
             })
         end
         if scopeStats.totalTags ~= nil then
+            local name = "Total Tags"
+            if statGroupIndex == INFECTION then name = "Total Infections" end
             table.insert(statEntries, {
-                name = "Total Tags",
+                name = name,
                 permission = PERMISSION_NONE,
                 valueText = scopeStats.totalTags
             })

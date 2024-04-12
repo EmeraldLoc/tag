@@ -1,4 +1,5 @@
--- an easy to use mod storage system, fully encrypted, cross compatible with ex-coop and coopdx
+-- an easy to use mod storage system, fully "encrypted"
+-- cross compatible with ex-coop and coopdx
 
 --------------------------
 -- encryption functions --

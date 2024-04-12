@@ -282,7 +282,6 @@ stats = {
     [DEATHMATCH] = {
         playTime = 0,
         totalTags = 0,
-        runnerVictories = 0,
         taggerVictories = 0,
     },
 }
