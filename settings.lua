@@ -1382,8 +1382,10 @@ local function reset_stat_entries()
             })
         end
         if scopeStats.taggerVictories ~= nil then
+            local name = "Tagger Victories"
+            if statGroupIndex == ASSASSINS then name = "Victories" end
             table.insert(statEntries, {
-                name = "Tagger Victories",
+                name = name,
                 permission = PERMISSION_NONE,
                 valueText = scopeStats.taggerVictories
             })
