@@ -893,19 +893,19 @@ local function update()
         -- load gamemode stats
         for i = MIN_GAMEMODE, MAX_GAMEMODE do
             if load_int("stats_" .. i .. "_playTime") ~= nil then
-                stats[i].playTime = load_int("stats_" .. i .. "playTime")
+                stats[i].playTime = load_int("stats_" .. i .. "_playTime")
             elseif load_int("stats_" .. i .. "_runnerVictories") ~= nil then
-                stats[i].runnerVictories = load_int("stats_" .. i .. "runnerVictories")
+                stats[i].runnerVictories = load_int("stats_" .. i .. "_runnerVictories")
             elseif load_int("stats_" .. i .. "_taggerVictories") ~= nil then
-                stats[i].taggerVictories = load_int("stats_" .. i .. "taggerVictories")
+                stats[i].taggerVictories = load_int("stats_" .. i .. "_taggerVictories")
             elseif load_int("stats_" .. i .. "_victories") ~= nil then
-                stats[i].victories = load_int("stats_" .. i .. "victories")
+                stats[i].victories = load_int("stats_" .. i .. "_victories")
             elseif load_int("stats_" .. i .. "_totalTimeAsRunner") ~= nil then
-                stats[i].totalTimeAsRunner = load_int("stats_" .. i .. "totalTimeAsRunner")
+                stats[i].totalTimeAsRunner = load_int("stats_" .. i .. "_totalTimeAsRunner")
             elseif load_int("stats_" .. i .. "_totalTags") ~= nil then
-                stats[i].totalTags = load_int("stats_" .. i .. "totalTags")
+                stats[i].totalTags = load_int("stats_" .. i .. "_totalTags")
             elseif load_int("stats_" .. i .. "_totalTimeAsSardine") ~= nil then
-                stats[i].totalTimeAsSardine = load_int("stats_" .. i .. "totalTimeAsSardine")
+                stats[i].totalTimeAsSardine = load_int("stats_" .. i .. "_totalTimeAsSardine")
             end
         end
     end
