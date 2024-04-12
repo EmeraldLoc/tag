@@ -1,6 +1,7 @@
 
 local hudTimer =  0
 local fade = 0
+local addedStats = false
 
 local function update()
     if hudTimer > 0 then
@@ -160,6 +161,37 @@ local function hud_leaderboard()
                     text = "Tags: " .. gPlayerSyncTable[i].amountOfTags
                 else
                     text = "Infections: " .. gPlayerSyncTable[i].amountOfTags
+                end
+            end
+
+            -- stats
+            if not addedStats
+            and i == 0 then
+                addedStats = true
+                local stat = stats[gGlobalSyncTable.gamemode]
+                if  stat.runnerVictories ~= nil
+                and gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
+                and position == 1 then
+                    stat.runnerVictories = stat.runnerVictories + 1
+                elseif stat.taggerVictories ~= nil
+                and gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
+                and position == 1 then
+                    stat.taggerVictories = stat.taggerVictories + 1
+                elseif stat.victories ~= nil
+                and position == 1 then
+                    stat.victories = stat.victories + 1
+                end
+
+                if stat.totalTimeAsRunner ~= nil then
+                    stat.totalTimeAsRunner = gPlayerSyncTable[i].amountOfTimeAsRunner
+                end
+
+                if stat.totalTags ~= nil then
+                    stat.totalTags = gPlayerSyncTable[i].amountOfTags
+                end
+
+                if stat.totalTimeAsSardine ~= nil then
+                    stat.totalTimeAsSardine = gPlayerSyncTable[i].amountOfTimeAsRunner
                 end
             end
 
@@ -324,6 +356,7 @@ local function hud_render()
         if joinTimer <= 0 and desyncTimer >= 10 * 30 and gGlobalSyncTable.roundState ~= ROUND_HIDING_SARDINES then
             select_random_did_you_know()
         end
+        addedStats = false
 
         return
     end

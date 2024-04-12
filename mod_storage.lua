@@ -1,8 +1,13 @@
 -- an easy to use mod storage system, fully encrypted, cross compatible with ex-coop and coopdx
 
-local encryptionKey = ""
--- get all characters used in encryption
+--------------------------
+-- encryption functions --
+--------------------------
 
+-- the encryption key
+local encryptionKey = ""
+
+-- get all characters used in encryption
 local characters = {
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
     "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
@@ -120,7 +125,7 @@ end
 function save_bool(key, value)
     -- convert value to string
     local strValue = tostring(value)
-    -- add tag_bool_ to the beggining
+    -- add tag_bool_ to the beginning
     strValue = "tag_bool_" .. strValue
     -- save
     mod_storage_save(key, encrypt_string(strValue))
@@ -132,7 +137,7 @@ end
 function save_int(key, value)
     -- convert value to string
     local strValue = tostring(value)
-    -- add tag_int_ to the beggining
+    -- add tag_int_ to the beginning
     strValue = "tag_int_" .. strValue
     -- save
     mod_storage_save(key, encrypt_string(strValue))

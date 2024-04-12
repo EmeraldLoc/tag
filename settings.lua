@@ -1265,25 +1265,25 @@ local function reset_stat_group_entries()
 
     for i = MIN_GAMEMODE, MAX_GAMEMODE do
         table.insert(statGroupEntries, {
-            {name = get_gamemode(i),
+            name = get_gamemode(i),
             permission = PERMISSION_NONE,
             input = INPUT_A,
             func = function ()
                 entries = statEntries
                 statGroupIndex = i
                 selection = 1
-            end,}
+            end
         })
     end
 
     table.insert(statGroupEntries, {
-        {name = "Back",
+        name = "Back",
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
             entries = statPlayerSelectionEntries
             selection = 1
-        end,}
+        end
     })
 
     if resetStatEntries then
@@ -1294,28 +1294,93 @@ end
 local function reset_stat_entries()
 
     resetStatEntries = entries == statEntries
-    statEntries = {
-        {name = "Play Time",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        valueText = stats.globalStats.playTime},
-        {name = "Runner Victories",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        valueText = stats.globalStats.runnerVictories},
-        {name = "Tagger Victories",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        valueText = stats.globalStats.taggerVictories},
-        {name = "Total Time As Runner",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        valueText = stats.globalStats.totalTimeAsRunner},
-        {name = "Total Tags",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        valueText = stats.globalStats.totalTags},
-    }
+    statEntries = {}
+    if statGroupIndex < 0 then
+
+        local scopeStats = stats.globalStats
+
+        statEntries = {
+            {name = "Play Time",
+            permission = PERMISSION_NONE,
+            valueText = scopeStats.playTime},
+            {name = "Runner Victories",
+            permission = PERMISSION_NONE,
+            valueText = scopeStats.runnerVictories},
+            {name = "Tagger Victories",
+            permission = PERMISSION_NONE,
+            valueText = scopeStats.taggerVictories},
+            {name = "Total Time As Runner",
+            permission = PERMISSION_NONE,
+            valueText = scopeStats.totalTimeAsRunner},
+            {name = "Total Tags",
+            permission = PERMISSION_NONE,
+            valueText = scopeStats.totalTags},
+            {name = "Back",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = statGroupEntries
+                selection = 1
+            end,}
+        }
+    else
+        local scopeStats = stats[statGroupIndex]
+        if scopeStats == nil then goto continue end
+        if scopeStats.playTime ~= nil then
+            table.insert(statEntries, {
+                name = "Play Time",
+                permission = PERMISSION_NONE,
+                valueText = scopeStats.playTime
+            })
+        end
+        if scopeStats.runnerVictories ~= nil then
+            table.insert(statEntries, {
+                name = "Runner Victories",
+                permission = PERMISSION_NONE,
+                valueText = scopeStats.runnerVictories
+            })
+        end
+        if scopeStats.taggerVictories ~= nil then
+            table.insert(statEntries, {
+                name = "Tagger Victories",
+                permission = PERMISSION_NONE,
+                valueText = scopeStats.taggerVictories
+            })
+        end
+        if scopeStats.totalTimeAsRunner ~= nil then
+            table.insert(statEntries, {
+                name = "Total Time As Runner",
+                permission = PERMISSION_NONE,
+                valueText = scopeStats.totalTimeAsRunner
+            })
+        end
+        if scopeStats.totalTags ~= nil then
+            table.insert(statEntries, {
+                name = "Total Tags",
+                permission = PERMISSION_NONE,
+                valueText = scopeStats.totalTags
+            })
+        end
+        if scopeStats.totalTimeAsSardine ~= nil then
+            table.insert(statEntries, {
+                name = "Total Time As Sardine",
+                permission = PERMISSION_NONE,
+                valueText = scopeStats.totalTimeAsSardine
+            })
+        end
+
+        table.insert(statEntries, {
+            name = "Back",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = statGroupEntries
+                selection = 1
+            end
+        })
+
+        ::continue::
+    end
 
     if resetStatEntries then
         entries = statEntries
@@ -1430,7 +1495,7 @@ local function hud_render()
             djui_hud_set_color(220, 220, 220, 255)
         end
 
-        djui_hud_print_colored_text(entries[i].name, x + 30, y + height + 4 - scrollOffset, 1)
+        djui_hud_print_colored_text(tostring(entries[i].name), x + 30, y + height + 4 - scrollOffset, 1)
 
         if entries[i].valueText ~= nil then
             djui_hud_set_color(220, 220, 220, 255)

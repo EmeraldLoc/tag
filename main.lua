@@ -20,7 +20,7 @@ ROUND_HOT_POTATO_INTERMISSION          = 5
 ROUND_VOTING                           = 6
 ROUND_HIDING_SARDINES                  = 7
 
--- roles (gamemode-specific roles specified in designated gamemode files)
+-- roles (gamemode-specific roles specified in designated gamemode files, and replace the wildcard role)
 RUNNER                                 = 0
 TAGGER                                 = 1
 WILDCARD_ROLE                          = 2
@@ -227,8 +227,64 @@ stats = {
         taggerVictories = 0,
     },
     [TAG] = {
-
-    }
+        playTime = 0,
+        totalTags = 0,
+        totalTimeAsRunner = 0,
+        runnerVictories = 0,
+        taggerVictories = 0,
+    },
+    [FREEZE_TAG] = {
+        playTime = 0,
+        totalTags = 0,
+        totalTimeAsRunner = 0,
+        runnerVictories = 0,
+        taggerVictories = 0,
+    },
+    [INFECTION] = {
+        playTime = 0,
+        totalTags = 0,
+        totalTimeAsRunner = 0,
+        runnerVictories = 0,
+        taggerVictories = 0,
+    },
+    [HOT_POTATO] = {
+        playTime = 0,
+        totalTags = 0,
+        totalTimeAsRunner = 0,
+        runnerVictories = 0,
+        taggerVictories = 0,
+    },
+    [JUGGERNAUT] = {
+        playTime = 0,
+        totalTags = 0,
+        totalTimeAsRunner = 0,
+        runnerVictories = 0,
+        taggerVictories = 0,
+    },
+    [ASSASSINS] = {
+        playTime = 0,
+        totalTags = 0,
+        victories = 0,
+    },
+    [SARDINES] = {
+        playTime = 0,
+        totalTags = 0,
+        totalTimeAsSardine = 0,
+        taggerVictories = 0,
+    },
+    [HUNT] = {
+        playTime = 0,
+        totalTags = 0,
+        totalTimeAsRunner = 0,
+        runnerVictories = 0,
+        taggerVictories = 0,
+    },
+    [DEATHMATCH] = {
+        playTime = 0,
+        totalTags = 0,
+        runnerVictories = 0,
+        taggerVictories = 0,
+    },
 }
 
 -- speed boost timer handles boosting
@@ -1123,6 +1179,17 @@ local function mario_update(m)
         if levels[gGlobalSyncTable.selectedLevel].overrideSurfaceType ~= nil
         and levels[gGlobalSyncTable.selectedLevel].overrideSurfaceType[m.floor.type] ~= nil then
             m.floor.type = levels[gGlobalSyncTable.selectedLevel].overrideSurfaceType[m.floor.type]
+        end
+
+        -- handle play time stats
+        if gGlobalSyncTable.roundState == ROUND_ACTIVE
+        or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
+        or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
+            if stats[gGlobalSyncTable.gamemode].playTime ~= nil then
+                stats[gGlobalSyncTable.gamemode].playTime = stats[gGlobalSyncTable.gamemode].playTime + 1
+            end
+
+            stats.globalStats.playTime = stats.globalStats.playTime + 1
         end
     end
 end
