@@ -90,7 +90,7 @@ That's it!
 
 # Adding Your Level to Tag
 
-Firstly, if your level already works in Arena, then it should work in tag as well, however no pipes will be added. If you want to add pipes, then you can using the official way to add levels to tag. Here's what that looks like:
+Firstly, if your level already works in Arena, then it should work in tag as well. Pipes are placed in the position of the team flags, and the spawn is set via the flag tag pos. If the floor is invalid however, it'll set your spawn point to an actual spawn point. If you want to add a level to tag using the official way, here's what that looks like:
 
 ```
 _G.tag.add_level(level, name, painting, area, pipes, spawnLocation)
