@@ -11,7 +11,6 @@ function arena_spawn_init(o)
     if levels[gGlobalSyncTable.selectedLevel].spawnLocation == nil then
         levels[gGlobalSyncTable.selectedLevel].spawnLocation = {x = o.oPosX, y = o.oFloorHeight, z = o.oPosZ}
         vec3f_copy(gMarioStates[0].pos, levels[gGlobalSyncTable.selectedLevel].spawnLocation)
-        reset_standing_still()
     end
     -- delete this spawn
     obj_mark_for_deletion(o)
@@ -30,7 +29,6 @@ function arena_flag_spawn_init(o)
     and collision_find_floor(o.oPosX, o.oPosY, o.oPosZ).type ~= SURFACE_DEATH_PLANE then
         levels[gGlobalSyncTable.selectedLevel].spawnLocation = {x = o.oPosX, y = find_floor_height(o.oPosX, o.oPosY, o.oPosZ), z = o.oPosZ}
         vec3f_copy(gMarioStates[0].pos, levels[gGlobalSyncTable.selectedLevel].spawnLocation)
-        reset_standing_still()
     elseif team == 1 then
         if levels[gGlobalSyncTable.selectedLevel].pipes == nil then
             levels[gGlobalSyncTable.selectedLevel].pipes = { { { x = 0, y = 0, z = 0, }, { x = 0, y = 0, z = 0, } } }
