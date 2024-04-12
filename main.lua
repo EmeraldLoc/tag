@@ -867,9 +867,45 @@ local function update()
             if load_int("bind_" .. tostring(i)) ~= nil then
                 binds[i].btn = load_int("bind_" .. tostring(i))
             end
+        end
+        -- stats
+        -- load global stats
+        if load_int("stats_global_playTime") ~= nil then
+            stats.globalStats.playTime = load_int("stats_global_playTime")
+        end
 
-            if load_int("bind_" .. tostring(i)) ~= nil then
-                binds[i].btn = load_int("bind_" .. tostring(i))
+        if load_int("stats_global_runnerVictories") ~= nil then
+            stats.globalStats.runnerVictories = load_int("stats_global_runnerVictories")
+        end
+
+        if load_int("stats_global_taggerVictories") ~= nil then
+            stats.globalStats.taggerVictories = load_int("stats_global_taggerVictories")
+        end
+
+        if load_int("stats_global_totalTimeAsRunner") ~= nil then
+            stats.globalStats.totalTimeAsRunner = load_int("stats_global_totalTimeAsRunner")
+        end
+
+        if load_int("stats_global_totalTags") ~= nil then
+            stats.globalStats.totalTags = load_int("stats_global_totalTags")
+        end
+
+        -- load gamemode stats
+        for i = MIN_GAMEMODE, MAX_GAMEMODE do
+            if load_int("stats_" .. i .. "playTime") ~= nil then
+                stats[i].playTime = load_int("stats_" .. i .. "playTime")
+            elseif load_int("stats_" .. i .. "runnerVictories") ~= nil then
+                stats[i].runnerVictories = load_int("stats_" .. i .. "runnerVictories")
+            elseif load_int("stats_" .. i .. "taggerVictories") ~= nil then
+                stats[i].taggerVictories = load_int("stats_" .. i .. "taggerVictories")
+            elseif load_int("stats_" .. i .. "victories") ~= nil then
+                stats[i].victories = load_int("stats_" .. i .. "victories")
+            elseif load_int("stats_" .. i .. "totalTimeAsRunner") ~= nil then
+                stats[i].totalTimeAsRunner = load_int("stats_" .. i .. "totalTimeAsRunner")
+            elseif load_int("stats_" .. i .. "totalTags") ~= nil then
+                stats[i].totalTags = load_int("stats_" .. i .. "totalTags")
+            elseif load_int("stats_" .. i .. "totalTimeAsSardine") ~= nil then
+                stats[i].totalTimeAsSardine = load_int("stats_" .. i .. "totalTimeAsSardine")
             end
         end
     end

@@ -165,37 +165,53 @@ local function hud_leaderboard()
             end
 
             -- stats
-            if not addedStats
-            and i == 0 then
+            if not addedStats then
                 addedStats = true
                 local stat = stats[gGlobalSyncTable.gamemode]
+
+                -- playTime is handled in main.lua, save it here though
+                save_int("stats_" .. gGlobalSyncTable.gamemode .. "_playTime", stat.playTime)
+                save_int("stats_global_playTime", stats.globalStats.playTime)
+
                 if  stat.runnerVictories ~= nil
                 and gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
                 and position == 1 then
                     stat.runnerVictories = stat.runnerVictories + 1
+                    save_int("stats_" .. tostring(gGlobalSyncTable.gamemode) .. "_runnerVictories", stat.runnerVictories)
                     stats.globalStats.runnerVictories = stats.globalStats.runnerVictories + 1
+                    save_int("stats_global_runnerVictories", stats.globalStats.runnerVictories)
                 elseif stat.taggerVictories ~= nil
                 and gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
                 and position == 1 then
                     stat.taggerVictories = stat.taggerVictories + 1
+                    save_int("stats_" .. tostring(gGlobalSyncTable.gamemode) .. "_taggerVictories", stat.taggerVictories)
                     stats.globalStats.taggerVictories = stats.globalStats.taggerVictories + 1
+                    save_int("stats_global_taggerVictories", stats.globalStats.taggerVictories)
                 elseif stat.victories ~= nil
                 and position == 1 then
                     stat.victories = stat.victories + 1
+                    save_int("stats_" .. tostring(gGlobalSyncTable.gamemode) .. "_victories", stat.victories)
                 end
 
                 if stat.totalTimeAsRunner ~= nil then
-                    stat.totalTimeAsRunner = gPlayerSyncTable[i].amountOfTimeAsRunner
+                    stat.totalTimeAsRunner = gPlayerSyncTable[0].amountOfTimeAsRunner
+                    save_int("stats_" .. tostring(gGlobalSyncTable.gamemode) .. "_totalTimeAsRunner", stat.totalTimeAsRunner)
                     stats.globalStats.totalTimeAsRunner = stats.globalStats.totalTimeAsRunner + stat.totalTimeAsRunner
+                    save_int("stats_global_totalTimeAsRunner", stats.globalStats.totalTimeAsRunner)
                 end
 
                 if stat.totalTags ~= nil then
-                    stat.totalTags = stat.totalTags + gPlayerSyncTable[i].amountOfTags
-                    stats.globalStats.totalTags = stats.globalStats.totalTags + gPlayerSyncTable[i].amountOfTags
+                    stat.totalTags = stat.totalTags + gPlayerSyncTable[0].amountOfTags
+                    save_int("stats_" .. tostring(gGlobalSyncTable.gamemode) .. "_totalTags", stat.totalTags)
+                    stats.globalStats.totalTags = stats.globalStats.totalTags + gPlayerSyncTable[0].amountOfTags
+                    save_int("stats_global_totalTags", stats.globalStats.totalTags)
                 end
 
                 if stat.totalTimeAsSardine ~= nil then
-                    stat.totalTimeAsSardine = stat.totalTimeAsSardine + gPlayerSyncTable[i].amountOfTimeAsRunner
+                    stat.totalTimeAsSardine = stat.totalTimeAsSardine + gPlayerSyncTable[0].amountOfTimeAsRunner
+                    save_int("stats_" .. tostring(gGlobalSyncTable.gamemode) .. "_totalTimeAsSardine", stat.totalTimeAsSardine)
+                    stats.globalStats.totalTimeAsRunner = stats.globalStats.totalTimeAsRunner + gPlayerSyncTable[0].amountOfTimeAsRunner
+                    save_int("stats_global_totalTimeAsRunner", stats.globalStats.totalTimeAsRunner)
                 end
             end
 

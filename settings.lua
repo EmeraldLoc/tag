@@ -1302,7 +1302,7 @@ local function reset_stat_entries()
         statEntries = {
             {name = "Play Time",
             permission = PERMISSION_NONE,
-            valueText = scopeStats.playTime},
+            valueText = math.floor(scopeStats.playTime / 30) .. "s"},
             {name = "Runner Victories",
             permission = PERMISSION_NONE,
             valueText = scopeStats.runnerVictories},
@@ -1311,7 +1311,7 @@ local function reset_stat_entries()
             valueText = scopeStats.taggerVictories},
             {name = "Total Time As Runner",
             permission = PERMISSION_NONE,
-            valueText = scopeStats.totalTimeAsRunner},
+            valueText = math.floor(scopeStats.totalTimeAsRunner / 30) .. "s"},
             {name = "Total Tags",
             permission = PERMISSION_NONE,
             valueText = scopeStats.totalTags},
@@ -1330,7 +1330,7 @@ local function reset_stat_entries()
             table.insert(statEntries, {
                 name = "Play Time",
                 permission = PERMISSION_NONE,
-                valueText = scopeStats.playTime
+                valueText = math.floor(scopeStats.playTime / 30) .. "s"
             })
         end
         if scopeStats.runnerVictories ~= nil then
@@ -1351,7 +1351,7 @@ local function reset_stat_entries()
             table.insert(statEntries, {
                 name = "Total Time As Runner",
                 permission = PERMISSION_NONE,
-                valueText = scopeStats.totalTimeAsRunner
+                valueText = math.floor(scopeStats.totalTimeAsRunner / 30) .. "s"
             })
         end
         if scopeStats.totalTags ~= nil then
@@ -1365,7 +1365,7 @@ local function reset_stat_entries()
             table.insert(statEntries, {
                 name = "Total Time As Sardine",
                 permission = PERMISSION_NONE,
-                valueText = scopeStats.totalTimeAsSardine
+                valueText = math.floor(scopeStats.totalTimeAsSardine / 30) .. "s"
             })
         end
 
