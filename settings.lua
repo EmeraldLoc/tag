@@ -15,6 +15,7 @@ local awaitingInput = nil
 local scrollEntry = 12
 local statGroupIndex = 0
 local statIndex = 0
+local sentStatPacket = false
 
 local function on_off_text(bool)
     if bool then return "On" else return "Off" end
@@ -1226,7 +1227,7 @@ local function reset_stat_player_selections_entries()
             input = INPUT_A,
             func = function ()
                 entries = statGroupEntries
-                statIndex = 0
+                statIndex = i
                 selection = 1
             end
         })
@@ -1295,9 +1296,46 @@ local function reset_stat_entries()
 
     resetStatEntries = entries == statEntries
     statEntries = {}
-    if statGroupIndex < 0 then
 
+    if statIndex ~= 0 then
+        scopeStats = remoteStats
+        if scopeStats == nil then
+            table.insert(statEntries, {
+                name = "Back",
+                permission = PERMISSION_NONE,
+                input = INPUT_A,
+                func = function ()
+                    entries = statGroupEntries
+                    selection = 1
+                end
+            })
+
+            if not sentStatPacket then
+                sentStatPacket = true
+
+                -- create packet
+                local p = {
+                    packetType = PACKET_TYPE_REQUEST_STATS,
+                    globalIndex = network_global_index_from_local(0),
+                    statIndex = statGroupIndex
+                }
+
+                -- send packet to player
+                network_send_to(statIndex, true, p)
+            end
+
+            if resetStatEntries then entries = statEntries end
+
+            return
+        end
+    end
+
+    if statGroupIndex < 0 then
         local scopeStats = stats.globalStats
+
+        if statIndex ~= 0 then
+            scopeStats = remoteStats
+        end
 
         statEntries = {
             {name = "Play Time",
@@ -1325,6 +1363,9 @@ local function reset_stat_entries()
         }
     else
         local scopeStats = stats[statGroupIndex]
+        if statIndex ~= 0 then
+            scopeStats = remoteStats
+        end
         if scopeStats == nil then goto continue end
         if scopeStats.playTime ~= nil then
             table.insert(statEntries, {
@@ -1361,13 +1402,6 @@ local function reset_stat_entries()
                 valueText = scopeStats.totalTags
             })
         end
-        if scopeStats.totalTimeAsSardine ~= nil then
-            table.insert(statEntries, {
-                name = "Total Time As Sardine",
-                permission = PERMISSION_NONE,
-                valueText = math.floor(scopeStats.totalTimeAsSardine / 30) .. "s"
-            })
-        end
 
         table.insert(statEntries, {
             name = "Back",
@@ -1384,6 +1418,9 @@ local function reset_stat_entries()
 
     if resetStatEntries then
         entries = statEntries
+    else
+        sentStatPacket = false
+        remoteStats = nil
     end
 end
 

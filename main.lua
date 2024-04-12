@@ -264,12 +264,12 @@ stats = {
     [ASSASSINS] = {
         playTime = 0,
         totalTags = 0,
-        victories = 0,
+        taggerVictories = 0,
     },
     [SARDINES] = {
         playTime = 0,
         totalTags = 0,
-        totalTimeAsSardine = 0,
+        totalTimeAsRunner = 0,
         taggerVictories = 0,
     },
     [HUNT] = {
@@ -285,6 +285,14 @@ stats = {
         runnerVictories = 0,
         taggerVictories = 0,
     },
+}
+
+remoteStats = {
+    playTime = 0,
+    totalTags = 0,
+    totalTimeAsRunner = 0,
+    runnerVictories = 0,
+    taggerVictories = 0,
 }
 
 -- speed boost timer handles boosting
@@ -901,17 +909,11 @@ local function update()
             if load_int("stats_" .. i .. "_taggerVictories") ~= nil then
                 stats[i].taggerVictories = load_int("stats_" .. i .. "_taggerVictories")
             end
-            if load_int("stats_" .. i .. "_victories") ~= nil then
-                stats[i].victories = load_int("stats_" .. i .. "_victories")
-            end
             if load_int("stats_" .. i .. "_totalTimeAsRunner") ~= nil then
                 stats[i].totalTimeAsRunner = load_int("stats_" .. i .. "_totalTimeAsRunner")
             end
             if load_int("stats_" .. i .. "_totalTags") ~= nil then
                 stats[i].totalTags = load_int("stats_" .. i .. "_totalTags")
-            end
-            if load_int("stats_" .. i .. "_totalTimeAsSardine") ~= nil then
-                stats[i].totalTimeAsSardine = load_int("stats_" .. i .. "_totalTimeAsSardine")
             end
         end
     end

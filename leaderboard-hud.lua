@@ -116,10 +116,6 @@ local function hud_leaderboard()
             save_int("stats_" .. tostring(gGlobalSyncTable.gamemode) .. "_taggerVictories", stat.taggerVictories)
             stats.globalStats.taggerVictories = stats.globalStats.taggerVictories + 1
             save_int("stats_global_taggerVictories", stats.globalStats.taggerVictories)
-        elseif stat.victories ~= nil
-        and winners[1] == 0 then
-            stat.victories = stat.victories + 1
-            save_int("stats_" .. tostring(gGlobalSyncTable.gamemode) .. "_victories", stat.victories)
         end
 
         if stat.totalTimeAsRunner ~= nil then
@@ -134,13 +130,6 @@ local function hud_leaderboard()
             save_int("stats_" .. tostring(gGlobalSyncTable.gamemode) .. "_totalTags", stat.totalTags)
             stats.globalStats.totalTags = stats.globalStats.totalTags + gPlayerSyncTable[0].amountOfTags
             save_int("stats_global_totalTags", stats.globalStats.totalTags)
-        end
-
-        if stat.totalTimeAsSardine ~= nil then
-            stat.totalTimeAsSardine = stat.totalTimeAsSardine + gPlayerSyncTable[0].amountOfTimeAsRunner
-            save_int("stats_" .. tostring(gGlobalSyncTable.gamemode) .. "_totalTimeAsSardine", stat.totalTimeAsSardine)
-            stats.globalStats.totalTimeAsRunner = stats.globalStats.totalTimeAsRunner + gPlayerSyncTable[0].amountOfTimeAsRunner
-            save_int("stats_global_totalTimeAsRunner", stats.globalStats.totalTimeAsRunner)
         end
     end
 
