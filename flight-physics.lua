@@ -2,6 +2,7 @@
 local speed = 20
 local maxSpeed = 100
 local gunCooldown = 1 * 30
+local maxHeight = 0
 
 --- @param m MarioState
 local function mario_update(m)
@@ -12,17 +13,32 @@ local function mario_update(m)
         maxSpeed = 100
     end
 
+    if m.action == ACT_FLYING_TRIPLE_JUMP then
+        maxHeight = m.pos.y + 5000
+    end
+
     -- flight physics
     if m.action == ACT_FLYING then
-        if m.controller.buttonDown & A_BUTTON ~= 0 then
+        if m.controller.buttonDown & A_BUTTON ~= 0
+        and (m.pos.y < maxHeight
+        or m.faceAngle.x <= 0) then
             speed = speed + 1
-        elseif m.controller.buttonDown & B_BUTTON ~= 0 then
+        elseif m.controller.buttonDown & B_BUTTON ~= 0
+        and (m.pos.y < maxHeight
+        or m.faceAngle.x <= 0) then
             speed = speed - 1
-        else
+        elseif (m.pos.y < maxHeight
+        or m.faceAngle.x <= 0) then
             speed = speed - 0.2
         end
 
-        speed = clampf(speed, 20, maxSpeed)
+        if m.pos.y > maxHeight
+        and m.faceAngle.x > 0 then
+            speed = speed - 3
+            speed = clampf(speed, 0, maxSpeed)
+        else
+            speed = clampf(speed, 20, maxSpeed)
+        end
 
         m.forwardVel = speed
 
