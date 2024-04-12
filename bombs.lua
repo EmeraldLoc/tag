@@ -168,14 +168,16 @@ local function bomb_loop(o)
     local step = object_step_without_floor_orient()
 
     -- explode if we hit a wall or land
-    if step & AIR_STEP_HIT_WALL ~= 0
+    if (step & AIR_STEP_HIT_WALL ~= 0
     or step & AIR_STEP_LANDED ~= 0
-    or bobomb_intersects_player(o, 100) then
+    or bobomb_intersects_player(o, 100))
+    and network_local_index_from_global(o.oBombOwner) == 0 then
         bomb_explode(o)
     end
 
     -- explode if we touch water
-    if o.oPosY < find_water_level(o.oPosX, o.oPosZ) then
+    if o.oPosY < find_water_level(o.oPosX, o.oPosZ)
+    and network_local_index_from_global(o.oBombOwner) == 0  then
         bomb_explode(o)
     end
 end
