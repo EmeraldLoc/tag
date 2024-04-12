@@ -111,7 +111,7 @@ romhacks = {
             { name = "bss",   level = LEVEL_BITDW,          painting = get_texture_info("painting_sr_bss"),    area = 1, pipes = { { { x = 3252, y = -890, z = 1743 }, { x = 414, y = 2324, z = 226 } } } },
             { name = "b1",    level = LEVEL_BOWSER_1,       painting = get_texture_info("painting_sr_b1"),     area = 1, pipes = nil },
             { name = "b3",    level = LEVEL_BOWSER_3,       painting = get_texture_info("painting_sr_b3"),     area = 1, pipes = nil },
-            { name = "kc",    level = LEVEL_LLL,            painting = get_texture_info("painting_sr_kc"),     area = 1, pipes = { { { x = -6169, y = -1996, z = -1872 }, { x = 5580, y = 19, z = 5189 } } } },
+            { name = "kc",    level = LEVEL_LLL,            painting = get_texture_info("painting_sr_kc"),     area = 1, pipes = { { { x = -1117, y = -1996, z = -4614 }, { x = 1087, y = 2133, z = 3941 } } } },
             { name = "llf",   level = LEVEL_SSL,            painting = get_texture_info("painting_sr_llf"),    area = 1, pipes = { { { x = 1158, y = 3336, z = 3333 }, { x = 3, y = -529, z = -4816 } }, { { x = -259, y = -2213, z = 2789 }, { x = 654, y = -751, z = 893 } } } },
             { name = "mmm",   level = LEVEL_DDD,            painting = get_texture_info("painting_sr_mmm"),    area = 1, pipes = { { { x = 361, y = 2235, z = -3679 }, { x = -1347, y = -2299, z = 4495 } } } },
             { name = "rrc",   level = LEVEL_BITFS,          painting = get_texture_info("painting_sr_bitfs"),  area = 1, pipes = { { { x = 3928, y = -415, z = -39 }, { x = 3076, y = 584, z = 4523 } } } },
