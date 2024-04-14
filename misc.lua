@@ -630,7 +630,9 @@ function boosts_enabled()
 	if  gGlobalSyncTable.boosts
 	and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST
 	and gGlobalSyncTable.modifier ~= MODIFIER_BOMBS
-	and gGlobalSyncTable.modifier ~= MODIFIER_SPEED then
+	and gGlobalSyncTable.modifier ~= MODIFIER_SPEED
+	and gGlobalSyncTable.modifier ~= MODIFIER_BLASTER
+	and gGlobalSyncTable.modifier ~= MODIFIER_FLY then
 		return true
 	end
 
