@@ -121,7 +121,7 @@ local function hud_leaderboard()
         if stat.totalTimeAsRunner ~= nil then
             stat.totalTimeAsRunner = stat.totalTimeAsRunner + gPlayerSyncTable[0].amountOfTimeAsRunner
             save_int("stats_" .. tostring(gGlobalSyncTable.gamemode) .. "_totalTimeAsRunner", stat.totalTimeAsRunner)
-            stats.globalStats.totalTimeAsRunner = stats.globalStats.totalTimeAsRunner + stat.totalTimeAsRunner
+            stats.globalStats.totalTimeAsRunner = stats.globalStats.totalTimeAsRunner + gPlayerSyncTable[0].amountOfTimeAsRunner
             save_int("stats_global_totalTimeAsRunner", stats.globalStats.totalTimeAsRunner)
         end
 
