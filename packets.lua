@@ -5,6 +5,7 @@ PACKET_TYPE_SEND_LEVELS = 2
 PACKET_TYPE_ASSASSINS_TARGET = 3
 PACKET_TYPE_REQUEST_STATS = 4
 PACKET_TYPE_RECEIVE_STATS = 5
+PACKET_TYPE_CHAT_MESSAGE_GLOBAL = 6
 
 --[[
 Developer Notes when copying this system:
@@ -38,12 +39,7 @@ send_packet function. Here's an example:
 Now that player will recieve the packet, note that the send_packet
 function uses the global index, not local.
 
-Goto the file desync-packet.lua to learn how to recieve packets
-
-You cannot send another table within the
-data param in the create_packet function. I assume because you
-can't have more than 1 table in a packet. I'm not so sure, so if you
-can find something ,that would be great!
+Goto the file packet-assassins_target.lua to learn how to recieve packets
 --]]
 
 ---@param packetType integer

@@ -835,3 +835,15 @@ function toggle_spectator()
         end
     end
 end
+
+---@param msg string
+function djui_chat_message_create_global(msg)
+	if type(msg) ~= "string" then
+		log_to_console("Tag: djui_chat_message_create_global: \\#FF0000\\Error: Received Invalid Type: " .. type(msg))
+		return
+	end
+
+	djui_chat_message_create(msg)
+	local p = create_packet(PACKET_TYPE_CHAT_MESSAGE_GLOBAL, msg)
+	network_send(true, p)
+end
