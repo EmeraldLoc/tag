@@ -849,3 +849,16 @@ function djui_chat_message_create_global(msg)
 	local p = create_packet(PACKET_TYPE_CHAT_MESSAGE_GLOBAL, msg)
 	network_send(true, p)
 end
+
+-- taken from arena
+function convert_s16(num)
+    local min = -32768
+    local max = 32767
+    while (num < min) do
+        num = max + (num - min)
+    end
+    while (num > max) do
+        num = min + (num - max)
+    end
+    return num
+end
