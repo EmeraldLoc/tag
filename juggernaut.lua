@@ -52,7 +52,7 @@ local function hud_bottom_render()
         djui_hud_set_color(66, 176, 245, 128)
         djui_hud_render_rect(x, y, width, height)
 
-        local text = "Tags Remaining: " .. tostring(gPlayerSyncTable[0].tagLives)
+        local text = "Lives Remaining: " .. tostring(gPlayerSyncTable[0].tagLives)
 
         scale = 0.25
         width = djui_hud_measure_text(text) * scale

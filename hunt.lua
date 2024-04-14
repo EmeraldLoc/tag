@@ -1,7 +1,6 @@
 
 ---@param m MarioState
 local function mario_update(m)
-
     if gGlobalSyncTable.gamemode ~= HUNT then return end
 
     m.health = 0x880 -- set mario's health to full
@@ -30,7 +29,7 @@ local function hud_bottom_render()
         djui_hud_set_color(66, 176, 245, 128)
         djui_hud_render_rect(x, y, width, height)
 
-        local text = "Tags Remaining: " .. tostring(gPlayerSyncTable[0].tagLives)
+        local text = "Lives Remaining: " .. tostring(gPlayerSyncTable[0].tagLives)
 
         scale = 0.25
         width = djui_hud_measure_text(text) * scale
@@ -47,7 +46,6 @@ local function hud_bottom_render()
 end
 
 local function hud_render()
-
     if gGlobalSyncTable.gamemode ~= HUNT then return end
 
     -- set djui font and resolution
