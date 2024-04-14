@@ -6,6 +6,7 @@ local FINISHED = 2
 
 -- variables
 local fade = 0
+local hidingPos = { x = 0, y = 0, z = 0 }
 
 ---@param m MarioState
 local function mario_update(m)
@@ -28,6 +29,12 @@ local function mario_update(m)
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE
     and gPlayerSyncTable[0].state == RUNNER then
         m.freeze = 1
+        vec3f_copy(m.pos, hidingPos)
+    end
+
+    if gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES
+    and gPlayerSyncTable[0].state == RUNNER then
+        vec3f_copy(hidingPos, m.pos)
     end
 end
 
