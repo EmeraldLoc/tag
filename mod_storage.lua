@@ -12,7 +12,7 @@ local encryptionKey = ""
 local characters = {
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
     "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "_"
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "_", "-"
 }
 
 local function retrieve_key_table()
@@ -40,6 +40,11 @@ function generate_key()
     and mod_storage_load("encryptionKey2") ~= nil
     and encryptionKey == "" then
         encryptionKey = mod_storage_load("encryptionKey1") .. mod_storage_load("encryptionKey2")
+
+        if #encryptionKey ~= #characters * 2 then
+            -- invalid/outdated encrpytion key, regenerate
+            encryptionKey = ""
+        end
     end
 
     -- check if key exists, if it doesn't, generate a new key
