@@ -50,9 +50,7 @@ end
 function mario_health_float(m)
 	-- fancy maths code that djoslin0 made
     local returnValue = (m.health - 255) / (2176 - 255)
-	-- dont use clamp function because it doesnt work for some reason, either that or I'm dumb
-	if returnValue > 1 then returnValue = 1
-	elseif returnValue < 0 then returnValue = 0 end
+	returnValue = clampf(returnValue, 0, 1)
 
 	return returnValue
 end

@@ -32,6 +32,15 @@ local function mario_update(m)
                 m.health = m.health - (gGlobalSyncTable.freezeHealthDrain / 10)
             end
         end
+
+        if m.health <= 0xFF then
+            gPlayerSyncTable[0].state = TAGGER
+
+            tagger_popup(0)
+
+            m.health = 0x880
+            set_mario_action(m, ACT_FREEFALL, 0)
+        end
     else
         m.health = 0x880 -- set mario's health to full
     end
@@ -55,8 +64,8 @@ local function hud_health_render()
     djui_hud_set_color(0, 0, 0, 128)
     djui_hud_render_rect(x, y, width, height)
 
-    x = x + 2 * scale -- add 2 to x to  to compensate for smaller size
-    y = y + 2 * scale -- add 2 to y to  to compensate for smaller size
+    x = x + 2 * scale -- add 2 to x to compensate for smaller size
+    y = y + 2 * scale -- add 2 to y to compensate for smaller size
     width = width - 4 * scale
     height = height - 4 * scale
     local health = mario_health_float(gMarioStates[0]) -- get mario's health between 0 and 1
