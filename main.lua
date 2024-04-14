@@ -855,68 +855,6 @@ local function update()
         end
     end
 
-    -- load save data if we haven't
-    if not initializedSaveData then
-        initializedSaveData = true
-        -- booleans
-        if load_bool("bljs") ~= nil then gGlobalSyncTable.bljs = load_bool("bljs") end
-        if load_bool("cannons") ~= nil then gGlobalSyncTable.cannons = load_bool("cannons") end
-        if load_bool("water") ~= nil then gGlobalSyncTable.water = load_bool("water") end
-        if load_bool("eliminateOnDeath") ~= nil then gGlobalSyncTable.eliminateOnDeath = load_bool("eliminateOnDeath") end
-        if load_bool("voting") ~= nil then gGlobalSyncTable.voting = load_bool("voting") end
-        if load_bool("autoMode") ~= nil then gGlobalSyncTable.autoMode = load_bool("autoMode") end
-        if load_bool("boost") ~= nil then gGlobalSyncTable.boosts = load_bool("boost") end
-        if load_bool("hazardSurfaces") ~= nil then gGlobalSyncTable.hazardSurfaces = load_bool("hazardSurfaces") end
-        if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
-        if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
-        -- binds
-        for i = 0, BIND_MAX do
-            if load_int("bind_" .. tostring(i)) ~= nil then
-                binds[i].btn = load_int("bind_" .. tostring(i))
-            end
-        end
-        -- stats
-        -- load global stats
-        if load_int("stats_global_playTime") ~= nil then
-            stats.globalStats.playTime = load_int("stats_global_playTime")
-        end
-
-        if load_int("stats_global_runnerVictories") ~= nil then
-            stats.globalStats.runnerVictories = load_int("stats_global_runnerVictories")
-        end
-
-        if load_int("stats_global_taggerVictories") ~= nil then
-            stats.globalStats.taggerVictories = load_int("stats_global_taggerVictories")
-        end
-
-        if load_int("stats_global_totalTimeAsRunner") ~= nil then
-            stats.globalStats.totalTimeAsRunner = load_int("stats_global_totalTimeAsRunner")
-        end
-
-        if load_int("stats_global_totalTags") ~= nil then
-            stats.globalStats.totalTags = load_int("stats_global_totalTags")
-        end
-
-        -- load gamemode stats
-        for i = MIN_GAMEMODE, MAX_GAMEMODE do
-            if load_int("stats_" .. i .. "_playTime") ~= nil then
-                stats[i].playTime = load_int("stats_" .. i .. "_playTime")
-            end
-            if load_int("stats_" .. i .. "_runnerVictories") ~= nil then
-                stats[i].runnerVictories = load_int("stats_" .. i .. "_runnerVictories")
-            end
-            if load_int("stats_" .. i .. "_taggerVictories") ~= nil then
-                stats[i].taggerVictories = load_int("stats_" .. i .. "_taggerVictories")
-            end
-            if load_int("stats_" .. i .. "_totalTimeAsRunner") ~= nil then
-                stats[i].totalTimeAsRunner = load_int("stats_" .. i .. "_totalTimeAsRunner")
-            end
-            if load_int("stats_" .. i .. "_totalTags") ~= nil then
-                stats[i].totalTags = load_int("stats_" .. i .. "_totalTags")
-            end
-        end
-    end
-
     -- handle romhack overrides
     if  gGlobalSyncTable.romhackOverride ~= nil
     and gGlobalSyncTable.romhackOverride ~= prevRomhackOverride then
@@ -1045,6 +983,76 @@ local function mario_update(m)
     end
 
     if m.playerIndex == 0 then
+        -- load save data if we haven't
+        if not initializedSaveData then
+            initializedSaveData = true
+            -- booleans
+            if load_bool("bljs") ~= nil then gGlobalSyncTable.bljs = load_bool("bljs") end
+            if load_bool("cannons") ~= nil then gGlobalSyncTable.cannons = load_bool("cannons") end
+            if load_bool("water") ~= nil then gGlobalSyncTable.water = load_bool("water") end
+            if load_bool("eliminateOnDeath") ~= nil then gGlobalSyncTable.eliminateOnDeath = load_bool("eliminateOnDeath") end
+            if load_bool("voting") ~= nil then gGlobalSyncTable.voting = load_bool("voting") end
+            if load_bool("autoMode") ~= nil then gGlobalSyncTable.autoMode = load_bool("autoMode") end
+            if load_bool("boost") ~= nil then gGlobalSyncTable.boosts = load_bool("boost") end
+            if load_bool("hazardSurfaces") ~= nil then gGlobalSyncTable.hazardSurfaces = load_bool("hazardSurfaces") end
+            if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
+            if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
+            -- binds
+            for i = 0, BIND_MAX do
+                if load_int("bind_" .. tostring(i)) ~= nil then
+                    binds[i].btn = load_int("bind_" .. tostring(i))
+                end
+            end
+            -- stats
+            -- load global stats
+            if load_int("stats_global_playTime") ~= nil then
+                stats.globalStats.playTime = load_int("stats_global_playTime")
+            end
+
+            if load_int("stats_global_runnerVictories") ~= nil then
+                stats.globalStats.runnerVictories = load_int("stats_global_runnerVictories")
+            end
+
+            if load_int("stats_global_taggerVictories") ~= nil then
+                stats.globalStats.taggerVictories = load_int("stats_global_taggerVictories")
+            end
+
+            if load_int("stats_global_totalTimeAsRunner") ~= nil then
+                stats.globalStats.totalTimeAsRunner = load_int("stats_global_totalTimeAsRunner")
+            end
+
+            if load_int("stats_global_totalTags") ~= nil then
+                stats.globalStats.totalTags = load_int("stats_global_totalTags")
+            end
+
+            -- load gamemode stats
+            for i = MIN_GAMEMODE, MAX_GAMEMODE do
+                if load_int("stats_" .. i .. "_playTime") ~= nil then
+                    stats[i].playTime = load_int("stats_" .. i .. "_playTime")
+                end
+                if load_int("stats_" .. i .. "_runnerVictories") ~= nil then
+                    stats[i].runnerVictories = load_int("stats_" .. i .. "_runnerVictories")
+                end
+                if load_int("stats_" .. i .. "_taggerVictories") ~= nil then
+                    stats[i].taggerVictories = load_int("stats_" .. i .. "_taggerVictories")
+                end
+                if load_int("stats_" .. i .. "_totalTimeAsRunner") ~= nil then
+                    stats[i].totalTimeAsRunner = load_int("stats_" .. i .. "_totalTimeAsRunner")
+                end
+                if load_int("stats_" .. i .. "_totalTags") ~= nil then
+                    stats[i].totalTags = load_int("stats_" .. i .. "_totalTags")
+                end
+            end
+
+            -- print some stats so players can get a gist of this guy's skill
+            if stats.globalStats.runnerVictories > 0 then
+                djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.runnerVictories .. " \\#dcdcdc\\times as a \\#316BE8\\Runner\\#dcdcdc\\.")
+            end
+            if stats.globalStats.taggerVictories > 0 then
+                djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.taggerVictories .. " \\#dcdcdc\\times as a \\#E82E2E\\Tagger\\#dcdcdc\\.")
+            end
+        end
+
         ---@type NetworkPlayer
         local np = gNetworkPlayers[0]
         local selectedLevel = levels[gGlobalSyncTable.selectedLevel] -- get currently selected level
