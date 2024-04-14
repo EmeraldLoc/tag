@@ -10,13 +10,6 @@ local function mario_update(m)
     -- I will be forever grateful for parts of the anticamp code. Thank you dj
     if m.playerIndex ~= 0 then return end
 
-    if initializedLevel then
-        vec3f_copy(prevPos, m.pos)
-        distMoved = 0
-        initializedLevel = false
-        isStandingStill = false
-    end
-
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then
         reset_standing_still()
         return
@@ -38,7 +31,7 @@ local function mario_update(m)
 end
 
 local function level_init()
-    initializedLevel = true
+    reset_standing_still()
 end
 
 function is_standing_still()
@@ -46,7 +39,10 @@ function is_standing_still()
 end
 
 function reset_standing_still()
-    initializedLevel = true
+    local  m = gMarioStates[0]
+    isStandingStill = true
+    vec3f_copy(prevPos, m.pos)
+    distMoved = 0
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
