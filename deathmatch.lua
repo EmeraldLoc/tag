@@ -94,13 +94,13 @@ local function hud_render()
     end
 end
 
----@param m MarioState
-local function on_warp(m)
+local function on_warp()
+
+    local m = gMarioStates[0]
 
     if gGlobalSyncTable.gamemode ~= DEATHMATCH then return end
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
     if not gGlobalSyncTable.eliminateOnDeath then return end
-    if m.playerIndex ~= 0 then return end
 
     -- subtract lives by 1 with a cap of 1
     if gPlayerSyncTable[0].state == TAGGER then
@@ -148,7 +148,8 @@ function deathmatch_handle_pvp(aI, vI)
         end
         -- increase amount of tags and set invincibility timer to 1 second
         a.amountOfTags = a.amountOfTags + 1
-        a.invincTimer = 1 * 30
+        -- set victim i frames
+        v.invincTimer = 2 * 30
     end
 end
 

@@ -14,6 +14,7 @@ local function mario_update(m)
         vec3f_copy(prevPos, m.pos)
         distMoved = 0
         initializedLevel = false
+        isStandingStill = false
     end
 
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then

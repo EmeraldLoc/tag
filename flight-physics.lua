@@ -20,20 +20,28 @@ local function mario_update(m)
     -- flight physics
     if m.action == ACT_FLYING then
         if m.controller.buttonDown & A_BUTTON ~= 0
-        and (m.pos.y < maxHeight
-        or m.faceAngle.x <= 0) then
+        and ((m.pos.y < maxHeight
+        or m.faceAngle.x <= 0)
+        or gPlayerSyncTable[0].state == SPECTATOR
+        or gPlayerSyncTable[0].state == WILDCARD_ROLE) then
             speed = speed + 1
         elseif m.controller.buttonDown & B_BUTTON ~= 0
-        and (m.pos.y < maxHeight
-        or m.faceAngle.x <= 0) then
+        and ((m.pos.y < maxHeight
+        or m.faceAngle.x <= 0)
+        or gPlayerSyncTable[0].state == SPECTATOR
+        or gPlayerSyncTable[0].state == WILDCARD_ROLE) then
             speed = speed - 1
         elseif (m.pos.y < maxHeight
-        or m.faceAngle.x <= 0) then
+        or m.faceAngle.x <= 0)
+        or gPlayerSyncTable[0].state == SPECTATOR
+        or gPlayerSyncTable[0].state == WILDCARD_ROLE then
             speed = speed - 0.2
         end
 
         if m.pos.y > maxHeight
-        and m.faceAngle.x > 0 then
+        and m.faceAngle.x > 0
+        and gPlayerSyncTable[0].state ~= SPECTATOR
+        and gPlayerSyncTable[0].state ~= WILDCARD_ROLE then
             speed = speed - 3
             speed = clampf(speed, 0, maxSpeed)
         else
