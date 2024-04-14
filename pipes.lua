@@ -57,9 +57,9 @@ local function pipe_loop(o)
 
         if m.invincTimer < 2 * 30 and pipeUse < 3 then
             gPlayerSyncTable[m.playerIndex].invincTimer = 2 * 30 -- 2 seconds
-            pipeUse = pipeUse + 1
         end
 
+        pipeUse = pipeUse + 1
         pipeTimer = 0
 
         reset_camera(m.area.camera)             -- reset camera
