@@ -16,6 +16,10 @@ local function bullet_init(o)
     o.oMoveAnglePitch = m.faceAngle.x
     o.oMoveAngleYaw = m.faceAngle.y
     local speed = m.forwardVel + 150
+    -- shoot backwards
+    if m.controller.buttonDown & D_JPAD ~= 0 then
+        speed = -speed
+    end
     o.oVelX = speed * coss(o.oFaceAnglePitch) * sins(o.oFaceAngleYaw)
     o.oVelY = speed * sins(o.oFaceAnglePitch)
     o.oVelY = -o.oVelY
