@@ -1,6 +1,26 @@
 # Tag
 
-This mod is a collection of multiple gamemodes all in one mod! The mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and more! It also contains modifiers that effect the gameplay of the gamemode, which can add twists to your game!
+This mod is a collection of multiple gamemodes all in one mod! The mod contains 9 gamemodes, modifiers that effect the gameplay of the gamemode, in-depth, easy to understand settings, and statistics!
+
+### Gamemodes
+
+Tag contains multiple tag-related gamemodes! All gamemodes involve "tagging" another player. There are as of right now 9 different gamemodes. These gamemodes are Tag, Freeze Tag, Infection, Hot Potato, Juggernaut (meh), Assassins, Sardines, Hunt, and Deathmatch! Each gamemode gives it's own fun to the mod!
+
+### Modifiers
+
+There are plenty of modifiers to add variety your game! From simple gravity changes to blasters and fog, modifiers add plenty of enjoyable (or annoying) changes to the base gamemodes!
+
+### Romhacks
+
+Romhack support depends on the romhack. Offical romhacks have paintings, and pipes like vanilla levels! Non-official romhacks don't have these benefits, however, the romhack should still work perfectly fine!
+
+### Blacklists
+
+Don't like a gamemode, modifier, or level? Blacklist it! Blacklisting allows you to turn off certain gamemods, modifiers, or levels that you don't like in your game.
+
+### Stats
+
+Each player has stats! These stats go from playtime, total tags, and total time as runner, to total runner victories and tagger victories. The best part is each gamemode gets it's own statistics for each of these metrics!
 
 ### Frequently Asked Questions
 
