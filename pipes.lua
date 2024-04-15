@@ -63,7 +63,6 @@ local function pipe_loop(o)
         pipeTimer = 0
 
         reset_camera(m.area.camera)             -- reset camera
-
         play_sound(SOUND_MENU_EXIT_PIPE, m.pos) -- play pipe sounds
     end
 end
