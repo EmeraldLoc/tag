@@ -25,7 +25,6 @@ local function door_loop(o)
     end
 
     if o.oAction == 5 then
-
         if o.oTimer == 0 then
             -- when the object timer is 0 (when we first set the action to 5) play a soudn and init the animation based off of if we are pulling or pushing the door
             if should_push_or_pull_door(gMarioStates[0], o) == 1 then
