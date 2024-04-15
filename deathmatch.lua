@@ -149,7 +149,7 @@ function deathmatch_handle_pvp(aI, vI)
         -- increase amount of tags and set invincibility timer to 1 second
         a.amountOfTags = a.amountOfTags + 1
         -- set victim i frames
-        v.invincTimer = 2 * 30
+        v.invincTimer = 3 * 30
     end
 end
 

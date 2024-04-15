@@ -8,7 +8,7 @@ local maxHeight = 0
 local function mario_update(m)
     if m.playerIndex ~= 0 then return end
     if gPlayerSyncTable[0].state == RUNNER then
-        maxSpeed = 70
+        maxSpeed = 60
     else
         maxSpeed = 100
     end

@@ -16,7 +16,7 @@ local function check_for_updates()
         -- if it doesn't load, the file doesn't exist, so assume there's an update
         -- a caviat with this trick is that if you don't have a internet connection,
         -- or fail to retrieve the file, it'll return an update rather than returning
-        -- that your up to date, slight downside
+        -- that you're up to date, slight downside
         if updateFile == nil or not updateFile.loaded or updateFile.handle == 0 then
             djui_chat_message_create("An update is available for Tag!")
         else

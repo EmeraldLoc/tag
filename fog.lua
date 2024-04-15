@@ -1,9 +1,8 @@
 
 -- the way fog works in sm64 is not reproducable with lua mods, so instead opt for models.
--- this uses 6 objects in total. Five transparent objects, 1 opaque object.
--- we spawn 5 transparent object for a smooth "opaquining" (thats not a word) effect (its not smooth)
+-- this uses a fog model, whih uses anim states to decide the color and transparency.
+-- there are 5 transparent sphere's in this model for a smooth "opaquining" (thats not a word) effect (its not smooth, but ok)
 -- spawn in an opaque object as some objects ignore transparent objects opacity being solid
--- this looks pretty good, but the more you look at it, the worse it gets. I know, your welcome.
 
 local E_MODEL_FOG = smlua_model_util_get_id("fog_geo")
 local warpTimer = 0.2 * 30

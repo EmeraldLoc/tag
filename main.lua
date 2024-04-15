@@ -112,6 +112,10 @@ gGlobalSyncTable.huntActiveTimer       = 180 * 30
 gGlobalSyncTable.deathmatchActiveTimer = 180 * 30
 -- other timers
 gGlobalSyncTable.sardinesHidingTimer   = 30  * 30
+-- amount of lives for hunt
+gGlobalSyncTable.huntLivesCount        = 3
+-- amount of lives for deathmatch
+gGlobalSyncTable.deathmatchLivesCount  = 5
 -- auto mode
 gGlobalSyncTable.autoMode              = true
 -- enable tagger boosts or not
@@ -590,13 +594,10 @@ local function server_update()
 
             local amountOfTaggersNeeded = math.floor(numPlayers / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
 
-            -- set tag max lives for gamemodes like juggernaut and hunt
-            gGlobalSyncTable.tagMaxLives = math.floor(numPlayers * 2)
-
-            if gGlobalSyncTable.tagMaxLives > 20 then gGlobalSyncTable.tagMaxLives = 20 end
-            -- hunt and deathmatch override
-            if gGlobalSyncTable.gamemode == HUNT then gGlobalSyncTable.tagMaxLives = 3 end
-            if gGlobalSyncTable.gamemode == DEATHMATCH then gGlobalSyncTable.tagMaxLives = 5 end
+            -- set tag max lives for gamemodes like juggernaut, hunt, and deathmatch
+            if gGlobalSyncTable.gamemode == JUGGERNAUT then gGlobalSyncTable.tagMaxLives = clampf(math.floor(numPlayers * 2), 1, 16) end
+            if gGlobalSyncTable.gamemode == HUNT then gGlobalSyncTable.tagMaxLives = gGlobalSyncTable.huntLivesCount end
+            if gGlobalSyncTable.gamemode == DEATHMATCH then gGlobalSyncTable.tagMaxLives = gGlobalSyncTable.deathmatchLivesCount end
 
             for i = 0, MAX_PLAYERS - 1 do
                 gPlayerSyncTable[i].tagLives = gGlobalSyncTable.tagMaxLives

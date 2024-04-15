@@ -339,6 +339,32 @@ local function set_time_limit(gamemode)
     end
 end
 
+local function set_lives(gamemode)
+    -- get which direction we are facing
+    local m = gMarioStates[0]
+    local direction = CONT_LEFT
+
+    if m.controller.buttonPressed & R_JPAD ~= 0
+    or m.controller.stickX > 0.5 then direction = CONT_RIGHT end
+
+    if gamemode == HUNT then
+        if direction == CONT_LEFT then
+            gGlobalSyncTable.huntLivesCount = gGlobalSyncTable.huntLivesCount - 1
+        elseif direction == CONT_RIGHT then
+            gGlobalSyncTable.huntLivesCount = gGlobalSyncTable.huntLivesCount + 1
+        end
+    elseif gamemode == DEATHMATCH then
+        if direction == CONT_LEFT then
+            gGlobalSyncTable.deathmatchLivesCount = gGlobalSyncTable.deathmatchLivesCount - 1
+        elseif direction == CONT_RIGHT then
+            gGlobalSyncTable.deathmatchLivesCount = gGlobalSyncTable.deathmatchLivesCount + 1
+        end
+    end
+
+    gGlobalSyncTable.huntLivesCount = clamp(gGlobalSyncTable.huntLivesCount, 2, 20)
+    gGlobalSyncTable.deathmatchLivesCount = clamp(gGlobalSyncTable.deathmatchLivesCount, 1, 20)
+end
+
 local function set_sardines_hide_time()
     -- get which direction we are facing
     local m = gMarioStates[0]
@@ -918,12 +944,24 @@ local function reset_gamemode_selection()
         valueText = tostring(math.floor(gGlobalSyncTable.huntActiveTimer / 30)) .. "s",
         seperator = get_gamemode(HUNT)},
 
-        {name = "Deathmatch",
+        {name = "Lives",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = function () set_lives(HUNT) end,
+        valueText = tostring(gGlobalSyncTable.huntLivesCount)},
+
+        {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(DEATHMATCH) end,
         valueText = tostring(math.floor(gGlobalSyncTable.deathmatchActiveTimer / 30)) .. "s",
         seperator = get_gamemode(DEATHMATCH)},
+
+        {name = "Lives",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = function () set_lives(DEATHMATCH) end,
+        valueText = tostring(gGlobalSyncTable.deathmatchLivesCount)},
 
         {name = "Back",
         permission = PERMISSION_NONE,
