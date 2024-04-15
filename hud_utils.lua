@@ -240,7 +240,7 @@ function render_player_head(index, x, y, scaleX, scaleY)
 		if m.marioBodyState.modelState & MODEL_STATE_METAL ~= 0 then -- metal
 			color = network_player_palette_to_color(np, METAL, color)
 			djui_hud_set_color(color.r, color.g, color.b, alpha)
-			djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, 5*16, tileY*16, 16, 16)
+			djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, 5 * 16, tileY * 16, 16, 16)
 			isMetal = true
 
 			break

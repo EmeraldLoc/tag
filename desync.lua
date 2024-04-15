@@ -1,7 +1,7 @@
 
 DESYNC_REASON_LEVEL = 1
 DESYNC_REASON_ROUND_STATE = 2
-desyncTimer = 0
+desyncTimer = 10 * 30
 desyncReason = DESYNC_REASON_LEVEL
 local packetTimer = 10 * 30
 ---@type NetworkPlayer

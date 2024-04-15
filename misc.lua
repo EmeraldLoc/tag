@@ -850,7 +850,7 @@ function djui_chat_message_create_global(msg)
 	network_send(true, p)
 end
 
--- taken from arena
+-- taken from arena, for arena
 function convert_s16(num)
     local min = -32768
     local max = 32767
