@@ -1099,7 +1099,7 @@ local function mario_update(m)
                 end
             end
         elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS and not gGlobalSyncTable.autoMode then
-            if np.currLevelNum ~= LEVEL_CASTLE_GROUNDS then
+            if np.currLevelNum ~= gLevelValues.entryLevel then
                 warp_to_start_level()
             end
         end
