@@ -20,7 +20,6 @@ local function update()
             desyncTimer = desyncTimer - 1
             -- by using a packet timer, we can resend the packet if it doesn't seem that it went thru
             packetTimer = packetTimer - 1
-            djui_chat_message_create(tostring(desyncTimer))
             -- set the reason for the desync to level
             desyncReason = DESYNC_REASON_LEVEL
         elseif gGlobalSyncTable.roundState == ROUND_WAIT and math.floor(gGlobalSyncTable.displayTimer / 30) > 15 then
