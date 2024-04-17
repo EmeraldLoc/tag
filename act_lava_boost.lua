@@ -4,10 +4,8 @@ ACT_CUSTOM_LAVA_BOOST = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
 ---@param m MarioState
 local function act_lava_boost(m)
     if m.flags & MARIO_MARIO_SOUND_PLAYED == 0 then
-        play_character_sound_if_no_flag(m, CHAR_SOUND_ON_FIRE, MARIO_MARIO_SOUND_PLAYED)
         queue_rumble_data_mario(m, 5, 80)
     end
-    play_character_sound_if_no_flag(m, CHAR_SOUND_ON_FIRE, MARIO_MARIO_SOUND_PLAYED)
 
     if m.input & INPUT_NONZERO_ANALOG == 0 then
         m.forwardVel = approach_f32(m.forwardVel, 0.0, 0.35, 0.35)
