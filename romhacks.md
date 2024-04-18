@@ -90,14 +90,14 @@ That's it!
 
 # Adding Your Level to Tag
 
-Firstly, if your level already works in Arena, then it should work in tag as well. Pipes are placed in the position of the team flags, and the spawn is set via the flag tag pos. If the floor is invalid however, it'll set your spawn point to an actual spawn point specified in the level. If you want to add a level to tag using the official way (for some reason), here's what that looks like:
+Firstly, if your level already works in Arena, then it should work in tag as well, however no painting will exist. Pipes are placed in the position of the team flags, and the spawn is set via the flag tag pos. If the floor is invalid however, it'll set your spawn point to an actual spawn point specified in the level. If you want to add a level to tag using the official way, to get paintings, here's what that looks like:
 
 ```
 _G.tag.add_level(level, name, painting, area, pipes, spawnLocation)
 ```
 
+The arena benefits will still apply when you use the tag api, so there isn't really a need to specify a spawn or pipes.
+
 If you read the guide above, it should be clear what needs to be done.
 
-To check if tag is enabled, just check if `_G.tag` is nil or not
-
-Note for painting: You can only use painintgs already in tag, if a paintnig doesn't exist, you can't add one to tag. If you find a way to accomplish this that I don't know of, you can contact me at the modding site, or make an issue in the tag repo.
+To check if tag is enabled, just check if `_G.tag` is nil or not.
