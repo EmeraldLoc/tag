@@ -175,7 +175,6 @@ local function allow_pvp(a, v)
     if gGlobalSyncTable.gamemode ~= SARDINES then return end
 
     -- use allow pvp instead of on pvp so that the sardine never takes kb (pvp hit reg isn't that important here)
-
     if v.playerIndex ~= 0 then return false end
     -- handle pvp if we are the victim
     sardines_handle_pvp(a.playerIndex, v.playerIndex)

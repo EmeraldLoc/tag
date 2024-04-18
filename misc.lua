@@ -34,17 +34,20 @@ function table.pos_of_element(table, element)
 	return nil
 end
 
----@param str string
-function tobool(str)
-	if str == "true" or str == "1" then
-		return true
-	end
+function tobool(v)
+    local type = type(v)
+    if type == "boolean" then
+        return v
+    elseif type == "number" then
+        return v == 1
+    elseif type == "string" then
+        return v == "true"
+    elseif type == "table" or type == "function"
+	or type == "thread" or type == "userdata" then
+        return true
+    end
 
-	if str == "false" or str == "0" then
-		return false
-	end
-
-	return nil
+    return false
 end
 
 function mario_health_float(m)
