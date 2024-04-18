@@ -32,7 +32,7 @@ local function retrieve_key_table()
     return references
 end
 
-function generate_key()
+local function generate_key()
     -- retrieve key if it exists
     if  mod_storage_load("encryptionKey1") ~= nil
     and mod_storage_load("encryptionKey2") ~= nil
