@@ -681,7 +681,7 @@ local function server_update()
 
         if timer <= 0 then
             if gGlobalSyncTable.gamemode ~= HOT_POTATO then
-                timer = 15 * 30 -- 15 seconds
+                timer = 10 * 30 -- 10 seconds
 
                 if gGlobalSyncTable.gamemode == ASSASSINS
                 or gGlobalSyncTable.gamemode == DEATHMATCH then

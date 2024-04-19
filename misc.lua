@@ -118,11 +118,11 @@ function check_round_status()
 
 	if not hasTagger then
 		if gGlobalSyncTable.gamemode ~= HOT_POTATO then
-			timer = 15 * 30 -- 15 seconds
+			timer = 10 * 30 -- 10 seconds
 
 			gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
 		elseif runnerCount == 1 then
-			timer = 15 * 30 -- 15 seconds
+			timer = 10 * 30 -- 10 seconds
 
 			gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
 		elseif gGlobalSyncTable.gamemode == HOT_POTATO then
@@ -137,7 +137,7 @@ function check_round_status()
 	if  not hasRunner
 	and gGlobalSyncTable.gamemode ~= ASSASSINS
 	and gGlobalSyncTable.gamemode ~= DEATHMATCH then
-		timer = 15 * 30 -- 15 seconds
+		timer = 10 * 30 -- 10 seconds
 
 		gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
 
@@ -147,7 +147,7 @@ function check_round_status()
 	if  taggerCount == 1
 	and (gGlobalSyncTable.gamemode == ASSASSINS
 	or  gGlobalSyncTable.gamemode == DEATHMATCH) then
-		timer = 15 * 30 -- 15 seconds
+		timer = 10 * 30 -- 10 seconds
 
 		gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
 	end

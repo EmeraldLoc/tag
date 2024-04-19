@@ -10,7 +10,7 @@ local function mario_update(m)
     if gGlobalSyncTable.gamemode ~= TAG then return end
 
     m.health = 0x880 -- set mario's health to full
-    
+
     if gPlayerSyncTable[m.playerIndex].state == ELIMINATED then
         -- set model state
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA -- vanish cap style
