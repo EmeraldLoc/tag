@@ -280,11 +280,6 @@ local function set_time_limit(gamemode)
     -- set variable based off of dir and speed
     if direction == CONT_LEFT then
         set_active_timer(gamemode, get_active_timer(gamemode) - 30 * speed)
-        gGlobalSyncTable.tagActiveTimer = gGlobalSyncTable.tagActiveTimer - (30 * speed)
-
-        if gGlobalSyncTable.tagActiveTimer <= 30 * 30 then
-            gGlobalSyncTable.tagActiveTimer = 30 * 30
-        end
     else
         set_active_timer(gamemode, get_active_timer(gamemode) + 30 * speed)
     end
