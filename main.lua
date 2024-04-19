@@ -1538,24 +1538,6 @@ local function act_nothing(m)
     m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - 1
 end
 
-hook_on_sync_table_change(gGlobalSyncTable, 'randomGamemode', gGlobalSyncTable.randomGamemode,
-    function(tag, oldVal, newVal)
-        -- the only one of these awful sync table changes you will see, savor this moment.
-        if oldVal ~= newVal then
-            local text = ""
-
-            if gGlobalSyncTable.randomGamemode then
-                text = "random"
-            else
-                text = "not random"
-            end
-
-            if text ~= "" then
-                djui_chat_message_create("Gamemode is " .. text)
-            end
-        end
-    end)
-
 -- runs once per frame (all game logic runs at 30fps)
 hook_event(HOOK_UPDATE, update)
 -- runs when the hud is rendered

@@ -9,6 +9,7 @@ local function check_for_updates()
     if not finishedChecking then
         finishedChecking = true
 
+        --- TODO: Edit this when coopdx v1 comes out
         if VERSION_NUMBER < 37 then return end -- only works in v37
         -- attempt to load the current verion's audio file
         local url = "https://github.com/EmeraldLoc/Tag/raw/main/" .. version .. ".mp3"

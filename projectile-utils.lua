@@ -15,7 +15,7 @@ function handle_projectile_pvp(aI, vI)
     elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
         -- do nothing, purely for kb and protection
     elseif gGlobalSyncTable.gamemode == ASSASSINS then
-        assassins_handle_pvp(aI, vI) -- TODO: maybe better networking?
+        assassins_handle_pvp(aI, vI)
     elseif gGlobalSyncTable.gamemode == SARDINES then
         -- do nothing, purely for chaos
     elseif gGlobalSyncTable.gamemode == HUNT then

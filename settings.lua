@@ -191,6 +191,51 @@ local function reset_general_settings()
     save_bool("autoHideHud", true)
 end
 
+local function set_active_timer(g, v)
+    v = clampf(v, 30 * 30, v)
+    if g == TAG then
+        gGlobalSyncTable.tagActiveTimer = v
+    elseif g == FREEZE_TAG then
+        gGlobalSyncTable.freezeTagActiveTimer = v
+    elseif g == INFECTION then
+        gGlobalSyncTable.infectionActiveTimer = v
+    elseif g == HOT_POTATO then
+        gGlobalSyncTable.hotPotatoActiveTimer = v
+    elseif g == JUGGERNAUT then
+        gGlobalSyncTable.juggernautActiveTimer = v
+    elseif g == ASSASSINS then
+        gGlobalSyncTable.assassinsActiveTimer = v
+    elseif g == SARDINES then
+        gGlobalSyncTable.sardinesActiveTimer = v
+    elseif g == HUNT then
+        gGlobalSyncTable.huntActiveTimer = v
+    elseif g == DEATHMATCH then
+        gGlobalSyncTable.deathmatchActiveTimer = v
+    end
+end
+
+local function get_active_timer(g)
+    if g == TAG then
+        return gGlobalSyncTable.tagActiveTimer
+    elseif g == FREEZE_TAG then
+        return gGlobalSyncTable.freezeTagActiveTimer
+    elseif g == INFECTION then
+        return gGlobalSyncTable.infectionActiveTimer
+    elseif g == HOT_POTATO then
+        return gGlobalSyncTable.hotPotatoActiveTimer
+    elseif g == JUGGERNAUT then
+        return gGlobalSyncTable.juggernautActiveTimer
+    elseif g == ASSASSINS then
+        return gGlobalSyncTable.assassinsActiveTimer
+    elseif g == SARDINES then
+        return gGlobalSyncTable.sardinesActiveTimer
+    elseif g == HUNT then
+        return gGlobalSyncTable.huntActiveTimer
+    elseif g == DEATHMATCH then
+        return gGlobalSyncTable.deathmatchActiveTimer
+    end
+end
+
 local function set_time_limit(gamemode)
     -- get which direction we are facing
     local m = gMarioStates[0]
@@ -227,115 +272,21 @@ local function set_time_limit(gamemode)
     -- I'm not gonna fix it, too lazy for that, but this is just stupid that
     -- I've looked at this code 3 TIMES and haven't touched it ONCE... oh well...
 
+    -- Hello. The date is April 19, 2024. I just got done shredding mayo in a 1v1.
+    -- I've finally come around to fixing this abomination. It's now split into 2 functions.
+    -- This is a incredible day, a day I accomplished something with this mod.
+    -- This day is to be remembered as the day EmeraldLockdown did a thing!
+
     -- set variable based off of dir and speed
-    if gamemode == TAG then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.tagActiveTimer = gGlobalSyncTable.tagActiveTimer - (30 * speed)
+    if direction == CONT_LEFT then
+        set_active_timer(gamemode, get_active_timer(gamemode) - 30 * speed)
+        gGlobalSyncTable.tagActiveTimer = gGlobalSyncTable.tagActiveTimer - (30 * speed)
 
-            if gGlobalSyncTable.tagActiveTimer <= 30 * 30 then
-                gGlobalSyncTable.tagActiveTimer = 30 * 30
-            end
-        else
-            gGlobalSyncTable.tagActiveTimer = gGlobalSyncTable.tagActiveTimer + (30 * speed)
+        if gGlobalSyncTable.tagActiveTimer <= 30 * 30 then
+            gGlobalSyncTable.tagActiveTimer = 30 * 30
         end
-
-        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.tagActiveTimer / 30)) .. "s"
-    elseif gamemode == FREEZE_TAG then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.freezeTagActiveTimer = gGlobalSyncTable.freezeTagActiveTimer - (30 * speed)
-
-            if gGlobalSyncTable.freezeTagActiveTimer <= 30 * 30 then
-                gGlobalSyncTable.freezeTagActiveTimer = 30 * 30
-            end
-        else
-            gGlobalSyncTable.freezeTagActiveTimer = gGlobalSyncTable.freezeTagActiveTimer + (30 * speed)
-        end
-
-        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.freezeTagActiveTimer / 30)) .. "s"
-    elseif gamemode == INFECTION then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.infectionActiveTimer = gGlobalSyncTable.infectionActiveTimer - (30 * speed)
-
-            if gGlobalSyncTable.infectionActiveTimer <= 30 * 30 then
-                gGlobalSyncTable.infectionActiveTimer = 30 * 30
-            end
-        else
-            gGlobalSyncTable.infectionActiveTimer = gGlobalSyncTable.infectionActiveTimer + (30 * speed)
-        end
-
-        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.infectionActiveTimer / 30)) .. "s"
-    elseif gamemode == HOT_POTATO then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.hotPotatoActiveTimer = gGlobalSyncTable.hotPotatoActiveTimer - (30 * speed)
-
-            if gGlobalSyncTable.hotPotatoActiveTimer <= 30 * 30 then
-                gGlobalSyncTable.hotPotatoActiveTimer = 30 * 30
-            end
-        else
-            gGlobalSyncTable.hotPotatoActiveTimer = gGlobalSyncTable.hotPotatoActiveTimer + (30 * speed)
-        end
-
-        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.hotPotatoActiveTimer / 30)) .. "s"
-    elseif gamemode == JUGGERNAUT then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.juggernautActiveTimer = gGlobalSyncTable.juggernautActiveTimer - (30 * speed)
-
-            if gGlobalSyncTable.juggernautActiveTimer <= 30 * 30 then
-                gGlobalSyncTable.juggernautActiveTimer = 30 * 30
-            end
-        else
-            gGlobalSyncTable.juggernautActiveTimer = gGlobalSyncTable.juggernautActiveTimer + (30 * speed)
-        end
-
-        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.juggernautActiveTimer / 30)) .. "s"
-    elseif gamemode == ASSASSINS then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.assassinsActiveTimer = gGlobalSyncTable.assassinsActiveTimer - (30 * speed)
-
-            if gGlobalSyncTable.assassinsActiveTimer <= 30 * 30 then
-                gGlobalSyncTable.assassinsActiveTimer = 30 * 30
-            end
-        else
-            gGlobalSyncTable.assassinsActiveTimer = gGlobalSyncTable.assassinsActiveTimer + (30 * speed)
-        end
-
-        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.assassinsActiveTimer / 30)) .. "s"
-    elseif gamemode == SARDINES then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.sardinesActiveTimer = gGlobalSyncTable.sardinesActiveTimer - (30 * speed)
-
-            if gGlobalSyncTable.sardinesActiveTimer <= 30 * 30 then
-                gGlobalSyncTable.sardinesActiveTimer = 30 * 30
-            end
-        else
-            gGlobalSyncTable.sardinesActiveTimer = gGlobalSyncTable.sardinesActiveTimer + (30 * speed)
-        end
-
-        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.sardinesActiveTimer / 30)) .. "s"
-    elseif gamemode == HUNT then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.huntActiveTimer = gGlobalSyncTable.huntActiveTimer - (30 * speed)
-
-            if gGlobalSyncTable.huntActiveTimer <= 30 * 30 then
-                gGlobalSyncTable.huntActiveTimer = 30 * 30
-            end
-        else
-            gGlobalSyncTable.huntActiveTimer = gGlobalSyncTable.huntActiveTimer + (30 * speed)
-        end
-
-        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.huntActiveTimer / 30)) .. "s"
-    elseif gamemode == DEATHMATCH then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.deathmatchActiveTimer = gGlobalSyncTable.deathmatchActiveTimer - (30 * speed)
-
-            if gGlobalSyncTable.deathmatchActiveTimer <= 30 * 30 then
-                gGlobalSyncTable.deathmatchActiveTimer = 30 * 30
-            end
-        else
-            gGlobalSyncTable.deathmatchActiveTimer = gGlobalSyncTable.deathmatchActiveTimer + (30 * speed)
-        end
-
-        entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.deathmatchActiveTimer / 30)) .. "s"
+    else
+        set_active_timer(gamemode, get_active_timer(gamemode) + 30 * speed)
     end
 end
 

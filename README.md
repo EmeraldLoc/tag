@@ -37,7 +37,7 @@ Each player has stats! These stats go from playtime, total tags, and total time 
 - Where can I report bugs or suggestions?
   - You may report bugs or suggestions [here](https://github.com/EmeraldLoc/tag/issues).
 - How will I know that a update has released?
-  - Versions 2.1 and up have an update notifier, however this will only be activated once v37 of coop comes out, or when coopdx also fixes the bug currently stopping it from working.
+  - Versions 2.1 and up have an update notifier, however this will only be activated once v1 of coopdx comes out, or when coopdx also fixes the bug currently stopping it from working.
 - When do you beta test new versions of Tag?
   - There isn't really a set time. They typically happen when I got a good feature set for a next version. Expect more testing when the next version reaches the R.C stage, which you can know when I host it lol.
 - What are the stages of a new release?
