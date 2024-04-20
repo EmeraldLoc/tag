@@ -20,8 +20,6 @@ local function check_for_updates()
         -- that you're up to date, slight downside
         if updateFile == nil or not updateFile.loaded or updateFile.handle == 0 then
             djui_chat_message_create("An update is available for Tag!")
-        else
-            djui_chat_message_create("Tag is up to date!")
         end
     end
 end

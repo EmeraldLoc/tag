@@ -267,7 +267,7 @@ local function set_time_limit(gamemode)
     -- I don't think the ranting I did above is justified, its not thaat bad.
     -- If it ain't broke, don't fix it
 
-    -- Future me again, it's March 12th. Tag v2.21 is released, and I have a new gamemode im implementing as of 8 p.m CST.
+    -- Future me again, it's March 12th. Tag v2.21 is released, and I have a new gamemode im implementing as of 8 p.m CT.
     -- I despise having to touch this code, above me should have fixed it.
     -- I'm not gonna fix it, too lazy for that, but this is just stupid that
     -- I've looked at this code 3 TIMES and haven't touched it ONCE... oh well...

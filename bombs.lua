@@ -154,6 +154,7 @@ local function bomb_init(o)
     obj_scale(o, 0.75)
     -- init sync object
     network_init_object(o, true, {
+        "oBombOwner",
         "activeFlags",
         "oVelY",
         "oPosX",
