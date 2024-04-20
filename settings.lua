@@ -252,7 +252,7 @@ local function set_time_limit(gamemode)
         speed = 10
     end
 
-    -- TODO: Make this way cleaner (if your reading this then chances are i've released the mod
+    -- I need to make this way cleaner (if your reading this then chances are i've released the mod
     -- and past me is not proud of myself, but hey SCREW PAST ME THAT GUY SUCKS HAHAHAH)
     -- seriously though don't take this as an example for your mods, please, please make
     -- it organized and compressed, and don't underlook functions, they are HUGE
