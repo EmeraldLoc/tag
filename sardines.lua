@@ -226,7 +226,25 @@ local function allow_interact(m, o, intee)
     end
 end
 
+local function on_chat_message(m, msg)
+    local s = gPlayerSyncTable[0]
+    local rS = gPlayerSyncTable[m.playerIndex]
+
+    if gGlobalSyncTable.roundState == ROUND_ACTIVE
+    and gGlobalSyncTable.gamemode == SARDINES then
+        if  (s.state  == FINISHED or s.state  == RUNNER)
+        and (rS.state == FINISHED or rS.state == RUNNER) then
+            djui_chat_message_create("\\#BBBEA1\\Sardine Club: " .. get_player_name(m.playerIndex) .. ": \\#dcdcdc\\" .. msg)
+            play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
+            return false
+        elseif s.state ~= TAGGER or rS.state ~= TAGGER then
+            return false
+        end
+    end
+end
+
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
+hook_event(HOOK_ON_CHAT_MESSAGE, on_chat_message)
