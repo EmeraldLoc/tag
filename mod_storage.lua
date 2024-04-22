@@ -51,6 +51,7 @@ function load_bool(key)
     local data = decrypt_string(mod_storage_load(key))
     -- sanity check
     if data == nil then return nil end
+    if data == "" then return nil end
     -- remove the tag_bool_ part from the string
     data = data:gsub("tag_bool_", "")
     -- return converted bool from string
@@ -64,6 +65,7 @@ function load_int(key)
     local data = decrypt_string(mod_storage_load(key))
     -- sanity check
     if data == nil then return nil end
+    if data == "" then return nil end
     -- remove the tag_int_ part from the string
     data = data:gsub("tag_int_", "")
     -- return converted int from string
