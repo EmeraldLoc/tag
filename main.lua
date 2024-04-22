@@ -61,7 +61,8 @@ MODIFIER_INCOGNITO                     = 8
 MODIFIER_HIGH_GRAVITY                  = 9
 MODIFIER_FLY                           = 10
 MODIFIER_BLASTER                       = 11
-MODIFIER_MAX                           = 11
+MODIFIER_ONE_RUNNER                    = 12
+MODIFIER_MAX                           = 12
 
 -- binds
 BIND_BOOST = 0
@@ -196,6 +197,7 @@ blacklistedModifiers = {
     [MODIFIER_HIGH_GRAVITY] = false,
     [MODIFIER_FLY] = false,
     [MODIFIER_BLASTER] = false,
+    [MODIFIER_ONE_TAGGER] = false,
 }
 -- the previous level, used for when the server selects levels to pick
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
@@ -408,16 +410,12 @@ local function server_update()
                     -- select a random modifier
                     gGlobalSyncTable.modifier = math.random(MODIFIER_MIN + 1, MODIFIER_MAX) -- select random modifier, exclude MODIFIER_NONE
 
-                    if gGlobalSyncTable.gamemode == JUGGERNAUT
-                        and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
-                            or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
-                        goto selectmodifier
-                    end
-
-                    if (gGlobalSyncTable.gamemode == ASSASSINS
-                    or gGlobalSyncTable.gamemode == SARDINES)
+                    if  (gGlobalSyncTable.gamemode == ASSASSINS
+                    or  gGlobalSyncTable.gamemode  == SARDINES
+                    or  gGlobalSyncTable.gamemode  == JUGGERNAUT)
                     and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
-                    or gGlobalSyncTable.modifier == MODIFIER_INCOGNITO) then
+                    or  gGlobalSyncTable.modifier  == MODIFIER_INCOGNITO
+                    or  gGlobalSyncTable.modifier  == MODIFIER_ONE_RUNNER) then
                         goto selectmodifier
                     end
 
@@ -429,12 +427,6 @@ local function server_update()
                         goto selectmodifier
                     end
 
-                    if gGlobalSyncTable.gamemode == SARDINES
-                    and gGlobalSyncTable.modifier == MODIFIER_BOMBS then
-                        goto selectmodifier
-                    end
-
-                    -- don't know if explicit check for true is needed
                     if blacklistedModifiers[gGlobalSyncTable.modifier] == true then
                         goto selectmodifier
                     end
@@ -603,7 +595,9 @@ local function server_update()
 
             if not skipTaggerSelection then
                 if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
-                    amountOfTaggersNeeded = 1 -- set amount of taggers to one if the modifier is one tagger
+                    amountOfTaggersNeeded = 1
+                elseif gGlobalSyncTable.modifier == MODIFIER_ONE_RUNNER then
+                    amountOfTaggersNeeded = numPlayers - 1
                 end
 
                 if gGlobalSyncTable.gamemode == JUGGERNAUT
@@ -768,7 +762,9 @@ local function server_update()
             local amountOfTaggersNeeded = math.floor(currentConnectedCount / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
             if amountOfTaggersNeeded < 1 then amountOfTaggersNeeded = 1 end
             if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
-                amountOfTaggersNeeded = 1 -- set amount of taggers to one if the modifier is one tagger
+                amountOfTaggersNeeded = 1
+            elseif gGlobalSyncTable.modifier == MODIFIER_ONE_RUNNER then
+                amountOfTaggersNeeded = numPlayers - 1
             end
 
             timer = gGlobalSyncTable.amountOfTime

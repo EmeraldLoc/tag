@@ -17,7 +17,7 @@ function handle_projectile_pvp(aI, vI)
     elseif gGlobalSyncTable.gamemode == ASSASSINS then
         assassins_handle_pvp(aI, vI)
     elseif gGlobalSyncTable.gamemode == SARDINES then
-        -- do nothing, purely for chaos
+        sardines_handle_pvp(aI, vI)
     elseif gGlobalSyncTable.gamemode == HUNT then
         hunt_handle_pvp(aI, vI)
     elseif gGlobalSyncTable.gamemode == DEATHMATCH then

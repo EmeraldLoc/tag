@@ -396,7 +396,7 @@ function get_modifier_text(m)
 			text = "\\#0099FF\\Boosts"
 		end
 	elseif m == MODIFIER_ONE_TAGGER then
-		text = "\\#316BE8\\One Tagger"
+		text = "\\#E82E2E\\One Tagger"
 	elseif m == MODIFIER_FOG then
 		text = "\\#7ACEF5\\Fog"
 	elseif m == MODIFIER_SPEED then
@@ -409,6 +409,8 @@ function get_modifier_text(m)
 		text = "\\#FF0000\\Fly"
 	elseif m == MODIFIER_BLASTER then
 		text = "\\#0099FF\\Blaster"
+	elseif m == MODIFIER_ONE_RUNNER then
+		text = "\\#316BE8\\One Runner"
 	elseif m == MODIFIER_NONE
 	and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
@@ -450,6 +452,8 @@ function get_modifier_text_without_hex()
 		text = "Fly"
 	elseif gGlobalSyncTable.modifier == MODIFIER_BLASTER then
 		text = "Blaster"
+	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_RUNNER then
+		text = "One Runner"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
 		text = "None"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
