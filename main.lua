@@ -197,8 +197,6 @@ blacklistedModifiers = {
     [MODIFIER_FLY] = false,
     [MODIFIER_BLASTER] = false,
 }
--- the join timer, this is what gives it time to sync
-joinTimer = 6 * 30
 -- the previous level, used for when the server selects levels to pick
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
 -- These are levels that are failed to be warped to for romhacks
@@ -850,10 +848,8 @@ local function update()
     -- server update
     if network_is_server() then server_update() end
 
-    if joinTimer <= 0 then -- check this so the user has time to sync up
-        if gPlayerSyncTable[0].invincTimer > 0 then
-            gPlayerSyncTable[0].invincTimer = gPlayerSyncTable[0].invincTimer - 1
-        end
+    if gPlayerSyncTable[0].invincTimer ~= nil and gPlayerSyncTable[0].invincTimer > 0 then
+        gPlayerSyncTable[0].invincTimer = gPlayerSyncTable[0].invincTimer - 1
     end
 
     -- handle romhack overrides
@@ -892,10 +888,6 @@ local function update()
     if gPlayerSyncTable[0].state == SPECTATOR then
         gPlayerSyncTable[0].amountOfTimeAsRunner = 0
         gPlayerSyncTable[0].amountOfTags = 0
-    end
-
-    if joinTimer > 0 then
-        joinTimer = joinTimer - 1 -- this is done to ensure that all globals sync beforehand
     end
 
     -- set network descriptions
@@ -979,7 +971,7 @@ local function mario_update(m)
     end
 
     -- sync invinc timer to sync table invinc timer
-    if joinTimer <= 0 then
+    if gPlayerSyncTable[m.playerIndex].invincTimer ~= nil then
         m.invincTimer = gPlayerSyncTable[m.playerIndex].invincTimer
     end
 
@@ -1180,9 +1172,8 @@ local function mario_update(m)
             speedBoostTimer = 0
         end
 
-        -- handle if just join
-        if joinTimer == 2 * 30 and not network_is_server() then
-            -- this here sets our initial state
+        -- set our initial state
+        if np.currAreaSyncValid and gPlayerSyncTable[0].state == -1 then
             if gGlobalSyncTable.roundState == ROUND_ACTIVE
             or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
             or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
@@ -1197,13 +1188,6 @@ local function mario_update(m)
             else
                 gPlayerSyncTable[0].state = RUNNER
             end
-
-            m.freeze = 1
-            -- some m.freeze stuff and join timer shenenagins
-        elseif joinTimer > 0 and not network_is_server() then
-            m.freeze = 1
-        elseif network_is_server() then
-            joinTimer = 0
         end
 
         -- desync timer
@@ -1215,8 +1199,7 @@ local function mario_update(m)
         if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
             m.freeze = 1
             set_mario_action(m, ACT_NOTHING, 0)
-        elseif (joinTimer <= 0 and desyncTimer > 0) or network_is_server() then
-            -- yea idk what this is this looks awful, not changing it though since it somehow works
+        elseif desyncTimer > 0 or network_is_server() then
             if showSettings or isPaused then
                 m.freeze = 1
             else
@@ -1464,8 +1447,7 @@ local function hud_render()
 
     -- render hud
     if gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN
-    and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN
-    and joinTimer <= 0 then
+    and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN then
         hud_round_status()
         hud_gamemode()
         hud_modifier()
