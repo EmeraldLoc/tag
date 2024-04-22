@@ -12,6 +12,7 @@ local hidingPos = { x = 0, y = 0, z = 0 }
 local function mario_update(m)
 
     if gGlobalSyncTable.gamemode ~= SARDINES then return end
+    if m.playerIndex ~= 0 then return end
 
     m.health = 0x880 -- set mario's health to full
 
@@ -26,15 +27,17 @@ local function mario_update(m)
     if gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES
     and gPlayerSyncTable[0].state ~= RUNNER then
         m.freeze = 1
-    elseif gGlobalSyncTable.roundState == ROUND_ACTIVE
-    and gPlayerSyncTable[0].state == RUNNER then
-        m.freeze = 1
-        vec3f_copy(m.pos, hidingPos)
-    end
-
-    if gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES
+    elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES
     and gPlayerSyncTable[0].state == RUNNER then
         vec3f_copy(hidingPos, m.pos)
+    end
+
+    if gGlobalSyncTable.roundState == ROUND_ACTIVE
+    and gPlayerSyncTable[0].state == RUNNER then
+        m.freeze = 1
+        if m.pos ~= hidingPos then
+            vec3f_copy(m.pos, hidingPos)
+        end
     end
 end
 
@@ -190,7 +193,8 @@ function sardines_handle_pvp(aI, vI)
     local v = gPlayerSyncTable[vI]
 
     -- check if tagger tagged runner
-    if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+    if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0
+    and gGlobalSyncTable.roundState == ROUND_ACTIVE then
         -- set us to be finished
         a.state = FINISHED
 

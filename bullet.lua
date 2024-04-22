@@ -56,6 +56,9 @@ end
 
 function hud_bullet(gunCooldown, maxGunCooldown)
 
+    if gPlayerSyncTable[0].state == SPECTATOR
+    or gPlayerSyncTable[0].state == WILDCARD_ROLE then return end
+
     -- clamp gun cooldown
     gunCooldown = clampf(gunCooldown, 0, maxGunCooldown)
 

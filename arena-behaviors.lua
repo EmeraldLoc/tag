@@ -169,6 +169,9 @@ end
 
 ---@param m MarioState
 local function mario_update(m)
+
+    if m.playerIndex ~= 0 then return end
+
     if  interactedWithSpring
     and m.action == ACT_TRIPLE_JUMP then
         m.faceAngle.y = m.intendedYaw - approach_s32(convert_s16(m.intendedYaw - m.faceAngle.y), 0, 0x400, 0x400)

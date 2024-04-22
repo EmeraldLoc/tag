@@ -95,9 +95,6 @@ local function hud_render()
 end
 
 local function on_warp()
-
-    local m = gMarioStates[0]
-
     if gGlobalSyncTable.gamemode ~= DEATHMATCH then return end
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
     if not gGlobalSyncTable.eliminateOnDeath then return end

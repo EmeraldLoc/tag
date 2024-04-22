@@ -2,7 +2,6 @@
 local standingStill = true
 local prevPos = {x = 0, y = 0, z = 0}
 local distMoved = 0
-local initializedLevel = false
 
 ---@param m MarioState
 local function mario_update(m)
@@ -39,8 +38,8 @@ function is_standing_still()
 end
 
 function reset_standing_still()
-    local  m = gMarioStates[0]
-    isStandingStill = true
+    local m = gMarioStates[0]
+    standingStill = true
     vec3f_copy(prevPos, m.pos)
     distMoved = 0
 end

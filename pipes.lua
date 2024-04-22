@@ -55,7 +55,7 @@ local function pipe_loop(o)
         m.vel.y = 60
         m.forwardVel = 15
 
-        if m.invincTimer < 2 * 30 and pipeUse < 3 then
+        if m.invincTimer < 2 * 30 and pipeUse < 1 then
             gPlayerSyncTable[m.playerIndex].invincTimer = 2 * 30 -- 2 seconds
         end
 

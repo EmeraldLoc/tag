@@ -5,7 +5,6 @@ local updateFile = nil
 
 local function check_for_updates()
     -- you may take this code for your own mods, no credit is required
-
     if not finishedChecking then
         finishedChecking = true
 

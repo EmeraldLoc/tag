@@ -115,7 +115,7 @@ gGlobalSyncTable.sardinesHidingTimer   = 30  * 30
 -- amount of lives for hunt
 gGlobalSyncTable.huntLivesCount        = 3
 -- amount of lives for deathmatch
-gGlobalSyncTable.deathmatchLivesCount  = 5
+gGlobalSyncTable.deathmatchLivesCount  = 3
 -- auto mode
 gGlobalSyncTable.autoMode              = true
 -- enable tagger boosts or not
@@ -213,6 +213,8 @@ useRomhackCam = true
 autoHideHud = true
 -- amount of times the pipe has been used
 pipeUse = 0
+-- how long it has been since we last entered a pipe
+pipeTimer = 0
 -- binds
 binds = {}
 -- boost bind
@@ -303,8 +305,6 @@ local speedBoostTimer = 0
 -- hot potato timer multiplier is when the timer is faster if there's more people in
 -- hot potato
 local hotPotatoTimerMultiplier = 1
--- how long it has been since we last entered a pipe
-local pipeTimer = 0
 -- hud fade
 local hudFade = 255
 -- previous romhack override
@@ -988,14 +988,16 @@ local function mario_update(m)
         if not initializedSaveData then
             initializedSaveData = true
             -- booleans
-            if load_bool("bljs") ~= nil then gGlobalSyncTable.bljs = load_bool("bljs") end
-            if load_bool("cannons") ~= nil then gGlobalSyncTable.cannons = load_bool("cannons") end
-            if load_bool("water") ~= nil then gGlobalSyncTable.water = load_bool("water") end
-            if load_bool("eliminateOnDeath") ~= nil then gGlobalSyncTable.eliminateOnDeath = load_bool("eliminateOnDeath") end
-            if load_bool("voting") ~= nil then gGlobalSyncTable.voting = load_bool("voting") end
-            if load_bool("autoMode") ~= nil then gGlobalSyncTable.autoMode = load_bool("autoMode") end
-            if load_bool("boost") ~= nil then gGlobalSyncTable.boosts = load_bool("boost") end
-            if load_bool("hazardSurfaces") ~= nil then gGlobalSyncTable.hazardSurfaces = load_bool("hazardSurfaces") end
+            if network_is_server() then
+                if load_bool("bljs") ~= nil then gGlobalSyncTable.bljs = load_bool("bljs") end
+                if load_bool("cannons") ~= nil then gGlobalSyncTable.cannons = load_bool("cannons") end
+                if load_bool("water") ~= nil then gGlobalSyncTable.water = load_bool("water") end
+                if load_bool("eliminateOnDeath") ~= nil then gGlobalSyncTable.eliminateOnDeath = load_bool("eliminateOnDeath") end
+                if load_bool("voting") ~= nil then gGlobalSyncTable.voting = load_bool("voting") end
+                if load_bool("autoMode") ~= nil then gGlobalSyncTable.autoMode = load_bool("autoMode") end
+                if load_bool("boost") ~= nil then gGlobalSyncTable.boosts = load_bool("boost") end
+                if load_bool("hazardSurfaces") ~= nil then gGlobalSyncTable.hazardSurfaces = load_bool("hazardSurfaces") end
+            end
             if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
             if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
             -- binds
@@ -1392,6 +1394,7 @@ local function hud_modifier()
 end
 
 local function hud_boost()
+    if gGlobalSyncTable.roundState == ROUND_VOTING then return end
     if gPlayerSyncTable[0].state ~= TAGGER then return end
     if not boosts_enabled() then return end
 
@@ -1449,7 +1452,9 @@ local function hud_render()
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
     -- fade
-    if is_standing_still() or not autoHideHud then
+    if (is_standing_still()
+    or not autoHideHud)
+    and gGlobalSyncTable.roundState ~= ROUND_VOTING then
         hudFade = hudFade + 40
     else
         hudFade = hudFade - 40
