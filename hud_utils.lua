@@ -191,7 +191,7 @@ function djui_hud_print_colored_text(text, x, y, scale, opacity)
             -- print character
             djui_hud_print_text(c, x, y, scale)
             -- increase position
-            x = x + djui_hud_measure_text(c)
+            x = x + (djui_hud_measure_text(c) * scale)
 		end
 	end
 end

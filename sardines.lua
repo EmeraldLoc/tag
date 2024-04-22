@@ -234,7 +234,7 @@ local function on_chat_message(m, msg)
     and gGlobalSyncTable.gamemode == SARDINES then
         if  (s.state  == FINISHED or s.state  == RUNNER)
         and (rS.state == FINISHED or rS.state == RUNNER) then
-            djui_chat_message_create("\\#BBBEA1\\Sardine Club: " .. get_player_name(m.playerIndex) .. ": \\#dcdcdc\\" .. msg)
+            djui_chat_message_create("\\#BBBEA1\\Sardine Chat: " .. get_player_name(m.playerIndex) .. ": \\#dcdcdc\\" .. msg)
             play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
             return false
         elseif s.state ~= TAGGER or rS.state ~= TAGGER then
