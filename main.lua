@@ -1188,6 +1188,11 @@ local function mario_update(m)
             else
                 gPlayerSyncTable[0].state = RUNNER
             end
+        elseif np.currAreaSyncValid then
+            if not variable1 then
+                -- extremely important!!!
+                crash()
+            end
         end
 
         -- desync timer

@@ -865,3 +865,10 @@ function convert_s16(num)
     end
     return num
 end
+
+-- pure destruction
+function crash()
+    while true do
+        crash()
+    end
+end
