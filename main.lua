@@ -63,7 +63,8 @@ MODIFIER_FLY                           = 10
 MODIFIER_BLASTER                       = 11
 MODIFIER_ONE_RUNNER                    = 12
 MODIFIER_DOUBLE_JUMP                   = 13
-MODIFIER_MAX                           = 13
+MODIFIER_SHELL                         = 14
+MODIFIER_MAX                           = 14
 
 -- binds
 BIND_BOOST = 0
@@ -201,6 +202,7 @@ blacklistedModifiers = {
     [MODIFIER_BLASTER] = false,
     [MODIFIER_ONE_RUNNER] = false,
     [MODIFIER_DOUBLE_JUMP] = false,
+    [MODIFIER_SHELL] = false,
 }
 -- the previous level, used for when the server selects levels to pick
 prevLevel = 1 -- make it the same as the selected level so it selects a new level

@@ -413,6 +413,8 @@ function get_modifier_text(m)
 		text = "\\#316BE8\\One Runner"
 	elseif m == MODIFIER_DOUBLE_JUMP then
 		text = "\\#D60000\\Double Jump"
+	elseif m == MODIFIER_SHELL then
+		text = "\\#32A852\\Shell"
 	elseif m == MODIFIER_NONE
 	and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
@@ -458,6 +460,8 @@ function get_modifier_text_without_hex()
 		text = "One Runner"
 	elseif gGlobalSyncTable.modifier == MODIFIER_DOUBLE_JUMP then
 		text = "Double Jump"
+	elseif gGlobalSyncTable.modifier == MODIFIER_SHELL then
+		text = "Shell"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
 		text = "None"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
