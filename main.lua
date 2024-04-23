@@ -62,13 +62,15 @@ MODIFIER_HIGH_GRAVITY                  = 9
 MODIFIER_FLY                           = 10
 MODIFIER_BLASTER                       = 11
 MODIFIER_ONE_RUNNER                    = 12
-MODIFIER_MAX                           = 12
+MODIFIER_DOUBLE_JUMP                   = 13
+MODIFIER_MAX                           = 13
 
 -- binds
 BIND_BOOST = 0
 BIND_BOMBS = 1
 BIND_GUN = 2
-BIND_MAX = 2
+BIND_DOUBLE_JUMP = 3
+BIND_MAX = 3
 
 -- globals and sync tables
 -- this is the round state, this variable tells you what current round it is
@@ -197,7 +199,8 @@ blacklistedModifiers = {
     [MODIFIER_HIGH_GRAVITY] = false,
     [MODIFIER_FLY] = false,
     [MODIFIER_BLASTER] = false,
-    [MODIFIER_ONE_TAGGER] = false,
+    [MODIFIER_ONE_RUNNER] = false,
+    [MODIFIER_DOUBLE_JUMP] = false,
 }
 -- the previous level, used for when the server selects levels to pick
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
@@ -223,6 +226,8 @@ binds[BIND_BOOST] = {name = "Boost", btn = Y_BUTTON}
 binds[BIND_BOMBS] = {name = "Bombs", btn = Y_BUTTON}
 -- gun bind
 binds[BIND_GUN] = {name = "Gun", btn = X_BUTTON}
+-- double jump bind
+binds[BIND_DOUBLE_JUMP] = {name = "Double Jump", btn = X_BUTTON}
 -- stats
 stats = {
     globalStats = {

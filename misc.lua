@@ -411,6 +411,8 @@ function get_modifier_text(m)
 		text = "\\#0099FF\\Blaster"
 	elseif m == MODIFIER_ONE_RUNNER then
 		text = "\\#316BE8\\One Runner"
+	elseif m == MODIFIER_DOUBLE_JUMP then
+		text = "\\#D60000\\Double Jump"
 	elseif m == MODIFIER_NONE
 	and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
@@ -454,6 +456,8 @@ function get_modifier_text_without_hex()
 		text = "Blaster"
 	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_RUNNER then
 		text = "One Runner"
+	elseif gGlobalSyncTable.modifier == MODIFIER_DOUBLE_JUMP then
+		text = "Double Jump"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
 		text = "None"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
@@ -588,7 +592,7 @@ function get_role_name_without_hex(role)
 		return "Spectator"
 	end
 
-	return "???"
+	return "None"
 end
 
 ---@param role integer
@@ -630,7 +634,7 @@ function get_role_name(role)
 		return "\\#4A4A4A\\Spectator"
 	end
 
-	return "\\#4A4A4A\\???"
+	return "\\#4A4A4A\\None"
 end
 
 function boosts_enabled()
@@ -827,7 +831,7 @@ function toggle_spectator()
         local showRareMessage = math.random(1, 1000000)
 
         if showRareMessage == 777 then
-            djui_chat_message_create("1 in 1000000 chance of this message appearing. One time EmilyEmmi proved all my messages wrong and unspectated during a round :(")
+            djui_chat_message_create("1 in a million chance of this message appearing. One time EmilyEmmi proved all my messages wrong and unspectated during a round :(")
             return
         end
 
