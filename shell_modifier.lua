@@ -8,8 +8,8 @@ local function mario_update(m)
     if gGlobalSyncTable.modifier ~= MODIFIER_SHELL then
         if m.action & ACT_FLAG_RIDING_SHELL ~= 0 then
             set_mario_action(m, ACT_IDLE, 0)
-            return
         end
+        return
     end
 
     if m.action & ACT_FLAG_RIDING_SHELL == 0
