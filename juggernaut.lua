@@ -93,7 +93,7 @@ local function hud_render()
 end
 
 ---@param m MarioState
-local function on_death(m)
+local function on_warp(m)
 
     if gGlobalSyncTable.gamemode ~= JUGGERNAUT then return end
     if not gGlobalSyncTable.eliminateOnDeath then return end
@@ -136,4 +136,4 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_BEFORE_PHYS_STEP, before_phys_step)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ON_PVP_ATTACK, on_pvp)
-hook_event(HOOK_ON_DEATH, on_death)
+hook_event(HOOK_ON_WARP, on_warp)

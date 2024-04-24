@@ -40,7 +40,7 @@ local function hud_render()
 end
 
 ---@param m MarioState
-local function on_death(m)
+local function on_warp(m)
     if gGlobalSyncTable.gamemode ~= HOT_POTATO then return end
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then return end
     if not gGlobalSyncTable.eliminateOnDeath then return end
@@ -116,4 +116,4 @@ hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ON_PVP_ATTACK, on_pvp)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
-hook_event(HOOK_ON_DEATH, on_death)
+hook_event(HOOK_ON_WARP, on_warp)

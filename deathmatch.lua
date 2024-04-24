@@ -97,6 +97,7 @@ end
 local function on_warp()
     if gGlobalSyncTable.gamemode ~= DEATHMATCH then return end
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
+    if gNetworkPlayers[0].currLevelNum ~= levels[gGlobalSyncTable.selectedLevel].level then return end
     if not gGlobalSyncTable.eliminateOnDeath then return end
 
     -- subtract lives by 1 with a cap of 1
