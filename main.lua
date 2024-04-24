@@ -382,7 +382,7 @@ local function server_update()
         while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
             gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
 
-            if level.level == LEVEL_TTC and isRomhack then
+            if level.level == LEVEL_TTC and not isRomhack then
                 gGlobalSyncTable.ttcSpeed = math.random(0, 3)
             end
         end
