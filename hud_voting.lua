@@ -86,7 +86,7 @@ local function hud_map_vote()
         djui_hud_render_rect(x, y, 290, 50)
         djui_hud_set_color(255, 255, 255, fade)
         if i ~= 4 then
-            text = tostring(name_of_level(levels[voteRandomLevels[i]].level, levels[voteRandomLevels[i]].area)) .. ": " .. tostring(votes)
+            text = tostring(name_of_level(levels[voteRandomLevels[i]].level, levels[voteRandomLevels[i]].area, levels[voteRandomLevels[i]])) .. ": " .. tostring(votes)
         else
             text = "Random: " .. tostring(votes)
         end
@@ -104,7 +104,7 @@ local function hud_map_vote()
         else
             local level = levels[voteRandomLevels[currentMapWinner]].level
             local area = levels[voteRandomLevels[currentMapWinner]].area
-            text = name_of_level(level, area) .. " has been selected!"
+            text = name_of_level(level, area, levels[voteRandomLevels[currentMapWinner]]) .. " has been selected!"
         end
     end
     djui_hud_set_color(220, 220, 220, fade)

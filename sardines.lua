@@ -106,7 +106,7 @@ local function hud_current_sardine()
 end
 
 local function hud_level()
-    local text = "Level is " .. name_of_level(gNetworkPlayers[0].currLevelNum, gNetworkPlayers[0].currAreaIndex)
+    local text = "Level is " .. name_of_level(gNetworkPlayers[0].currLevelNum, gNetworkPlayers[0].currAreaIndex, levels[gGlobalSyncTable.selectedLevel])
 
     local screenWidth = djui_hud_get_screen_width()
     local width = djui_hud_measure_text(text)

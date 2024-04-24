@@ -17,20 +17,22 @@ function start_command(msg)
                     prevLevel = gGlobalSyncTable.selectedLevel
                     gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
 
-                    djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area))
+                    djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area, level))
 
                     return true
                 end
             end
         else
             for i, level in pairs(levels) do
-                if msg:lower() == level.name or msg:lower() == name_of_level(level.level, level.area):lower() then
+                if msg:lower() == level.name
+                or msg:lower() == name_of_level(level.level, level.area):lower()
+                or msg:lower() == level.overrideName then
                     timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
                     gGlobalSyncTable.selectedLevel = i
                     prevLevel = gGlobalSyncTable.selectedLevel
                     gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
 
-                    djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area))
+                    djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area, level))
 
                     return true
                 end

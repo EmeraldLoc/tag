@@ -942,7 +942,7 @@ local function reset_start_selection()
     for i = 1, #levels do
         if not table.contains(badLevels, i) then
             table.insert(startEntries, {
-                name = name_of_level(levels[i].level, levels[i].area),
+                name = name_of_level(levels[i].level, levels[i].area, levels[i]),
                 permission = PERMISSION_MODERATORS,
                 input = INPUT_A,
                 func = function ()
@@ -1021,7 +1021,7 @@ local function reset_blacklist_levels_entries()
 
     for i = 1, #levels do
         table.insert(blacklistLevelEntries, {
-            name = name_of_level(levels[i].level, levels[i].area),
+            name = name_of_level(levels[i].level, levels[i].area, levels[i]),
             permission = PERMISSION_MODERATORS,
             input = INPUT_JOYSTICK,
             func = function ()

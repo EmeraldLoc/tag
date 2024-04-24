@@ -324,10 +324,19 @@ function has_permission(perm)
     return false
 end
 
-function name_of_level(level, area)
+function name_of_level(level, area, levelTable)
+
+	-- if we are using a level table, use that instead
+	if levelTable ~= nil then
+		if levelTable.overrideName ~= nil then
+			return levelTable.overrideName
+		end
+	end
+
 	-- first see if we can find the level data
 	for _, lvl in pairs(levels) do
-		if lvl.level == level and lvl.area == area then
+		if lvl.level == level
+		and lvl.area == area then
 			-- search for an override name
 			if lvl.overrideName ~= nil then return lvl.overrideName end
 		end
