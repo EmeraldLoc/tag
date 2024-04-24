@@ -17,6 +17,16 @@ end
 
 ---@param o Object
 local function door_loop(o)
+
+    local selectedLevel = levels[gGlobalSyncTable.selectedLevel]
+    if selectedLevel.disabledBhvs ~= nil then
+        for i = 1, #selectedLevel.disabledBhvs do
+            if get_id_from_behavior(o.behavior) == selectedLevel.disabledBhvs[i] then
+                return
+            end
+        end
+    end
+
     if o.oAction == 0 then
         -- if mario is close enough, set action to the custom open door action, 5
         if dist_between_objects(o, gMarioStates[0].marioObj) <= 400 then
@@ -65,6 +75,16 @@ hook_behavior(id_bhvDoor, OBJ_LIST_SURFACE, false, function (o) o.collisionData 
 -- make star door open when mario gets close to it
 -- this code is by Sunk and Blocky
 function star_door_loop(o)
+
+    local selectedLevel = levels[gGlobalSyncTable.selectedLevel]
+    if selectedLevel.disabledBhvs ~= nil then
+        for i = 1, #selectedLevel.disabledBhvs do
+            if get_id_from_behavior(o.behavior) == selectedLevel.disabledBhvs[i] then
+                return
+            end
+        end
+    end
+
     if dist_between_objects(gMarioStates[0].marioObj, o) <= 400 then
         if o.oAction == 0 then
             o.oAction = 1
