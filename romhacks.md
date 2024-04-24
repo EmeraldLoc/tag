@@ -33,6 +33,8 @@ A `levels` table contains the following fields:
 | `pipes`|`table/nil`|A table of pairs of 2 pipes.
 | `spawnLocation`|`Vec3/nilf`|A spawn location.
 | `overrideName`|`string/nil`|A override name, typically used for subareas.
+| `unwantedBhvs`|`table/nil`|A table of unwanted behavior id's
+| `disabledBhvs`|`table/nil`|A table of disabled behavior id's, disabled meaning disabling interaction's for that behavior.
 
 Anything with /nil in it means it's optional, and you don't have to include it. Pipes and paintings should be set to nil, whereas spawnLoaction and overrideName can just not be included in the table. Begin constructing the table, keep painting and pipes as nil for now.
 

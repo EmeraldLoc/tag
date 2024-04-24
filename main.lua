@@ -64,7 +64,8 @@ MODIFIER_BLASTER                       = 11
 MODIFIER_ONE_RUNNER                    = 12
 MODIFIER_DOUBLE_JUMP                   = 13
 MODIFIER_SHELL                         = 14
-MODIFIER_MAX                           = 14
+MODIFIER_BLJS                          = 15
+MODIFIER_MAX                           = 15
 
 -- binds
 BIND_BOOST = 0
@@ -203,6 +204,7 @@ blacklistedModifiers = {
     [MODIFIER_ONE_RUNNER] = false,
     [MODIFIER_DOUBLE_JUMP] = false,
     [MODIFIER_SHELL] = false,
+    [MODIFIER_BLJS] = false,
 }
 -- the previous level, used for when the server selects levels to pick
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
@@ -914,7 +916,9 @@ local function mario_update(m)
     m.specialTripleJump = 0
 
     -- this ensures bljs are a no go, but hey, you can go as fast as a dive, so
-    if not gGlobalSyncTable.bljs and m.forwardVel <= -48 and (m.action == ACT_LONG_JUMP or m.action == ACT_LONG_JUMP_LAND or m.action == ACT_LONG_JUMP_LAND_STOP) then
+    if not bljs_enabled() and m.forwardVel <= -48
+    and (m.action == ACT_LONG_JUMP or m.action == ACT_LONG_JUMP_LAND
+    or m.action == ACT_LONG_JUMP_LAND_STOP) then
         m.forwardVel = -48 -- this is the dive speed
     end
 
@@ -1161,10 +1165,17 @@ local function mario_update(m)
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWaterLevelDiamond))
         end
 
-        -- delete objects depending if we are in a romhack or not
+        -- delete objects depending if romhacks are off
         if not isRomhack then
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvActivatedBackAndForthPlatform))
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvExclamationBox))
+        end
+
+        -- delete unwanted behaviors in level
+        if selectedLevel.unwantedBhvs ~= nil then
+            for i = 1, #selectedLevel.unwantedBhvs do
+                obj_mark_for_deletion(obj_get_first_with_behavior_id(selectedLevel.unwantedBhvs[i]))
+            end
         end
 
         -- handle speed boost, this is a fun if statement
@@ -1488,11 +1499,20 @@ local function allow_interact(m, o, intee)
         return false
     end
 
-    -- check if we interacted with a pipe, if we did, do pipe shenenagins
+    -- disable warp interaction
     if (intee == INTERACT_WARP or intee == INTERACT_WARP_DOOR)
     and gGlobalSyncTable.roundState ~= ROUND_WAIT_PLAYERS then
-        -- disable warp interaction
         return false
+    end
+
+    -- disable banned level interactions
+    local selectedLevel = levels[gGlobalSyncTable.selectedLevel]
+    if selectedLevel.disabledBhvs ~= nil then
+        for i = 1, #selectedLevel.disabledBhvs do
+            if get_id_from_behavior(o.behavior) == selectedLevel.disabledBhvs[i] then
+                return false
+            end
+        end
     end
 
     -- dont allow spectator to interact with objects, L

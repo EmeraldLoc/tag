@@ -415,6 +415,12 @@ function get_modifier_text(m)
 		text = "\\#D60000\\Double Jump"
 	elseif m == MODIFIER_SHELL then
 		text = "\\#32A852\\Shell"
+	elseif m == MODIFIER_BLJS then
+		if gGlobalSyncTable.bljs then
+			text = "\\#FF0000\\No Bljs"
+		else
+			text = "\\#FF0000\\Bljs"
+		end
 	elseif m == MODIFIER_NONE
 	and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
@@ -462,6 +468,12 @@ function get_modifier_text_without_hex()
 		text = "Double Jump"
 	elseif gGlobalSyncTable.modifier == MODIFIER_SHELL then
 		text = "Shell"
+	elseif gGlobalSyncTable.modifier == MODIFIER_BLJS then
+		if gGlobalSyncTable.bljs then
+			text = "No Bljs"
+		else
+			text = "Bljs"
+		end
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
 		text = "None"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
@@ -653,6 +665,18 @@ function boosts_enabled()
 
 	if  not gGlobalSyncTable.boosts
 	and gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
+		return true
+	end
+
+	return false
+end
+
+function bljs_enabled()
+	if gGlobalSyncTable.bljs
+	and gGlobalSyncTable.modifier ~= MODIFIER_BLJS then
+		return true
+	elseif not gGlobalSyncTable.bljs
+	and gGlobalSyncTable.modifier == MODIFIER_BLJS then
 		return true
 	end
 
