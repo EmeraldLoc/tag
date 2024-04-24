@@ -1173,8 +1173,8 @@ local function mario_update(m)
 
         -- delete unwanted behaviors in level
         if selectedLevel.unwantedBhvs ~= nil then
-            for i = 1, #selectedLevel.unwantedBhvs do
-                obj_mark_for_deletion(obj_get_first_with_behavior_id(selectedLevel.unwantedBhvs[i]))
+            for _, bhv in pairs(selectedLevel.unwantedBhvs) do
+                obj_mark_for_deletion(obj_get_first_with_behavior_id(bhv))
             end
         end
 
@@ -1508,8 +1508,8 @@ local function allow_interact(m, o, intee)
     -- disable banned level interactions
     local selectedLevel = levels[gGlobalSyncTable.selectedLevel]
     if selectedLevel.disabledBhvs ~= nil then
-        for i = 1, #selectedLevel.disabledBhvs do
-            if get_id_from_behavior(o.behavior) == selectedLevel.disabledBhvs[i] then
+        for _, bhv in pairs(selectedLevel.disabledBhvs) do
+            if get_id_from_behavior(o.behavior) == bhv then
                 return false
             end
         end

@@ -20,8 +20,10 @@ local function door_loop(o)
 
     local selectedLevel = levels[gGlobalSyncTable.selectedLevel]
     if selectedLevel.disabledBhvs ~= nil then
-        for i = 1, #selectedLevel.disabledBhvs do
-            if get_id_from_behavior(o.behavior) == selectedLevel.disabledBhvs[i] then
+        for _, bhv in pairs(selectedLevel.disabledBhvs) do
+            if bhv == id_bhvDoor then
+                o.oAction = 0
+                o.collisionData = gGlobalObjectCollisionData.door_seg3_collision_0301CE78
                 return
             end
         end
@@ -70,7 +72,7 @@ local function door_loop(o)
     end
 end
 
-hook_behavior(id_bhvDoor, OBJ_LIST_SURFACE, false, function (o) o.collisionData = nil end, door_loop, "door")
+id_bhvDoor = hook_behavior(id_bhvDoor, OBJ_LIST_SURFACE, false, function (o) o.collisionData = nil end, door_loop, "door")
 
 -- make star door open when mario gets close to it
 -- this code is by Sunk and Blocky
@@ -78,8 +80,10 @@ function star_door_loop(o)
 
     local selectedLevel = levels[gGlobalSyncTable.selectedLevel]
     if selectedLevel.disabledBhvs ~= nil then
-        for i = 1, #selectedLevel.disabledBhvs do
-            if get_id_from_behavior(o.behavior) == selectedLevel.disabledBhvs[i] then
+        for _, bhv in pairs(selectedLevel.disabledBhvs) do
+            if bhv == id_bhvDoor then
+                o.oAction = 0
+                o.collisionData = gGlobalObjectCollisionData.inside_castle_seg7_collision_star_door
                 return
             end
         end
@@ -104,4 +108,4 @@ function star_door_loop(o)
 end
 
 
-hook_behavior(id_bhvStarDoor, OBJ_LIST_SURFACE, false, function (o) o.collisionData = nil end, star_door_loop, "star-door")
+id_bhvStarDoor = hook_behavior(id_bhvStarDoor, OBJ_LIST_SURFACE, false, function (o) o.collisionData = nil end, star_door_loop, "star-door")
