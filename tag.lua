@@ -42,8 +42,10 @@ local function hud_render()
     end
 end
 
----@param m MarioState
-local function on_warp(m)
+local function on_warp()
+
+    ---@type MarioState
+    local m = gMarioStates[0]
 
     if gGlobalSyncTable.gamemode ~= TAG then return end
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end

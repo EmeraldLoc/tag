@@ -39,8 +39,11 @@ local function hud_render()
     end
 end
 
----@param m MarioState
-local function on_warp(m)
+local function on_warp()
+
+    ---@type MarioState
+    local m = gMarioStates[0]
+
     if gGlobalSyncTable.gamemode ~= HOT_POTATO then return end
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then return end
     if not gGlobalSyncTable.eliminateOnDeath then return end

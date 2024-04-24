@@ -36,8 +36,10 @@ local function hud_render()
     end
 end
 
----@param m MarioState
-local function on_warp(m)
+local function on_warp()
+
+    ---@type MarioState
+    local m = gMarioStates[0]
 
     if gGlobalSyncTable.gamemode ~= INFECTION then return end
     if not gGlobalSyncTable.eliminateOnDeath then return end
