@@ -1529,7 +1529,7 @@ local function act_nothing(m)
     m.vel.z = 0
     m.slideVelX = 0
     m.slideVelZ = 0
-    -- this is to freeze(tm) mario's animation
+    -- this is to freeze mario's animation
     m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - m.marioObj.header.gfx.animInfo.animAccel
 end
 
