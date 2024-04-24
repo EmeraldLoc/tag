@@ -1530,7 +1530,7 @@ local function act_nothing(m)
     m.slideVelX = 0
     m.slideVelZ = 0
     -- this is to freeze(tm) mario's animation
-    m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - 1
+    m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - m.marioObj.header.gfx.animInfo.animAccel
 end
 
 -- runs once per frame (all game logic runs at 30fps)
