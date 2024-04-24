@@ -217,7 +217,7 @@ local function act_frozen(m)
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
-hook_event(HOOK_ON_WARP, on_death)
+hook_event(HOOK_ON_WARP, on_warp)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ON_PVP_ATTACK, on_pvp)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
