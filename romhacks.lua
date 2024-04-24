@@ -11,7 +11,7 @@ romhacks = {
         -- level data
         levels = {
             -- name is the abbreviated level name, level is the level, painting is the image file, act is the act, area is the area, pipe stuff is for pipe positions
-            { name = "cg",       level = LEVEL_CASTLE_GROUNDS, painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = -5979, y = 378, z = -1371 },  { x = 1043, y = 3174, z = -5546 } } } },
+            { name = "cg",       level = LEVEL_CASTLE_GROUNDS, painting = get_texture_info("cg_painting"),    area = 1, pipes = { { { x = -5979, y = 363, z = -1371 },  { x = 1043, y = 3174, z = -5546 } } } },
             { name = "bob",      level = LEVEL_BOB,            painting = get_texture_info("bob_painting"),   area = 1, pipes = { { { x = -4694, y = 0, z = 6699 },     { x = 5079, y = 3072, z = 655 } } } },
             { name = "rr",       level = LEVEL_RR,             painting = get_texture_info("rr_painting"),    area = 1, pipes = { { { x = -4221, y = 6451, z = -5885 }, { x = 2125, y = -1833, z = 2079 } } } },
             { name = "ccm",      level = LEVEL_CCM,            painting = get_texture_info("ccm_painting"),   area = 1, pipes = { { { x = -1352, y = 2560, z = -1824 }, { x = 5628, y = -4607, z = -28 } } } },
@@ -21,7 +21,7 @@ romhacks = {
             { name = "ttc",      level = LEVEL_TTC,            painting = get_texture_info("ttc_painting"),   area = 1, pipes = { { { x = 1361, y = -4822, z = 176 },   { x = 1594, y = 5284, z = 1565 } } } },
             { name = "jrb",      level = LEVEL_JRB,            painting = get_texture_info("jrb_painting"),   area = 1, pipes = { { { x = 3000, y = -5119, z = 2688 },  { x = -6398, y = 1126, z = 191 } } } },
             { name = "wdw",      level = LEVEL_WDW,            painting = get_texture_info("wdw_painting"),   area = 1, pipes = { { { x = 3346, y = 154, z = 2918 },    { x = -3342, y = 3584, z = -3353 } } } },
-            { name = "rhmc",     level = LEVEL_HMC,            painting = get_texture_info("rhmc_painting"),  area = 1, pipes = nil, spawnLocation = { x = 4050, y = 0, z = 4981 }, overrideName = "Red's In HMC", unwantedBhvs = { id_bhvHmcElevatorPlatform }, disabledBhvs = { id_bhvDoor } },
+            { name = "rhmc",     level = LEVEL_HMC,            painting = get_texture_info("rhmc_painting"),  area = 1, pipes = nil, spawnLocation = { x = 4050, y = 0, z = 4981 }, overrideName = "Red's In HMC",  unwantedBhvs = { id_bhvHmcElevatorPlatform }, disabledBhvs = { id_bhvDoor } },
             { name = "tm",       level = LEVEL_HMC,            painting = get_texture_info("tm_painting"),    area = 1, pipes = nil, spawnLocation = { x = 1988, y = -1023, z = 454 }, overrideName = "Toxic Maze", unwantedBhvs = { id_bhvHmcElevatorPlatform }, disabledBhvs = { id_bhvDoor } },
             { name = "twdw",     level = LEVEL_WDW,            painting = get_texture_info("twdw_painting"),  area = 2, pipes = nil, spawnLocation = { x = -773, y = -2559, z = 220 }, overrideName = "Wet-Dry Town" },
             { name = "wf",       level = LEVEL_WF,             painting = get_texture_info("wf_painting"),    area = 1, pipes = nil },
