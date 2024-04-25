@@ -135,7 +135,6 @@ end
 local function hud_modifier()
     local text = "Modifier is set to " .. get_modifier_including_random()
 
-    local screenWidth = djui_hud_get_screen_width()
     local width = djui_hud_measure_text(strip_hex(text))
 
     local x = screenWidth - width - 40

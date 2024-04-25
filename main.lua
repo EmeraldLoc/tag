@@ -719,7 +719,7 @@ local function server_update()
         if timer <= 0 then
             if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
                 gGlobalSyncTable.roundState = ROUND_VOTING
-                timer = 20 * 30
+                timer = 14 * 30
                 log_to_console("Tag: Settings round state to ROUND_VOTING...")
             else
                 if not gGlobalSyncTable.autoMode then
