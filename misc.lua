@@ -137,7 +137,7 @@ function check_round_status()
 			end
 		elseif gGlobalSyncTable.gamemode == HOT_POTATO then
 			if roundStatusTimer < 0 then
-				timer = 7 * 30 -- 7 seconds
+				timer = 3 * 30 -- 3 seconds
 
 				gGlobalSyncTable.roundState = ROUND_HOT_POTATO_INTERMISSION
 			else
