@@ -713,7 +713,6 @@ local function server_update()
                 for i = 0, MAX_PLAYERS - 1 do
                     if gNetworkPlayers[i].connected then
                         if gPlayerSyncTable[i].state == TAGGER then
-                            gMarioStates[i].health = 0
                             spawn_sync_object(id_bhvExplosion, E_MODEL_EXPLOSION, gMarioStates[i].pos.x,
                                 gMarioStates[i].pos.y, gMarioStates[i].pos.z, function() end)
                             gPlayerSyncTable[i].state = WILDCARD_ROLE
