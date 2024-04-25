@@ -33,7 +33,8 @@ local function mario_update(m)
             end
         end
 
-        if m.health <= 0xFF then
+        if  m.health <= 0xFF
+        and m.playerIndex == 0 then
             gPlayerSyncTable[0].state = TAGGER
 
             tagger_popup(0)

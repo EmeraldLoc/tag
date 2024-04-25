@@ -206,7 +206,7 @@ function djui_hud_render_rect_outlined(x, y, width, height, oR, oG, oB, thicknes
     djui_hud_render_rect(x - thickness, y - thickness, thickness, height + thickness * 2)
     djui_hud_render_rect(x + (width - thickness) + thickness, y, thickness, height + thickness)
     djui_hud_render_rect(x, y - thickness, width + thickness, thickness)
-    djui_hud_render_rect(x, y + (height - thickness) + thickness, width + thickness, thickness)
+    djui_hud_render_rect(x, y + (height - thickness) + thickness, width, thickness)
 end
 
 -- this entire snippet for the player head was made by EmilyEmmi (with adjustments for tag made by me :), thanks!

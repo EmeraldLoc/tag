@@ -53,7 +53,7 @@ end
 
 -- taken from arena with minor modifications
 
-local interactedWithSpring = false
+interactedWithSpring = false
 
 local function bhv_arena_spring_init(obj)
     obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE

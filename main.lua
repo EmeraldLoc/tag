@@ -1194,7 +1194,7 @@ local function mario_update(m)
             roomTimer = roomTimer + 1
 
             if roomTimer % 30 == 1 then
-                play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+                play_sound(SOUND_MENU_CAMERA_BUZZ, m.marioObj.header.gfx.cameraToObject)
             end
         else
             roomTimer = 0
