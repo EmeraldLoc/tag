@@ -1293,8 +1293,13 @@ local function before_phys(m)
 
     -- handle speed boost
     if speedBoostTimer < 5 * 30 and gPlayerSyncTable[0].state == TAGGER then -- this allows for 5 seconds of speedboost
-        -- goodbye mario speed
-        if m.action ~= ACT_BACKWARD_AIR_KB and m.action ~= ACT_FORWARD_AIR_KB then
+        -- mario's speed be goin willlld
+        if  m.action ~= ACT_BACKWARD_AIR_KB
+        and m.action ~= ACT_FORWARD_AIR_KB
+        and m.action ~= ACT_HARD_BACKWARD_AIR_KB
+        and m.action ~= ACT_HARD_FORWARD_AIR_KB
+        and m.action ~= ACT_BACKWARD_AIR_KB
+        and m.action ~= ACT_FORWARD_AIR_KB then
             m.vel.x = m.vel.x * 1.25
             m.vel.z = m.vel.z * 1.25
         else
