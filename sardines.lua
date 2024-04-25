@@ -232,8 +232,8 @@ local function on_chat_message(m, msg)
 
     if gGlobalSyncTable.roundState == ROUND_ACTIVE
     and gGlobalSyncTable.gamemode == SARDINES then
-        if  (s.state  == FINISHED or s.state  == RUNNER)
-        and (rS.state == FINISHED or rS.state == RUNNER) then
+        if  (s.state  == FINISHED or s.state  == RUNNER or s.state  == SPECTATOR)
+        and (rS.state == FINISHED or rS.state == RUNNER or rS.state == SPECTATOR) then
             djui_chat_message_create("\\#BBBEA1\\Sardine Chat: " .. get_player_name(m.playerIndex) .. ": \\#dcdcdc\\" .. msg)
             play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
             return false
