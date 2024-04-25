@@ -690,7 +690,7 @@ local function reset_main_selections()
         valueText = ">",},
         -- romhack selection
         {name = "Romhacks",
-        permission = PERMISSION_MODERATORS,
+        permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
             entries = romhackEntries
@@ -1172,11 +1172,12 @@ local function reset_romhack_entries()
 
         table.insert(romhackEntries,
             {name = romhack.name,
-            permission = PERMISSION_SERVER,
+            permission = PERMISSION_MODERATORS,
             input = INPUT_A,
             func = function ()
                 -- set override level var
                 gGlobalSyncTable.romhackOverride = i
+                gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
             end}
         )
 
