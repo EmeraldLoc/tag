@@ -322,6 +322,8 @@ local prevRomhackOverride = nil
 local initializedSaveData = false
 -- room timer
 local roomTimer = 0
+-- water region values
+local waterRegions = {}
 
 -- just some global variables, honestly idk why the second one is there but it is so, uh, enjoy?
 _G.tag = {}
@@ -913,16 +915,23 @@ local function update()
     for i = 0, MAX_PLAYERS - 1 do
         local np = gNetworkPlayers[i]
         local s = gPlayerSyncTable[i]
-        network_player_set_description(np, get_role_name(s.state), 255, 255, 255, 255)
+        network_player_set_description(np, get_role_name(s.state), 220, 220, 220, 255)
     end
 end
 
 ---@param m MarioState
 local function mario_update(m)
-    -- get rid of water
     if not gGlobalSyncTable.water then
-        for i = 1, 6 do
+        -- get rid of water
+        for i = 1, 10 do
             set_environment_region(i, -10000)
+        end
+    else
+        -- bring back water
+        for i = 1, 10 do
+            if waterRegions[i] ~= nil then
+                set_environment_region(i, waterRegions[i])
+            end
         end
     end
 
@@ -1561,14 +1570,6 @@ local function allow_interact(m, o, intee)
 end
 
 local function on_warp()
-
-    -- get rid of water
-    if not gGlobalSyncTable.water then
-        for i = 1, 6 do
-            set_environment_region(i, -10000)
-        end
-    end
-
     local m = gMarioStates[0]
     local level = levels[gGlobalSyncTable.selectedLevel]
 
@@ -1576,6 +1577,16 @@ local function on_warp()
         vec3f_copy(m.pos, level.spawnLocation)
 
         reset_standing_still()
+    end
+end
+
+local function level_init()
+    -- get rid of water
+    for i = 1, 10 do
+        waterRegions[i] = get_environment_region(i)
+        if not gGlobalSyncTable.water then
+            set_environment_region(i, -10000)
+        end
     end
 end
 
@@ -1608,6 +1619,8 @@ hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 hook_event(HOOK_BEFORE_SET_MARIO_ACTION, before_set_mario_action)
 -- runs on warp
 hook_event(HOOK_ON_WARP, on_warp)
+-- runs on level initialization
+hook_event(HOOK_ON_LEVEL_INIT, level_init)
 -- make sure the user can never pause exit
 hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
 -- this hook allows us to walk on lava and quicksand
