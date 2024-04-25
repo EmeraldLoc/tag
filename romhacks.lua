@@ -110,7 +110,7 @@ romhacks = {
         water = false,
         levels = {
             { name = "cg",    level = LEVEL_CASTLE_GROUNDS, painting = get_texture_info("painting_sr_cg"),     area = 1, pipes = { { { x = -7517, y = 1784, z = 2992 }, { x = 2948, y = 6385, z = -891 } } }, spawnLocation = { x = -6743, y = 2031, z = 2626 }, overrideSurfaceType = {[SURFACE_DEFAULT] = SURFACE_HARD_NOT_SLIPPERY} },
-            { name = "f-hub", level = LEVEL_CASTLE,         painting = get_texture_info("painting_sr_castle"), area = 1, pipes = { { { x = -7754, y = 571, z = -6663 }, { x = 3299, y = 125, z = -2633 } } }, overrideName = "The Final Hub" },
+            { name = "fhub", level = LEVEL_CASTLE,         painting = get_texture_info("painting_sr_castle"), area = 1, pipes = { { { x = -7754, y = 571, z = -6663 }, { x = 3299, y = 125, z = -2633 } } }, overrideName = "The Final Hub" },
             { name = "boi",   level = LEVEL_BOB,            painting = get_texture_info("painting_sr_boi"),    area = 1, pipes = { { { x = 5157, y = 1623, z = 4206 }, { x = -831, y = -1807, z = -3773 } } } },
             { name = "slr",   level = LEVEL_WF,             painting = get_texture_info("painting_sr_slr"),    area = 1, pipes = { { { x = 1386, y = -2166, z = -1005 }, { x = 394, y = 2448, z = -2257 } } } },
             { name = "ppp",   level = LEVEL_JRB,            painting = get_texture_info("painting_sr_ppp"),    area = 1, pipes = { { { x = -820, y = -151, z = -81 }, { x = 5756, y = 2633, z = 4822 } } } },
@@ -142,7 +142,7 @@ romhacks = {
         water = false,
         levels = {
             { name = "bb",     level = LEVEL_BOB, painting = get_texture_info("painting_rl_bb"),     area = 1, pipes = { { { x = 4203, y = 92, z = -1896 }, { x = 4523, y = -3369, z = -5704 } } } },
-            { name = "tt",     level = LEVEL_WF,  painting = get_texture_info("painting_rl_tt"),     area = 1, pipes = { { { x = -7891, y = 4210, z = -1108 }, { x = -13667, y = 3727, z = -3591 } }, { { x = -4494, y = 2320, z = 2478 }, { x = -5700, y = 4215, z = 805 } }, { { x = -1851, y = 2977, z = -1312 }, { x = -3371, y = 2320, z = 1840 } } } },
+            { name = "tt",     level = LEVEL_WF,  painting = get_texture_info("painting_rl_tt"),     area = 1, pipes = { { { x = -7891, y = 4210, z = -1108 }, { x = -13667, y = 3727, z = -3591 } }, { { x = -4494, y = 2320, z = 2478 }, { x = -5700, y = 4215, z = 805 } }, { { x = -1851, y = 2977, z = -1312 }, { x = -3371, y = 2320, z = 1840 } } }, unwantedBhvs = { id_bhvBreakableBox } },
             { name = "bbanks", level = LEVEL_JRB, painting = get_texture_info("painting_rl_bbanks"), area = 1, pipes = { { { x = 9381, y = 486, z = -4980 }, { x = -1006, y = 3852, z = -1382 } } } },
             { name = "dd",     level = LEVEL_CCM, painting = get_texture_info("painting_rl_dd"),     area = 1, pipes = { { { x = 263, y = 600, z = -3725 }, { x = 232, y = 600, z = -10796 } } } },
         }

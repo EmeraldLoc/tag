@@ -122,11 +122,8 @@ end
 local function hud_gamemode()
     local text = "Gamemode is set to " .. get_gamemode_including_random(gGlobalSyncTable.gamemode)
 
-    local screenWidth = djui_hud_get_screen_width()
-    local width = djui_hud_measure_text(strip_hex(text))
-
-    local x = screenWidth - width - 40
-    local y = 60
+    local x = 40
+    local y = 20
 
     djui_hud_set_color(255, 255, 255, fade)
     djui_hud_print_colored_text(text, x, y, 1, fade)

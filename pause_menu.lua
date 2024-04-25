@@ -27,7 +27,6 @@ pauseEntries = {
 }
 
 local function on_render()
-
     if not isPaused then
         joystickCooldown = 0
         selection = 1
@@ -74,7 +73,7 @@ local function mario_update(m)
     end
 
     if m.controller.buttonPressed & START_BUTTON ~= 0 then
-        isPaused = not isPaused
+        toggle_paused()
         showSettings = false
         m.controller.buttonPressed = m.controller.buttonPressed & ~START_BUTTON
         play_sound(SOUND_MENU_PAUSE, gGlobalSoundSource)
@@ -88,10 +87,8 @@ local function mario_update(m)
         m.controller.buttonPressed = m.controller.buttonPressed & ~R_TRIG
     end
 
-    -- reset joystick cooldown
-    if m.controller.stickX == 0 and m.controller.stickY == 0 then
-        joystickCooldown = 0
-    end
+    -- if our stick is at 0, then set joystickCooldown to 0
+    if m.controller.stickY == 0 then joystickCooldown = 0 end
 
     if m.controller.buttonPressed & U_JPAD ~= 0 or (m.controller.stickY > 0.5 and joystickCooldown <= 0) then
         selection = selection - 1

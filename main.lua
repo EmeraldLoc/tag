@@ -1393,8 +1393,8 @@ local function hud_round_status()
     local y = 0
 
     -- render rect
-    djui_hud_set_color(0, 0, 0, fade / 2)
-    djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale))
+    djui_hud_set_color(20, 20, 22, fade / 1.4)
+    djui_hud_render_rect_outlined(x - (12 * scale), y, width + (24 * scale), (32 * scale), 35, 35, 35, 4, fade / 1.4)
 
     -- render text
     djui_hud_set_color(255, 255, 255, fade)
@@ -1412,10 +1412,11 @@ local function hud_gamemode()
     local y = 0
 
     -- render rect
-    djui_hud_set_color(0, 0, 0, hudFade / 2)
-    djui_hud_render_rect(x - (12 * scale), y, width + (24 * scale), (32 * scale))
+    djui_hud_set_color(20, 20, 22, hudFade / 1.4)
+    djui_hud_render_rect_outlined(x - (12 * scale), y, width + (24 * scale), (32 * scale), 35, 35, 35, 4 / 1.5, hudFade / 1.4)
 
     -- render text
+    djui_hud_set_color(220, 220, 220, hudFade)
     djui_hud_print_colored_text(text, x, y, scale, hudFade)
 end
 
@@ -1431,12 +1432,12 @@ local function hud_modifier()
     local y = 0
 
     -- render rect
-    djui_hud_set_color(0, 0, 0, hudFade / 2)
-    djui_hud_render_rect(x, y, width + (24 * scale), (32 * scale))
+    djui_hud_set_color(20, 20, 22, hudFade / 1.4)
+    djui_hud_render_rect_outlined(x - (12 * scale), y, width + (24 * scale), (32 * scale), 35, 35, 35, 4 / 1.5, hudFade / 1.4)
 
     -- render text
     djui_hud_set_color(220, 220, 220, hudFade)
-    djui_hud_print_colored_text(text, x + (8 * scale), y, scale, hudFade)
+    djui_hud_print_colored_text(text, x, y, scale, hudFade)
 end
 
 local function hud_boost()
