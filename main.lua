@@ -311,8 +311,8 @@ remoteStats = {
 
 -- speed boost timer handles boosting
 local speedBoostTimer = 0
--- hot potato timer multiplier is when the timer is faster if there's more people in
--- hot potato
+-- hot potato timer multiplier is when the timer
+-- is faster if there's more people currently active
 local hotPotatoTimerMultiplier = 1
 -- hud fade
 local hudFade = 255
@@ -635,7 +635,20 @@ local function server_update()
             end
 
             if gGlobalSyncTable.gamemode == HOT_POTATO then
-                hotPotatoTimerMultiplier = amountOfTaggersNeeded
+                -- get current amount of runners
+                local curRunnerCount = 0
+                for i = 0, MAX_PLAYERS - 1 do
+
+                    local np = gNetworkPlayers[i]
+                    local s = gPlayerSyncTable[i]
+
+                    if  s.state == RUNNER
+                    and np.connected then
+                        curRunnerCount = curRunnerCount + 1
+                    end
+                end
+
+                hotPotatoTimerMultiplier = curRunnerCount / 2
 
                 if hotPotatoTimerMultiplier > 2.3 then hotPotatoTimerMultiplier = 2.3 end
             else
