@@ -33,10 +33,11 @@ A `levels` table contains the following fields:
 | `pipes`|`table/nil`|A table of pairs of 2 pipes.
 | `spawnLocation`|`Vec3/nilf`|A spawn location.
 | `overrideName`|`string/nil`|A override name, typically used for subareas.
-| `unwantedBhvs`|`table/nil`|A table of unwanted behavior id's
+| `room`|`integer/nil`|A specific room to be forced. You have 5 seconds to re-enter a room if you leave it, shown with buzzing.
+| `unwantedBhvs`|`table/nil`|A table of unwanted behavior id's.
 | `disabledBhvs`|`table/nil`|A table of disabled behavior id's, disabled meaning disabling interaction's for that behavior.
 
-Anything with /nil in it means it's optional, and you don't have to include it. Pipes and paintings should be set to nil, whereas spawnLoaction and overrideName can just not be included in the table. Begin constructing the table, keep painting and pipes as nil for now.
+Anything with /nil in it means it's optional, and you don't have to include it. Pipes and paintings should be set to nil, whereas anything after pipes doesn't have to be included in the table (for no good reason, this needs to be update, here's a TODO for me). Begin constructing the table, keep painting and pipes as nil for now.
 
 ### Paintings
 
@@ -72,17 +73,21 @@ pipes = {
         {
             -- pipe
             { x = 0, y = 0, z = 0},
+            -- pipe
             { x = 0, y = 0, z = 0}
         },
+        -- pair of pipes
         {
+            -- pipe
             { x = 0, y = 0, z = 0},
+            -- pipe
             { x = 0, y = 0, z = 0}
         }
     }
 }
 ```
 
-Except do that on one line. Now get a mod that renders mario's position (I recommend Pos Display), and go to the place you want your first pipe to go. Now plug in the position values into the first pipe, and do the same for the second, and that's it! You can have as many pairs of pipes as you want.
+Except do that on one line (TODO: Make formatting better). Now get a mod that renders mario's position (I recommend Pos Display), and go to the place you want your first pipe to go. Now plug in the position values into the first pipe, and do the same for the second, and that's it! You can have as many pairs of pipes as you want.
 
 ### Contributing
 
