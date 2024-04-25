@@ -1601,6 +1601,12 @@ local function act_nothing(m)
     m.slideVelZ = 0
     -- this is to freeze mario's animation
     m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - (m.marioObj.header.gfx.animInfo.animAccel + 1)
+
+    -- get out of the action if round state is wait or wait players
+    if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS
+    or gGlobalSyncTable.roundState == ROUND_WAIT then
+        set_mario_action(m, ACT_FREEFALL, 0)
+    end
 end
 
 -- runs once per frame (all game logic runs at 30fps)
@@ -1629,7 +1635,6 @@ hook_event(HOOK_ALLOW_HAZARD_SURFACE, function() return gGlobalSyncTable.hazardS
 hook_event(HOOK_ON_DIALOG, function () return false end)
 
 -- make ACT_NOTHING do something, wild ain't it
----@diagnostic disable-next-line: missing-parameter
 hook_mario_action(ACT_NOTHING, act_nothing)
 
 -- Good job, you made it to the end of your file. I'd suggest heading over to tag.lua next!

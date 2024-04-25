@@ -1,5 +1,3 @@
----@diagnostic disable: param-type-mismatch
-
 ---@param msg string
 function start_command(msg)
     if network_player_connected_count() < PLAYERS_NEEDED then
@@ -44,7 +42,6 @@ function start_command(msg)
 
     local level = levels[gGlobalSyncTable.selectedLevel]
 
-    ---@diagnostic disable-next-line: param-type-mismatch
     while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
         gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
         level = levels[gGlobalSyncTable.selectedLevel]
