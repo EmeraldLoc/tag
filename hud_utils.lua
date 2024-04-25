@@ -196,11 +196,12 @@ function djui_hud_print_colored_text(text, x, y, scale, opacity)
 	end
 end
 
-function djui_hud_render_rect_outlined(x, y, width, height, oR, oG, oB, thickness)
+function djui_hud_render_rect_outlined(x, y, width, height, oR, oG, oB, thickness, opacity)
+    if opacity == nil then opacity = 255 end
     -- render main rect
     djui_hud_render_rect(x, y, width, height)
     -- set outline color to, well, outline color
-    djui_hud_set_color(oR, oG, oB, 255)
+    djui_hud_set_color(oR, oG, oB, opacity)
     -- render rect outside of each side
     djui_hud_render_rect(x - thickness, y - thickness, thickness, height + thickness * 2)
     djui_hud_render_rect(x + (width - thickness) + thickness, y, thickness, height + thickness)

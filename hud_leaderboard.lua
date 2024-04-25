@@ -148,8 +148,8 @@ local function hud_leaderboard()
             local x = (screenWidth - width) / 2
             local y = 80 + (renderedIndex * 50)
 
-            djui_hud_set_color(26, 26, 28, fade)
-            djui_hud_render_rect(x, y - 5, width + 15, 42)
+            djui_hud_set_color(32, 32, 32, fade)
+            djui_hud_render_rect_outlined(x, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
 
             local r, g, b = hex_to_rgb(network_get_player_text_color_string(i))
             width = djui_hud_measure_text(text)
@@ -254,8 +254,8 @@ local function hud_leaderboard()
         x = (screenWidth - width) / 2
         y = 80 + (renderedIndex * 47)
 
-        djui_hud_set_color(26, 26, 28, fade)
-        djui_hud_render_rect(x, y - 5, width + 15, 42)
+        djui_hud_set_color(32, 32, 32, fade)
+        djui_hud_render_rect_outlined(x, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
 
         local r, g, b = hex_to_rgb(network_get_player_text_color_string(sardine))
         width = djui_hud_measure_text(text)

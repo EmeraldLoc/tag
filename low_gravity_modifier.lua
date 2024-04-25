@@ -5,9 +5,10 @@ local function before_phys_step(m)
 
     if m.vel.y > 0 then
         -- check if action is getting blown or twirling because these actions have a high velocity acceleration
-        if m.action ~= ACT_TWIRLING
+        if  m.action ~= ACT_TWIRLING
         and m.action ~= ACT_GETTING_BLOWN
-        and m.action ~= ACT_FLYING_TRIPLE_JUMP  then
+        and m.action ~= ACT_FLYING_TRIPLE_JUMP
+        and m.action ~= ACT_TRIPLE_JUMP  then
             m.vel.y = m.vel.y * 1.05
         else
             m.vel.y = m.vel.y * 1.01

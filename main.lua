@@ -231,7 +231,7 @@ binds[BIND_BOMBS] = {name = "Bombs", btn = Y_BUTTON}
 -- gun bind
 binds[BIND_GUN] = {name = "Gun", btn = X_BUTTON}
 -- double jump bind
-binds[BIND_DOUBLE_JUMP] = {name = "Double Jump", btn = X_BUTTON}
+binds[BIND_DOUBLE_JUMP] = {name = "Double Jump", btn = A_BUTTON}
 -- stats
 stats = {
     globalStats = {
@@ -320,6 +320,8 @@ local hudFade = 255
 local prevRomhackOverride = nil
 -- initialized save data
 local initializedSaveData = false
+-- room timer
+local roomTimer = 0
 
 -- just some global variables, honestly idk why the second one is there but it is so, uh, enjoy?
 _G.tag = {}
@@ -1178,6 +1180,26 @@ local function mario_update(m)
             end
         end
 
+        -- check if we are in the room the level wants us to be in
+        if selectedLevel.room ~= nil and current_mario_room_check(selectedLevel.room) ~= 1
+        and np.currAreaSyncValid
+        and roomTimer > 5 * 30 then
+            local randomLevel = gGlobalSyncTable.selectedLevel + 1
+            if levels[randomLevel] == nil then
+                randomLevel = gGlobalSyncTable.selectedLevel - 1
+            end
+            warp_to_level(levels[randomLevel].level, 1, 0)
+        elseif selectedLevel.room ~= nil and current_mario_room_check(selectedLevel.room) ~= 1
+        and np.currAreaSyncValid then
+            roomTimer = roomTimer + 1
+
+            if roomTimer % 30 == 1 then
+                play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
+            end
+        else
+            roomTimer = 0
+        end
+
         -- handle speed boost, this is a fun if statement
         if m.controller.buttonPressed & binds[BIND_BOOST].btn ~= 0
         and speedBoostTimer >= 20 * 30
@@ -1550,7 +1572,7 @@ local function act_nothing(m)
     m.slideVelX = 0
     m.slideVelZ = 0
     -- this is to freeze mario's animation
-    m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - m.marioObj.header.gfx.animInfo.animAccel
+    m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - (m.marioObj.header.gfx.animInfo.animAccel + 1)
 end
 
 -- runs once per frame (all game logic runs at 30fps)

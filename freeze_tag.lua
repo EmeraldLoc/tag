@@ -197,6 +197,9 @@ function freeze_tag_handle_pvp(aI, vI)
         a.amountOfTags = a.amountOfTags + 1
         -- create popup
         unfreezed_popup(aI, vI)
+        set_mario_action(gMarioStates[vI], ACT_FREEFALL, 0)
+        gMarioStates[vI].forwardVel = 0
+        gMarioStates[vI].vel.y = 0
     end
 end
 
@@ -215,7 +218,7 @@ local function act_frozen(m)
     m.slideVelX = 0
     m.slideVelZ = 0
     -- freeze mario's animation
-    m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - m.marioObj.header.gfx.animInfo.animAccel
+    m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - (m.marioObj.header.gfx.animInfo.animAccel + 1)
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)

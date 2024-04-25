@@ -75,15 +75,23 @@ local function hud_map_vote()
 
         y = (screenHeight + 200) / 2
 
+        local outlineColor = { r = 50, g = 50, b = 50 }
+
         if gPlayerSyncTable[0].votingNumber == i then
             djui_hud_set_color(83, 153, 77, fade)
+            outlineColor.r = 113
+            outlineColor.g = 183
+            outlineColor.b = 107
         elseif selectedLevel == i then
-            djui_hud_set_color(60, 60, 63, fade)
+            djui_hud_set_color(40, 40, 40, fade)
+            outlineColor.r = 60
+            outlineColor.g = 60
+            outlineColor.b = 60
         else
-            djui_hud_set_color(35, 35, 37, fade)
+            djui_hud_set_color(32, 32, 32, fade)
         end
         x = (screenWidth - (256 * 4 + 100 * 3)) / 2 + (256 + 100) * (i - 1) - 18.125 -- help me
-        djui_hud_render_rect(x, y, 290, 50)
+        djui_hud_render_rect_outlined(x, y, 290, 50, outlineColor.r, outlineColor.g, outlineColor.b, 3, fade)
         djui_hud_set_color(255, 255, 255, fade)
         if i ~= 4 then
             text = tostring(name_of_level(levels[voteRandomLevels[i]].level, levels[voteRandomLevels[i]].area, levels[voteRandomLevels[i]])) .. ": " .. tostring(votes)
@@ -109,6 +117,32 @@ local function hud_map_vote()
     end
     djui_hud_set_color(220, 220, 220, fade)
     djui_hud_print_text(text, (screenWidth - djui_hud_measure_text(text)) / 2, screenHeight - 50, 1)
+end
+
+local function hud_gamemode()
+    local text = "Gamemode is set to " .. get_gamemode_including_random(gGlobalSyncTable.gamemode)
+
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(strip_hex(text))
+
+    local x = screenWidth - width - 40
+    local y = 60
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_colored_text(text, x, y, 1, fade)
+end
+
+local function hud_modifier()
+    local text = "Modifier is set to " .. get_modifier_including_random()
+
+    local screenWidth = djui_hud_get_screen_width()
+    local width = djui_hud_measure_text(strip_hex(text))
+
+    local x = screenWidth - width - 40
+    local y = 20
+
+    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_print_colored_text(text, x, y, 1, fade)
 end
 
 local function on_render()
@@ -158,6 +192,8 @@ local function on_render()
     djui_hud_set_font(FONT_NORMAL)
     hud_black_bg()
     hud_map_vote()
+    hud_modifier()
+    hud_gamemode()
 end
 
 ---@param m MarioState

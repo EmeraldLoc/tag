@@ -1,20 +1,31 @@
 
+ACT_SHELL_GROUND_CUSTOM = allocate_mario_action(ACT_FLAG_RIDING_SHELL | ACT_FLAG_ATTACKING)
+
 local shellTimer = 0
 
 ---@param m MarioState
 local function mario_update(m)
-
     if m.playerIndex ~= 0 then return end
-    if gGlobalSyncTable.modifier ~= MODIFIER_SHELL then
+    if  gGlobalSyncTable.modifier ~= MODIFIER_SHELL
+    or (gGlobalSyncTable.roundState ~= ROUND_ACTIVE
+    and gGlobalSyncTable.roundState ~= ROUND_WAIT
+    and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION)
+    or  gPlayerSyncTable[0].state == WILDCARD_ROLE
+    or  gPlayerSyncTable[0].state == SPECTATOR then
         if m.action & ACT_FLAG_RIDING_SHELL ~= 0 then
             set_mario_action(m, ACT_IDLE, 0)
         end
         return
     end
 
-    if m.action & ACT_FLAG_RIDING_SHELL == 0
-    and shellTimer >= 1 * 30 then
-        set_mario_action(m, ACT_RIDING_SHELL_GROUND, 0)
+    if (m.action & ACT_FLAG_RIDING_SHELL == 0
+    and shellTimer >= 1 * 30)
+    or m.action == ACT_RIDING_SHELL_GROUND then
+        if m.action == ACT_RIDING_SHELL_GROUND then
+            set_mario_action(m, ACT_SHELL_GROUND_CUSTOM, m.actionArg)
+        else
+            set_mario_action(m, ACT_SHELL_GROUND_CUSTOM, 0)
+        end
     elseif m.action & ACT_FLAG_RIDING_SHELL == 0 then
         shellTimer = shellTimer + 1
     else
@@ -30,6 +41,44 @@ local function level_init()
         end)
     end
 end
+
+local function act_riding_shell_ground(m)
+    local startYaw = m.faceAngle.y
+
+    if m.input & INPUT_A_PRESSED ~= 0 then
+        return set_mario_action(m, ACT_RIDING_SHELL_JUMP, 0)
+    end
+
+    update_shell_speed(m)
+    local anim = CHAR_ANIM_START_RIDING_SHELL
+    if m.actionArg ~= 0 then
+        anim = CHAR_ANIM_RIDING_SHELL
+    end
+    set_character_animation(m, anim)
+
+    local step = perform_ground_step(m)
+
+    if step == GROUND_STEP_LEFT_GROUND then
+        set_mario_action(m, ACT_RIDING_SHELL_FALL, 0)
+    elseif step == GROUND_STEP_HIT_WALL then
+        m.forwardVel = 0
+    end
+
+    tilt_body_ground_shell(m, startYaw)
+    if m.floor and m.floor.type == SURFACE_BURNING then
+        play_sound(SOUND_MOVING_RIDING_SHELL_LAVA, m.marioObj.header.gfx.cameraToObject)
+    else
+        play_sound(SOUND_MOVING_TERRAIN_RIDING_SHELL + m.terrainSoundAddend,
+                   m.marioObj.header.gfx.cameraToObject)
+    end
+
+    adjust_sound_for_speed(m)
+
+    reset_rumble_timers(m)
+    return false
+end
+
+hook_mario_action(ACT_SHELL_GROUND_CUSTOM, act_riding_shell_ground)
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_LEVEL_INIT, level_init)

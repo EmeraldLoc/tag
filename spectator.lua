@@ -100,7 +100,8 @@ local function mario_update(m)
     if (s.state == SPECTATOR
     or (s.state == WILDCARD_ROLE and gGlobalSyncTable.gamemode ~= FREEZE_TAG))
     and (s.spectatorState ~= SPECTATOR_STATE_MARIO
-    or gGlobalSyncTable.gamemode == SARDINES) then
+    or (gGlobalSyncTable.gamemode == SARDINES
+    and m.playerIndex ~= 0)) then
         obj_set_model_extended(m.marioObj, E_MODEL_NONE)
     end
 

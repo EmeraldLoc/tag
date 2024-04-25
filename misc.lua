@@ -95,6 +95,8 @@ function strip_hex(name)
 	return s
 end
 
+local roundStatusTimer = 0
+
 function check_round_status()
 	-- check if we have the avalible players
 	local hasTagger = false
@@ -118,17 +120,29 @@ function check_round_status()
 
 	if not hasTagger then
 		if gGlobalSyncTable.gamemode ~= HOT_POTATO then
-			timer = 7 * 30 -- 7 seconds
+			if roundStatusTimer < 0 then
+				timer = 7 * 30 -- 7 seconds
 
-			gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
+				gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
+			else
+				roundStatusTimer = roundStatusTimer - 1
+			end
 		elseif runnerCount == 1 then
-			timer = 7 * 30 -- 7 seconds
+			if roundStatusTimer < 0 then
+				timer = 7 * 30 -- 7 seconds
 
-			gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
+				gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
+			else
+				roundStatusTimer = roundStatusTimer - 1
+			end
 		elseif gGlobalSyncTable.gamemode == HOT_POTATO then
-			timer = 7 * 30 -- 7 seconds
+			if roundStatusTimer < 0 then
+				timer = 7 * 30 -- 7 seconds
 
-			gGlobalSyncTable.roundState = ROUND_HOT_POTATO_INTERMISSION
+				gGlobalSyncTable.roundState = ROUND_HOT_POTATO_INTERMISSION
+			else
+				roundStatusTimer = roundStatusTimer - 1
+			end
 		end
 
 		return
@@ -137,9 +151,13 @@ function check_round_status()
 	if  not hasRunner
 	and gGlobalSyncTable.gamemode ~= ASSASSINS
 	and gGlobalSyncTable.gamemode ~= DEATHMATCH then
-		timer = 7 * 30 -- 7 seconds
+		if roundStatusTimer < 0 then
+			timer = 7 * 30 -- 7 seconds
 
-		gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
+			gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
+		else
+			roundStatusTimer = roundStatusTimer - 1
+		end
 
 		return
 	end
@@ -147,10 +165,18 @@ function check_round_status()
 	if  taggerCount == 1
 	and (gGlobalSyncTable.gamemode == ASSASSINS
 	or  gGlobalSyncTable.gamemode == DEATHMATCH) then
-		timer = 7 * 30 -- 7 seconds
+		if roundStatusTimer < 0 then
+			timer = 7 * 30 -- 7 seconds
 
-		gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
+			gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
+		else
+			roundStatusTimer = roundStatusTimer - 1
+		end
+
+		return
 	end
+
+	roundStatusTimer = 0.2 * 30
 end
 
 ---@param course integer|LevelNum
