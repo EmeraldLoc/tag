@@ -82,4 +82,5 @@ if network_is_server()
 or network_is_moderator() then
     hook_chat_command("start", "[name|index] Starts round in a random or specific level", start_command)
 end
+
 hook_chat_command("tag", "View tag options", tag_command)
