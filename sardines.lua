@@ -231,7 +231,6 @@ _G.mhApi = {}
 local function on_chat_message(m, msg)
 
     -- use mariohunt api, since Emily did all the work already
-    -- and multiple mods already use the mh api
     if _G.mhApi.chatValidFunction and _G.mhApi.chatValidFunction(m, msg) == false then
         return false
     end

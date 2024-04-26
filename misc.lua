@@ -907,7 +907,7 @@ function toggle_spectator()
         elseif i == 4 then
             djui_chat_message_create("Is it hard to wait until the round ends?")
         elseif i == 5 then
-            djui_chat_message_create(get_player_name(i) .. "\\#FFFFFF\\, why do you try this thing when you know deep down it won't work?")
+            djui_chat_message_create(get_player_name(0) .. "\\#FFFFFF\\, why do you try this thing when you know deep down it won't work?")
         end
     end
 end
