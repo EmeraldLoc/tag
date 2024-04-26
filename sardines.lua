@@ -226,7 +226,22 @@ local function allow_interact(m, o, intee)
     end
 end
 
+_G.mhApi = {}
+
 local function on_chat_message(m, msg)
+
+    -- use mariohunt api, since Emily did all the work already
+    -- and multiple mods already use the mh api
+    if _G.mhApi.chatValidFunction and _G.mhApi.chatValidFunction(m, msg) == false then
+        return false
+    end
+
+    if _G.mhApi.chatModifyFunction then
+        -- ignore name, as it's not used here
+        local msg_, _ = _G.mhApi.chatModifyFunction(m, msg)
+        if msg_ then msg = msg_ end
+    end
+
     local s = gPlayerSyncTable[0]
     local rS = gPlayerSyncTable[m.playerIndex]
 
