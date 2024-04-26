@@ -611,7 +611,6 @@ local function settings_text()
     djui_hud_set_color(220, 220, 220, 255)
     djui_hud_print_text(text, x + ((bgWidth / 2) - djui_hud_measure_text(text)), y + 50 - scrollOffset, 2)
     text = version
-    y = (djui_hud_get_screen_height() - bgHeight) / 2
     djui_hud_set_color(220, 220, 220, 255)
     djui_hud_print_text(text, x + (bgWidth / 2) - (djui_hud_measure_text(text) / 2), y + 105 - scrollOffset, 1)
 end
