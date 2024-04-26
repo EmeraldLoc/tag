@@ -184,6 +184,9 @@ local function on_render()
         if fade < 0 then fade = 0 end
     end
 
+    screenWidth = djui_hud_get_screen_width()
+    screenHeight = djui_hud_get_screen_height()
+
     djui_hud_set_resolution(RESOLUTION_DJUI)
     djui_hud_set_font(FONT_NORMAL)
     hud_black_bg()

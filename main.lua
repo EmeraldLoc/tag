@@ -74,6 +74,9 @@ BIND_GUN = 2
 BIND_DOUBLE_JUMP = 3
 BIND_MAX = 3
 
+-- textures
+TEXTURE_TAG_LOGO = get_texture_info("logo")
+
 -- globals and sync tables
 -- this is the round state, this variable tells you what current round it is
 gGlobalSyncTable.roundState            = ROUND_WAIT_PLAYERS
