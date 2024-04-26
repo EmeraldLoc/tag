@@ -50,8 +50,8 @@ end
 local function hud_render()
     if finishedChecking then
         if updateTimer > 0.6 * 30 then
-            --if fade == 0 then return end
-            --fade = clampf(fade - 15, 0, 255)
+            if fade == 0 then return end
+            fade = clampf(fade - 15, 0, 255)
         end
         updateTimer = updateTimer + 1
     end
