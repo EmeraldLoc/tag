@@ -701,7 +701,7 @@ local function server_update()
 
         if timer <= 0 then
             if gGlobalSyncTable.gamemode ~= HOT_POTATO then
-                timer = 7 * 30 -- 7 seconds
+                timer = 5 * 30 -- 5 seconds
 
                 if gGlobalSyncTable.gamemode == ASSASSINS
                 or gGlobalSyncTable.gamemode == DEATHMATCH then
@@ -735,7 +735,7 @@ local function server_update()
         if timer <= 0 then
             if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
                 gGlobalSyncTable.roundState = ROUND_VOTING
-                timer = 14 * 30
+                timer = 11 * 30
                 log_to_console("Tag: Settings round state to ROUND_VOTING...")
             else
                 if not gGlobalSyncTable.autoMode then

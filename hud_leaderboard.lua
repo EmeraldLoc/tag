@@ -363,7 +363,7 @@ end
 local function hud_render()
     if gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN then
         fade = 0
-        hudTimer = 7 * 30
+        hudTimer = 5 * 30
         if  gGlobalSyncTable.roundState ~= ROUND_HIDING_SARDINES
         and desyncTimer >= 10 * 30 then
             select_random_did_you_know()
