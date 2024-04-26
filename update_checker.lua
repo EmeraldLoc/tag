@@ -8,11 +8,11 @@ local function check_for_updates()
     if not finishedChecking then
         finishedChecking = true
 
-        --- TODO: Edit this when coopdx v1 comes out
-        if VERSION_NUMBER < 37 then return end -- only works in v37
         -- attempt to load the current verion's audio file
         local url = "https://github.com/EmeraldLoc/Tag/raw/main/" .. version .. ".mp3"
         updateFile = audio_stream_load_url(url)
+        -- ensure the version we're using actually has this function working
+        if not updateFile.isStream then return end
         -- if it doesn't load, the file doesn't exist, so assume there's an update
         -- a caviat with this trick is that if you don't have a internet connection,
         -- or fail to retrieve the file, it'll return an update rather than returning
