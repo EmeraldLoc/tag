@@ -233,6 +233,8 @@ local function hud_leaderboard()
 
         if sardine == nil then goto continue end
 
+        renderedIndex = renderedIndex + 1
+
         local screenWidth = djui_hud_get_screen_width()
         local width = 550
 
@@ -315,7 +317,7 @@ local function hud_leaderboard()
 end
 
 local function hud_voting_begins_in()
-    local text = tostring(math.floor(gGlobalSyncTable.displayTimer / 30)) .. " seconds"
+    local text = tostring(math.floor(gGlobalSyncTable.displayTimer / 30) + 1) .. " seconds"
 
     if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
         text = "Voting begins in " .. text

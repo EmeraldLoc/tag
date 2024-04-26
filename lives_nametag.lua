@@ -67,6 +67,7 @@ local function on_hud_render()
     and gGlobalSyncTable.gamemode ~= DEATHMATCH
     and gGlobalSyncTable.gamemode ~= HUNT then return end
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
+    if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
 
     djui_hud_set_resolution(RESOLUTION_N64)
     djui_hud_set_font(FONT_NORMAL)

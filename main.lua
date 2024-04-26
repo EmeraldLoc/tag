@@ -1378,7 +1378,7 @@ local function hud_round_status()
         text = "Starting new round"
     elseif gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then
         text = "Intermission: " ..
-            math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+            math.floor(gGlobalSyncTable.displayTimer / 30) + 1 -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
     else
         return
     end
