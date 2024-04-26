@@ -1,4 +1,4 @@
--- name: \\#316BE8\\Tag (v2.3 Beta)\\#dcdcdc\\
+-- name: \\#316BE8\\Tag (v2.3 R.C 1)\\#dcdcdc\\
 -- description: All Tag Related Gamemodes!\n\nThis mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and more, with modifiers, and full romhack support!\n\nThis mod includes a blacklist command to blacklist bad levels in romhacks\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\ and\\#ff7f00\\ Agent X\\#dcdcdc\\\n\nPainting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi.
 -- incompatible: gamemode tag
 
