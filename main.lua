@@ -795,7 +795,7 @@ local function server_update()
 
             timer = gGlobalSyncTable.amountOfTime
 
-            log_to_console("Tag: Assigning Players")
+            log_to_console("Tag: Assigning Taggers")
 
             local amountOfTaggers = 0
 
