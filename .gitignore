@@ -4,5 +4,3 @@
 # actor stuff
 actors/**
 !actors/*.bin
-
-achievements.lua
