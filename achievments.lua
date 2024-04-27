@@ -15,7 +15,7 @@ achievements = {
     ---@type Achievement
     {
         name = "Welcome to Tag",
-        description = "Play Your First Game of Tag",
+        description = "Play Your First Game of Tag!",
         reward = {
             title = "Noob",
             trail = nil,
@@ -33,15 +33,19 @@ achievements = {
     },
 }
 
-local completedAchievements = {}
 local initializedAchievements = false
+
+completedAchievements = {}
+remoteCompletedAchievements = {}
 
 local function completed_achievement(i)
     completedAchievements[i] = true
 
     local text = "\\#FFD700\\Achievement Unlocked\n" .. achievements[i].name
-
     djui_popup_create(text, 2)
+
+    -- save achievement
+    save_bool("achievement_" .. tostring(i), true)
 end
 
 local function mario_update(m)
@@ -53,6 +57,15 @@ local function mario_update(m)
         if completedAchievements[i] then goto continue end
 
         if not initializedAchievements then
+            -- load achievement
+            local completed = load_bool("achievement_" .. tostring(i))
+
+            if completed == true then
+                completedAchievements[i] = true
+
+                goto continue
+            end
+
             if achievement.initFunc then
                 if achievement.initFunc() == true then
                     completed_achievement(i)

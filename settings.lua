@@ -16,6 +16,9 @@ local scrollEntry = 12
 local statGroupIndex = 0
 local statIndex = 0
 local sentStatPacket = false
+local achievementIndex = 0
+local achievementEntryIndex = 0
+local sentAchievementPacket = false
 
 local function on_off_text(bool)
     if bool then return "On" else return "Off" end
@@ -605,6 +608,11 @@ statPlayerSelectionEntries = {}
 statGroupEntries = {}
 statEntries = {}
 
+-- achievement entries
+achievementEntry = {}
+achievementEntries = {}
+achievementsPlayerEntries = {}
+
 entries = mainEntries
 
 local function background()
@@ -722,6 +730,15 @@ local function reset_main_selections()
         input = INPUT_A,
         func = function ()
             entries = statPlayerSelectionEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- achievements selection
+        {name = "Achievements",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = achievementsPlayerEntries
             selection = 1
         end,
         valueText = ">",},
@@ -1433,6 +1450,150 @@ local function reset_stat_entries()
     end
 end
 
+local function reset_achievement_players_entries()
+    local resetAchievementPlayerEntries = entries == achievementsPlayerEntries
+    achievementsPlayerEntries = {}
+
+    for i = 0, MAX_PLAYERS - 1 do
+        if not gNetworkPlayers[i].connected then goto continue end
+        table.insert(achievementsPlayerEntries, {
+            name = get_player_name(i),
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = achievementEntries
+                achievementIndex = network_global_index_from_local(i)
+                selection = 1
+            end
+        })
+
+        ::continue::
+    end
+
+    table.insert(achievementsPlayerEntries, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = mainEntries
+            selection = 1
+        end
+    })
+
+    if resetAchievementPlayerEntries then
+        entries = achievementsPlayerEntries
+    end
+end
+
+local function reset_achievement_entries()
+    local resetAchievementEntries = entries == achievementEntries
+    achievementEntries = {}
+
+    local localCompletedAchievements = {}
+    if network_local_index_from_global(achievementIndex) ~= 0 then
+        localCompletedAchievements = remoteCompletedAchievements
+    else
+        localCompletedAchievements = completedAchievements
+    end
+
+    for i, achievement in pairs(achievements) do
+
+        local valueText = "Not Completed"
+
+        if localCompletedAchievements[i] == true then
+            valueText = "Completed"
+        end
+
+        table.insert(achievementEntries, {
+            name = achievement.name,
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = achievementEntry
+                achievementEntryIndex = i
+                selection = 1
+            end,
+            valueText = valueText
+        })
+    end
+
+    table.insert(achievementEntries, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = achievementsPlayerEntries
+            selection = 1
+        end
+    })
+
+    if resetAchievementEntries then
+        if  not sentAchievementPacket
+        and network_local_index_from_global(achievementIndex) ~= 0 then
+            sentAchievementPacket = true
+            local p = { packetType = PACKET_TYPE_REQUEST_ACHIEVEMENTS, globalIndex = network_global_index_from_local(0) }
+
+            send_packet(achievementIndex, p)
+        end
+
+        entries = achievementEntries
+    elseif entries ~= achievementEntry then
+        sentAchievementPacket = false
+        achievementIndex = 0
+        remoteCompletedAchievements = {}
+    end
+end
+
+local function reset_achievement_entry()
+    local resetAchievementEntry = entries == achievementEntry
+
+    achievementEntry = {}
+
+    local achievement = achievements[achievementEntryIndex]
+
+    if achievement ~= nil then
+        achievementEntry = {
+            {
+                name = "Name:",
+                valueText = achievement.name
+            },
+            {
+                name = "Description:",
+                valueText = achievement.description,
+            },
+            {
+                name = "Title:",
+                valueText = achievement.reward.title,
+                seperator = "Rewards"
+            },
+            {
+                name = "Trail:",
+                valueText = achievement.reward.trail,
+            },
+            {
+                name = "Banner:",
+                valueText = achievement.reward.banner,
+            },
+        }
+    end
+
+    table.insert(achievementEntry, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = achievementEntries
+            selection = 1
+        end
+    })
+
+    if resetAchievementEntry then
+        entries = achievementEntry
+    else
+        achievementEntryIndex = 0
+    end
+end
+
 local function hud_render()
 
     if not showSettings then
@@ -1475,6 +1636,9 @@ local function hud_render()
     reset_stat_player_selections_entries()
     reset_stat_group_entries()
     reset_stat_entries()
+    reset_achievement_players_entries()
+    reset_achievement_entry()
+    reset_achievement_entries()
 
     local height = 90
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
@@ -1501,6 +1665,20 @@ local function hud_render()
         end
 
         if entries[i].text ~= nil then
+
+            -- if there's a name, print that first
+            if entries[i].name ~= nil then
+                if selection == i then
+                    djui_hud_set_color(240, 240, 240, 255)
+                else
+                    djui_hud_set_color(200, 200, 200, 255)
+                end
+
+                djui_hud_print_text(entries[i].name, x + 20, y + height - scrollOffset, 1)
+
+                height = height + 30
+            end
+
             -- appreciate the free labor chatgpt (ok I did a little bit of cleanup)
             local textAmount = 64
             if usingCoopDX then textAmount = 55 end
