@@ -5,6 +5,7 @@ local finishedChecking = false
 local updateFile = nil
 local updateTimer = 0
 local fade = 255
+local alertUserOfChangedDir = true
 
 local function check_for_updates(m)
 
@@ -13,9 +14,20 @@ local function check_for_updates(m)
     -- you may take this code for your own mods, no credit is required
     if not finishedChecking then
 
+        -- check to see if we modified the folder name
+        for _, mod in pairs(gActiveMods) do
+            if mod.relativePath == "tag" then
+                alertUserOfChangedDir = false
+            end
+        end
+
         if updateTimer < 0.5 * 30 then
             updateTimer = updateTimer + 1
             return
+        end
+
+        if alertUserOfChangedDir then
+            djui_chat_message_create("Please DO NOT change the folder name for Tag. Please rename the folder to \"tag\"")
         end
 
         -- attempt to load the current verion's audio file
