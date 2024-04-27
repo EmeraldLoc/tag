@@ -671,7 +671,7 @@ local function reset_main_selections()
         valueText = ">",},
         -- blacklist selection
         {name = "Blacklist",
-        permission = PERMISSION_NONE,
+        permission = PERMISSION_SERVER,
         input = INPUT_A,
         func = function ()
             entries = blacklistEntries
