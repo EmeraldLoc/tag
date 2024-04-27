@@ -119,7 +119,7 @@ local function hud_current_sardine()
     local y = 60
 
     djui_hud_set_color(255, 255, 255, fade)
-    djui_hud_print_text(text, x, y, 1)
+    djui_hud_print_colored_text(text, x, y, 1, fade)
 end
 
 local function hud_level()
