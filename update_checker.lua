@@ -13,7 +13,7 @@ local function check_for_updates(m)
     -- you may take this code for your own mods, no credit is required
     if not finishedChecking then
 
-        if updateTimer < 0.2 * 30 then
+        if updateTimer < 0.5 * 30 then
             updateTimer = updateTimer + 1
             return
         end
@@ -49,7 +49,7 @@ end
 
 local function hud_render()
     if finishedChecking then
-        if updateTimer > 0.6 * 30 then
+        if updateTimer > 1 * 30 then
             if fade == 0 then return end
             fade = clampf(fade - 15, 0, 255)
         end
