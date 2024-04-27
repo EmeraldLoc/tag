@@ -1095,10 +1095,10 @@ local function mario_update(m)
 
             -- print some stats so players can get a gist of this guy's skill
             if stats.globalStats.runnerVictories > 0 then
-                djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.runnerVictories .. " \\#dcdcdc\\times as a \\#316BE8\\Runner\\#dcdcdc\\.")
+                djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.runnerVictories .. " \\#dcdcdc\\times as a \\#316BE8\\Runner")
             end
             if stats.globalStats.taggerVictories > 0 then
-                djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.taggerVictories .. " \\#dcdcdc\\times as a \\#E82E2E\\Tagger\\#dcdcdc\\.")
+                djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.taggerVictories .. " \\#dcdcdc\\times as a \\#E82E2E\\Tagger")
             end
         end
 
