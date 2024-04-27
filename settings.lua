@@ -1501,7 +1501,7 @@ local function reset_achievement_entries()
         local valueText = "Not Completed"
 
         if localCompletedAchievements[i] == true then
-            valueText = "Completed"
+            valueText = "\\#FFD700\\Completed"
         end
 
         table.insert(achievementEntries, {
