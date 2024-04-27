@@ -41,12 +41,12 @@ local function mario_update(m)
             vec3f_copy(m.pos, hidingPos)
         end
 
-        if m.action ~= ACT_FREEFALL
+        if  m.action ~= ACT_FREEFALL
         and m.action ~= ACT_FREEFALL_LAND
         and m.action ~= ACT_FREEFALL_LAND_STOP
         and m.action ~= ACT_IDLE
         and m.action ~= ACT_LEDGE_GRAB then
-            set_mario_action(m, ACT_IDLE, 0)
+            set_mario_action(m, ACT_FREEFALL, 0)
         end
 
         m.vel.x = 0
@@ -272,8 +272,19 @@ local function on_chat_message(m, msg)
     end
 end
 
+---@param m MarioState
+local function character_sound(m)
+    local s = gPlayerSyncTable[m.playerIndex]
+
+    if  s.state == FINISHED or s.state == RUNNER
+    and m.playerIndex ~= 0 then
+        return 0
+    end
+end
+
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 hook_event(HOOK_ON_CHAT_MESSAGE, on_chat_message)
+hook_event(HOOK_CHARACTER_SOUND, character_sound)
