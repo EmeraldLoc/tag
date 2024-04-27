@@ -1,5 +1,7 @@
 # Tag
 
+![small_logo](https://github.com/EmeraldLoc/tag/assets/86802223/5abe4931-f5db-4fad-a8e7-f98fbc9a8990)
+
 This mod is a collection of multiple gamemodes all in one mod! The mod contains 9 gamemodes, modifiers that effect the gameplay of the gamemode, in-depth, easy to understand settings, and statistics!
 
 ### Gamemodes
@@ -52,3 +54,5 @@ Each player has stats! These stats go from playtime, total tags, and total time 
   - Typically it goes thru 2 stages. A beta stage, this is where features are rough, and everything is prone to chage. When I feel comfy with a build, I make that a Release Canidate (R.C.) build. R.C. means that the next version is not too far away, while beta means you still have a ways to go.
 - How can I contact you?
   - If you need to contact me with a concern, then you can do so at the modding site. My profile is [here](https://mods.sm64coopdx.com/members/emeraldlockdown.116/).
+- Do Arena maps support Tag?
+  - Yes, tag supports arena maps, and will add pipes for you based off of the ctf flags. If you want paintings and such, check out [this repo](https://github.com/EmeraldLoc/tag-arena-maps), where I ported a lot of well known arena maps.
