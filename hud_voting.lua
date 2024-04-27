@@ -32,7 +32,7 @@ local function hud_map_vote()
 
     -- render top text
     local text = "Vote for a Map"
-    djui_hud_set_color(220, 220, 220, fade)
+    djui_hud_set_color(255, 255, 255, fade)
     djui_hud_print_text(text, (screenWidth - djui_hud_measure_text(text)) / 2, 50, 1)
 
     local currentMapWinner = -1
@@ -115,7 +115,7 @@ local function hud_map_vote()
             text = name_of_level(level, area, levels[voteRandomLevels[currentMapWinner]]) .. " has been selected!"
         end
     end
-    djui_hud_set_color(220, 220, 220, fade)
+    djui_hud_set_color(255, 255, 255, fade)
     djui_hud_print_text(text, (screenWidth - djui_hud_measure_text(text)) / 2, screenHeight - 50, 1)
 end
 
