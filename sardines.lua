@@ -42,11 +42,11 @@ local function mario_update(m)
         end
 
         if m.action ~= ACT_FREEFALL
-        or m.action ~= ACT_FREEFALL_LAND
-        or m.action ~= ACT_FREEFALL_LAND_STOP
-        or m.action ~= ACT_IDLE
-        or m.action ~= ACT_LEDGE_GRAB then
-            set_mario_action(m, ACT_FREEFALL, 0)
+        and m.action ~= ACT_FREEFALL_LAND
+        and m.action ~= ACT_FREEFALL_LAND_STOP
+        and m.action ~= ACT_IDLE
+        and m.action ~= ACT_LEDGE_GRAB then
+            set_mario_action(m, ACT_IDLE, 0)
         end
 
         m.vel.x = 0
