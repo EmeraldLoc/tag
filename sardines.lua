@@ -113,7 +113,7 @@ local function hud_current_sardine()
         end
     end
 
-    local text = "The Sardine is " .. strip_hex(gNetworkPlayers[sardine].name)
+    local text = "The Sardine is " .. get_player_name(sardine)
 
     local x = 40
     local y = 60
