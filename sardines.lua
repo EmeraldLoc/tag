@@ -274,6 +274,9 @@ end
 
 ---@param m MarioState
 local function character_sound(m)
+
+    if gGlobalSyncTable.gamemode ~= SARDINES then return end
+
     local s = gPlayerSyncTable[m.playerIndex]
 
     if  s.state == FINISHED or s.state == RUNNER
