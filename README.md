@@ -1,5 +1,7 @@
 # Tag
 
+![small_logo](https://github.com/EmeraldLoc/tag/assets/86802223/5abe4931-f5db-4fad-a8e7-f98fbc9a8990)
+
 This mod is a collection of multiple gamemodes all in one mod! The mod contains 9 gamemodes, modifiers that effect the gameplay of the gamemode, in-depth, easy to understand settings, and statistics!
 
 ### Gamemodes
