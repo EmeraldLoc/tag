@@ -456,6 +456,8 @@ function get_modifier_text(m)
 		else
 			text = "\\#FF0000\\Bljs"
 		end
+	elseif m == MODIFIER_FRIENDLY_FIRE then
+		text = "\\#F26D13\\Friendly Fire"
 	elseif m == MODIFIER_NONE
 	and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
@@ -509,6 +511,8 @@ function get_modifier_text_without_hex()
 		else
 			text = "Bljs"
 		end
+	elseif gGlobalSyncTable.modifier == MODIFIER_FRIENDLY_FIRE then
+		text = "Friendly Fire"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
 		text = "None"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then

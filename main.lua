@@ -65,7 +65,8 @@ MODIFIER_ONE_RUNNER                    = 12
 MODIFIER_DOUBLE_JUMP                   = 13
 MODIFIER_SHELL                         = 14
 MODIFIER_BLJS                          = 15
-MODIFIER_MAX                           = 15
+MODIFIER_FRIENDLY_FIRE                 = 16
+MODIFIER_MAX                           = 16
 
 -- binds
 BIND_BOOST = 0
@@ -211,6 +212,7 @@ blacklistedModifiers = {
     [MODIFIER_DOUBLE_JUMP] = false,
     [MODIFIER_SHELL] = false,
     [MODIFIER_BLJS] = false,
+    [MODIFIER_FRIENDLY_FIRE] = false,
 }
 -- the previous level, used for when the server selects levels to pick
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
@@ -1527,13 +1529,15 @@ end
 ---@param a MarioState
 ---@param v MarioState
 local function allow_pvp(a, v)
+    -- don't allow spectators to attack players, vice versa
+    if gPlayerSyncTable[v.playerIndex].state == SPECTATOR or gPlayerSyncTable[a.playerIndex].state == SPECTATOR then return false end
+    -- if the modifier is friendly fire, don't continue
+    if gGlobalSyncTable.modifier == MODIFIER_FRIENDLY_FIRE then return end
     -- check if 2 runners are trying to attack eachother
     if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == RUNNER then return false end
     -- check if 2 taggers are trying to attack eachother
     if gPlayerSyncTable[v.playerIndex].state == TAGGER and gPlayerSyncTable[a.playerIndex].state == TAGGER
     and gGlobalSyncTable.gamemode ~= ASSASSINS and gGlobalSyncTable.gamemode ~= DEATHMATCH then return false end
-    -- don't allow spectators to attack players, vice versa
-    if gPlayerSyncTable[v.playerIndex].state == SPECTATOR or gPlayerSyncTable[a.playerIndex].state == SPECTATOR then return false end
 end
 
 ---@param m MarioState
