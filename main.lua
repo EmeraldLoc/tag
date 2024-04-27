@@ -1,4 +1,4 @@
--- name: \\#316BE8\\Tag (v2.31)\\#dcdcdc\\
+-- name: \\#316BE8\\Tag (v2.4 Beta)\\#dcdcdc\\
 -- description: All Tag Related Gamemodes!\n\nThis mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and more, with modifiers, and full romhack support!\n\nThis mod includes a blacklist command to blacklist bad levels in romhacks\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\ and\\#ff7f00\\ Agent X\\#dcdcdc\\\n\nPainting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi\n\nRomhack Porters are in the romhacks.lua file.
 -- incompatible: gamemode tag
 
@@ -37,7 +37,8 @@ ASSASSINS                              = 6
 SARDINES                               = 7
 HUNT                                   = 8
 DEATHMATCH                             = 9
-MAX_GAMEMODE                           = 9
+TERMINATOR                             = 10
+MAX_GAMEMODE                           = 10
 
 -- spectator states
 SPECTATOR_STATE_MARIO                  = 0
@@ -119,6 +120,7 @@ gGlobalSyncTable.assassinsActiveTimer  = 120 * 30
 gGlobalSyncTable.sardinesActiveTimer   = 120 * 30
 gGlobalSyncTable.huntActiveTimer       = 180 * 30
 gGlobalSyncTable.deathmatchActiveTimer = 180 * 30
+gGlobalSyncTable.terminatorActiveTimer = 180 * 30
 -- other timers
 gGlobalSyncTable.sardinesHidingTimer   = 30  * 30
 -- amount of lives for hunt
@@ -194,6 +196,7 @@ blacklistedGamemodes = {
     [SARDINES] = false,
     [HUNT] = false,
     [DEATHMATCH] = false,
+    [TERMINATOR] = false,
 }
 blacklistedModifiers = {
     [MODIFIER_BOMBS] = false,
@@ -305,6 +308,13 @@ stats = {
     [DEATHMATCH] = {
         playTime = 0,
         totalTags = 0,
+        taggerVictories = 0,
+    },
+    [TERMINATOR] = {
+        playTime = 0,
+        totalTags = 0,
+        totalTimeAsRunner = 0,
+        runnerVictories = 0,
         taggerVictories = 0,
     },
 }
@@ -529,6 +539,11 @@ local function server_update()
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.deathmatchActiveTimer
 
                 PLAYERS_NEEDED = 3
+            elseif gGlobalSyncTable.gamemode == TERMINATOR then
+                -- set terminator timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.terminatorActiveTimer
+
+                PLAYERS_NEEDED = 3
             end
 
             log_to_console("Tag: Modifier is set to " ..
@@ -584,6 +599,9 @@ local function server_update()
             elseif gGlobalSyncTable.gamemode == DEATHMATCH then
                 -- set deathmatch timer
                 gGlobalSyncTable.amountOfTime = gGlobalSyncTable.deathmatchActiveTimer
+            elseif gGlobalSyncTable.gamemode == TERMINATOR then
+                -- set deathmatch timer
+                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.terminatorActiveTimer
             end
 
             timer = gGlobalSyncTable.amountOfTime -- set timer to amount of time in a round
@@ -613,7 +631,8 @@ local function server_update()
             end
 
             if not skipTaggerSelection then
-                if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
+                if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
+                or gGlobalSyncTable.gamemode == TERMINATOR then
                     amountOfTaggersNeeded = 1
                 elseif gGlobalSyncTable.modifier == MODIFIER_ONE_RUNNER then
                     amountOfTaggersNeeded = numPlayers - 1
@@ -714,7 +733,7 @@ local function server_update()
                     gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN -- end round
                 end
 
-                log_to_console("Tag: Runners Won")
+                log_to_console("Tag: Timer's Set to 0, ending round...")
 
                 return
             else

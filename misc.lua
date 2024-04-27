@@ -552,6 +552,8 @@ function get_gamemode_hex_color(g)
 		return "\\#C74444\\"
 	elseif g == DEATHMATCH then
 		return "\\#B83333\\"
+	elseif g == TERMINATOR then
+		return "\\#7D2A24\\"
 	end
 end
 
@@ -574,6 +576,8 @@ function get_gamemode(g)
 		return "\\#C74444\\Hunt\\#DCDCDC\\"
 	elseif g == DEATHMATCH then
 		return "\\#B83333\\Deathmatch\\#DCDCDC\\"
+	elseif g == TERMINATOR then
+		return "\\#7D2A24\\Terminator\\#DCDCDC\\"
 	end
 
 	return "Uhhhhhhhhhh"
@@ -604,6 +608,8 @@ function get_gamemode_without_hex(g)
 		return "Hunt"
 	elseif g == DEATHMATCH then
 		return "Deathmatch"
+	elseif g == TERMINATOR then
+		return "Terminator"
 	end
 end
 
@@ -760,15 +766,24 @@ end
 ---@param runner integer
 function tagged_popup(tagger, runner)
 	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
-	if  gGlobalSyncTable.gamemode ~= INFECTION
-	and gGlobalSyncTable.gamemode ~= HUNT
-	and gGlobalSyncTable.gamemode ~= DEATHMATCH then
-		djui_popup_create_global(get_player_name(tagger) .. " \\#E82E2E\\Tagged\n" .. get_player_name(runner), 3)
-	elseif gGlobalSyncTable.gamemode ~= INFECTION then
-		djui_popup_create_global(get_player_name(tagger) .. " \\#C74444\\Killed\n" .. get_player_name(runner), 3)
-	else
+
+	if gGlobalSyncTable.gamemode == INFECTION then
 		djui_popup_create_global(get_player_name(tagger) .. " \\#24D636\\Infected\n" .. get_player_name(runner), 3)
+		return
 	end
+
+	if gGlobalSyncTable.gamemode == DEATHMATCH
+	or gGlobalSyncTable.gamemode == HUNT then
+		djui_popup_create_global(get_player_name(tagger) .. " \\#C74444\\Killed\n" .. get_player_name(runner), 3)
+		return
+	end
+
+	if gGlobalSyncTable.gamemode == TERMINATOR then
+		djui_popup_create_global(get_player_name(tagger) .. " \\#7D2A24\\Terminated\n" .. get_player_name(runner), 3)
+		return
+	end
+
+	djui_popup_create_global(get_player_name(tagger) .. " \\#E82E2E\\Tagged\n" .. get_player_name(runner), 3)
 end
 
 ---@param tagger integer
@@ -796,6 +811,8 @@ function get_rules_for_gamemode(gamemode)
 		return "Hunt is similar to Tag. Runners each have 3 lives. You must remove all of the runners lives to become a runner yourself. Hunters must tag Runners in order to become Runners. Runners lives get set to 1 on death. You never become eliminated on death. If a hunter dies, they go back to the start of the level. Leaderboard works the same as in Tag."
 	elseif gamemode == DEATHMATCH then
 		return "Deathmatch is pretty much Hunt but free for all. Every player is assigned 5 lives. When you tag a player, they lose a life. Last one standing wins. You lose a life on death if elimination on death is on."
+	elseif gamemode == TERMINATOR then
+		return "This gamemode is pretty much juggernaut but flipped. There's one Terminator that gets selected, the reset of the players are Runners. The terminator's goal is to tag all the runners. You become eliminated on death as a runner if elimination on death is on. Leaderboard works by using time as runner for runner, and for terminator the amount of tags."
 	end
 end
 

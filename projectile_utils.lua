@@ -22,5 +22,7 @@ function handle_projectile_pvp(aI, vI)
         hunt_handle_pvp(aI, vI)
     elseif gGlobalSyncTable.gamemode == DEATHMATCH then
         deathmatch_handle_pvp(aI, vI)
+    elseif gGlobalSyncTable.gamemode == TERMINATOR then
+        terminator_handle_pvp(aI, vI)
     end
 end

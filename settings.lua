@@ -211,6 +211,8 @@ local function set_active_timer(g, v)
         gGlobalSyncTable.huntActiveTimer = v
     elseif g == DEATHMATCH then
         gGlobalSyncTable.deathmatchActiveTimer = v
+    elseif g == TERMINATOR then
+        gGlobalSyncTable.terminatorActiveTimer = v
     end
 end
 
@@ -233,6 +235,8 @@ local function get_active_timer(g)
         return gGlobalSyncTable.huntActiveTimer
     elseif g == DEATHMATCH then
         return gGlobalSyncTable.deathmatchActiveTimer
+    elseif g == TERMINATOR then
+        return gGlobalSyncTable.terminatorActiveTimer
     end
 end
 
@@ -561,6 +565,13 @@ helpEntries = {
     input = INPUT_A,
     func = function ()
         get_rules(DEATHMATCH)
+    end},
+
+    {name = get_gamemode(TERMINATOR),
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(TERMINATOR)
     end},
 
     {name = "Spectating",
@@ -907,6 +918,13 @@ local function reset_gamemode_selection()
         input = INPUT_JOYSTICK,
         func = function () set_lives(DEATHMATCH) end,
         valueText = tostring(gGlobalSyncTable.deathmatchLivesCount)},
+
+        {name = "Time Limit",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = function () set_time_limit(TERMINATOR) end,
+        valueText = tostring(math.floor(gGlobalSyncTable.terminatorActiveTimer / 30)) .. "s",
+        seperator = get_gamemode(TERMINATOR)},
 
         {name = "Back",
         permission = PERMISSION_NONE,
