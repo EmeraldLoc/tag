@@ -26,7 +26,7 @@ local function recieve_packet(p)
             elseif desyncReason == DESYNC_REASON_ROUND_STATE then
                 gGlobalSyncTable.roundState = p.data
             end
-            log_to_console("Tag: You have been resynced due to " .. p.reason)
+            log_to_console("Tag: You have been resynced due to " .. tostring(p.reason))
         end
     end
 end

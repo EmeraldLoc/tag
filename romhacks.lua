@@ -136,7 +136,8 @@ romhacks = {
                 area = 1,
                 pipes = nil,
                 spawnLocation = { x = 4050, y = 0, z = 4981 },
-                overrideName = "Red's In HMC", room = 2,
+                overrideName = "Red's In HMC",
+                room = 2,
                 unwantedBhvs = { id_bhvHmcElevatorPlatform },
                 disabledBhvs = { id_bhvDoor }
             },
@@ -148,17 +149,18 @@ romhacks = {
                 pipes = nil,
                 spawnLocation = { x = 1988, y = -1023, z = 454 },
                 overrideName = "Toxic Maze",
+                room = 3,
                 unwantedBhvs = { id_bhvHmcElevatorPlatform },
                 disabledBhvs = { id_bhvDoor }
             },
             {
-                name = "twdw",
+                name = "wdt",
                 level = LEVEL_WDW,
                 painting = get_texture_info("twdw_painting"),
                 area = 2,
                 pipes = nil,
                 spawnLocation = { x = -773, y = -2559, z = 220 },
-                overrideName = "Wet-Dry World"
+                overrideName = "Wet-Dry Town"
             },
             {
                 name = "wf",

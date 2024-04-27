@@ -35,7 +35,8 @@ local function hud_bottom_render()
         local y = math.floor(screenHeight - height - 4 * scale)
         local tagLives = linear_interpolation(gPlayerSyncTable[0].tagLives, 0, 1, 0, gGlobalSyncTable.tagMaxLives)
 
-        if boosts_enabled() then
+        if boosts_enabled()
+        or gGlobalSyncTable.modifier == MODIFIER_FLY then
             y = y - 32
         end
 
@@ -58,7 +59,8 @@ local function hud_bottom_render()
         x = (screenWidth - width) / 2
         y = screenHeight - 28
 
-        if boosts_enabled() then
+        if boosts_enabled()
+        or gGlobalSyncTable.modifier == MODIFIER_FLY then
             y = y - 32
         end
 

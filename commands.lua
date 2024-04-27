@@ -10,7 +10,7 @@ function start_command(msg)
         if tonumber(msg) ~= nil then
             for i, level in pairs(levels) do
                 if level_to_course(level.level) == tonumber(msg) then
-                    timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+                    timer = 15 * 30 -- 15 seconds
                     gGlobalSyncTable.selectedLevel = i
                     prevLevel = gGlobalSyncTable.selectedLevel
                     gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
@@ -25,7 +25,7 @@ function start_command(msg)
                 if msg:lower() == level.name
                 or msg:lower() == name_of_level(level.level, level.area):lower()
                 or msg:lower() == level.overrideName then
-                    timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+                    timer = 15 * 30 -- 15 seconds
                     gGlobalSyncTable.selectedLevel = i
                     prevLevel = gGlobalSyncTable.selectedLevel
                     gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
@@ -38,7 +38,7 @@ function start_command(msg)
         end
     end
 
-    timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+    timer = 15 * 30 -- 15 seconds
 
     local level = levels[gGlobalSyncTable.selectedLevel]
 

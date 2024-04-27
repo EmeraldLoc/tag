@@ -1,8 +1,8 @@
--- name: \\#316BE8\\Tag (v2.3 R.C 2)\\#dcdcdc\\
--- description: All Tag Related Gamemodes!\n\nThis mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and more, with modifiers, and full romhack support!\n\nThis mod includes a blacklist command to blacklist bad levels in romhacks\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\ and\\#ff7f00\\ Agent X\\#dcdcdc\\\n\nPainting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi.
+-- name: \\#316BE8\\Tag (v2.3)\\#dcdcdc\\
+-- description: All Tag Related Gamemodes!\n\nThis mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and more, with modifiers, and full romhack support!\n\nThis mod includes a blacklist command to blacklist bad levels in romhacks\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\ and\\#ff7f00\\ Agent X\\#dcdcdc\\\n\nPainting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi\n\nRomhack Porters are in the romhacks.lua file.
 -- incompatible: gamemode tag
 
--- if your trying to learn this code, I hope i've done a good job.
+-- if your trying to learn this code, I hope I've done a good job.
 -- This file is pretty much (other than misc.lua) the most unorganized file of them all
 -- threw so much crap in here that isn't even apart of the actual game loop or anything
 -- anyways other than that, everything should be good, so
@@ -170,6 +170,9 @@ levels = {}
 
 -- if we are using coopdx or not
 usingCoopDX = SM64COOPDX_VERSION ~= nil
+
+-- initialized mh api for chat stuff
+_G.mhApi = {}
 
 -- variables
 -- this is the local server timer used to set gGlobalSyncTable.displayTimer and other variables
@@ -382,7 +385,7 @@ local function server_update()
             goto ifend
         end
 
-        timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+        timer = 15 * 30 -- 15 seconds
 
         local level = levels[gGlobalSyncTable.selectedLevel]
 
@@ -415,7 +418,7 @@ local function server_update()
         timer = 15 * 30
     elseif gGlobalSyncTable.roundState == ROUND_WAIT then
         -- select a modifier and gamemode if timer is at its highest point
-        if timer == 16 * 30 then
+        if timer == 15 * 30 then
             if gGlobalSyncTable.randomModifiers then
                 -- see if we should use a modifier modifiers or not
                 local selectModifier = math.random(1, 2) -- 50% chance
@@ -467,10 +470,9 @@ local function server_update()
                     end
 
                     ::selectgamemode::
-                    gGlobalSyncTable.gamemode = -1 -- force popup to show
                     gGlobalSyncTable.gamemode = math.random(MIN_GAMEMODE, MAX_GAMEMODE)
 
-                    if blacklistedGamemodes[gGlobalSyncTable.gamemode] == true then -- don't if it explicit check for true is needed here
+                    if blacklistedGamemodes[gGlobalSyncTable.gamemode] == true then
                         goto selectgamemode
                     end
                 else
@@ -750,7 +752,7 @@ local function server_update()
                     goto ifend
                 end
 
-                timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+                timer = 15 * 30 -- 15 seconds
 
                 local level = levels[gGlobalSyncTable.selectedLevel]
 
@@ -825,7 +827,7 @@ local function server_update()
         end
 
         if timer <= -3 * 30 then
-            timer = 16 * 30 -- 16 seconds, 16 so the 15 shows, you probably won't see the 16
+            timer = 15 * 30 -- 15
             local voteResult = -1
             local maxVotes = -1
             for i = 1, 4 do
@@ -970,7 +972,8 @@ local function mario_update(m)
     -- guide:
     -- | = add
     -- & ~ = subtract
-    if gPlayerSyncTable[m.playerIndex].state ~= SPECTATOR then
+    if  gPlayerSyncTable[m.playerIndex].state ~= SPECTATOR
+    and gPlayerSyncTable[m.playerIndex].state ~= WILDCARD_ROLE then
         if gGlobalSyncTable.modifier ~= MODIFIER_FLY then
             m.flags = m.flags & ~MARIO_WING_CAP
         else
@@ -1201,16 +1204,17 @@ local function mario_update(m)
         end
 
         -- check if we are in the room the level wants us to be in
-        if selectedLevel.room ~= nil and current_mario_room_check(selectedLevel.room) ~= 1
-        and np.currAreaSyncValid
-        and roomTimer > 5 * 30 then
+        if selectedLevel.room ~= nil
+        and current_mario_room_check(selectedLevel.room) ~= 1
+        and np.currAreaSyncValid and (roomTimer > 5 * 30
+        or gGlobalSyncTable.roundState == ROUND_WAIT) then
             local randomLevel = gGlobalSyncTable.selectedLevel + 1
             if levels[randomLevel] == nil then
                 randomLevel = gGlobalSyncTable.selectedLevel - 1
             end
             warp_to_level(levels[randomLevel].level, 1, 0)
-        elseif selectedLevel.room ~= nil and current_mario_room_check(selectedLevel.room) ~= 1
-        and np.currAreaSyncValid then
+        elseif selectedLevel.room ~= nil and np.currAreaSyncValid
+        and current_mario_room_check(selectedLevel.room) ~= 1 then
             roomTimer = roomTimer + 1
 
             if roomTimer % 30 == 1 then
@@ -1243,11 +1247,6 @@ local function mario_update(m)
                 end
             else
                 gPlayerSyncTable[0].state = RUNNER
-            end
-        elseif np.currAreaSyncValid then
-            if not variable1 then
-                -- extremely important!!!
-                crash()
             end
         end
 
@@ -1376,7 +1375,7 @@ local function hud_round_status()
         end
     elseif gGlobalSyncTable.roundState == ROUND_WAIT then
         text = "Starting in " ..
-            math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+            math.floor(gGlobalSyncTable.displayTimer / 30) + 1 -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
     elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.state == ROUND_TAGGERS_WIN then
         text = "Starting new round"
     elseif gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION then

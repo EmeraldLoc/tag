@@ -112,6 +112,7 @@ function hunt_handle_pvp(aI, vI)
             -- flip states
             v.state = TAGGER
             a.state = RUNNER
+            a.invincTimer = 1 * 30
             -- set attacker lives
             a.tagLives = 3
             -- create popup
@@ -119,7 +120,7 @@ function hunt_handle_pvp(aI, vI)
         end
         -- increase amount of tags and set invincibility timer to 1 second
         a.amountOfTags = a.amountOfTags + 1
-        a.invincTimer = 1 * 30
+        v.invincTimer = 3 * 30
     end
 end
 

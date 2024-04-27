@@ -29,7 +29,9 @@ local function mario_update(m)
         m.freeze = 1
     elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES
     and gPlayerSyncTable[0].state == RUNNER then
-        vec3f_copy(hidingPos, m.pos)
+        if m.action & ACT_GROUP_MASK ~= ACT_GROUP_AIRBORNE then
+            vec3f_copy(hidingPos, m.pos)
+        end
     end
 
     if gGlobalSyncTable.roundState == ROUND_ACTIVE
@@ -38,6 +40,21 @@ local function mario_update(m)
         if m.pos ~= hidingPos then
             vec3f_copy(m.pos, hidingPos)
         end
+
+        if m.action ~= ACT_FREEFALL
+        or m.action ~= ACT_FREEFALL_LAND
+        or m.action ~= ACT_FREEFALL_LAND_STOP
+        or m.action ~= ACT_IDLE
+        or m.action ~= ACT_LEDGE_GRAB then
+            set_mario_action(m, ACT_FREEFALL, 0)
+        end
+
+        m.vel.x = 0
+        m.vel.y = 0
+        m.vel.z = 0
+        m.slideVelX = 0
+        m.slideVelZ = 0
+        m.forwardVel = 0
     end
 end
 
@@ -225,8 +242,6 @@ local function allow_interact(m, o, intee)
         end
     end
 end
-
-_G.mhApi = {}
 
 local function on_chat_message(m, msg)
 

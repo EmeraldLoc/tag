@@ -14,6 +14,14 @@ There are plenty of modifiers to add variety your game! From simple gravity chan
 
 Romhack support depends on the romhack. Offical romhacks have paintings, and pipes like vanilla levels! Non-official romhacks don't have these benefits, however, the romhack should still work perfectly fine!
 
+### Arena Stage
+
+Arena Stages are fully supported, with pipes and all! It is highly recommended to play with arena stages. Downside is you don't get paintings.
+
+### Official Tag Stages
+
+Tag Stages include paintings and custom-placed pipes, these are perfect mods to add to your tag experience!
+
 ### Blacklists
 
 Don't like a gamemode, modifier, or level? Blacklist it! Blacklisting allows you to turn off certain gamemods, modifiers, or levels that you don't like in your game.
@@ -42,3 +50,5 @@ Each player has stats! These stats go from playtime, total tags, and total time 
   - There isn't really a set time. They typically happen when I got a good feature set for a next version. Expect more testing when the next version reaches the R.C stage, which you can know when I host it lol.
 - What are the stages of a new release?
   - Typically it goes thru 2 stages. A beta stage, this is where features are rough, and everything is prone to chage. When I feel comfy with a build, I make that a Release Canidate (R.C.) build. R.C. means that the next version is not too far away, while beta means you still have a ways to go.
+- How can I contact you?
+  - If you need to contact me with a concern, then you can do so at the modding site. My profile is [here](https://mods.sm64coopdx.com/members/emeraldlockdown.116/).

@@ -103,6 +103,10 @@ local function mario_update(m)
     or (gGlobalSyncTable.gamemode == SARDINES
     and m.playerIndex ~= 0)) then
         obj_set_model_extended(m.marioObj, E_MODEL_NONE)
+    elseif (s.state == SPECTATOR
+    or (s.state == WILDCARD_ROLE))
+    and gGlobalSyncTable.gamemode == SARDINES then
+        m.particleFlags = 0
     end
 
     if m.playerIndex ~= 0 then return end
@@ -156,6 +160,11 @@ local function mario_update(m)
             local originalIndex = followTargetIndex
             followTargetIndex = followTargetIndex + 1
 
+            if followTargetIndex >= MAX_PLAYERS then
+                followTargetIndex = originalIndex
+                goto endr
+            end
+
             while not gNetworkPlayers[followTargetIndex].connected
             or (gPlayerSyncTable[followTargetIndex].state == SPECTATOR
             or (gPlayerSyncTable[followTargetIndex].state == WILDCARD_ROLE
@@ -167,6 +176,8 @@ local function mario_update(m)
                     break
                 end
             end
+
+            ::endr::
         end
 
         if m.controller.buttonPressed & L_JPAD ~= 0 then
