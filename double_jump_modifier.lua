@@ -21,6 +21,7 @@ local function mario_update(m)
 
         set_mario_action(m, ACT_TRIPLE_JUMP, 0)
         m.vel.y = 65
+        spawn_mist_particles_variable(5, 0, 15)
     elseif m.action & ACT_GROUP_MASK == ACT_GROUP_AIRBORNE then
         airTimer = airTimer + 1
     elseif m.action & ACT_GROUP_MASK ~= ACT_GROUP_AIRBORNE then
