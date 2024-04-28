@@ -1112,7 +1112,13 @@ local function mario_update(m)
 
             -- load selected player title
             if isOwner or isDeveloper then
-
+                local title = load_string("playerTitle")
+                if  isOwner
+                and title == "owner" then
+                    gPlayerSyncTable[0].playerTitle = achievements.owner.reward.title
+                elseif title == "developer" then
+                    gPlayerSyncTable[0].playerTitle = achievements.developer.reward.title
+                end
             else
                 local title = load_int("playerTitle")
                 if title ~= nil then
