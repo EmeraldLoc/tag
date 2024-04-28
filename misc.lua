@@ -392,7 +392,7 @@ function generate_boost_trail()
 	for i = 0, MAX_PLAYERS - 1 do
 		-- ensure we are connected and are boosting
 		if not gNetworkPlayers[i].connected then goto continue end
-		--if not gPlayerSyncTable[i].boosting then goto continue end
+		if not gPlayerSyncTable[i].boosting then goto continue end
 
 		E_MODEL_BOOST_TRAIL = gPlayerSyncTable[i].playerTrail
 
