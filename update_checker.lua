@@ -39,6 +39,7 @@ local function check_for_updates(m)
             updateTimer = 0
             return
         end
+
         -- if it doesn't load, the file doesn't exist, so assume there's an update
         -- a caviat with this trick is that if you don't have a internet connection,
         -- or fail to retrieve the file, it'll return an update rather than returning
@@ -48,9 +49,9 @@ local function check_for_updates(m)
             url = "https://github.com/EmeraldLoc/Tag/raw/main/" .. prevVersion .. ".mp3"
             updateFile = audio_stream_load_url(url)
             if updateFile == nil or not updateFile.loaded or updateFile.handle == 0 then
-                djui_chat_message_create("An update is available for Tag!")
+                djui_popup_create("An update is available for Tag!", 2)
             else
-                djui_chat_message_create("You're playing a beta version of Tag, enjoy!")
+                djui_popup_create("Enjoy the beta test for Tag!", 2)
             end
         end
 
