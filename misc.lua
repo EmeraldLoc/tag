@@ -395,6 +395,7 @@ function generate_boost_trail()
 		if not gPlayerSyncTable[i].boosting then goto continue end
 
 		E_MODEL_BOOST_TRAIL = gPlayerSyncTable[i].playerTrail
+		--E_MODEL_BOOST_TRAIL = smlua_model_util_get_id("speeding_trail_geo")
 
 		-- get mario state and coords
 		local m = gMarioStates[i]

@@ -242,7 +242,8 @@ achievements = {
             title = "Speeding Tagger",
             ---@type Trail
             trail = {
-
+                name = "Speeding Trail",
+                model = smlua_model_util_get_id("speeding_trail_geo")
             },
         },
         initFunc = nil,
