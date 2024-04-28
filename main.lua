@@ -1109,6 +1109,21 @@ local function mario_update(m)
             if stats.globalStats.taggerVictories > 0 then
                 djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.taggerVictories .. " \\#dcdcdc\\times as a \\#E82E2E\\Tagger")
             end
+
+            -- load selected player title
+            if isOwner or isDeveloper then
+
+            else
+                local title = load_int("playerTitle")
+                if title ~= nil then
+                    if  completedAchievements[title] ~= nil
+                    and achievements[title] ~= nil
+                    and achievements[title].reward ~= nil
+                    and achievements[title].reward.title ~= nil then
+                        gPlayerSyncTable[0].playerTitle = achievements[title].reward.title
+                    end
+                end
+            end
         end
 
         ---@type NetworkPlayer

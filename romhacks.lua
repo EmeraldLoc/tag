@@ -225,7 +225,16 @@ romhacks = {
                     }
                 },
                 overrideName = "Under The Moat"
-            }
+            },
+            {
+                -- level added by Murioz
+                name = "cc",
+                level = LEVEL_CASTLE_COURTYARD,
+                painting = get_texture_info("cc_painting"),
+                area = 1,
+                pipes = nil,
+                unwantedBhvs = { id_bhvBooCage }
+            },
         },
     },
     {

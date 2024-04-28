@@ -1685,6 +1685,7 @@ local function reset_title_reward_entries()
             input = INPUT_A,
             func = function ()
                 gPlayerSyncTable[0].playerTitle = achievements.owner.reward.title
+                save_string("playerTitle", "owner")
             end,
             valueText = valueText
         })
@@ -1701,6 +1702,7 @@ local function reset_title_reward_entries()
             input = INPUT_A,
             func = function ()
                 gPlayerSyncTable[0].playerTitle = achievements.developer.reward.title
+                save_string("playerTitle", "developer")
             end,
             valueText = valueText
         })
@@ -1720,6 +1722,7 @@ local function reset_title_reward_entries()
                 input = INPUT_A,
                 func = function ()
                     gPlayerSyncTable[0].playerTitle = achievement.reward.title
+                    save_int("playerTitle", i)
                 end,
                 valueText = valueText
             })
