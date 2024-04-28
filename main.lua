@@ -1102,21 +1102,16 @@ local function mario_update(m)
                 end
             end
 
-            -- print some stats so players can get a gist of this guy's skill
-            if stats.globalStats.runnerVictories > 0 then
-                djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.runnerVictories .. " \\#dcdcdc\\times as a \\#316BE8\\Runner")
-            end
-            if stats.globalStats.taggerVictories > 0 then
-                djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.taggerVictories .. " \\#dcdcdc\\times as a \\#E82E2E\\Tagger")
-            end
+            isOwner = achievements.owner ~= nil
+            isDeveloper = achievements.developer ~= nil
 
             -- load selected player title
             if isOwner or isDeveloper then
-                local title = load_string("playerTitle")
+                local title = load_int("playerTitle")
                 if  isOwner
-                and title == "owner" then
+                and title == -2 then
                     gPlayerSyncTable[0].playerTitle = achievements.owner.reward.title
-                elseif title == "developer" then
+                elseif title == -1 then
                     gPlayerSyncTable[0].playerTitle = achievements.developer.reward.title
                 end
             else
@@ -1129,6 +1124,26 @@ local function mario_update(m)
                         gPlayerSyncTable[0].playerTitle = achievements[title].reward.title
                     end
                 end
+            end
+
+            -- load selected trail
+            local trail = load_int("playerTrail")
+
+            if trail ~= nil then
+                if  completedAchievements[trail] ~= nil
+                and achievements[trail] ~= nil
+                and achievements[trail].reward ~= nil
+                and achievements[trail].reward.trail ~= nil then
+                    gPlayerSyncTable[0].playerTrail = achievements[trail].reward.trail.model
+                end
+            end
+
+            -- print some stats so players can get a gist of this guy's skill
+            if stats.globalStats.runnerVictories > 0 then
+                djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.runnerVictories .. " \\#dcdcdc\\times as a \\#316BE8\\Runner")
+            end
+            if stats.globalStats.taggerVictories > 0 then
+                djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.taggerVictories .. " \\#dcdcdc\\times as a \\#E82E2E\\Tagger")
             end
         end
 

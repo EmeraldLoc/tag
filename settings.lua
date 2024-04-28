@@ -1685,7 +1685,7 @@ local function reset_title_reward_entries()
             input = INPUT_A,
             func = function ()
                 gPlayerSyncTable[0].playerTitle = achievements.owner.reward.title
-                save_string("playerTitle", "owner")
+                save_int("playerTitle", -2)
             end,
             valueText = valueText
         })
@@ -1702,7 +1702,7 @@ local function reset_title_reward_entries()
             input = INPUT_A,
             func = function ()
                 gPlayerSyncTable[0].playerTitle = achievements.developer.reward.title
-                save_string("playerTitle", "developer")
+                save_int("playerTitle", -1)
             end,
             valueText = valueText
         })
@@ -1780,6 +1780,7 @@ local function reset_trails_reward_entries()
                 input = INPUT_A,
                 func = function ()
                     gPlayerSyncTable[0].playerTrail = achievement.reward.trail.model
+                    save_int("playerTrail", i)
                 end,
                 valueText = valueText
             })
