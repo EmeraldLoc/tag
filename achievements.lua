@@ -18,6 +18,8 @@ local marathonTimer = 0
 local speedingTimer = 0
 local speederPrevAmountOfTags = 0
 
+spectatorAttemptCount = 0
+
 achievements = {
     ---@type Achievement
     {
@@ -295,6 +297,27 @@ achievements = {
             end
 
             if mastered then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "You really wanna spectate I see...",
+        description = "Hit \"Toggle Spectate\" 100 times while in a match.",
+        ---@type Reward
+        reward = {
+            title = "\\#4A4A4A\\Spectator Lover",
+            trail = nil,
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if  gGlobalSyncTable.roundState ~= ROUND_ACTIVE
+            and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then
+                spectatorAttemptCount = 0
+            end
+
+            if spectatorAttemptCount >= 100 then
                 return true
             end
         end

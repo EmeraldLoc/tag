@@ -924,7 +924,7 @@ function button_to_text(btn)
 end
 
 function toggle_spectator()
-	if gGlobalSyncTable.roundState ~= ROUND_ACTIVE
+	if  gGlobalSyncTable.roundState ~= ROUND_ACTIVE
     and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then
         if gPlayerSyncTable[0].state ~= SPECTATOR then
             gPlayerSyncTable[0].state = SPECTATOR
@@ -956,6 +956,8 @@ function toggle_spectator()
         elseif i == 5 then
             djui_chat_message_create(get_player_name(0) .. "\\#FFFFFF\\, why do you try this thing when you know deep down it won't work?")
         end
+
+		spectatorAttemptCount = spectatorAttemptCount + 1
     end
 end
 
