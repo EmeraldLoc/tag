@@ -1619,6 +1619,39 @@ local function level_init()
     end
 end
 
+local function on_chat_message(m, msg)
+
+    -- use mariohunt api, since Emily did all the work already
+    if _G.mhApi.chatValidFunction and _G.mhApi.chatValidFunction(m, msg) == false then
+        return false
+    end
+
+    if _G.mhApi.chatModifyFunction then
+        -- ignore name, as it's not used here
+        local msg_, _ = _G.mhApi.chatModifyFunction(m, msg)
+        if msg_ then msg = msg_ end
+    end
+
+    local s = gPlayerSyncTable[0]
+    local rS = gPlayerSyncTable[m.playerIndex]
+
+    if gGlobalSyncTable.roundState == ROUND_ACTIVE
+    and gGlobalSyncTable.gamemode == SARDINES then
+        if  (s.state  == WILDCARD_ROLE or s.state  == RUNNER or s.state  == SPECTATOR)
+        and (rS.state == WILDCARD_ROLE or rS.state == RUNNER or rS.state == SPECTATOR) then
+            djui_chat_message_create("\\#BBBEA1\\Sardine Chat: " .. get_player_name(m.playerIndex) .. ": \\#dcdcdc\\" .. msg)
+            play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
+            return false
+        elseif s.state ~= TAGGER or rS.state ~= TAGGER then
+            return false
+        end
+    end
+
+    djui_chat_message_create(get_player_name(m.playerIndex) .. ": \\#dcdcdc\\" .. msg)
+    play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
+    return false
+end
+
 ---@param m MarioState
 local function act_nothing(m)
     -- great action am I right
@@ -1656,6 +1689,8 @@ hook_event(HOOK_BEFORE_SET_MARIO_ACTION, before_set_mario_action)
 hook_event(HOOK_ON_WARP, on_warp)
 -- runs on level initialization
 hook_event(HOOK_ON_LEVEL_INIT, level_init)
+-- runs when the player sends a chat message
+hook_event(HOOK_ON_CHAT_MESSAGE, on_chat_message)
 -- make sure the user can never pause exit
 hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
 -- this hook allows us to walk on lava and quicksand

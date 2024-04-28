@@ -92,6 +92,26 @@ function strip_hex(name)
 	return s
 end
 
+function get_hex_from_string(name)
+	-- create variables
+	local s = ''
+	local inSlash = false
+	-- the way this works is if your in a slash, you add the characters in the slash,
+	-- otherwise, you do nothing, this allows you to keep the hex only
+
+	-- loop thru each character in the string
+	for i = 1, #name do
+		local c = name:sub(i,i)
+		if c == '\\' then
+			-- we are now in (or out) of the slash, set variable accordingly
+			inSlash = not inSlash
+		elseif inSlash then
+			s = s .. c
+		end
+	end
+	return s
+end
+
 local roundStatusTimer = 0
 
 function check_round_status()
@@ -586,7 +606,13 @@ end
 ---@param localIndex integer
 ---@return string
 function get_player_name(localIndex)
-	return network_get_player_text_color_string(localIndex) .. gNetworkPlayers[localIndex].name
+	local s = gPlayerSyncTable[localIndex]
+	local title = ""
+
+	if s.playerTitle ~= nil then
+		title = "\\" .. get_hex_from_string(s.playerTitle) .. "\\" .. "[" .. strip_hex(s.playerTitle) .. "] "
+	end
+	return title .. network_get_player_text_color_string(localIndex) .. gNetworkPlayers[localIndex].name
 end
 
 function get_gamemode_without_hex(g)

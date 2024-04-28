@@ -39,7 +39,7 @@ achievements = {
         description = "Play your first game of Tag!",
         ---@type Reward
         reward = {
-            title = "Noob",
+            title = "\\#dcdcdc\\Noob",
             trail = nil,
         },
         initFunc = nil,
@@ -58,7 +58,7 @@ achievements = {
         description = "Tag A Player!",
         ---@type Reward
         reward = {
-            title = "Beginner",
+            title = "\\#dcdcdc\\Beginner",
             trail = nil,
         },
         initFunc = nil,
@@ -90,7 +90,7 @@ achievements = {
         description = "Get 50 Tags!",
         ---@type Reward
         reward = {
-            title = "Tagger",
+            title = "\\#E82E2E\\Tagger",
             trail = nil,
         },
         initFunc = nil,
@@ -106,7 +106,7 @@ achievements = {
         description = "Get 100 Tags!",
         ---@type Reward
         reward = {
-            title = "Aggresive Tagger",
+            title = "\\#A62D24\\Aggresive Tagger",
             trail = nil,
         },
         initFunc = nil,
@@ -122,7 +122,7 @@ achievements = {
         description = "Get 1000 Tags!",
         ---@type Reward
         reward = {
-            title = "Expert Tagger",
+            title = "\\#E82E2E\\Expert Tagger",
             trail = nil,
         },
         initFunc = nil,
@@ -138,7 +138,7 @@ achievements = {
         description = "Play for 1 hour total!",
         ---@type Reward
         reward = {
-            title = "1 Hour In",
+            title = "\\#dcdcdc\\1 Hour In",
             trail = nil,
         },
         initFunc = nil,
@@ -154,7 +154,7 @@ achievements = {
         description = "Play for 12 hours total!",
         ---@type Reward
         reward = {
-            title = "12 Hours In",
+            title = "\\#999999\\12 Hours In",
             trail = nil,
         },
         initFunc = nil,
@@ -170,7 +170,7 @@ achievements = {
         description = "Play for 24 hours total!",
         ---@type Reward
         reward = {
-            title = "24 Hours In",
+            title = "\\#636363\\24 Hours In",
             trail = nil,
         },
         initFunc = nil,
@@ -186,7 +186,7 @@ achievements = {
         description = "Play for 48 hours total!",
         ---@type Reward
         reward = {
-            title = "Grinding Tag",
+            title = "\\#FFD700\\Grinding Tag",
             trail = nil,
         },
         initFunc = nil,
@@ -202,7 +202,7 @@ achievements = {
         description = "Play for 7 hours in a single session!",
         ---@type Reward
         reward = {
-            title = "I'm In When I'm In",
+            title = "\\#4287f5\\I'm In When I'm In",
             trail = nil,
         },
         initFunc = nil,
@@ -214,11 +214,11 @@ achievements = {
     },
     ---@type Achievement
     {
-        name = "Dang, good marathon!",
-        description = "Play for 26 hours in a single session!",
+        name = "Dang, a half a day, really?!",
+        description = "Play for 12 hours in a single session!",
         ---@type Reward
         reward = {
-            title = "Running Marathon's",
+            title = "\\#316BE8\\Running For Days",
             trail = nil,
         },
         initFunc = nil,
@@ -228,7 +228,7 @@ achievements = {
             if s.state ~= SPECTATOR then
                 marathonTimer = marathonTimer + 1
             end
-            if marathonTimer / 30 / 60 / 60 >= 26 then
+            if marathonTimer / 30 / 60 / 60 >= 12 then
                 return true
             end
         end
@@ -239,7 +239,7 @@ achievements = {
         description = "Tag 5 players within 30 seconds!",
         ---@type Reward
         reward = {
-            title = "Speeding Tagger",
+            title = "\\#316BE8\\Speeding Tagger",
             ---@type Trail
             trail = {
                 name = "Speeding Trail",
@@ -278,7 +278,7 @@ achievements = {
         description = "Get every achievement in the game!",
         ---@type Reward
         reward = {
-            title = "Tag Master",
+            title = "\\#8D4D8B\\Tag Master",
             trail = {
                 name = "The Master Trail",
                 model = smlua_model_util_get_id("master_trail_geo"),

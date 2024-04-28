@@ -243,35 +243,6 @@ local function allow_interact(m, o, intee)
     end
 end
 
-local function on_chat_message(m, msg)
-
-    -- use mariohunt api, since Emily did all the work already
-    if _G.mhApi.chatValidFunction and _G.mhApi.chatValidFunction(m, msg) == false then
-        return false
-    end
-
-    if _G.mhApi.chatModifyFunction then
-        -- ignore name, as it's not used here
-        local msg_, _ = _G.mhApi.chatModifyFunction(m, msg)
-        if msg_ then msg = msg_ end
-    end
-
-    local s = gPlayerSyncTable[0]
-    local rS = gPlayerSyncTable[m.playerIndex]
-
-    if gGlobalSyncTable.roundState == ROUND_ACTIVE
-    and gGlobalSyncTable.gamemode == SARDINES then
-        if  (s.state  == FINISHED or s.state  == RUNNER or s.state  == SPECTATOR)
-        and (rS.state == FINISHED or rS.state == RUNNER or rS.state == SPECTATOR) then
-            djui_chat_message_create("\\#BBBEA1\\Sardine Chat: " .. get_player_name(m.playerIndex) .. ": \\#dcdcdc\\" .. msg)
-            play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
-            return false
-        elseif s.state ~= TAGGER or rS.state ~= TAGGER then
-            return false
-        end
-    end
-end
-
 ---@param m MarioState
 local function character_sound(m)
 
@@ -289,5 +260,4 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
-hook_event(HOOK_ON_CHAT_MESSAGE, on_chat_message)
 hook_event(HOOK_CHARACTER_SOUND, character_sound)
