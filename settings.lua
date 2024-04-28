@@ -1674,6 +1674,38 @@ local function reset_title_reward_entries()
         }
     }
 
+    if achievements.owner ~= nil then
+        valueText = "Unequipped"
+        if achievements.owner.reward.title == gPlayerSyncTable[0].playerTitle then
+            valueText = "Equipped"
+        end
+        table.insert(titleRewardEntries, {
+            name = achievements.owner.reward.title,
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                gPlayerSyncTable[0].playerTitle = achievements.owner.reward.title
+            end,
+            valueText = valueText
+        })
+    end
+
+    if achievements.developer ~= nil then
+        valueText = "Unequipped"
+        if achievements.developer.reward.title == gPlayerSyncTable[0].playerTitle then
+            valueText = "Equipped"
+        end
+        table.insert(titleRewardEntries, {
+            name = achievements.developer.reward.title,
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                gPlayerSyncTable[0].playerTitle = achievements.developer.reward.title
+            end,
+            valueText = valueText
+        })
+    end
+
     for i, achievement in pairs(achievements) do
         -- if we completed the achievement, add the title to the entry
         if  completedAchievements[i] == true

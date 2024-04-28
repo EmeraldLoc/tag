@@ -1,18 +1,18 @@
 
 ---@class Trail
----@field public name      string|nil
----@field public model     integer|ModelExtendedId|nil
+---@field public name        string|nil
+---@field public model       integer|ModelExtendedId|nil
 
 ---@class Reward
----@field public title     string|nil
----@field public trail     Trail|nil
+---@field public title       string|nil
+---@field public trail       Trail|nil
 
 ---@class Achievement
----@field public name      string
----@field public guide     string
----@field public reward    Reward
----@field public initFunc  function
----@field public loopFunc  function
+---@field public name        string
+---@field public description string
+---@field public reward      Reward
+---@field public initFunc    function|nil
+---@field public loopFunc    function|nil
 
 local marathonTimer = 0
 local speedingTimer = 0
