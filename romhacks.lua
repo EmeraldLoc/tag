@@ -211,6 +211,20 @@ romhacks = {
                 painting = get_texture_info("bitdw_painting"),
                 area = 1,
                 pipes = nil
+            },
+            {
+                -- level added by Murioz
+                name = "vcutm",
+                level = LEVEL_VCUTM,
+                painting = get_texture_info("vcutm_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -3560, y = 5734, z = -6142 },
+                        { x = 4500, y = 0, z = -5529 }
+                    }
+                },
+                overrideName = "Under The Moat"
             }
         },
     },
