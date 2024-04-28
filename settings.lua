@@ -1545,6 +1545,17 @@ local function reset_achievement_entries()
             valueText = "\\#FFD700\\Completed"
         end
 
+        if achievements.owner ~= nil then
+            if achievement.name == achievements.owner.name
+            or achievement.name == achievements.developer.name then
+                goto continue
+            end
+        elseif achievements.developer ~= nil then
+            if achievement.name == achievements.developer.name then
+                goto continue
+            end
+        end
+
         table.insert(achievementEntries, {
             name = achievement.name,
             permission = PERMISSION_NONE,
@@ -1556,6 +1567,8 @@ local function reset_achievement_entries()
             end,
             valueText = valueText
         })
+
+        ::continue::
     end
 
     table.insert(achievementEntries, {
@@ -1578,10 +1591,15 @@ local function reset_achievement_entries()
         end
 
         entries = achievementEntries
+
+        bgWidth = 750
     elseif entries ~= achievementEntry then
         sentAchievementPacket = false
         achievementIndex = 0
         remoteCompletedAchievements = {}
+        bgWidth = 600
+    else
+        bgWidth = 750
     end
 end
 
@@ -1830,25 +1848,6 @@ local function hud_render()
 
     background()
     settings_text()
-    -- reconstruct tables
-    reset_main_selections()
-    reset_general_selection()
-    reset_gamemode_selection()
-    reset_start_selection()
-    reset_player_selection()
-    reset_blacklist_levels_entries()
-    reset_blacklist_gamemode_entries()
-    reset_blacklist_modifier_entries()
-    reset_bind_entries()
-    reset_romhack_entries()
-    reset_stat_player_selections_entries()
-    reset_stat_group_entries()
-    reset_stat_entries()
-    reset_achievement_players_entries()
-    reset_achievement_entry()
-    reset_achievement_entries()
-    reset_title_reward_entries()
-    reset_trails_reward_entries()
 
     local height = 90
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
@@ -2022,6 +2021,27 @@ local function mario_update(m)
             play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
         end
     end
+
+    -- reconstruct tables
+    -- do this in mario update so it's more responsive
+    reset_main_selections()
+    reset_general_selection()
+    reset_gamemode_selection()
+    reset_start_selection()
+    reset_player_selection()
+    reset_blacklist_levels_entries()
+    reset_blacklist_gamemode_entries()
+    reset_blacklist_modifier_entries()
+    reset_bind_entries()
+    reset_romhack_entries()
+    reset_stat_player_selections_entries()
+    reset_stat_group_entries()
+    reset_stat_entries()
+    reset_achievement_players_entries()
+    reset_achievement_entry()
+    reset_achievement_entries()
+    reset_title_reward_entries()
+    reset_trails_reward_entries()
 end
 
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
