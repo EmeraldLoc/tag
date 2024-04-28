@@ -1,9 +1,4 @@
 
--- this is the boost trail model
-E_MODEL_DEFAULT_TRAIL = smlua_model_util_get_id("boost_trail_geo")
-E_MODEL_MASTER_TRAIL = smlua_model_util_get_id("master_trail_geo")
-E_MODEL_BOOST_TRAIL = E_MODEL_DEFAULT_TRAIL
-
 ---@param table table
 ---@param element any
 function table.contains(table, element)
@@ -397,7 +392,7 @@ function generate_boost_trail()
 	for i = 0, MAX_PLAYERS - 1 do
 		-- ensure we are connected and are boosting
 		if not gNetworkPlayers[i].connected then goto continue end
-		if not gPlayerSyncTable[i].boosting then goto continue end
+		--if not gPlayerSyncTable[i].boosting then goto continue end
 
 		E_MODEL_BOOST_TRAIL = gPlayerSyncTable[i].playerTrail
 

@@ -3,14 +3,9 @@
 ---@field public name      string|nil
 ---@field public model     integer|ModelExtendedId|nil
 
----@class Banner
----@field public name      string|nil
----@field public texture   TextureInfo|nil
-
 ---@class Reward
 ---@field public title     string|nil
 ---@field public trail     Trail|nil
----@field public banner    Banner|nil
 
 ---@class Achievement
 ---@field public name      string
@@ -31,11 +26,7 @@ achievements = {
         ---@type Reward
         reward = {
             title = nil,
-            trail = {
-                name = "Default Trail",
-                model = E_MODEL_DEFAULT_TRAIL,
-            },
-            banner = nil,
+            trail = nil,
         },
         initFunc = function ()
             return true
@@ -48,9 +39,8 @@ achievements = {
         description = "Play your first game of Tag!",
         ---@type Reward
         reward = {
-            title = "Beginner",
+            title = "Noob",
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -68,9 +58,8 @@ achievements = {
         description = "Tag A Player!",
         ---@type Reward
         reward = {
-            title = "Player",
+            title = "Beginner",
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -87,7 +76,6 @@ achievements = {
         reward = {
             title = nil,
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -104,7 +92,6 @@ achievements = {
         reward = {
             title = "Tagger",
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -121,7 +108,6 @@ achievements = {
         reward = {
             title = "Aggresive Tagger",
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -138,7 +124,6 @@ achievements = {
         reward = {
             title = "Expert Tagger",
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -153,9 +138,8 @@ achievements = {
         description = "Play for 1 hour total!",
         ---@type Reward
         reward = {
-            title = "1 Hours In",
+            title = "1 Hour In",
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -172,7 +156,6 @@ achievements = {
         reward = {
             title = "12 Hours In",
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -189,7 +172,6 @@ achievements = {
         reward = {
             title = "24 Hours In",
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -206,7 +188,6 @@ achievements = {
         reward = {
             title = "Grinding Tag",
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -223,7 +204,6 @@ achievements = {
         reward = {
             title = "I'm In When I'm In",
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -240,7 +220,6 @@ achievements = {
         reward = {
             title = "Running Marathon's",
             trail = nil,
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -265,7 +244,6 @@ achievements = {
             trail = {
 
             },
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()
@@ -302,9 +280,8 @@ achievements = {
             title = "Tag Master",
             trail = {
                 name = "The Master Trail",
-                model = E_MODEL_MASTER_TRAIL,
+                model = smlua_model_util_get_id("master_trail_geo"),
             },
-            banner = nil,
         },
         initFunc = nil,
         loopFunc = function ()

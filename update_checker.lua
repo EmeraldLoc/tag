@@ -1,6 +1,6 @@
 
 version = "v2.4"
-local prevVersion = "v2.31"
+local prevVersion = "v2.32"
 local finishedChecking = false
 local updateFile = nil
 local updateTimer = 0

@@ -613,6 +613,39 @@ achievementEntry = {}
 achievementEntries = {}
 achievementsPlayerEntries = {}
 
+-- rewards entry
+titleRewardEntries = {}
+trailRewardEntries = {}
+rewardEntries = {
+    {
+        name = "Titles",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = titleRewardEntries
+            selection = 1
+        end,
+    },
+    {
+        name = "Trails",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = trailRewardEntries
+            selection = 1
+        end,
+    },
+    {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = mainEntries
+            selection = 1
+        end,
+    }
+}
+
 entries = mainEntries
 
 local function background()
@@ -739,6 +772,14 @@ local function reset_main_selections()
         input = INPUT_A,
         func = function ()
             entries = achievementsPlayerEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        {name = "Rewards",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = rewardEntries
             selection = 1
         end,
         valueText = ">",},
@@ -1569,14 +1610,6 @@ local function reset_achievement_entry()
             trailValue = achievement.reward.trail.name
         end
 
-        local bannerName = nil
-        local bannerValue = nil
-
-        if achievement.reward.banner ~= nil then
-            bannerName = "Banner"
-            bannerValue = achievement.reward.banner.name
-        end
-
         achievementEntry = {
             {
                 name = "Name",
@@ -1601,13 +1634,6 @@ local function reset_achievement_entry()
                 valueText = trailValue,
             })
         end
-
-        if bannerName ~= nil then
-            table.insert(achievementEntry, {
-                name = bannerName,
-                valueText = bannerValue,
-            })
-        end
     end
 
     table.insert(achievementEntry, {
@@ -1624,6 +1650,119 @@ local function reset_achievement_entry()
         entries = achievementEntry
     else
         achievementEntryIndex = 0
+    end
+end
+
+local function reset_title_reward_entries()
+    local resetTitleEntries = entries == titleRewardEntries
+
+    local valueText = "Unequipped"
+
+    if gPlayerSyncTable[0].playerTitle == nil then
+        valueText = "Equipped"
+    end
+
+    titleRewardEntries = {
+        {
+            name = "None",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                gPlayerSyncTable[0].playerTitle = nil
+            end,
+            valueText = valueText
+        }
+    }
+
+    for i, achievement in pairs(achievements) do
+        -- if we completed the achievement, add the title to the entry
+        if  completedAchievements[i] == true
+        and achievement.reward.title ~= nil then
+            valueText = "Unequipped"
+            if achievement.reward.title == gPlayerSyncTable[0].playerTitle then
+                valueText = "Equipped"
+            end
+            table.insert(titleRewardEntries, {
+                name = achievement.reward.title,
+                permission = PERMISSION_NONE,
+                input = INPUT_A,
+                func = function ()
+                    gPlayerSyncTable[0].playerTitle = achievement.reward.title
+                end,
+                valueText = valueText
+            })
+        end
+    end
+
+    table.insert(titleRewardEntries, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = rewardEntries
+            selection = 1
+        end
+    })
+
+    if resetTitleEntries then
+        entries = titleRewardEntries
+    end
+end
+
+local function reset_trails_reward_entries()
+    local resetTrailEntries = entries == trailRewardEntries
+
+    local valueText = "Unequipped"
+
+    if gPlayerSyncTable[0].playerTrail == smlua_model_util_get_id("boost_trail_geo") then
+        valueText = "Equipped"
+    end
+
+    trailRewardEntries = {
+        {
+            name = "Default Trail",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                gPlayerSyncTable[0].playerTrail = smlua_model_util_get_id("boost_trail_geo")
+            end,
+            valueText = valueText
+        }
+    }
+
+    for i, achievement in pairs(achievements) do
+        -- if we completed the achievement, add the trail to the entry
+        if  completedAchievements[i] == true
+        and achievement.reward.trail ~= nil then
+            valueText = "Unequipped"
+            if achievement.reward.trail.model == gPlayerSyncTable[0].playerTrail then
+                valueText = "Equipped"
+            end
+
+            table.insert(trailRewardEntries, {
+                name = achievement.reward.trail.name,
+                permission = PERMISSION_NONE,
+                input = INPUT_A,
+                func = function ()
+                    gPlayerSyncTable[0].playerTrail = achievement.reward.trail.model
+                end,
+                valueText = valueText
+            })
+        end
+    end
+
+    table.insert(trailRewardEntries, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = rewardEntries
+            selection = 1
+        end
+    })
+
+    if resetTrailEntries then
+        entries = trailRewardEntries
     end
 end
 
@@ -1672,6 +1811,8 @@ local function hud_render()
     reset_achievement_players_entries()
     reset_achievement_entry()
     reset_achievement_entries()
+    reset_title_reward_entries()
+    reset_trails_reward_entries()
 
     local height = 90
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
