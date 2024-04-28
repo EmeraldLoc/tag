@@ -322,6 +322,22 @@ achievements = {
             end
         end
     },
+    ---@type Achievement
+    {
+        name = "You're pretty good at terminating people...",
+        description = "Win 5 Times as the Terminator!",
+        ---@type Reward
+        reward = {
+            title = "\\#7D2A24\\A Terminator",
+            trail = nil,
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats[TERMINATOR].taggerVictories >= 5 then
+                return true
+            end
+        end
+    },
 }
 
 local initializedAchievements = false
