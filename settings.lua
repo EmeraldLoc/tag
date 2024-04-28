@@ -1552,29 +1552,62 @@ local function reset_achievement_entry()
     local achievement = achievements[achievementEntryIndex]
 
     if achievement ~= nil then
+
+        local titleName = nil
+        local titleValue = nil
+
+        if achievement.reward.title ~= nil then
+            titleName = "Title"
+            titleValue = achievement.reward.title
+        end
+
+        local trailName = nil
+        local trailValue = nil
+
+        if achievement.reward.trail ~= nil then
+            trailName = "Trail"
+            trailValue = achievement.reward.trail.name
+        end
+
+        local bannerName = nil
+        local bannerValue = nil
+
+        if achievement.reward.banner ~= nil then
+            bannerName = "Banner"
+            bannerValue = achievement.reward.banner.name
+        end
+
         achievementEntry = {
             {
-                name = "Name:",
+                name = "Name",
                 valueText = achievement.name
             },
             {
-                name = "Description:",
+                name = "Description",
                 valueText = achievement.description,
             },
-            {
-                name = "Title:",
-                valueText = achievement.reward.title,
-                seperator = "Rewards"
-            },
-            {
-                name = "Trail:",
-                valueText = achievement.reward.trail,
-            },
-            {
-                name = "Banner:",
-                valueText = achievement.reward.banner,
-            },
         }
+
+        if titleName ~= nil then
+            table.insert(achievementEntry, {
+                name = titleName,
+                valueText = titleValue,
+            })
+        end
+
+        if trailName ~= nil then
+            table.insert(achievementEntry, {
+                name = trailName,
+                valueText = trailValue,
+            })
+        end
+
+        if bannerName ~= nil then
+            table.insert(achievementEntry, {
+                name = bannerName,
+                valueText = bannerValue,
+            })
+        end
     end
 
     table.insert(achievementEntry, {
@@ -1651,8 +1684,8 @@ local function hud_render()
                 height = height + 60
                 goto continue
             end
-            height = height + 45
 
+            height = height + 45
 
             djui_hud_set_color(220, 220, 220, 255)
             djui_hud_print_colored_text(entries[i].seperator, x + 30, y + height + 4 - scrollOffset, 1)
@@ -1719,7 +1752,9 @@ local function hud_render()
             djui_hud_set_color(220, 220, 220, 255)
         end
 
-        djui_hud_print_colored_text(tostring(entries[i].name), x + 30, y + height + 4 - scrollOffset, 1)
+        if entries[i].name ~= nil then
+            djui_hud_print_colored_text(tostring(entries[i].name), x + 30, y + height + 4 - scrollOffset, 1)
+        end
 
         if entries[i].valueText ~= nil then
             djui_hud_set_color(220, 220, 220, 255)

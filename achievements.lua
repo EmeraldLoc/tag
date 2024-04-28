@@ -1,8 +1,16 @@
 
+---@class Trail
+---@field public name      string|nil
+---@field public model     integer|ModelExtendedId|nil
+
+---@class Banner
+---@field public name      string|nil
+---@field public texture   TextureInfo|nil
+
 ---@class Reward
 ---@field public title     string|nil
----@field public trail     ModelExtendedId|nil
----@field public banner    string|nil
+---@field public trail     Trail|nil
+---@field public banner    Banner|nil
 
 ---@class Achievement
 ---@field public name      string
@@ -19,10 +27,28 @@ achievements = {
     ---@type Achievement
     {
         name = "Welcome to Tag",
+        description = "Launch Tag!",
+        ---@type Reward
+        reward = {
+            title = nil,
+            trail = {
+                name = "Default Trail",
+                model = E_MODEL_DEFAULT_TRAIL,
+            },
+            banner = nil,
+        },
+        initFunc = function ()
+            return true
+        end,
+        loopFunc = nil
+    },
+    ---@type Achievement
+    {
+        name = "One match in!",
         description = "Play your first game of Tag!",
         ---@type Reward
         reward = {
-            title = "Noob",
+            title = "Beginner",
             trail = nil,
             banner = nil,
         },
@@ -123,7 +149,7 @@ achievements = {
     },
     ---@type Achievement
     {
-        name = "An hour Ccmes, a hour goes.",
+        name = "An hour comes, a hour goes.",
         description = "Play for 1 hour total!",
         ---@type Reward
         reward = {
@@ -235,7 +261,10 @@ achievements = {
         ---@type Reward
         reward = {
             title = "Speeding Tagger",
-            trail = nil,
+            ---@type Trail
+            trail = {
+
+            },
             banner = nil,
         },
         initFunc = nil,
@@ -261,6 +290,34 @@ achievements = {
                 end
             else
                 speedingTimer = 0
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "Welp, you've mastered the game!",
+        description = "Get every achievement in the game!",
+        ---@type Reward
+        reward = {
+            title = "Tag Master",
+            trail = {
+                name = "The Master Trail",
+                model = E_MODEL_MASTER_TRAIL,
+            },
+            banner = nil,
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            local mastered = true
+            for i, achievement in pairs(achievements) do
+                if  completedAchievements[i] ~= true
+                and achievement.reward.title ~= "Tag Master" then
+                    mastered = false
+                end
+            end
+
+            if mastered then
+                return true
             end
         end
     },
