@@ -93,7 +93,10 @@ achievements = {
         ---@type Reward
         reward = {
             title = "\\#E82E2E\\Tagger",
-            trail = nil,
+            trail = {
+                name = "Tagger Trail",
+                model = smlua_model_util_get_id("tagger_trail_geo")
+            },
         },
         initFunc = nil,
         loopFunc = function ()
@@ -109,7 +112,10 @@ achievements = {
         ---@type Reward
         reward = {
             title = "\\#A62D24\\Aggresive Tagger",
-            trail = nil,
+            trail = {
+                name = "Aggresive Tagger Trail",
+                model = smlua_model_util_get_id("aggresive_tagger_trail_geo")
+            },
         },
         initFunc = nil,
         loopFunc = function ()
@@ -125,7 +131,10 @@ achievements = {
         ---@type Reward
         reward = {
             title = "\\#E82E2E\\Expert Tagger",
-            trail = nil,
+            trail = {
+                name = "Tagger Ring Trail",
+                model = smlua_model_util_get_id("tagger_ring_trail_geo")
+            },
         },
         initFunc = nil,
         loopFunc = function ()
@@ -325,15 +334,37 @@ achievements = {
     ---@type Achievement
     {
         name = "You're pretty good at terminating people...",
-        description = "Win 5 Times as the Terminator!",
+        description = "Win 10 Times as the Terminator!",
         ---@type Reward
         reward = {
-            title = "\\#7D2A24\\A Terminator",
-            trail = nil,
+            title = "\\#7D2A24\\Beginner Terminator",
+            trail = {
+                name = "Terminator Trail",
+                model = smlua_model_util_get_id("terminator_trail_geo")
+            },
         },
         initFunc = nil,
         loopFunc = function ()
-            if stats[TERMINATOR].taggerVictories >= 5 then
+            if stats[TERMINATOR].taggerVictories >= 10 then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "Wow, you're very good with those terminations!",
+        description = "Win 50 Times as the Terminator!",
+        ---@type Reward
+        reward = {
+            title = "\\#7D2A24\\Terminator",
+            trail = {
+                name = "Terminator Ring Trail",
+                model = smlua_model_util_get_id("terminator_ring_trail_geo")
+            },
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats[TERMINATOR].taggerVictories >= 10 then
                 return true
             end
         end

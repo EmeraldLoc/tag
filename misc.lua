@@ -421,7 +421,7 @@ function generate_boost_trail()
 		local m = gMarioStates[i]
 
 		local x = m.pos.x
-		local y = m.pos.y + 5
+		local y = m.pos.y + 15
 		local z = m.pos.z
 
 		-- spawn boost particle object
