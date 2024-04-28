@@ -1,4 +1,4 @@
--- name: \\#316BE8\\Tag (v2.4 Beta)\\#dcdcdc\\
+-- name: \\#316BE8\\Tag (v2.32)\\#dcdcdc\\
 -- description: All Tag Related Gamemodes!\n\nThis mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and more, with modifiers, and full romhack support!\n\nThis mod includes a blacklist command to blacklist bad levels in romhacks\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\ and\\#ff7f00\\ Agent X\\#dcdcdc\\\n\nPainting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi\n\nRomhack Porters are in the romhacks.lua file.
 -- incompatible: gamemode tag
 
@@ -1225,10 +1225,10 @@ local function mario_update(m)
         end
 
         -- check if we are in the room the level wants us to be in
-        if selectedLevel.room ~= nil
+        if  selectedLevel.room ~= nil
         and current_mario_room_check(selectedLevel.room) ~= 1
         and np.currAreaSyncValid and (roomTimer > 5 * 30
-        or gGlobalSyncTable.roundState == ROUND_WAIT) then
+        or  gGlobalSyncTable.roundState == ROUND_WAIT) then
             local randomLevel = gGlobalSyncTable.selectedLevel + 1
             if levels[randomLevel] == nil then
                 randomLevel = gGlobalSyncTable.selectedLevel - 1
@@ -1261,7 +1261,8 @@ local function mario_update(m)
                 if gGlobalSyncTable.gamemode == TAG
                 or gGlobalSyncTable.gamemode == INFECTION
                 or gGlobalSyncTable.gamemode == HOT_POTATO
-                or gGlobalSyncTable.gamemode == ASSASSINS then
+                or gGlobalSyncTable.gamemode == ASSASSINS
+                or gGlobalSyncTable.gamemode == TERMINATOR then
                     gPlayerSyncTable[0].state = WILDCARD_ROLE
                 else
                     gPlayerSyncTable[0].state = TAGGER
