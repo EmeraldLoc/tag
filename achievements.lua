@@ -387,7 +387,9 @@ local function completed_achievement(i)
 end
 
 local function mario_update(m)
+    local np = gNetworkPlayers[m.playerIndex]
     if m.playerIndex ~= 0 then return end
+    if not np.currAreaSyncValid then return end
 
     -- loop thru all achievements
     for i, achievement in pairs(achievements) do
