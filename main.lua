@@ -1290,7 +1290,15 @@ local function mario_update(m)
             roomTimer = 0
         end
 
-        -- handle speed boost, this is a fun if statement
+        if m.pos.y <= -10000 then
+            local randomLevel = gGlobalSyncTable.selectedLevel + 1
+            if levels[randomLevel] == nil then
+                randomLevel = gGlobalSyncTable.selectedLevel - 1
+            end
+            warp_to_level(levels[randomLevel].level, 1, 0)
+        end
+
+        -- handle speed boost
         if m.controller.buttonPressed & binds[BIND_BOOST].btn ~= 0
         and speedBoostTimer >= 20 * 30
         and gPlayerSyncTable[0].state == TAGGER
