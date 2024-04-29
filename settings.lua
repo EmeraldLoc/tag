@@ -881,11 +881,7 @@ local function reset_general_selection()
 end
 
 local function reset_gamemode_selection()
-    local resetGamemodeEntries = false
-
-    if entries == gamemodeEntries then
-        resetGamemodeEntries = true
-    end
+    local resetGamemodeEntries = entries == gamemodeEntries
 
     -- gamemode entries
     gamemodeEntries = {
@@ -1321,7 +1317,7 @@ local function reset_stat_group_entries()
             entries = statEntries
             statGroupIndex = -1
             selection = 1
-        end,},
+        end},
     }
 
     for i = MIN_GAMEMODE, MAX_GAMEMODE do
@@ -1548,11 +1544,11 @@ local function reset_achievement_entries()
         if achievements.owner ~= nil then
             if achievement.name == achievements.owner.name
             or achievement.name == achievements.developer.name then
-                goto continue
+                valueText = "\\#FFD700\\Completed"
             end
         elseif achievements.developer ~= nil then
             if achievement.name == achievements.developer.name then
-                goto continue
+                valueText = "\\#FFD700\\Completed"
             end
         end
 
@@ -1567,8 +1563,6 @@ local function reset_achievement_entries()
             end,
             valueText = valueText
         })
-
-        ::continue::
     end
 
     table.insert(achievementEntries, {

@@ -1334,7 +1334,9 @@ local function mario_update(m)
                 m.freeze = 0
             end
         end
-
+        if not np.currAreaSyncValid then
+            table_to_string(achievements)
+        end
         -- sync tick tock clock speed
         if get_ttc_speed_setting() ~= gGlobalSyncTable.ttcSpeed then
             set_ttc_speed_setting(gGlobalSyncTable.ttcSpeed)

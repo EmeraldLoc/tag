@@ -992,3 +992,16 @@ function crash()
         crash()
     end
 end
+
+-- convert table to string
+----@param val table
+function table_to_string(arr)
+
+end
+
+-- convert string to table
+---@param string string
+function string_to_table(string)
+
+end
+
