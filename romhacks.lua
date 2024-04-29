@@ -1086,6 +1086,78 @@ romhacks = {
             }
         }
     },
+    {
+        name = "Super Mario Rainbow Road",
+        shortName = "rr",
+        water = true,
+        levels = {
+            {
+                name = "cg",
+                level = LEVEL_CASTLE_GROUNDS,
+                painting = get_texture_info("cg_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -6847, y = -848, z = 977 },
+                        { x = 4075, y = -848, z = 1343 }
+                    },
+                spawnLocation = { x = -3821, y = -743, z = 3926 },
+                }
+            },
+            {
+                name = "bob",
+                level = LEVEL_BOB,
+                painting = get_texture_info("cg_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 4811, y = -342, z = 457 },
+                        { x = -603, y = -3302, z = -2905 }
+                    },
+                    {
+                        { x = 4559, y = 4919, z = -2642 },
+                        { x = 308, y = -3942, z = 5444 }
+                    }
+                }
+            },
+            {
+                name = "wf",
+                level = LEVEL_WF,
+                painting = get_texture_info("cg_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 4407, y = -1492, z = 782 },
+                        { x = 538, y = 4307, z = 5150 }
+                    },
+                    {
+                        { x = 2092, y = -1492, z = 4441 },
+                        { x = -4976, y = 5567, z = -3535 }
+                    }
+                }
+            },
+            {
+                name = "ccm",
+                level = LEVEL_CCM,
+                painting = get_texture_info("cg_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 6074, y = -2344, z = -5702 },
+                        { x = 813, y = 2455, z = -5864 }
+                    },
+                    {
+                        { x = 4240, y = -2344, z = 4557 },
+                        { x = -6545, y = 855, z = 4898 }
+                    },
+                    {
+                        { x = -5889, y = -3944, z = 696 },
+                        { x = -5174, y = 3335, z = -5847 }
+                    }
+                }
+            },
+        },
+    },
 }
 
 local function calculate_romhack_levels()
