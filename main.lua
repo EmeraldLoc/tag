@@ -1645,6 +1645,7 @@ local function on_warp()
     local level = levels[gGlobalSyncTable.selectedLevel]
 
     if level ~= nil and level.spawnLocation ~= nil then
+        set_mario_action(m, ACT_FREEFALL, 0)
         vec3f_copy(m.pos, level.spawnLocation)
 
         reset_standing_still()
