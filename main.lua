@@ -1221,6 +1221,10 @@ local function mario_update(m)
         end
 
         -- get rid of unwated behaviors (no better way to do it other than this block of text)
+        unwantedEnemies = {
+            amp = { name = "Amp", bhvs = { id_bhvCirclingAmp, id_bhvHomingAmp } },
+            boo = { name = "Boo", bhvs = { id_bhvBoo, id_bhvBooInCastle, id_bhvBalconyBigBoo, id_bhvGhostHuntBigBoo, id_bhvMerryGoRoundBigBoo } },
+        }
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhv1Up))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBubba))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvOneCoin))
@@ -1689,7 +1693,11 @@ local function on_chat_message(m, msg)
         if  (s.state  == WILDCARD_ROLE or s.state  == RUNNER or s.state  == SPECTATOR)
         and (rS.state == WILDCARD_ROLE or rS.state == RUNNER or rS.state == SPECTATOR) then
             djui_chat_message_create("\\#BBBEA1\\Sardine Chat: " .. get_player_name(m.playerIndex) .. ": \\#dcdcdc\\" .. msg)
-            play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
+            if m.playerIndex == 0 then
+                play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
+            else
+                play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
+            end
             return false
         elseif s.state ~= TAGGER or rS.state ~= TAGGER then
             return false
@@ -1697,7 +1705,11 @@ local function on_chat_message(m, msg)
     end
 
     djui_chat_message_create(get_player_name(m.playerIndex) .. ": \\#dcdcdc\\" .. msg)
-    play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
+    if m.playerIndex == 0 then
+        play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
+    else
+        play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
+    end
     return false
 end
 
