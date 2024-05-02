@@ -50,7 +50,11 @@ local function pipe_loop(o)
         m.pos.y = otherPipe.oPosY + 200
         m.pos.z = otherPipe.oPosZ
 
-        set_mario_action(m, ACT_JUMP, 0)
+        if m.pos.y > m.waterLevel then
+            set_mario_action(m, ACT_JUMP, 0)
+        else
+            set_mario_action(m, ACT_BREASTSTROKE, 0)
+        end
 
         m.vel.y = 60
         m.forwardVel = 15
