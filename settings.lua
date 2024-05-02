@@ -646,6 +646,8 @@ rewardEntries = {
     }
 }
 
+enemyEntries = {}
+
 entries = mainEntries
 
 local function background()
@@ -780,6 +782,14 @@ local function reset_main_selections()
         input = INPUT_A,
         func = function ()
             entries = rewardEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        {name = "Enemies",
+        permission = PERMISSION_SERVER,
+        input = INPUT_A,
+        func = function ()
+            entries = enemyEntries
             selection = 1
         end,
         valueText = ">",},
@@ -1814,6 +1824,49 @@ local function reset_trails_reward_entries()
     end
 end
 
+local function resset_enemy_entries()
+    local resetEntries = entries == enemyEntries
+
+    enemyEntries = {}
+
+    for _, enemy in pairs(enemies) do
+        table.insert(enemyEntries, {
+            name = enemy.name,
+            permission = PERMISSION_SERVER,
+            input = INPUT_JOYSTICK,
+            func = function ()
+                enemy.active = not enemy.active
+            end,
+            valueText = on_off_text(enemy.active)
+        })
+    end
+
+    table.insert(enemyEntries, {
+        name = "Reset To Default",
+        permission = PERMISSION_SERVER,
+        input = INPUT_A,
+        func = function ()
+            for _, enemy in pairs(enemies) do
+                enemy.active = enemy.default
+            end
+        end
+    })
+
+    table.insert(enemyEntries, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = mainEntries
+            selection = 1
+        end
+    })
+
+    if resetEntries then
+        entries = enemyEntries
+    end
+end
+
 local function hud_render()
 
     if not showSettings then
@@ -2036,6 +2089,7 @@ local function mario_update(m)
     reset_achievement_entries()
     reset_title_reward_entries()
     reset_trails_reward_entries()
+    resset_enemy_entries()
 end
 
 hook_event(HOOK_ON_HUD_RENDER, hud_render)

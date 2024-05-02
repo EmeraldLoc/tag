@@ -1221,30 +1221,16 @@ local function mario_update(m)
         end
 
         -- get rid of unwated behaviors (no better way to do it other than this block of text)
-        unwantedEnemies = {
-            amp = { name = "Amp", bhvs = { id_bhvCirclingAmp, id_bhvHomingAmp } },
-            boo = { name = "Boo", bhvs = { id_bhvBoo, id_bhvBooInCastle, id_bhvBalconyBigBoo, id_bhvGhostHuntBigBoo, id_bhvMerryGoRoundBigBoo } },
-        }
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhv1Up))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBubba))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvOneCoin))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvRedCoin))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvRedCoinStarMarker))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvHeaveHo))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvHeaveHoThrowMario))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWhompKingBoss))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvSmallWhomp))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvMoneybag))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvMoneybagHidden))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvSpindrift))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvYoshi))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBulletBill))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvHoot))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvTweester))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowser))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowserBodyAnchor))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowserTailAnchor))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvKingBobomb))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStar))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStarSpawnCoordinates))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvSpawnedStar))
@@ -1253,7 +1239,6 @@ local function mario_update(m)
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvMetalCap))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvVanishCap))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBoo))
 
         -- water level diamond breaks water being disabled, so just get rid of it
         if not gGlobalSyncTable.water then
