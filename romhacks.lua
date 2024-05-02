@@ -83,6 +83,32 @@ romhacks = {
                 }
             },
             {
+                -- ported by Murioz
+                name = "bbh",
+                level = LEVEL_BBH,
+                painting = get_texture_info("bbh_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -3291, y = -204, z = 4997 },
+                        { x = 946, y = -2457, z = 1799 }
+                    },
+                    {
+                        { x = -403, y = -204, z = 2436 },
+                        { x = 657, y = 2867, z = 1568 }
+                    }
+                }
+            },
+            {
+                -- ported by Murioz
+                name = "totwc",
+                level = LEVEL_TOTWC,
+                painting = get_texture_info("totwc_painting"),
+                area = 1,
+                pipes = nil,
+                spawnLocation = { x = 2, y = -1620, z = 7 }
+            },
+            {
                 name = "ttm",
                 level = LEVEL_TTM,
                 painting = get_texture_info("ttm_painting"),
@@ -1153,6 +1179,30 @@ romhacks = {
                     {
                         { x = -5889, y = -3944, z = 696 },
                         { x = -5174, y = 3335, z = -5847 }
+                    }
+                }
+            },
+            {
+                name = "jrb",
+                level = LEVEL_JRB,
+                painting = get_texture_info("cg_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 1482, y = -1415, z = 963 },
+                        { x = 1112, y = 1884, z = 1804 }
+                    }
+                }
+            },
+            {
+                name = "pss",
+                level = LEVEL_PSS,
+                painting = get_texture_info("cg_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 570, y = 1291, z = -1449 },
+                        { x = 23, y = -458, z = -1349 }
                     }
                 }
             },
