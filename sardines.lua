@@ -199,6 +199,12 @@ local function allow_pvp(a, v)
     -- handle pvp if we are the victim
     sardines_handle_pvp(a.playerIndex, v.playerIndex)
 
+    local aS = gPlayerSyncTable[a.playerIndex]
+    local vS = gPlayerSyncTable[v.playerIndex]
+
+    if gGlobalSyncTable.modifier == MODIFIER_FRIENDLY_FIRE
+    and aS.state ~= RUNNER and vS.state ~= RUNNER then return end
+
     return false
 end
 
