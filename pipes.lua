@@ -14,6 +14,13 @@ end
 
 ---@param o Object
 local function pipe_loop(o)
+
+    -- if pipes are off, delete pipes
+    if not gGlobalSyncTable.pipes then
+        obj_mark_for_deletion(o)
+        return
+    end
+
     -- get nearest mario state
     local m = nearest_mario_state_to_object(o)
 

@@ -93,7 +93,7 @@ gGlobalSyncTable.modifier              = MODIFIER_NONE
 -- dictates whether or not modifiers and gamemodes are random
 gGlobalSyncTable.randomGamemode        = true
 gGlobalSyncTable.randomModifiers       = true
--- toggles for bljs, cnanons, and water
+-- toggles for bljs, cannons, and water
 gGlobalSyncTable.bljs                  = false
 gGlobalSyncTable.cannons               = false
 gGlobalSyncTable.water                 = false
@@ -136,8 +136,10 @@ gGlobalSyncTable.autoMode              = true
 gGlobalSyncTable.boosts                = true
 -- enable or disable hazardous surfaces
 gGlobalSyncTable.hazardSurfaces        = false
+-- enable or disable pipes
+gGlobalSyncTable.pipes                 = true
 -- override for romhacks
-gGlobalSyncTable.romhackOverride        = nil
+gGlobalSyncTable.romhackOverride       = nil
 
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then
@@ -1199,9 +1201,10 @@ local function mario_update(m)
 
         -- spawn pipes
         -- make sure the level has pipes (found in level table), then check if they aren't spawned
-        if selectedLevel.pipes ~= nil
+        if  selectedLevel.pipes ~= nil
         and obj_get_first_with_behavior_id(id_bhvPipe) == nil
-        and np.currLevelNum == selectedLevel.level then
+        and np.currLevelNum == selectedLevel.level
+        and gGlobalSyncTable.pipes then
             -- spawn pipes
             for pipesIndex, pipes in pairs(selectedLevel.pipes) do
                 for _, pipe in pairs(pipes) do

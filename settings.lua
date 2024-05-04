@@ -159,6 +159,11 @@ local function toggle_hazards()
     save_bool("hazardSurfaces", gGlobalSyncTable.hazardSurfaces)
 end
 
+local function toggle_pipes()
+    gGlobalSyncTable.pipes = not gGlobalSyncTable.pipes
+    save_bool("pipes", gGlobalSyncTable.pipes)
+end
+
 local function toggle_romhack_cam()
     useRomhackCam = not useRomhackCam
     save_bool("useRomhackCam", useRomhackCam)
@@ -858,6 +863,12 @@ local function reset_general_selection()
         input = INPUT_JOYSTICK,
         func = toggle_hazards,
         valueText = on_off_text(gGlobalSyncTable.hazardSurfaces),},
+        -- pipe selection
+        {name = "Pipes",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = toggle_pipes,
+        valueText = on_off_text(gGlobalSyncTable.pipes),},
         -- romhack camera selection
         {name = "Romhack Camera",
         permission = PERMISSION_NONE,
