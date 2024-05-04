@@ -3,6 +3,18 @@
 ---@param aI integer
 ---@param vI integer
 function handle_projectile_pvp(aI, vI)
+
+    -- don't allow spectators to attack players, vice versa
+    if gPlayerSyncTable[aI].state == SPECTATOR or gPlayerSyncTable[aI].state == SPECTATOR then return end
+    -- if the modifier is not friendly fire, check runners and taggers
+    if gGlobalSyncTable.modifier ~= MODIFIER_FRIENDLY_FIRE then
+        -- check if 2 runners are trying to attack eachother
+        if gPlayerSyncTable[vI].state == RUNNER and gPlayerSyncTable[aI].state == RUNNER then return end
+        -- check if 2 taggers are trying to attack eachother
+        if gPlayerSyncTable[vI].state == TAGGER and gPlayerSyncTable[aI].state == TAGGER
+        and gGlobalSyncTable.gamemode ~= ASSASSINS and gGlobalSyncTable.gamemode ~= DEATHMATCH then return end
+    end
+
     -- run handle pvp function based off of gamemode (if we run anything at all)
     if gGlobalSyncTable.gamemode == TAG then
         tag_handle_pvp(aI, vI)
