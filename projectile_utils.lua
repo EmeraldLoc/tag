@@ -16,8 +16,9 @@ function handle_projectile_pvp(aI, vI, o)
         and gGlobalSyncTable.gamemode ~= ASSASSINS and gGlobalSyncTable.gamemode ~= DEATHMATCH then return end
     end
 
-    -- if we get this far, make mario take kb if o is specified
-    if o ~= nil then
+    -- if we get this far, make mario take kb if o is specified, and if mario's invinc timer is 0
+    if gPlayerSyncTable[vI].invincTimer <= 0
+    and o ~= nil then
         take_damage_and_knock_back(gMarioStates[vI], o)
     end
 
