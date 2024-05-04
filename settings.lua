@@ -464,6 +464,8 @@ end
 
 -- main selections
 mainEntries = {}
+-- setting selections
+settingEntries = {}
 -- general selections
 generalEntries = {}
 -- gamemode entries
@@ -479,6 +481,7 @@ blacklistGamemodeEntries = {}
 -- blacklisted modifier entries
 blacklistModifierEntries = {}
 -- blacklisted entries
+-- generate it here as it is never changed
 blacklistEntries = {
     {name = "Levels",
     permission = PERMISSION_NONE,
@@ -505,7 +508,7 @@ blacklistEntries = {
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
-        entries = mainEntries
+        entries = settingEntries
         selection = 1
     end,},
 }
@@ -688,22 +691,9 @@ end
 
 local function reset_main_selections()
 
-    local resetSettingsEntries = entries == mainEntries
+    local resetEntries = entries == mainEntries
 
     mainEntries = {
-        -- have gamemode and modifiers here as they are the most used settings
-        -- gamemode selection
-        {name = "Gamemode",
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_JOYSTICK,
-        func = set_gamemode,
-        valueText = get_gamemode_including_random(gGlobalSyncTable.gamemode)},
-        -- modifier selection
-        {name = "Modifiers",
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_JOYSTICK,
-        func = set_modifier,
-        valueText = get_modifier_including_random()},
         -- start selection
         {name = "Start",
         permission = PERMISSION_NONE,
@@ -713,6 +703,67 @@ local function reset_main_selections()
             selection = 1
         end,
         valueText = ">",},
+        -- setting selection
+        {name = "Settings",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = settingEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- stats selection
+        {name = "Stats",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = statPlayerSelectionEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- achievements selection
+        {name = "Achievements",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = achievementsPlayerEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        {name = "Rewards",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = rewardEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- help selection
+        {name = "Help",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = helpEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- done selection
+        {name = "Done",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function () showSettings = not showSettings end,
+        valueText = nil,},
+    }
+
+    if resetEntries then
+        entries = mainEntries
+    end
+end
+
+local function reset_setting_selections()
+    local resetEntries = entries == settingEntries
+
+    settingEntries = {
         -- general settings selection
         {name = "General Settings",
         permission = PERMISSION_NONE,
@@ -767,41 +818,6 @@ local function reset_main_selections()
             selection = 1
         end,
         valueText = ">",},
-        -- help selection
-        {name = "Help",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        func = function ()
-            entries = helpEntries
-            selection = 1
-        end,
-        valueText = ">",},
-        -- stats selection
-        {name = "Stats",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        func = function ()
-            entries = statPlayerSelectionEntries
-            selection = 1
-        end,
-        valueText = ">",},
-        -- achievements selection
-        {name = "Achievements",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        func = function ()
-            entries = achievementsPlayerEntries
-            selection = 1
-        end,
-        valueText = ">",},
-        {name = "Rewards",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        func = function ()
-            entries = rewardEntries
-            selection = 1
-        end,
-        valueText = ">",},
         {name = "Enemies",
         permission = PERMISSION_SERVER,
         input = INPUT_A,
@@ -810,23 +826,33 @@ local function reset_main_selections()
             selection = 1
         end,
         valueText = ">",},
-        -- done selection
-        {name = "Done",
+        -- back selection
+        {name = "Back",
         permission = PERMISSION_NONE,
         input = INPUT_A,
-        func = function () showSettings = not showSettings end,
-        valueText = nil,},
+        func = function () entries = mainEntries; selection = 1 end,
+        valueText = nil},
     }
 
-    if resetSettingsEntries then
-        entries = mainEntries
-    end
+    if resetEntries then entries = settingEntries end
 end
 
 local function reset_general_selection()
     local resetGeneralEntries = entries == generalEntries
 
     generalEntries = {
+        -- gamemode selection
+        {name = "Gamemode",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = set_gamemode,
+        valueText = get_gamemode_including_random(gGlobalSyncTable.gamemode)},
+        -- modifier selection
+        {name = "Modifiers",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = set_modifier,
+        valueText = get_modifier_including_random()},
         -- blj selection
         {name = "Bljs",
         permission = PERMISSION_MODERATORS,
@@ -910,7 +936,7 @@ local function reset_general_selection()
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
-            entries = mainEntries
+            entries = settingEntries
             selection = 1
         end,},
     }
@@ -1024,7 +1050,7 @@ local function reset_gamemode_selection()
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
-            entries = mainEntries
+            entries = settingEntries
             selection = 1
         end,
         seperator = ""} -- empty seperator is just spacing,
@@ -1115,7 +1141,7 @@ local function reset_player_selection()
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
-        entries = mainEntries
+        entries = settingEntries
         selection = 1
     end,})
 
@@ -1149,7 +1175,7 @@ local function reset_blacklist_levels_entries()
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
-        entries = blacklistEntries
+        entries = settingEntries
         selection = 1
     end,})
 
@@ -1260,7 +1286,7 @@ local function reset_bind_entries()
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
-            entries = mainEntries
+            entries = settingEntries
             selection = 1
         end}
     )
@@ -1302,7 +1328,7 @@ local function reset_romhack_entries()
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
-            entries = mainEntries
+            entries = settingEntries
             selection = 1
         end}
     )
@@ -1889,7 +1915,7 @@ local function resset_enemy_entries()
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
-            entries = mainEntries
+            entries = settingEntries
             selection = 1
         end
     })
@@ -2105,6 +2131,7 @@ local function mario_update(m)
     -- reconstruct tables
     -- do this in mario update so it's more responsive
     reset_main_selections()
+    reset_setting_selections()
     reset_general_selection()
     reset_gamemode_selection()
     reset_start_selection()
