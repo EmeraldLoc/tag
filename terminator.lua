@@ -123,6 +123,7 @@ local function before_phys_step(m)
     if m.playerIndex ~= 0 then return end
     if gPlayerSyncTable[0].state ~= TAGGER then return end
     -- give terminator a speed boost
+    if gPlayerSyncTable[0].boosting then return end
     m.vel.x = m.vel.x * 1.03
     m.vel.z = m.vel.z * 1.03
 end
