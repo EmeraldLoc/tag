@@ -135,8 +135,20 @@ local function toggle_water()
 end
 
 local function toggle_eliminate_on_death()
-    gGlobalSyncTable.eliminateOnDeath = not gGlobalSyncTable.eliminateOnDeath
+    if gGlobalSyncTable.lateJoining then
+        gGlobalSyncTable.eliminateOnDeath = false
+    else
+        gGlobalSyncTable.eliminateOnDeath = not gGlobalSyncTable.eliminateOnDeath
+    end
     save_bool("eliminateOnDeath", gGlobalSyncTable.eliminateOnDeath)
+end
+
+local function toggle_late_joining()
+    gGlobalSyncTable.lateJoining = not gGlobalSyncTable.lateJoining
+    save_bool("lateJoining", gGlobalSyncTable.lateJoining)
+    if gGlobalSyncTable.lateJoining then
+        toggle_eliminate_on_death()
+    end
 end
 
 local function toggle_voting()
@@ -838,7 +850,14 @@ local function reset_general_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = toggle_eliminate_on_death,
-        valueText = on_off_text(gGlobalSyncTable.eliminateOnDeath),},
+        valueText = on_off_text(gGlobalSyncTable.eliminateOnDeath),
+        disabled = gGlobalSyncTable.lateJoining},
+        -- late joining selection
+        {name = "Late Joining",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = toggle_late_joining,
+        valueText = on_off_text(gGlobalSyncTable.lateJoining),},
         -- vote selection
         {name = "Voting",
         permission = PERMISSION_MODERATORS,
@@ -1045,21 +1064,23 @@ local function reset_start_selection()
     end
 
     table.insert(startEntries,
-    {name = "Stop Round",
-    permission = PERMISSION_MODERATORS,
-    input = INPUT_A,
-    disabled = stop_round_disabled,
-    func = stop_round,
+    {
+        name = "Stop Round",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_A,
+        disabled = stop_round_disabled(),
+        func = stop_round,
     })
 
-    table.insert(startEntries,
-    {name = "Back",
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        entries = mainEntries
-        selection = 1
-    end,})
+    table.insert(startEntries, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = mainEntries
+            selection = 1
+        end
+    })
 
     if resetEntryVariable then
         entries = startEntries
@@ -1980,7 +2001,7 @@ local function hud_render()
         djui_hud_render_rect_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor, outlineColor, outlineColor, 3)
 
         if not has_permission(entries[i].permission)
-        or (entries[i].disabled ~= nil and entries[i].disabled()) then
+        or entries[i].disabled then
             djui_hud_set_color(150, 150, 150, 255)
         else
             djui_hud_set_color(220, 220, 220, 255)
@@ -2069,8 +2090,7 @@ local function mario_update(m)
     if m.controller.buttonPressed & A_BUTTON ~= 0
     and entries[selection].input == INPUT_A then
         if has_permission(entries[selection].permission)
-        and (entries[selection].disabled == nil or
-        (entries[selection].disabled ~= nil and not entries[selection].disabled())) then
+        and not entries[selection].disabled then
             if entries[selection].func ~= nil then
                 entries[selection].func()
                 play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)

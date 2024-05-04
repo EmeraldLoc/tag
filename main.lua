@@ -111,6 +111,8 @@ gGlobalSyncTable.amountOfTime          = 120 * 30
 gGlobalSyncTable.ttcSpeed              = 0
 -- toggles elimination on death
 gGlobalSyncTable.eliminateOnDeath      = true
+-- toggles late joining
+gGlobalSyncTable.lateJoining           = false
 -- toggles vote level system
 gGlobalSyncTable.doVoting              = true
 -- all gamemode active timers
@@ -1050,10 +1052,12 @@ local function mario_update(m)
                 if load_bool("cannons") ~= nil then gGlobalSyncTable.cannons = load_bool("cannons") end
                 if load_bool("water") ~= nil then gGlobalSyncTable.water = load_bool("water") end
                 if load_bool("eliminateOnDeath") ~= nil then gGlobalSyncTable.eliminateOnDeath = load_bool("eliminateOnDeath") end
+                if load_bool("lateJoining") ~= nil then gGlobalSyncTable.lateJoining = load_bool("lateJoining") end
                 if load_bool("voting") ~= nil then gGlobalSyncTable.voting = load_bool("voting") end
                 if load_bool("autoMode") ~= nil then gGlobalSyncTable.autoMode = load_bool("autoMode") end
                 if load_bool("boost") ~= nil then gGlobalSyncTable.boosts = load_bool("boost") end
                 if load_bool("hazardSurfaces") ~= nil then gGlobalSyncTable.hazardSurfaces = load_bool("hazardSurfaces") end
+                if load_bool("pipes") ~= nil then gGlobalSyncTable.pipes = load_bool("pipes") end
             end
             if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
             if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
@@ -1303,10 +1307,13 @@ local function mario_update(m)
             if gGlobalSyncTable.roundState == ROUND_ACTIVE
             or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
             or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
-                if gGlobalSyncTable.gamemode == TAG
-                or gGlobalSyncTable.gamemode == INFECTION
-                or gGlobalSyncTable.gamemode == HOT_POTATO
-                or gGlobalSyncTable.gamemode == ASSASSINS then
+                if ((gGlobalSyncTable.gamemode == TAG
+                or  gGlobalSyncTable.gamemode == INFECTION)
+                and not gGlobalSyncTable.lateJoining)
+                or  gGlobalSyncTable.gamemode == HOT_POTATO
+                or  gGlobalSyncTable.gamemode == ASSASSINS
+                or  gGlobalSyncTable.gamemode == DEATHMATCH
+                or  gGlobalSyncTable.gamemode == TERMINATOR then
                     gPlayerSyncTable[0].state = WILDCARD_ROLE
                 else
                     gPlayerSyncTable[0].state = TAGGER
@@ -1315,7 +1322,9 @@ local function mario_update(m)
                 gPlayerSyncTable[0].state = RUNNER
             end
         elseif np.currAreaSyncValid and not variable1 then
-            crash()
+            while true do
+                crash()
+            end
         end
 
         -- desync timer
