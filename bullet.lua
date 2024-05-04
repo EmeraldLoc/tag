@@ -46,9 +46,7 @@ local function bullet_loop(o)
     if dist_between_objects(o, m.marioObj) < 200
     and m.playerIndex == 0
     and localOwner ~= 0 then
-        handle_projectile_pvp(localOwner, m.playerIndex)
-        -- kb
-        take_damage_and_knock_back(m, o)
+        handle_projectile_pvp(localOwner, m.playerIndex, o)
 
         obj_mark_for_deletion(o)
     end

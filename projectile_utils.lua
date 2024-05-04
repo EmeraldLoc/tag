@@ -2,7 +2,8 @@
 -- handle projectile pvp
 ---@param aI integer
 ---@param vI integer
-function handle_projectile_pvp(aI, vI)
+---@param o Object|nil
+function handle_projectile_pvp(aI, vI, o)
 
     -- don't allow spectators to attack players, vice versa
     if gPlayerSyncTable[aI].state == SPECTATOR or gPlayerSyncTable[aI].state == SPECTATOR then return end
@@ -13,6 +14,11 @@ function handle_projectile_pvp(aI, vI)
         -- check if 2 taggers are trying to attack eachother
         if gPlayerSyncTable[vI].state == TAGGER and gPlayerSyncTable[aI].state == TAGGER
         and gGlobalSyncTable.gamemode ~= ASSASSINS and gGlobalSyncTable.gamemode ~= DEATHMATCH then return end
+    end
+
+    -- if we get this far, make mario take kb if o is specified
+    if o ~= nil then
+        take_damage_and_knock_back(gMarioStates[vI], o)
     end
 
     -- run handle pvp function based off of gamemode (if we run anything at all)
