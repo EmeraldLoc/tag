@@ -2048,7 +2048,8 @@ local function mario_update(m)
     if (m.controller.buttonPressed & R_JPAD ~= 0 or (m.controller.stickX > 0.5
     and joystickCooldown <= 0))
     and entries[selection].input == INPUT_JOYSTICK then
-        if has_permission(entries[selection].permission) then
+        if has_permission(entries[selection].permission)
+        and not entries[selection].disabled then
             if entries[selection].func ~= nil then
                 entries[selection].func()
                 play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
@@ -2061,7 +2062,8 @@ local function mario_update(m)
     elseif (m.controller.buttonPressed & L_JPAD ~= 0 or (m.controller.stickX < -0.5
     and joystickCooldown <= 0))
     and entries[selection].input == INPUT_JOYSTICK then
-        if has_permission(entries[selection].permission) then
+        if has_permission(entries[selection].permission)
+        and not entries[selection].disabled then
             if entries[selection].func ~= nil then
                 entries[selection].func()
                 play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
@@ -2087,7 +2089,7 @@ local function mario_update(m)
         return
     end
 
-    if m.controller.buttonPressed & A_BUTTON ~= 0
+    if  m.controller.buttonPressed & A_BUTTON ~= 0
     and entries[selection].input == INPUT_A then
         if has_permission(entries[selection].permission)
         and not entries[selection].disabled then
