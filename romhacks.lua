@@ -214,7 +214,12 @@ romhacks = {
                 level = LEVEL_THI,
                 painting = get_texture_info("thi_painting"),
                 area = 1,
-                pipes = nil
+                pipes = {
+                    {
+                        { x = -5675, y = -2969, z = 7611 },
+                        { x = 0, y = 3891, z = -1521 },
+                    }
+                }
             },
             {
                 name = "ithi",
