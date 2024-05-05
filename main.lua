@@ -70,11 +70,16 @@ MODIFIER_FRIENDLY_FIRE                 = 16
 MODIFIER_MAX                           = 16
 
 -- binds
-BIND_BOOST = 0
-BIND_BOMBS = 1
-BIND_GUN = 2
-BIND_DOUBLE_JUMP = 3
-BIND_MAX = 3
+BIND_BOOST                             = 0
+BIND_BOMBS                             = 1
+BIND_GUN                               = 2
+BIND_DOUBLE_JUMP                       = 3
+BIND_MAX                               = 3
+
+-- boost states
+BOOST_STATE_RECHARGING                 = 0
+BOOST_STATE_READY                      = 1
+BOOST_STATE_BOOSTING                   = 2
 
 -- textures
 TEXTURE_TAG_LOGO = get_texture_info("logo")
@@ -136,6 +141,8 @@ gGlobalSyncTable.deathmatchLivesCount  = 3
 gGlobalSyncTable.autoMode              = true
 -- enable tagger boosts or not
 gGlobalSyncTable.boosts                = true
+-- boost cooldown
+gGlobalSyncTable.boostCooldown         = 15 * 30
 -- enable or disable hazardous surfaces
 gGlobalSyncTable.hazardSurfaces        = false
 -- enable or disable pipes
@@ -340,8 +347,10 @@ remoteStats = {
     taggerVictories = 0,
 }
 
--- speed boost timer handles boosting
+-- speed boost timer
 local speedBoostTimer = 0
+-- boost state
+local boostState = BOOST_STATE_RECHARGING
 -- hot potato timer multiplier is when the timer
 -- is faster if there's more people currently active
 local hotPotatoTimerMultiplier = 1
@@ -935,10 +944,10 @@ local function update()
     end
 
     -- handle speed boost
-    if speedBoostTimer < 20 * 30 and gPlayerSyncTable[0].state == TAGGER and boosts_enabled() then
-        speedBoostTimer = speedBoostTimer + 1
+    if gPlayerSyncTable[0].state == TAGGER and boosts_enabled() then
+
     elseif gPlayerSyncTable[0].state ~= TAGGER or not boosts_enabled() then
-        speedBoostTimer = 5 * 30 -- 5 seconds
+
     end
 
     -- set some variables if we are a spectator
@@ -1295,11 +1304,27 @@ local function mario_update(m)
         end
 
         -- handle speed boost
-        if m.controller.buttonPressed & binds[BIND_BOOST].btn ~= 0
-        and speedBoostTimer >= 20 * 30
-        and gPlayerSyncTable[0].state == TAGGER
-        and boosts_enabled() then
-            speedBoostTimer = 0
+        if boostState == BOOST_STATE_RECHARGING then
+            speedBoostTimer = speedBoostTimer + 1
+
+            if speedBoostTimer >= gGlobalSyncTable.boostCooldown then
+                boostState = BOOST_STATE_READY
+            end
+        elseif boostState == BOOST_STATE_READY then
+            speedBoostTimer = gGlobalSyncTable.boostCooldown
+
+            if  m.controller.buttonPressed & binds[BIND_BOOST].btn ~= 0
+            and gPlayerSyncTable[0].state == TAGGER
+            and boosts_enabled() then
+                boostState = BOOST_STATE_BOOSTING
+                speedBoostTimer = 5 * 30
+            end
+        elseif boostState == BOOST_STATE_BOOSTING then
+            speedBoostTimer = speedBoostTimer - 1
+
+            if speedBoostTimer <= 0 then
+                boostState = BOOST_STATE_RECHARGING
+            end
         end
 
         -- set our initial state
@@ -1350,20 +1375,23 @@ local function mario_update(m)
         end
 
         -- handle level surface
-        if levels[gGlobalSyncTable.selectedLevel].overrideSurfaceType ~= nil
+        if  levels[gGlobalSyncTable.selectedLevel].overrideSurfaceType ~= nil
         and levels[gGlobalSyncTable.selectedLevel].overrideSurfaceType[m.floor.type] ~= nil then
             m.floor.type = levels[gGlobalSyncTable.selectedLevel].overrideSurfaceType[m.floor.type]
         end
 
-        -- handle play time stats
         if gGlobalSyncTable.roundState == ROUND_ACTIVE
         or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
         or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
+            -- handle play time stats
             if stats[gGlobalSyncTable.gamemode].playTime ~= nil then
                 stats[gGlobalSyncTable.gamemode].playTime = stats[gGlobalSyncTable.gamemode].playTime + 1
             end
 
             stats.globalStats.playTime = stats.globalStats.playTime + 1
+        else
+            -- reset boost state
+            boostState = BOOST_STATE_READY
         end
     end
 end
@@ -1388,7 +1416,7 @@ local function before_phys(m)
     if m.playerIndex ~= 0 then return end
 
     -- handle speed boost
-    if speedBoostTimer < 5 * 30 and gPlayerSyncTable[0].state == TAGGER then -- this allows for 5 seconds of speedboost
+    if boostState == BOOST_STATE_BOOSTING then
         -- mario's speed be goin willlld
         if  m.action ~= ACT_BACKWARD_AIR_KB
         and m.action ~= ACT_FORWARD_AIR_KB
@@ -1535,7 +1563,10 @@ local function hud_boost()
     local height       = 16 * scale
     local x            = math.floor((screenWidth - width) / 2)
     local y            = math.floor(screenHeight - height - 4 * scale)
-    local boostTime    = speedBoostTimer / 30 / 20
+    local boostTime    = speedBoostTimer / 30 / (gGlobalSyncTable.boostCooldown / 30)
+    if boostState == BOOST_STATE_BOOSTING then
+        boostTime      = speedBoostTimer / 30 / 5
+    end
 
     djui_hud_set_color(0, 0, 0, 128)
     djui_hud_render_rect(x, y, width, height)
@@ -1544,13 +1575,13 @@ local function hud_boost()
     y = y + 2 * scale
     width = width - 4 * scale
     height = height - 4 * scale
-    width = math.floor(width * boostTime)
+    width = width * boostTime
     djui_hud_set_color(0, 137, 237, 128)
     djui_hud_render_rect(x, y, width, height)
 
-    if speedBoostTimer < 5 * 30 then
+    if boostState == BOOST_STATE_BOOSTING then
         text = "Boosting"
-    elseif speedBoostTimer >= 5 * 30 and speedBoostTimer < 20 * 30 then
+    elseif boostState == BOOST_STATE_RECHARGING then
         text = "Recharging"
     else
         text = "Boost (" .. button_to_text(binds[BIND_BOOST].btn) .. ")"

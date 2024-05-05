@@ -120,6 +120,7 @@ end
 
 ---@param m MarioState
 local function before_phys_step(m)
+    if gGlobalSyncTable.gamemode ~= TERMINATOR then return end
     if m.playerIndex ~= 0 then return end
     if gPlayerSyncTable[0].state ~= TAGGER then return end
     if gPlayerSyncTable[0].boosting then return end

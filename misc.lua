@@ -734,7 +734,7 @@ function boosts_enabled()
 		return true
 	end
 
-	if  not gGlobalSyncTable.boosts
+	if not gGlobalSyncTable.boosts
 	and gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
 		return true
 	end
