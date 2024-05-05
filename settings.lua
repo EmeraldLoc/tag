@@ -426,6 +426,14 @@ local function set_player_role(i)
         if gPlayerSyncTable[i].state > 3 then gPlayerSyncTable[i].state = 0 end
         if gPlayerSyncTable[i].state == 2 then gPlayerSyncTable[i].state = 3 end
     end
+
+    if gPlayerSyncTable[i].state == RUNNER then
+        if gGlobalSyncTable.gamemode == HUNT then
+            gPlayerSyncTable[i].tagLives = gGlobalSyncTable.huntLivesCount
+        elseif gGlobalSyncTable.gamemode == DEATHMATCH then
+            gPlayerSyncTable[i].tagLives = gGlobalSyncTable.deathmatchLivesCount
+        end
+    end
 end
 
 local function get_rules(gamemode)
