@@ -3,7 +3,7 @@
 local FROZEN = 2
 
 -- global scope vars
-ACT_FROZEN = allocate_mario_action(ACT_FLAG_IDLE)
+ACT_FROZEN = ACT_GROUP_AIRBORNE | allocate_mario_action(ACT_FLAG_IDLE)
 ACT_FROZEN_SUBMERGED = ACT_GROUP_SUBMERGED | allocate_mario_action(ACT_FLAG_IDLE)
 
 -- global vars
