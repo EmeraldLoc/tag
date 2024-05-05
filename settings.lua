@@ -166,6 +166,34 @@ local function toggle_boost()
     save_bool("boost", gGlobalSyncTable.boosts)
 end
 
+local function set_boost_cooldown()
+
+    -- get which direction we are facing
+    local m = gMarioStates[0]
+    local direction = CONT_LEFT
+
+    if m.controller.buttonPressed & R_JPAD ~= 0
+    or m.controller.stickX > 0.5 then direction = CONT_RIGHT end
+
+    -- get speed
+    local speed = 30
+
+    if m.controller.buttonPressed & R_JPAD ~= 0
+    or m.controller.buttonPressed & L_JPAD ~= 0 then
+        speed = 10 * 30
+    end
+
+    if direction == CONT_LEFT then
+        gGlobalSyncTable.boostCooldown = gGlobalSyncTable.boostCooldown - speed
+
+        if gGlobalSyncTable.boostCooldown <= 0 then
+            gGlobalSyncTable.boostCooldown = 0
+        end
+    else
+        gGlobalSyncTable.boostCooldown = gGlobalSyncTable.boostCooldown + speed
+    end
+end
+
 local function toggle_hazards()
     gGlobalSyncTable.hazardSurfaces = not gGlobalSyncTable.hazardSurfaces
     save_bool("hazardSurfaces", gGlobalSyncTable.hazardSurfaces)
@@ -393,7 +421,6 @@ local function set_frozen_health_drain()
 
     entries[selection].valueText = tostring(gGlobalSyncTable.freezeHealthDrain / 10)
 end
-
 
 local function stop_round()
     gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
@@ -904,12 +931,18 @@ local function reset_general_selection()
         input = INPUT_JOYSTICK,
         func = toggle_auto_mode,
         valueText = on_off_text(gGlobalSyncTable.autoMode),},
-        -- boost mode selection
-        {name = "Boost",
+        -- boosts selection
+        {name = "Boosts",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = toggle_boost,
         valueText = on_off_text(gGlobalSyncTable.boosts),},
+        -- boost cooldown selection
+        {name = "Boost Cooldown",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = set_boost_cooldown,
+        valueText = math.floor(gGlobalSyncTable.boostCooldown / 30) .. "s"},
         -- hazard selection
         {name = "Hazardous Surfaces",
         permission = PERMISSION_MODERATORS,
