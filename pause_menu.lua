@@ -20,8 +20,8 @@ pauseEntries = {
     {name = "Coop Settings",
     permission = PERMISSION_NONE,
     func = djui_open_pause_menu},
-    -- tag settings selection
-    {name = "Tag Settings",
+    -- tag options selection
+    {name = "Tag Options",
     permission = PERMISSION_NONE,
     func = function() showSettings = true end},
 }

@@ -213,7 +213,7 @@ achievements = {
         description = "Play for 7 hours in a single session!",
         ---@type Reward
         reward = {
-            title = "\\#4287f5\\I'm In When I'm In",
+            title = "\\#732323\\Always Watching",
             trail = nil,
         },
         initFunc = nil,
@@ -285,8 +285,8 @@ achievements = {
     },
     ---@type Achievement
     {
-        name = "Welp, you've mastered the game!",
-        description = "Get every achievement in the game!",
+        name = "Welp, you've mastered Tag!",
+        description = "Get every achievement in Tag!",
         ---@type Reward
         reward = {
             title = "\\#8D4D8B\\Tag Master",
@@ -365,6 +365,40 @@ achievements = {
         initFunc = nil,
         loopFunc = function ()
             if stats[TERMINATOR].taggerVictories >= 10 then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "Potato Wielder victories are just better!",
+        description = "Win 5 Times as a Potato Wielder!",
+        ---@type Reward
+        reward = {
+            title = "\\#FC9003\\Potato Wielder",
+            trail = nil
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats[HOT_POTATO].taggerVictories >= 5 then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "Uh oh, not Juggernaut :E",
+        description = "Play as the Juggernaut.",
+        ---@type Reward
+        reward = {
+            title = nil,
+            trail = nil
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if gGlobalSyncTable.gamemode == JUGGERNAUT
+            and gGlobalSyncTable.roundState == ROUND_ACTIVE
+            and gPlayerSyncTable[0].state == RUNNER then
                 return true
             end
         end
