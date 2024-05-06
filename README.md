@@ -6,7 +6,7 @@ This mod is a collection of multiple gamemodes all in one mod! The mod contains 
 
 ### Gamemodes
 
-Tag contains multiple tag-related gamemodes! All gamemodes involve "tagging" another player. There are as of right now 9 different gamemodes. These gamemodes are Tag, Freeze Tag, Infection, Hot Potato, Juggernaut (meh), Assassins, Sardines, Hunt, and Deathmatch! Each gamemode gives it's own fun to the mod!
+Tag contains multiple tag-related gamemodes! All gamemodes involve "tagging" another player. There are as of right now 10 different gamemodes. These gamemodes are Tag, Freeze Tag, Infection, Hot Potato, Juggernaut (meh), Assassins, Sardines, Hunt, Deathmatch, and Terminator! Each gamemode gives it's own fun to the mod!
 
 ### Modifiers
 
@@ -14,7 +14,7 @@ There are plenty of modifiers to add variety your game! From simple gravity chan
 
 ### Romhacks
 
-Romhack support depends on the romhack. Offical romhacks have paintings, and pipes like vanilla levels! Non-official romhacks don't have these benefits, however, the romhack should still work perfectly fine!
+Romhack support depends on the romhack. Offical romhacks have paintings and pipes like vanilla levels! Non-official romhacks don't have these benefits, however, the romhack should still work perfectly fine!
 
 ### Arena Stage
 
