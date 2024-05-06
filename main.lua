@@ -1331,9 +1331,6 @@ local function before_phys(m)
         and m.action ~= ACT_FORWARD_AIR_KB then
             m.vel.x = m.vel.x * 1.25
             m.vel.z = m.vel.z * 1.25
-        else
-            m.vel.x = m.vel.x * 1.05
-            m.vel.z = m.vel.z * 1.05
         end
 
         -- tells other players we are boosting
