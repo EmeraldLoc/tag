@@ -1213,6 +1213,233 @@ romhacks = {
             },
         },
     },
+    {
+        -- ported to tag by jzzle and TheMan
+        name = "Lug's Delightful Dioramas",
+        shortName = "ldd",
+        water = false,
+        levels = {
+            {
+                name = "gh",
+                level = LEVEL_CASTLE,
+                painting = get_texture_info("painting_ttown_cg"),
+                area = 1,
+                pipes = nil,
+                overrideName = "Grassy Hub"
+            },
+            {
+                name = "sh",
+                level = LEVEL_CASTLE_COURTYARD,
+                painting = get_texture_info("painting_ttown_cg"),
+                area = 1,
+                pipes = nil,
+                overrideName = "Sandy Hub"
+            },
+            {
+                name = "lh",
+                level = LEVEL_CASTLE,
+                painting = get_texture_info("painting_ttown_cg"),
+                area = 2,
+                pipes = nil,
+                overrideName = "Lava Hub"
+            },
+            {
+                name = "asd",
+                level = LEVEL_BITS,
+                painting = get_texture_info("painting_ttown_eoo"),
+                area = 1,
+                pipes = nil
+            },
+            {
+                name = "cp",
+                level = LEVEL_BOB,
+                painting = get_texture_info("painting_ttown_mmh"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -1967, y = 1014, z = 2300 },
+                        { x = 1229, y = 2848, z = -807 }
+                    }
+                },
+                spawnLocation = { x = -469, y = 168, z = -2134 }
+            },
+            {
+                name = "qqys",
+                level = LEVEL_PSS,
+                painting = get_texture_info("painting_ttown_mmh"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 910, y = 2560, z = -1383 },
+                        { x = -323, y = -4500, z = -2290 }
+                    }
+                },
+                spawnLocation = { x = -469, y = 168, z = -2134 }
+            },
+            {
+                name = "lt",
+                level = LEVEL_WF,
+                painting = get_texture_info("painting_ttown_sod"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -73, y = 0, z = -24 },
+                        { x = -77, y = 2640, z = -19 }
+                    },
+                    {
+                        { x = -90, y = 4617, z = 2379 },
+                        { x = -73, y = -1377, z = 2298 }
+                    }
+                }
+            },
+            {
+                name = "qqgs",
+                level = LEVEL_COTMC,
+                painting = get_texture_info("painting_ttown_sod"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 75, y = 2463, z = 816 },
+                        { x = 1915, y = -80, z = -1003 }
+                    }
+                },
+                spawnLocation = { x = -453, y = 2360, z = -297 }
+            },
+            {
+                name = "ssf",
+                level = LEVEL_JRB,
+                painting = get_texture_info("painting_ttown_sod"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 22, y = 2350, z = -1574 },
+                        { x = -4173, y = -900, z = -791 }
+                    }
+                },
+                spawnLocation = { x = -31, y = 2350, z = 1084 }
+            },
+            {
+                name = "qqbs",
+                level = LEVEL_VCUTM,
+                painting = get_texture_info("painting_ttown_sod"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 22, y = 2350, z = -1574 },
+                        { x = -4173, y = -900, z = -791 }
+                    }
+                },
+                spawnLocation = { x = -31, y = 2350, z = 1084 }
+            },
+            {
+                name = "oo",
+                level = LEVEL_CCM,
+                painting = get_texture_info("painting_ttown_hcc"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 2600, y = 570, z = 2026 },
+                        { x = 95, y = 2445, z = 3168 }
+                    }
+                }
+            },
+            {
+                name = "qqrs",
+                level = LEVEL_TOTWC,
+                painting = get_texture_info("painting_ttown_eoo"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 831, y = 2350, z = 160 },
+                        { x = -913, y = 5375, z = 994 }
+                    }
+                },
+                spawnLocation = { x = -28, y = 2350, z = 84 }
+            },
+            {
+                name = "roat",
+                level = LEVEL_BBH,
+                painting = get_texture_info("painting_ttown_eoo"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 901, y = 94, z = 691 },
+                        { x = 1128, y = 1650, z = -1348 }
+                    }
+                }
+            },
+            {
+                name = "qqos",
+                level = LEVEL_SA,
+                painting = get_texture_info("painting_ttown_eoo"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 4120, y = 1000, z = -1021 },
+                        { x = 579, y = 4167, z = -89 }
+                    },
+                    {
+                        { x = 1150, y = 1433, z = -803 },
+                        { x = 825, y = -521, z = 4130 }
+                    }
+                }
+            },
+            {
+                name = "sj",
+                level = LEVEL_HMC,
+                painting = get_texture_info("painting_ttown_eoo"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -3082, y = 1144, z = -2836 },
+                        { x = -3285, y = 2232, z = 526 }
+                    },
+                    {
+                        { x = -30, y = -3468, z = -331 },
+                        { x = -83, y = 628, z = 3606 }
+                    }
+                }
+            },
+            {
+                name = "qqps",
+                level = LEVEL_WMOTR,
+                painting = get_texture_info("painting_ttown_eoo"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 241, y = 2600, z = 530 },
+                        { x = -844, y = -4300, z = 1382 }
+                    }
+                }
+            },
+            {
+                name = "ss",
+                level = LEVEL_BITFS,
+                painting = get_texture_info("painting_ttown_eoo"),
+                area = 1,
+                pipes = nil
+            },
+            {
+                name = "ls",
+                level = LEVEL_LLL,
+                painting = get_texture_info("painting_ttown_eoo"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -4949, y = 17025, z = 397 },
+                        { x = 1598, y = 6440, z = -1535 }
+                    }
+                }
+            },
+            {
+                name = "qqt",
+                level = LEVEL_BITDW,
+                painting = get_texture_info("painting_ttown_eoo"),
+                area = 1,
+                pipes = nil
+            }
+        }
+    },
 }
 
 local function calculate_romhack_levels()
