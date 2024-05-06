@@ -1,5 +1,6 @@
 
 -- yipee
+
 enemies = {
     amp = { name = "Amp", bhvs = { id_bhvCirclingAmp, id_bhvHomingAmp }, active = true, default = true },
     boo = { name = "Boo", bhvs = { id_bhvBoo, id_bhvBooInCastle, id_bhvBalconyBigBoo, id_bhvGhostHuntBigBoo, id_bhvMerryGoRoundBigBoo }, active = false, default = false },
