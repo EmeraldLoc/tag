@@ -121,16 +121,19 @@ gGlobalSyncTable.lateJoining           = false
 -- toggles vote level system
 gGlobalSyncTable.doVoting              = true
 -- all gamemode active timers
-gGlobalSyncTable.tagActiveTimer        = 120 * 30
-gGlobalSyncTable.freezeTagActiveTimer  = 180 * 30
-gGlobalSyncTable.infectionActiveTimer  = 120 * 30
-gGlobalSyncTable.hotPotatoActiveTimer  = 035 * 30
-gGlobalSyncTable.juggernautActiveTimer = 120 * 30
-gGlobalSyncTable.assassinsActiveTimer  = 120 * 30
-gGlobalSyncTable.sardinesActiveTimer   = 120 * 30
-gGlobalSyncTable.huntActiveTimer       = 180 * 30
-gGlobalSyncTable.deathmatchActiveTimer = 180 * 30
-gGlobalSyncTable.terminatorActiveTimer = 180 * 30
+gGlobalSyncTable.activeTimers = {}
+for i = MIN_GAMEMODE, MAX_GAMEMODE do
+    gGlobalSyncTable.activeTimers[i]   = 120 * 30
+
+    if i == FREEZE_TAG or i == HUNT or i == DEATHMATCH
+    or i == TERMINATOR then
+        gGlobalSyncTable.activeTimers[i] = 180 * 30
+    end
+
+    if i == HOT_POTATO then
+        gGlobalSyncTable.activeTimers[i] = 35 * 30
+    end
+end
 -- other timers
 gGlobalSyncTable.sardinesHidingTimer   = 30  * 30
 -- amount of lives for hunt
@@ -378,7 +381,7 @@ local function server_update()
             gGlobalSyncTable.gamemode = TAG
 
             -- default tag timer
-            gGlobalSyncTable.amountOfTime = gGlobalSyncTable.tagActiveTimer
+            gGlobalSyncTable.amountOfTime = gGlobalSyncTable.activeTimers[TAG]
 
             PLAYERS_NEEDED = 2
             log_to_console("Tag: Attempted to keep tag going by setting the gamemode to tag")
@@ -494,60 +497,14 @@ local function server_update()
 
             -- set the amount of time var and players needed var
             ::amountoftime::
-            if gGlobalSyncTable.gamemode == FREEZE_TAG then
-                -- set freeze tag timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.freezeTagActiveTimer
-
-                PLAYERS_NEEDED = 3
-            elseif gGlobalSyncTable.gamemode == TAG then
-                -- set tag timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.tagActiveTimer
-
+            gGlobalSyncTable.amountOfTime = gGlobalSyncTable.activeTimers[gGlobalSyncTable.gamemode]
+            if gGlobalSyncTable.gamemode == TAG then
                 PLAYERS_NEEDED = 2
-            elseif gGlobalSyncTable.gamemode == INFECTION then
-                -- set infection timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.infectionActiveTimer
-
-                PLAYERS_NEEDED = 3
-            elseif gGlobalSyncTable.gamemode == HOT_POTATO then
-                -- set hot potato timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.hotPotatoActiveTimer
-
-                PLAYERS_NEEDED = 3
-            elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-                -- set juggernaut timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.juggernautActiveTimer
-
-                PLAYERS_NEEDED = 3
-            elseif gGlobalSyncTable.gamemode == ASSASSINS then
-                -- set assassins timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.assassinsActiveTimer
-
-                PLAYERS_NEEDED = 3
-            elseif gGlobalSyncTable.gamemode == SARDINES then
-                -- set sardines timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.sardinesActiveTimer
-
-                PLAYERS_NEEDED = 3
-            elseif gGlobalSyncTable.gamemode == HUNT then
-                -- set hunt timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.huntActiveTimer
-
-                PLAYERS_NEEDED = 3
-            elseif gGlobalSyncTable.gamemode == DEATHMATCH then
-                -- set deathmatch timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.deathmatchActiveTimer
-
-                PLAYERS_NEEDED = 3
-            elseif gGlobalSyncTable.gamemode == TERMINATOR then
-                -- set terminator timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.terminatorActiveTimer
-
+            else
                 PLAYERS_NEEDED = 3
             end
 
-            log_to_console("Tag: Modifier is set to " ..
-                get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex(gGlobalSyncTable.gamemode))
+            log_to_console("Tag: Modifier is set to " .. get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex(gGlobalSyncTable.gamemode))
         end
 
         for i = 0, MAX_PLAYERS - 1 do
@@ -572,37 +529,7 @@ local function server_update()
 
         if timer <= 0 then
             -- set the amount of time var and players needed var
-            if gGlobalSyncTable.gamemode == FREEZE_TAG then
-                -- set freeze tag timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.freezeTagActiveTimer
-            elseif gGlobalSyncTable.gamemode == TAG then
-                -- set tag timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.tagActiveTimer
-            elseif gGlobalSyncTable.gamemode == INFECTION then
-                -- set infection timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.infectionActiveTimer
-            elseif gGlobalSyncTable.gamemode == HOT_POTATO then
-                -- set hot potato timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.hotPotatoActiveTimer
-            elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-                -- set juggernaut timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.juggernautActiveTimer
-            elseif gGlobalSyncTable.gamemode == ASSASSINS then
-                -- set assassins timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.assassinsActiveTimer
-            elseif gGlobalSyncTable.gamemode == SARDINES then
-                -- set sardines timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.sardinesActiveTimer
-            elseif gGlobalSyncTable.gamemode == HUNT then
-                -- set hunt timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.huntActiveTimer
-            elseif gGlobalSyncTable.gamemode == DEATHMATCH then
-                -- set deathmatch timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.deathmatchActiveTimer
-            elseif gGlobalSyncTable.gamemode == TERMINATOR then
-                -- set deathmatch timer
-                gGlobalSyncTable.amountOfTime = gGlobalSyncTable.terminatorActiveTimer
-            end
+            gGlobalSyncTable.amountOfTime = gGlobalSyncTable.activeTimers[gGlobalSyncTable.gamemode]
 
             timer = gGlobalSyncTable.amountOfTime -- set timer to amount of time in a round
 

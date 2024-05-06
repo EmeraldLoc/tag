@@ -241,51 +241,11 @@ end
 
 local function set_active_timer(g, v)
     v = clampf(v, 30 * 30, v)
-    if g == TAG then
-        gGlobalSyncTable.tagActiveTimer = v
-    elseif g == FREEZE_TAG then
-        gGlobalSyncTable.freezeTagActiveTimer = v
-    elseif g == INFECTION then
-        gGlobalSyncTable.infectionActiveTimer = v
-    elseif g == HOT_POTATO then
-        gGlobalSyncTable.hotPotatoActiveTimer = v
-    elseif g == JUGGERNAUT then
-        gGlobalSyncTable.juggernautActiveTimer = v
-    elseif g == ASSASSINS then
-        gGlobalSyncTable.assassinsActiveTimer = v
-    elseif g == SARDINES then
-        gGlobalSyncTable.sardinesActiveTimer = v
-    elseif g == HUNT then
-        gGlobalSyncTable.huntActiveTimer = v
-    elseif g == DEATHMATCH then
-        gGlobalSyncTable.deathmatchActiveTimer = v
-    elseif g == TERMINATOR then
-        gGlobalSyncTable.terminatorActiveTimer = v
-    end
+    gGlobalSyncTable.activeTimers[g] = v
 end
 
 local function get_active_timer(g)
-    if g == TAG then
-        return gGlobalSyncTable.tagActiveTimer
-    elseif g == FREEZE_TAG then
-        return gGlobalSyncTable.freezeTagActiveTimer
-    elseif g == INFECTION then
-        return gGlobalSyncTable.infectionActiveTimer
-    elseif g == HOT_POTATO then
-        return gGlobalSyncTable.hotPotatoActiveTimer
-    elseif g == JUGGERNAUT then
-        return gGlobalSyncTable.juggernautActiveTimer
-    elseif g == ASSASSINS then
-        return gGlobalSyncTable.assassinsActiveTimer
-    elseif g == SARDINES then
-        return gGlobalSyncTable.sardinesActiveTimer
-    elseif g == HUNT then
-        return gGlobalSyncTable.huntActiveTimer
-    elseif g == DEATHMATCH then
-        return gGlobalSyncTable.deathmatchActiveTimer
-    elseif g == TERMINATOR then
-        return gGlobalSyncTable.terminatorActiveTimer
-    end
+    return gGlobalSyncTable.activeTimers[g]
 end
 
 local function set_time_limit(gamemode)
@@ -997,14 +957,14 @@ local function reset_gamemode_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(TAG) end,
-        valueText = tostring(math.floor(gGlobalSyncTable.tagActiveTimer / 30)) .. "s",
+        valueText = tostring(math.floor(get_active_timer(TAG) / 30)) .. "s",
         seperator = get_gamemode(TAG)}, -- this seperator seperates 2 sections. It goes above the button.
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(FREEZE_TAG) end,
-        valueText = tostring(math.floor(gGlobalSyncTable.freezeTagActiveTimer / 30)) .. "s",
+        valueText = tostring(math.floor(get_active_timer(FREEZE_TAG) / 30)) .. "s",
         seperator = get_gamemode(FREEZE_TAG)},
 
         {name = "Frozen Health Drain",
@@ -1017,35 +977,35 @@ local function reset_gamemode_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(INFECTION) end,
-        valueText = tostring(math.floor(gGlobalSyncTable.infectionActiveTimer / 30)) .. "s",
+        valueText = tostring(math.floor(get_active_timer(INFECTION) / 30)) .. "s",
         seperator = get_gamemode(INFECTION)},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(HOT_POTATO) end,
-        valueText = tostring(math.floor(gGlobalSyncTable.hotPotatoActiveTimer / 30)) .. "s",
+        valueText = tostring(math.floor(get_active_timer(HOT_POTATO) / 30)) .. "s",
         seperator = get_gamemode(HOT_POTATO)},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(JUGGERNAUT) end,
-        valueText = tostring(math.floor(gGlobalSyncTable.juggernautActiveTimer / 30)) .. "s",
+        valueText = tostring(math.floor(get_active_timer(JUGGERNAUT) / 30)) .. "s",
         seperator = get_gamemode(JUGGERNAUT)},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(ASSASSINS) end,
-        valueText = tostring(math.floor(gGlobalSyncTable.assassinsActiveTimer / 30)) .. "s",
+        valueText = tostring(math.floor(get_active_timer(ASSASSINS) / 30)) .. "s",
         seperator = get_gamemode(ASSASSINS)},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(SARDINES) end,
-        valueText = tostring(math.floor(gGlobalSyncTable.sardinesActiveTimer / 30)) .. "s",
+        valueText = tostring(math.floor(get_active_timer(SARDINES) / 30)) .. "s",
         seperator = get_gamemode(SARDINES)},
 
         {name = "Picking Spot Time Limit",
@@ -1058,7 +1018,7 @@ local function reset_gamemode_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(HUNT) end,
-        valueText = tostring(math.floor(gGlobalSyncTable.huntActiveTimer / 30)) .. "s",
+        valueText = tostring(math.floor(get_active_timer(HUNT) / 30)) .. "s",
         seperator = get_gamemode(HUNT)},
 
         {name = "Lives",
@@ -1071,7 +1031,7 @@ local function reset_gamemode_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(DEATHMATCH) end,
-        valueText = tostring(math.floor(gGlobalSyncTable.deathmatchActiveTimer / 30)) .. "s",
+        valueText = tostring(math.floor(get_active_timer(DEATHMATCH) / 30)) .. "s",
         seperator = get_gamemode(DEATHMATCH)},
 
         {name = "Lives",
@@ -1084,7 +1044,7 @@ local function reset_gamemode_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_time_limit(TERMINATOR) end,
-        valueText = tostring(math.floor(gGlobalSyncTable.terminatorActiveTimer / 30)) .. "s",
+        valueText = tostring(math.floor(get_active_timer(TERMINATOR) / 30)) .. "s",
         seperator = get_gamemode(TERMINATOR)},
 
         {name = "Back",
