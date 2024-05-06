@@ -27,7 +27,11 @@ local function check_for_updates(m)
         end
 
         if alertUserOfChangedDir then
-            djui_chat_message_create("Please DO NOT change the folder name for Tag. Please rename the folder to \"tag\"")
+            if network_is_server() then
+                djui_chat_message_create("Please DO NOT change the folder name for Tag. Please rename the folder to \"tag\"")
+            else
+                djui_chat_message_create("Folder name is not tag, so stats and achievements will not be synced.")
+            end
         end
 
         -- attempt to load the current verion's audio file

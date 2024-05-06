@@ -934,7 +934,12 @@ function toggle_spectator()
 			else
             	gPlayerSyncTable[0].state = RUNNER
 			end
-            warp_to_level(LEVEL_VCUTM, 1, 0) -- hehehehe
+
+            local randomLevel = gGlobalSyncTable.selectedLevel + 1
+            if levels[randomLevel] == nil then
+                randomLevel = gGlobalSyncTable.selectedLevel - 1
+            end
+            warp_to_level(levels[randomLevel].level, 1, 0)
         end
     else
         local i = math.random(1, 5)

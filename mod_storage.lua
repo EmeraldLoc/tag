@@ -1,4 +1,4 @@
--- an easy to use mod storage system
+-- an easy to use mod storage system, also requires encryption.lua
 
 ----------------------
 -- saving functions --
