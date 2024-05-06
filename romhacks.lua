@@ -1460,7 +1460,7 @@ end
 
 function configure_romhacks(mod)
     if mod == nil then
-        -- vanilla, set level data to vanilla "romhack"
+        -- set level data to vanilla "romhack"
         levels = romhacks[1].levels
 
         -- level reg override
@@ -1541,26 +1541,49 @@ end
 _G.Arena = {}
 _G.Arena.add_level = function(level, name)
     -- insert level into the level reg stages
-    table.insert(romhacks[3].levels, {
-        name = name,
-        level = level,
-        painting = nil,
-                area = 1,
-        pipes = nil
-    })
+    if not initializedRomhacks then
+        table.insert(romhacks[3].levels, {
+            name = name,
+            level = level,
+            painting = nil,
+            area = 1,
+            pipes = nil,
+            spawnLocation = nil,
+        })
+    else
+        table.insert(levels, {
+            name = name,
+            level = level,
+            painting = nil,
+            area = 1,
+            pipes = nil,
+            spawnLocation = nil,
+        })
+    end
 end
 
 -- tag map api
 _G.tag.add_level = function (level, name, painting, area, pipes, spawnLocation)
     -- insert level into the level reg stages
-    table.insert(romhacks[3].levels, {
-        name = name,
-        level = level,
-        painting = painting,
-        area = area,
-        pipes = pipes,
-        spawnLocation = spawnLocation,
-    })
+    if not initializedRomhacks then
+        table.insert(romhacks[3].levels, {
+            name = name,
+            level = level,
+            painting = painting,
+            area = area,
+            pipes = pipes,
+            spawnLocation = spawnLocation,
+        })
+    else
+        table.insert(levels, {
+            name = name,
+            level = level,
+            painting = painting,
+            area = area,
+            pipes = pipes,
+            spawnLocation = spawnLocation,
+        })
+    end
 end
 
 local function level_init()
