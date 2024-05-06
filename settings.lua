@@ -828,7 +828,7 @@ local function reset_setting_selections()
         valueText = ">",},
         -- blacklist selection
         {name = "Blacklist",
-        permission = PERMISSION_SERVER,
+        permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
             entries = blacklistEntries
@@ -1205,9 +1205,9 @@ local function reset_blacklist_levels_entries()
             permission = PERMISSION_MODERATORS,
             input = INPUT_JOYSTICK,
             func = function ()
-                blacklistedCourses[i] = not blacklistedCourses[i]
+                gGlobalSyncTable.blacklistedCourses[i] = not gGlobalSyncTable.blacklistedCourses[i]
             end,
-            valueText = on_off_text(not blacklistedCourses[i])
+            valueText = on_off_text(not gGlobalSyncTable.blacklistedCourses[i])
         })
     end
 
@@ -1216,7 +1216,7 @@ local function reset_blacklist_levels_entries()
     permission = PERMISSION_NONE,
     input = INPUT_A,
     func = function ()
-        entries = settingEntries
+        entries = blacklistEntries
         selection = 1
     end,})
 
@@ -1236,11 +1236,11 @@ local function reset_blacklist_gamemode_entries()
     for i = MIN_GAMEMODE, MAX_GAMEMODE do
         table.insert(blacklistGamemodeEntries, {
             name = get_gamemode(i),
-            permission = PERMISSION_NONE,
+            permission = PERMISSION_MODERATORS,
             input = INPUT_JOYSTICK,
-            valueText = on_off_text(not blacklistedGamemodes[i]),
+            valueText = on_off_text(not gGlobalSyncTable.blacklistedGamemodes[i]),
             func = function ()
-                blacklistedGamemodes[i] = not blacklistedGamemodes[i]
+                gGlobalSyncTable.blacklistedGamemodes[i] = not gGlobalSyncTable.blacklistedGamemodes[i]
             end,
         })
     end
@@ -1268,11 +1268,11 @@ local function reset_blacklist_modifier_entries()
     for i = MODIFIER_MIN + 1, MODIFIER_MAX do
         table.insert(blacklistModifierEntries, {
             name = get_modifier_text(i),
-            permission = PERMISSION_NONE,
+            permission = PERMISSION_MODERATORS,
             input = INPUT_JOYSTICK,
-            valueText = on_off_text(not blacklistedModifiers[i]),
+            valueText = on_off_text(not gGlobalSyncTable.blacklistedModifiers[i]),
             func = function ()
-                blacklistedModifiers[i] = not blacklistedModifiers[i]
+                gGlobalSyncTable.blacklistedModifiers[i] = not gGlobalSyncTable.blacklistedModifiers[i]
             end,
         })
     end

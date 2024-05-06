@@ -42,7 +42,7 @@ function start_command(msg)
 
     local level = levels[gGlobalSyncTable.selectedLevel]
 
-    while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+    while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
         gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
         level = levels[gGlobalSyncTable.selectedLevel]
 

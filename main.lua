@@ -202,41 +202,19 @@ timer = 0
 isRomhack = false
 -- if nametags are enabled or not (checked in check_mods function)
 nametagsEnabled = false
--- blacklisted courses, gamemodes, and modifiers
-blacklistedCourses = {}
+-- owner and developer vars
 isOwner = false
 isDeveloper = false
-blacklistedGamemodes = {
-    [TAG] = false,
-    [FREEZE_TAG] = false,
-    [INFECTION] = false,
-    [HOT_POTATO] = false,
-    [JUGGERNAUT] = false,
-    [ASSASSINS] = false,
-    [SARDINES] = false,
-    [HUNT] = false,
-    [DEATHMATCH] = false,
-    [TERMINATOR] = false,
-}
-blacklistedModifiers = {
-    [MODIFIER_BOMBS] = false,
-    [MODIFIER_LOW_GRAVITY] = false,
-    [MODIFIER_NO_RADAR] = false,
-    [MODIFIER_NO_BOOST] = false,
-    [MODIFIER_ONE_TAGGER] = false,
-    [MODIFIER_FOG] = false,
-    [MODIFIER_BOMBS] = false,
-    [MODIFIER_SPEED] = false,
-    [MODIFIER_INCOGNITO] = false,
-    [MODIFIER_HIGH_GRAVITY] = false,
-    [MODIFIER_FLY] = false,
-    [MODIFIER_BLASTER] = false,
-    [MODIFIER_ONE_RUNNER] = false,
-    [MODIFIER_DOUBLE_JUMP] = false,
-    [MODIFIER_SHELL] = false,
-    [MODIFIER_BLJS] = false,
-    [MODIFIER_FRIENDLY_FIRE] = false,
-}
+-- blacklisted courses, gamemodes, and modifiers
+gGlobalSyncTable.blacklistedCourses = {}
+gGlobalSyncTable.blacklistedGamemodes = {}
+for i = MIN_GAMEMODE, MAX_GAMEMODE do
+    gGlobalSyncTable.blacklistedGamemodes[i] = false
+end
+gGlobalSyncTable.blacklistedModifiers = {}
+for i = MIN_GAMEMODE, MAX_GAMEMODE do
+    gGlobalSyncTable.blacklistedModifiers[i] = false
+end
 -- the previous level, used for when the server selects levels to pick
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
 -- These are levels that are failed to be warped to for romhacks
@@ -424,7 +402,7 @@ local function server_update()
         local level = levels[gGlobalSyncTable.selectedLevel]
 
         -- this long while loop is just to select a random level, ik, extremely hard to read
-        while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+        while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
             gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
 
             if level.level == LEVEL_TTC and not isRomhack then
@@ -479,7 +457,7 @@ local function server_update()
                         goto selectmodifier
                     end
 
-                    if blacklistedModifiers[gGlobalSyncTable.modifier] == true then
+                    if gGlobalSyncTable.blacklistedModifiers[gGlobalSyncTable.modifier] == true then
                         goto selectmodifier
                     end
                 else
@@ -493,7 +471,7 @@ local function server_update()
                     -- check if we have all gamemodes blacklisted
                     local gamemodesBlacklisted = MIN_GAMEMODE - 1
                     for i = MIN_GAMEMODE, MAX_GAMEMODE do
-                        if blacklistedGamemodes[i] == true then
+                        if gGlobalSyncTable.blacklistedGamemodes[i] == true then
                             gamemodesBlacklisted = gamemodesBlacklisted + 1
                         end
                     end
@@ -506,7 +484,7 @@ local function server_update()
                     ::selectgamemode::
                     gGlobalSyncTable.gamemode = math.random(MIN_GAMEMODE, MAX_GAMEMODE)
 
-                    if blacklistedGamemodes[gGlobalSyncTable.gamemode] == true then
+                    if gGlobalSyncTable.blacklistedGamemodes[gGlobalSyncTable.gamemode] == true then
                         goto selectgamemode
                     end
                 else
@@ -799,7 +777,7 @@ local function server_update()
 
                 local level = levels[gGlobalSyncTable.selectedLevel]
 
-                while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+                while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
                     gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
 
                     if level.level == LEVEL_TTC and isRomhack then
@@ -896,7 +874,7 @@ local function server_update()
 
             local level = levels[gGlobalSyncTable.selectedLevel]
 
-            while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+            while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
                 gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
 
                 if level.level == LEVEL_TTC and isRomhack then
@@ -1198,7 +1176,7 @@ local function mario_update(m)
 
                         local level = levels[gGlobalSyncTable.selectedLevel]
 
-                        while blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+                        while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
                             gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_MAX)) -- select a random level
                         end
 

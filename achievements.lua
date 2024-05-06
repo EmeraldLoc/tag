@@ -1,4 +1,3 @@
-
 ---@class Trail
 ---@field public name        string|nil
 ---@field public model       integer|ModelExtendedId|nil
