@@ -7,7 +7,7 @@ Before beginning, this guide assumes you have some lua experience, experience wi
 [Noclip](https://mods.sm64coopdx.com/mods/noclip.30/)
 [Position Display](https://github.com/Agent-11/agent-ex-coop-mods/blob/main/mods/pos-display.lua)
 
-### Actually Beggining
+### Creating a Romhack
 
 First, head to `romhacks.lua`. There should be a table called `romhacks` in that file.
 
