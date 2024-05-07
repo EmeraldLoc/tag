@@ -43,5 +43,7 @@ function handle_projectile_pvp(aI, vI, o)
         deathmatch_handle_pvp(aI, vI)
     elseif gGlobalSyncTable.gamemode == TERMINATOR then
         terminator_handle_pvp(aI, vI)
+    elseif gGlobalSyncTable.gamemode == ODDBALL then
+        oddball_handle_pvp(aI, vI)
     end
 end

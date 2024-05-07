@@ -574,6 +574,8 @@ function get_gamemode_hex_color(g)
 		return "\\#B83333\\"
 	elseif g == TERMINATOR then
 		return "\\#7D2A24\\"
+	elseif g == ODDBALL then
+		return "\\#919AA1\\"
 	end
 end
 
@@ -598,6 +600,8 @@ function get_gamemode(g)
 		return "\\#B83333\\Deathmatch\\#DCDCDC\\"
 	elseif g == TERMINATOR then
 		return "\\#7D2A24\\Terminator\\#DCDCDC\\"
+	elseif g == ODDBALL then
+		return "\\#919AA1\\Oddball\\#DCDCDC\\"
 	end
 
 	return "Uhhhhhhhhhh"
@@ -636,6 +640,8 @@ function get_gamemode_without_hex(g)
 		return "Deathmatch"
 	elseif g == TERMINATOR then
 		return "Terminator"
+	elseif g == ODDBALL then
+		return "Oddball"
 	end
 end
 
@@ -839,6 +845,8 @@ function get_rules_for_gamemode(gamemode)
 		return "Deathmatch is pretty much Hunt but free for all. Every player is assigned 5 lives. When you tag a player, they lose a life. Last one standing wins. You lose a life on death if elimination on death is on."
 	elseif gamemode == TERMINATOR then
 		return "This gamemode is pretty much juggernaut but flipped. There's one Terminator that gets selected, the reset of the players are Runners. The terminator's goal is to tag all the runners. You become eliminated on death as a runner if elimination on death is on. Leaderboard works by using time as runner for runner, and for terminator the amount of tags."
+	elseif gamemode == ODDBALL then
+		return "In this gamemode, there is 1 runner, and everyone else is a tagger. You have to be the runner for a certain amount of time to win. When you die as a runner, another player becomes a runner randomly."
 	end
 end
 

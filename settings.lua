@@ -1047,6 +1047,13 @@ local function reset_gamemode_selection()
         valueText = tostring(math.floor(get_active_timer(TERMINATOR) / 30)) .. "s",
         seperator = get_gamemode(TERMINATOR)},
 
+        {name = "Time Limit",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = function () set_time_limit(ODDBALL) end,
+        valueText = tostring(math.floor(get_active_timer(ODDBALL) / 30)) .. "s",
+        seperator = get_gamemode(ODDBALL)},
+
         {name = "Back",
         permission = PERMISSION_NONE,
         input = INPUT_A,

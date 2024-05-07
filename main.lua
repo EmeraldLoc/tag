@@ -38,7 +38,8 @@ SARDINES                               = 7
 HUNT                                   = 8
 DEATHMATCH                             = 9
 TERMINATOR                             = 10
-MAX_GAMEMODE                           = 10
+ODDBALL                                = 11
+MAX_GAMEMODE                           = 11
 
 -- spectator states
 SPECTATOR_STATE_MARIO                  = 0
@@ -179,6 +180,8 @@ for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we a
         gPlayerSyncTable[i].playerTitle = nil
         -- current trail
         gPlayerSyncTable[i].playerTrail = E_MODEL_BOOST_TRAIL
+        -- timer for oddball
+        gPlayerSyncTable[i].oddballTimer = 0
     end
 end
 
@@ -317,6 +320,12 @@ stats = {
         totalTimeAsRunner = 0,
         runnerVictories = 0,
         taggerVictories = 0,
+    },
+    [ODDBALL] = {
+        playTime = 0,
+        totalTags = 0,
+        totalTimeAsRunner = 0,
+        runnerVictories = 0,
     },
 }
 
@@ -522,6 +531,7 @@ local function server_update()
             gPlayerSyncTable[i].assassinTarget = -1      -- reset assassin target
             gPlayerSyncTable[i].amountOfTags = 0         -- reset amount of tags
             gPlayerSyncTable[i].amountOfTimeAsRunner = 0 -- reset amount of time as runner
+            gPlayerSyncTable[i].oddballTimer = gGlobalSyncTable.activeTimers[ODDBALL] -- reset oddball timer
         end
 
         timer = timer - 1                     -- subtract timer by one
@@ -566,7 +576,8 @@ local function server_update()
                 end
 
                 if gGlobalSyncTable.gamemode == JUGGERNAUT
-                or gGlobalSyncTable.gamemode == SARDINES then
+                or gGlobalSyncTable.gamemode == SARDINES
+                or gGlobalSyncTable.gamemode == ODDBALL then
                     amountOfTaggersNeeded = numPlayers - 1
                 end
 
@@ -1359,8 +1370,25 @@ local function hud_round_status()
             text = "Waiting for Host"
         end
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        text = "Time Remaining: " ..
-            math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+        if gGlobalSyncTable.gamemode == ODDBALL then
+
+            -- find runner
+            local runner = 0
+            local np = gNetworkPlayers[0]
+            local s = gPlayerSyncTable[0]
+            for i = 0, MAX_PLAYERS - 1 do
+                np = gNetworkPlayers[i]
+                s = gPlayerSyncTable[i]
+                if np.connected and s.state == RUNNER then
+                    runner = i
+                    break
+                end
+            end
+
+            text = get_player_name(runner) .. "\\#FFFFFF\\: " .. s.oddballTimer
+        else
+            text = "Time Remaining: " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
+        end
 
         -- if auto hide hud is on, and we are less than 20 seconds away from the round ending, make fade hud peek
         if math.floor(gGlobalSyncTable.displayTimer / 30) <= 20 then
