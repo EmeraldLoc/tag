@@ -402,6 +402,38 @@ achievements = {
             end
         end
     },
+    ---@type Achievement
+    {
+        name = "First Tournament W!",
+        description = "Win a Tournament.",
+        ---@type Reward
+        reward = {
+            title = "nil",
+            trail = nil
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats.globalStats.totalTournamentWins >= 1 then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "5 Tournament wins, nice!",
+        description = "Win 5 Tournaments.",
+        ---@type Reward
+        reward = {
+            title = "Tournament Victor",
+            trail = nil
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats.globalStats.totalTournamentWins >= 5 then
+                return true
+            end
+        end
+    },
 }
 
 local initializedAchievements = false

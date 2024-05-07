@@ -24,6 +24,17 @@ local function on_off_text(bool)
     if bool then return "On" else return "Off" end
 end
 
+local function get_controller_dir()
+    -- get which direction we are facing
+    local m = gMarioStates[0]
+    local direction = CONT_LEFT
+
+    if m.controller.buttonPressed & R_JPAD ~= 0
+    or m.controller.stickX > 0.5 then direction = CONT_RIGHT end
+
+    return direction
+end
+
 -- click functions
 local function set_gamemode()
     if (gMarioStates[0].controller.buttonPressed & R_JPAD ~= 0
@@ -170,10 +181,7 @@ local function set_boost_cooldown()
 
     -- get which direction we are facing
     local m = gMarioStates[0]
-    local direction = CONT_LEFT
-
-    if m.controller.buttonPressed & R_JPAD ~= 0
-    or m.controller.stickX > 0.5 then direction = CONT_RIGHT end
+    local direction = get_controller_dir()
 
     -- get speed
     local speed = 30
@@ -251,10 +259,7 @@ end
 local function set_time_limit(gamemode)
     -- get which direction we are facing
     local m = gMarioStates[0]
-    local direction = CONT_LEFT
-
-    if m.controller.buttonPressed & R_JPAD ~= 0
-    or m.controller.stickX > 0.5 then direction = CONT_RIGHT end
+    local direction = get_controller_dir()
 
     -- get speed
     local speed = 1
@@ -299,11 +304,7 @@ end
 
 local function set_lives(gamemode)
     -- get which direction we are facing
-    local m = gMarioStates[0]
-    local direction = CONT_LEFT
-
-    if m.controller.buttonPressed & R_JPAD ~= 0
-    or m.controller.stickX > 0.5 then direction = CONT_RIGHT end
+    local direction = get_controller_dir()
 
     if gamemode == HUNT then
         if direction == CONT_LEFT then
@@ -326,10 +327,7 @@ end
 local function set_sardines_hide_time()
     -- get which direction we are facing
     local m = gMarioStates[0]
-    local direction = CONT_LEFT
-
-    if m.controller.buttonPressed & R_JPAD ~= 0
-    or m.controller.stickX > 0.5 then direction = CONT_RIGHT end
+    local direction = get_controller_dir()
 
     -- get speed
     local speed = 1
@@ -356,10 +354,7 @@ local function set_frozen_health_drain()
 
     -- get which direction we are facing
     local m = gMarioStates[0]
-    local direction = CONT_LEFT
-
-    if m.controller.buttonPressed & R_JPAD ~= 0
-    or m.controller.stickX > 0.5 then direction = CONT_RIGHT end
+    local direction = get_controller_dir()
 
     -- get speed
     local speed = 1
@@ -399,11 +394,7 @@ end
 
 local function set_player_role(i)
     -- get which direction we are facing
-    local m = gMarioStates[0]
-    local direction = CONT_LEFT
-
-    if m.controller.buttonPressed & R_JPAD ~= 0
-    or m.controller.stickX > 0.5 then direction = CONT_RIGHT end
+    local direction = get_controller_dir()
     if direction == CONT_LEFT then
         gPlayerSyncTable[i].state = gPlayerSyncTable[i].state - 1
         if gPlayerSyncTable[i].state < 0 then gPlayerSyncTable[i].state = 3 end
@@ -421,6 +412,29 @@ local function set_player_role(i)
             gPlayerSyncTable[i].tagLives = gGlobalSyncTable.deathmatchLivesCount
         end
     end
+end
+
+local function set_tournament_points_req()
+    local m = gMarioStates[0]
+    local direction = get_controller_dir()
+
+    -- get speed
+    local speed = 1
+
+    if m.controller.buttonPressed & R_JPAD ~= 0
+    or m.controller.buttonPressed & L_JPAD ~= 0 then
+        speed = 10
+    end
+
+    if direction == CONT_LEFT then
+        gGlobalSyncTable.tournamentPointsReq = gGlobalSyncTable.tournamentPointsReq - speed
+    else
+        gGlobalSyncTable.tournamentPointsReq = gGlobalSyncTable.tournamentPointsReq + speed
+    end
+
+    gGlobalSyncTable.tournamentPointsReq = clamp(gGlobalSyncTable.tournamentPointsReq, 10, 200)
+
+    save_int("tournamentPointsReq", gGlobalSyncTable.tournamentPointsReq)
 end
 
 local function get_rules(gamemode)
@@ -511,6 +525,8 @@ blacklistEntries = {
 bindsEntries = {}
 -- romhack entries
 romhackEntries = {}
+-- tournament entries
+tournamentEntries = {}
 
 -- help entries
 -- generate it here as it is never changed
@@ -818,6 +834,14 @@ local function reset_setting_selections()
         input = INPUT_A,
         func = function ()
             entries = enemyEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        {name = "Tournament",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = tournamentEntries
             selection = 1
         end,
         valueText = ">",},
@@ -1346,6 +1370,34 @@ local function reset_romhack_entries()
     end
 end
 
+local function reset_tournament_entries()
+    local resetEntries = entries == tournamentEntries
+
+    tournamentEntries = {
+        {name = "Tournaments",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = function ()
+            gGlobalSyncTable.tournamentMode = not gGlobalSyncTable.tournamentMode
+        end,
+        valueText = on_off_text(gGlobalSyncTable.tournamentMode)},
+        {name = "Points Needed To Win",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = set_tournament_points_req,
+        valueText = gGlobalSyncTable.tournamentPointsReq},
+        {name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = settingEntries
+            selection = 1
+        end},
+    }
+
+    if resetEntries then entries = tournamentEntries end
+end
+
 local function reset_stat_player_selections_entries()
     local resetStatEntries = entries == statPlayerSelectionEntries
     statPlayerSelectionEntries = {}
@@ -1485,6 +1537,12 @@ local function reset_stat_entries()
             {name = "Total Tags",
             permission = PERMISSION_NONE,
             valueText = scopeStats.totalTags},
+            {name = "Tournament Wins",
+            permission = PERMISSION_NONE,
+            valueText = scopeStats.totalTournamentWins},
+            {name = "Total Tournament Points",
+            permission = PERMISSION_NONE,
+            valueText = scopeStats.totalTournamentPoints},
             {name = "Back",
             permission = PERMISSION_NONE,
             input = INPUT_A,
@@ -1890,7 +1948,7 @@ local function reset_trails_reward_entries()
     end
 end
 
-local function resset_enemy_entries()
+local function reset_enemy_entries()
     local resetEntries = entries == enemyEntries
 
     enemyEntries = {}
@@ -2149,6 +2207,7 @@ local function mario_update(m)
     reset_blacklist_modifier_entries()
     reset_bind_entries()
     reset_romhack_entries()
+    reset_tournament_entries()
     reset_stat_player_selections_entries()
     reset_stat_group_entries()
     reset_stat_entries()
@@ -2157,7 +2216,7 @@ local function mario_update(m)
     reset_achievement_entries()
     reset_title_reward_entries()
     reset_trails_reward_entries()
-    resset_enemy_entries()
+    reset_enemy_entries()
 end
 
 hook_event(HOOK_ON_HUD_RENDER, hud_render)

@@ -131,6 +131,30 @@ local function hud_leaderboard()
             stats.globalStats.totalTags = stats.globalStats.totalTags + gPlayerSyncTable[0].amountOfTags
             save_int("stats_global_totalTags", stats.globalStats.totalTags)
         end
+
+        -- if we are in tournament mode, add tournament points to stats
+        if gGlobalSyncTable.tournamentMode then
+            local addedPoints = 0
+
+            -- per tag we got, add half a point, round down
+            addedPoints = addedPoints + math.floor(gPlayerSyncTable[0].amountOfTags / 2)
+
+            -- depending on our placement, add points
+            if winners[1] == 0 then
+                addedPoints = addedPoints + 5
+            elseif winners[2] == 0 then
+                addedPoints = addedPoints + 3
+            elseif winners[3] == 0 then
+                addedPoints = addedPoints + 1
+            end
+
+            -- save to global stats
+            stats.globalStats.totalTournamentPoints = stats.globalStats.totalTournamentPoints + addedPoints
+            save_int("stats_global_totalTournamentPoints", stats.globalStats.totalTournamentPoints)
+
+            -- add to our points
+            gPlayerSyncTable[0].tournamentPoints = gPlayerSyncTable[0].tournamentPoints + addedPoints
+        end
     end
 
     local position = 1
@@ -319,7 +343,9 @@ end
 local function hud_voting_begins_in()
     local text = tostring(math.floor(gGlobalSyncTable.displayTimer / 30) + 1) .. " seconds"
 
-    if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
+    if gGlobalSyncTable.tournamentMode then
+        text = "Tournament Leaderboard in " .. text
+    elseif gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
         text = "Voting begins in " .. text
     elseif gGlobalSyncTable.autoMode then
         text = "Next round in " .. text
@@ -364,10 +390,6 @@ local function hud_render()
     if gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN then
         fade = 0
         hudTimer = 5 * 30
-        if  gGlobalSyncTable.roundState ~= ROUND_HIDING_SARDINES
-        and desyncTimer >= 10 * 30 then
-            select_random_did_you_know()
-        end
         addedStats = false
 
         return

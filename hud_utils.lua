@@ -1,11 +1,19 @@
 
-randomDidYouKnow = 0
+local didYouKnowHudRendering = 0
+local randomDidYouKnow = 0
 
-function select_random_did_you_know()
-    randomDidYouKnow = math.random(1, 34)
+---@param m MarioState
+local function mario_update(m)
+    didYouKnowHudRendering = didYouKnowHudRendering - 1
+    if didYouKnowHudRendering <= 0 then
+        randomDidYouKnow = math.random(1, 34)
+    end
 end
 
+hook_event(HOOK_MARIO_UPDATE, mario_update)
+
 function hud_did_you_know(fade)
+    didYouKnowHudRendering = 1 * 30
 
     local text = ""
     local text2 = ""

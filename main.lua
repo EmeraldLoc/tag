@@ -16,9 +16,10 @@ ROUND_ACTIVE                           = 1
 ROUND_WAIT                             = 2
 ROUND_TAGGERS_WIN                      = 3
 ROUND_RUNNERS_WIN                      = 4
-ROUND_HOT_POTATO_INTERMISSION          = 5
-ROUND_VOTING                           = 6
-ROUND_HIDING_SARDINES                  = 7
+ROUND_TOURNAMENT_LEADERBOARD           = 5
+ROUND_HOT_POTATO_INTERMISSION          = 6
+ROUND_VOTING                           = 7
+ROUND_HIDING_SARDINES                  = 8
 
 -- roles (gamemode-specific roles specified in designated gamemode files, and replace the wildcard role)
 RUNNER                                 = 0
@@ -122,7 +123,7 @@ gGlobalSyncTable.lateJoining           = false
 -- toggles vote level system
 gGlobalSyncTable.doVoting              = true
 -- all gamemode active timers
-gGlobalSyncTable.activeTimers = {}
+gGlobalSyncTable.activeTimers          = {}
 for i = MIN_GAMEMODE, MAX_GAMEMODE do
     gGlobalSyncTable.activeTimers[i]   = 120 * 30
 
@@ -153,6 +154,10 @@ gGlobalSyncTable.hazardSurfaces        = false
 gGlobalSyncTable.pipes                 = true
 -- override for romhacks
 gGlobalSyncTable.romhackOverride       = nil
+-- if we are in tournament mode or not
+gGlobalSyncTable.tournamentMode        = false
+-- points needed to win a tournament
+gGlobalSyncTable.tournamentPointsReq   = 50
 
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then
@@ -162,10 +167,10 @@ for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we a
         -- syincing it or something, anyways that's what it is so
         gPlayerSyncTable[i].invincTimer = 0
         -- amount of tags a player has gotten, and the amount of time a runner has
-        -- been a runner, this is for the leaderboard
+        -- been a runner, this is for the leaderboard, and adding stats
         gPlayerSyncTable[i].amountOfTags = 0
         gPlayerSyncTable[i].amountOfTimeAsRunner = 0
-        -- amount of tags till death (used for juggernaut and hunt)
+        -- amount of tags till death (used for multiple gamemodes)
         gPlayerSyncTable[i].tagLives = 0
         -- the assassins's target and stun timer (stun as the shock action)
         gPlayerSyncTable[i].assassinTarget = -1
@@ -182,6 +187,8 @@ for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we a
         gPlayerSyncTable[i].playerTrail = E_MODEL_BOOST_TRAIL
         -- timer for oddball
         gPlayerSyncTable[i].oddballTimer = 0
+        -- tournament points
+        gPlayerSyncTable[i].tournamentPoints = 0
     end
 end
 
@@ -255,6 +262,8 @@ stats = {
         totalTimeAsRunner = 0,
         runnerVictories = 0,
         taggerVictories = 0,
+        totalTournamentPoints = 0,
+        totalTournamentWins = 0,
     },
     [TAG] = {
         playTime = 0,
@@ -689,16 +698,78 @@ local function server_update()
         end
 
         check_round_status() -- check current round status
-    elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
+    elseif gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
+    or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
+        timer = timer - 1
+        gGlobalSyncTable.displayTimer = timer
+
+        if timer <= 0 then
+            if gGlobalSyncTable.tournamentMode then
+                gGlobalSyncTable.roundState = ROUND_TOURNAMENT_LEADERBOARD
+                timer = 5 * 30 -- 5 seconds
+                -- see if someone has won
+                for i = 0, MAX_PLAYERS - 1 do
+                    if gPlayerSyncTable[i].tournamentPoints >= gGlobalSyncTable.tournamentPointsReq
+                    and gNetworkPlayers[i].connected then
+                        timer = 10 * 30
+                    end
+                end
+                log_to_console("Tag: Setting round state to ROUND_TOURNAMENT_LEADERBOARD...")
+            elseif gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
+                gGlobalSyncTable.roundState = ROUND_VOTING
+                timer = 11 * 30 -- 11 seconds
+                log_to_console("Tag: Setting round state to ROUND_VOTING...")
+            else
+                if not gGlobalSyncTable.autoMode then
+                    for i = 0, MAX_PLAYERS - 1 do
+                        if gPlayerSyncTable[i].state ~= SPECTATOR then
+                            gPlayerSyncTable[i].state = RUNNER
+                        end
+                    end
+
+                    gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
+
+                    goto ifend
+                end
+
+                timer = 15 * 30 -- 15 seconds
+
+                local level = levels[gGlobalSyncTable.selectedLevel]
+
+                while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+                    gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+
+                    if level.level == LEVEL_TTC and isRomhack then
+                        gGlobalSyncTable.ttcSpeed = math.random(0, 3)
+                    end
+                end
+
+                prevLevel = gGlobalSyncTable.selectedLevel
+                gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+
+                log_to_console("Tag: Settings round state to ROUND_WAIT...")
+
+                ::ifend::
+            end
+        end
+    elseif gGlobalSyncTable.roundState == ROUND_TOURNAMENT_LEADERBOARD then
         timer = timer - 1
         gGlobalSyncTable.displayTimer = timer
 
         if timer <= 0 then
             if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
+                for i = 0, MAX_PLAYERS - 1 do
+                    local s = gPlayerSyncTable[i]
+                    s.tournamentPoints = 0
+                end
                 gGlobalSyncTable.roundState = ROUND_VOTING
-                timer = 11 * 30
+                timer = 11 * 30 -- 11 seconds
                 log_to_console("Tag: Settings round state to ROUND_VOTING...")
             else
+                for i = 0, MAX_PLAYERS - 1 do
+                    local s = gPlayerSyncTable[i]
+                    s.tournamentPoints = 0
+                end
                 if not gGlobalSyncTable.autoMode then
                     for i = 0, MAX_PLAYERS - 1 do
                         if gPlayerSyncTable[i].state ~= SPECTATOR then
@@ -983,6 +1054,7 @@ local function mario_update(m)
                 if load_bool("boost") ~= nil then gGlobalSyncTable.boosts = load_bool("boost") end
                 if load_bool("hazardSurfaces") ~= nil then gGlobalSyncTable.hazardSurfaces = load_bool("hazardSurfaces") end
                 if load_bool("pipes") ~= nil then gGlobalSyncTable.pipes = load_bool("pipes") end
+                if load_int("tournamentPointsReq") ~= nil then gGlobalSyncTable.tournamentPointsReq = load_int("tournamentPointsReq") end
             end
             if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
             if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
@@ -1012,6 +1084,14 @@ local function mario_update(m)
 
             if load_int("stats_global_totalTags") ~= nil then
                 stats.globalStats.totalTags = load_int("stats_global_totalTags")
+            end
+
+            if load_int("stats_global_totalTournamentPoints") ~= nil then
+                stats.globalStats.totalTournamentPoints = load_int("stats_global_totalTournamentPoints")
+            end
+
+            if load_int("stats_global_totalTournamentWins") ~= nil then
+                stats.globalStats.totalTournamentWins = load_int("stats_global_totalTournamentWins")
             end
 
             -- load gamemode stats
