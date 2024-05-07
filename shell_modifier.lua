@@ -81,7 +81,7 @@ local function act_riding_shell_ground(m)
     adjust_sound_for_speed(m)
 
     reset_rumble_timers(m)
-    return false
+    return 0
 end
 
 hook_mario_action(ACT_SHELL_GROUND_CUSTOM, act_riding_shell_ground)

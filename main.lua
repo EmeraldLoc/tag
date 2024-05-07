@@ -1774,8 +1774,10 @@ local function act_nothing(m)
     -- get out of the action if round state is wait or wait players
     if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS
     or gGlobalSyncTable.roundState == ROUND_WAIT then
-        set_mario_action(m, ACT_FREEFALL, 0)
+        return set_mario_action(m, ACT_FREEFALL, 0)
     end
+
+    return 0
 end
 
 -- runs once per frame (all game logic runs at 30fps)

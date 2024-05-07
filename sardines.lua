@@ -8,6 +8,8 @@ local FINISHED = 2
 local fade = 0
 local hidingPos = { x = 0, y = 0, z = 0 }
 
+ACT_IDLE_SARDINE = ACT_GROUP_AIRBORNE | allocate_mario_action(ACT_FLAG_AIR)
+
 ---@param m MarioState
 local function mario_update(m)
 
@@ -29,9 +31,7 @@ local function mario_update(m)
         m.freeze = 1
     elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES
     and gPlayerSyncTable[0].state == RUNNER then
-        if m.action & ACT_GROUP_MASK ~= ACT_GROUP_AIRBORNE then
-            vec3f_copy(hidingPos, m.pos)
-        end
+        vec3f_copy(hidingPos, m.pos)
     end
 
     if gGlobalSyncTable.roundState == ROUND_ACTIVE
@@ -41,13 +41,7 @@ local function mario_update(m)
             vec3f_copy(m.pos, hidingPos)
         end
 
-        if  m.action ~= ACT_FREEFALL
-        and m.action ~= ACT_FREEFALL_LAND
-        and m.action ~= ACT_FREEFALL_LAND_STOP
-        and m.action ~= ACT_IDLE
-        and m.action ~= ACT_LEDGE_GRAB then
-            set_mario_action(m, ACT_FREEFALL, 0)
-        end
+        set_mario_action(m, ACT_IDLE_SARDINE, 0)
 
         m.vel.x = 0
         m.vel.y = 0
@@ -262,8 +256,32 @@ local function character_sound(m)
     end
 end
 
+---@param m MarioState
+local function act_idle_sardine(m)
+
+    -- set velocity varaibles to none
+    m.forwardVel = 0
+    m.vel.x = 0
+    m.vel.y = 0
+    m.vel.z = 0
+    m.slideVelX = 0
+    m.slideVelZ = 0
+    -- freeze mario's animation
+    m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - (m.marioObj.header.gfx.animInfo.animAccel + 1)
+
+    -- get out of the action if round state is wait or wait players
+    if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS
+    or gGlobalSyncTable.roundState == ROUND_WAIT then
+        return set_mario_action(m, ACT_FREEFALL, 0)
+    end
+
+    return 0
+end
+
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 hook_event(HOOK_CHARACTER_SOUND, character_sound)
+
+hook_mario_action(ACT_IDLE_SARDINE, act_idle_sardine)

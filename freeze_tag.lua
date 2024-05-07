@@ -220,6 +220,7 @@ local function act_frozen(m)
     m.slideVelZ = 0
     -- freeze mario's animation
     m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - (m.marioObj.header.gfx.animInfo.animAccel + 1)
+    return 0
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
