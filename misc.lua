@@ -193,6 +193,26 @@ function check_round_status()
 		return
 	end
 
+	-- for oddball, find runner
+	if gGlobalSyncTable.gamemode == ODDBALL then
+		for i = 0, MAX_PLAYERS - 1 do
+			if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state == RUNNER then
+				if gPlayerSyncTable[i].oddballTimer <= 0 then
+					if roundStatusTimer < 0 then
+						timer = 5 * 30 -- 5 seconds
+
+						gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN
+					else
+						roundStatusTimer = roundStatusTimer - 1
+						return
+					end
+				end
+
+				break
+			end
+		end
+	end
+
 	roundStatusTimer = 0.2 * 30
 end
 

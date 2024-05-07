@@ -4,6 +4,10 @@ local function mario_update(m)
     if gGlobalSyncTable.gamemode ~= ODDBALL then return end
 
     m.health = 0x880 -- set mario's health to full
+
+    if gPlayerSyncTable[0].state == ODDBALL and m.playerIndex == 0 then
+        gPlayerSyncTable[0].oddballTimer = gPlayerSyncTable[0].oddballTimer - 1
+    end
 end
 
 local function hud_render()

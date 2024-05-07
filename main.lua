@@ -1385,7 +1385,7 @@ local function hud_round_status()
                 end
             end
 
-            text = get_player_name(runner) .. "\\#FFFFFF\\: " .. s.oddballTimer
+            text = get_player_name(runner) .. "\\#FFFFFF\\: " .. math.floor(s.oddballTimer / 30)
         else
             text = "Time Remaining: " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
         end
@@ -1424,7 +1424,7 @@ local function hud_round_status()
 
     -- get width of screen and text
     local screenWidth = djui_hud_get_screen_width()
-    local width = djui_hud_measure_text(text) * scale
+    local width = djui_hud_measure_text(strip_hex(text)) * scale
 
     local x = (screenWidth - width) / 2.0
     local y = 0
@@ -1435,7 +1435,7 @@ local function hud_round_status()
 
     -- render text
     djui_hud_set_color(255, 255, 255, fade)
-    djui_hud_print_text(text, x, y, scale)
+    djui_hud_print_colored_text(text, x, y, scale, fade)
 end
 
 local function hud_gamemode()
