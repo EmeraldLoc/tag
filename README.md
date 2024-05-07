@@ -32,6 +32,10 @@ Don't like a gamemode, modifier, or level? Blacklist it! Blacklisting allows you
 
 Each player has stats! These stats go from playtime, total tags, and total time as runner, to total runner victories and tagger victories. The best part is each gamemode gets it's own statistics for each of these metrics!
 
+### Achievements
+
+Each player can now unlock achievements! This isn't just for bragging rights either, you also get rewards like titles and boost trails! You can view what each achievements unlocks, and how to get it in the "Achievements" section in Tag.
+
 ### Frequently Asked Questions
 
 - Does this support sm64ex-coop/sm64coopdx
