@@ -192,7 +192,7 @@ achievements = {
     },
     ---@type Achievement
     {
-        name = "2 days in, you mut be grinding!",
+        name = "2 days in, you must be grinding!",
         description = "Play for 48 hours total!",
         ---@type Reward
         reward = {
