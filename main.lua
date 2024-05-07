@@ -69,7 +69,9 @@ MODIFIER_DOUBLE_JUMP                   = 13
 MODIFIER_SHELL                         = 14
 MODIFIER_BLJS                          = 15
 MODIFIER_FRIENDLY_FIRE                 = 16
-MODIFIER_MAX                           = 16
+MODIFIER_HARD_SURFACE                  = 17
+MODIFIER_SAND                          = 18
+MODIFIER_MAX                           = 18
 
 -- binds
 BIND_BOOST                             = 0
@@ -1799,7 +1801,10 @@ hook_event(HOOK_ON_CHAT_MESSAGE, on_chat_message)
 -- make sure the user can never pause exit
 hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
 -- this hook allows us to walk on lava and quicksand
-hook_event(HOOK_ALLOW_HAZARD_SURFACE, function() return gGlobalSyncTable.hazardSurfaces end)
+hook_event(HOOK_ALLOW_HAZARD_SURFACE, function (m)
+    if gGlobalSyncTable.modifier == MODIFIER_SAND and m.floor.type == SURFACE_DEEP_QUICKSAND then return end
+    return gGlobalSyncTable.hazardSurfaces
+end)
 -- disables dialogs
 hook_event(HOOK_ON_DIALOG, function () return false end)
 

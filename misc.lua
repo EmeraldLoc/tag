@@ -499,6 +499,10 @@ function get_modifier_text(m)
 		end
 	elseif m == MODIFIER_FRIENDLY_FIRE then
 		text = "\\#F26D13\\Friendly Fire"
+	elseif m == MODIFIER_HARD_SURFACE then
+		text = "\\#686C73\\Hard Floors"
+	elseif m == MODIFIER_SAND then
+		text = "\\#E7C496\\Sandy Floor"
 	elseif m == MODIFIER_NONE
 	and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
@@ -554,6 +558,10 @@ function get_modifier_text_without_hex()
 		end
 	elseif gGlobalSyncTable.modifier == MODIFIER_FRIENDLY_FIRE then
 		text = "Friendly Fire"
+	elseif gGlobalSyncTable.modifier == MODIFIER_HARD_SURFACE then
+		text = "Hard Floor"
+	elseif gGlobalSyncTable.modifier == MODIFIER_SAND then
+		text = "Sandy Floor"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
 		text = "None"
 	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
