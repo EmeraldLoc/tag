@@ -269,7 +269,7 @@ romhacks = {
         },
     },
     {
-        name = "Unknown",
+        name = "Unknown Hack",
         shortName = "unknown",
         water = true,
         levels = {

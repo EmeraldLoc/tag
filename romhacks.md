@@ -7,11 +7,11 @@ Before beginning, this guide assumes you have some lua experience, experience wi
 [Noclip](https://mods.sm64coopdx.com/mods/noclip.30/)
 [Position Display](https://github.com/Agent-11/agent-ex-coop-mods/blob/main/mods/pos-display.lua)
 
-### Creating a Romhack
+### Romhack Table Configuration
 
 First, head to `romhacks.lua`. There should be a table called `romhacks` in that file.
 
-The table `romhacks` is a table containing:
+The table `romhacks` is a table containing multiple romhack entries. A romhack entries looks like:
 
 | Field | Type | Notes |
 | ----- | ---- | ----- |
