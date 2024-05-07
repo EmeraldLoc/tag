@@ -1385,7 +1385,13 @@ local function hud_round_status()
                 end
             end
 
-            text = get_player_name(runner) .. "\\#FFFFFF\\: " .. math.floor(s.oddballTimer / 30)
+            local time = tostring(math.floor(s.oddballTimer / 30))
+
+            if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+                time = "???"
+            end
+
+            text = get_player_name(runner) .. "\\#FFFFFF\\: " .. time
         else
             text = "Time Remaining: " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
         end
