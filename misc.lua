@@ -383,7 +383,7 @@ PERMISSION_MODERATORS = 2
 function has_permission(perm)
     if perm == PERMISSION_NONE then return true end
     if perm == PERMISSION_SERVER and network_is_server() then return true end
-    if perm == PERMISSION_MODERATORS and (network_is_server() or network_is_moderator() or isOwner) then return true end
+    if perm == PERMISSION_MODERATORS and (network_is_server() or network_is_moderator() or isOwner or isDeveloper) then return true end
 
     return false
 end
