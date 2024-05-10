@@ -1115,27 +1115,17 @@ local function mario_update(m)
                 end
             end
 
-            isOwner = achievements.owner ~= nil
-            isDeveloper = achievements.developer ~= nil
+            isOwner = achievements[-1] ~= nil
+            isDeveloper = achievements[-2] ~= nil
 
             -- load selected player title
-            if isOwner or isDeveloper then
-                local title = load_int("playerTitle")
-                if  isOwner
-                and title == -2 then
-                    gPlayerSyncTable[0].playerTitle = achievements.owner.reward.title
-                elseif title == -1 then
-                    gPlayerSyncTable[0].playerTitle = achievements.developer.reward.title
-                end
-            else
-                local title = load_int("playerTitle")
-                if title ~= nil then
-                    if  completedAchievements[title] ~= nil
-                    and achievements[title] ~= nil
-                    and achievements[title].reward ~= nil
-                    and achievements[title].reward.title ~= nil then
-                        gPlayerSyncTable[0].playerTitle = achievements[title].reward.title
-                    end
+            local title = load_int("playerTitle")
+            if title ~= nil then
+                if (completedAchievements[title] ~= nil or title < 0)
+                and achievements[title] ~= nil
+                and achievements[title].reward ~= nil
+                and achievements[title].reward.title ~= nil then
+                    gPlayerSyncTable[0].playerTitle = achievements[title].reward.title
                 end
             end
 

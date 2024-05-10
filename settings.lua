@@ -1671,19 +1671,9 @@ local function reset_achievement_entries()
 
         local valueText = "Not Completed"
 
-        if localCompletedAchievements[i] == true then
+        if localCompletedAchievements[i] == true
+        or i < 0 then
             valueText = "\\#FFD700\\Completed"
-        end
-
-        if achievements.owner ~= nil then
-            if achievement.name == achievements.owner.name
-            or achievement.name == achievements.developer.name then
-                valueText = "\\#FFD700\\Completed"
-            end
-        elseif achievements.developer ~= nil then
-            if achievement.name == achievements.developer.name then
-                valueText = "\\#FFD700\\Completed"
-            end
         end
 
         table.insert(achievementEntries, {
@@ -1820,43 +1810,9 @@ local function reset_title_reward_entries()
         }
     }
 
-    if achievements.owner ~= nil then
-        valueText = "Unequipped"
-        if achievements.owner.reward.title == gPlayerSyncTable[0].playerTitle then
-            valueText = "Equipped"
-        end
-        table.insert(titleRewardEntries, {
-            name = achievements.owner.reward.title,
-            permission = PERMISSION_NONE,
-            input = INPUT_A,
-            func = function ()
-                gPlayerSyncTable[0].playerTitle = achievements.owner.reward.title
-                save_int("playerTitle", -2)
-            end,
-            valueText = valueText
-        })
-    end
-
-    if achievements.developer ~= nil then
-        valueText = "Unequipped"
-        if achievements.developer.reward.title == gPlayerSyncTable[0].playerTitle then
-            valueText = "Equipped"
-        end
-        table.insert(titleRewardEntries, {
-            name = achievements.developer.reward.title,
-            permission = PERMISSION_NONE,
-            input = INPUT_A,
-            func = function ()
-                gPlayerSyncTable[0].playerTitle = achievements.developer.reward.title
-                save_int("playerTitle", -1)
-            end,
-            valueText = valueText
-        })
-    end
-
     for i, achievement in pairs(achievements) do
         -- if we completed the achievement, add the title to the entry
-        if  completedAchievements[i] == true
+        if (completedAchievements[i] == true or i < 0)
         and achievement.reward.title ~= nil then
             valueText = "Unequipped"
             if achievement.reward.title == gPlayerSyncTable[0].playerTitle then
