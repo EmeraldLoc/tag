@@ -1,0 +1,8 @@
+extern const GeoLayout aggresive_tagger_trail_geo[];
+extern Lights1 aggresive_tagger_trail_f3dlite_material_001_lights;
+extern Vtx aggresive_tagger_trail_Circle_mesh_layer_1_vtx_0[40];
+extern Gfx aggresive_tagger_trail_Circle_mesh_layer_1_tri_0[];
+extern Gfx mat_aggresive_tagger_trail_f3dlite_material_001[];
+extern Gfx mat_revert_aggresive_tagger_trail_f3dlite_material_001[];
+extern Gfx aggresive_tagger_trail_Circle_mesh_layer_1[];
+extern Gfx aggresive_tagger_trail_material_revert_render_settings[];

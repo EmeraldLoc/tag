@@ -1,6 +1,2 @@
 # I love macos
 .DS_Store
-
-# actor stuff
-actors/**
-!actors/*.bin

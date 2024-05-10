@@ -1,0 +1,118 @@
+Lights1 tagger_trail_f3dlite_material_lights = gdSPDefLights1(
+	0xE8, 0x2E, 0x2E,
+	0xE8, 0x2E, 0x2E, 0x28, 0x28, 0x28);
+
+Vtx tagger_trail_Plane_mesh_layer_1_vtx_0[40] = {
+	{{ {-100, -57, 0}, 0, {-16, 202}, {0, 0, 129, 255} }},
+	{{ {-100, 57, 0}, 0, {-16, 790}, {0, 0, 129, 255} }},
+	{{ {-99, 67, 0}, 0, {-11, 838}, {0, 0, 129, 255} }},
+	{{ {-91, 84, 0}, 0, {32, 926}, {0, 0, 129, 255} }},
+	{{ {-96, 76, 0}, 0, {6, 884}, {0, 0, 129, 255} }},
+	{{ {-57, 100, 0}, 0, {202, 1008}, {0, 0, 129, 255} }},
+	{{ {-76, 96, 0}, 0, {108, 986}, {0, 0, 129, 255} }},
+	{{ {-84, 91, 0}, 0, {66, 960}, {0, 0, 129, 255} }},
+	{{ {-67, 99, 0}, 0, {154, 1003}, {0, 0, 129, 255} }},
+	{{ {57, 100, 0}, 0, {790, 1008}, {0, 0, 129, 255} }},
+	{{ {67, 99, 0}, 0, {838, 1003}, {0, 0, 129, 255} }},
+	{{ {84, 91, 0}, 0, {926, 960}, {0, 0, 129, 255} }},
+	{{ {76, 96, 0}, 0, {884, 986}, {0, 0, 129, 255} }},
+	{{ {100, 57, 0}, 0, {1008, 790}, {0, 0, 129, 255} }},
+	{{ {96, 76, 0}, 0, {986, 884}, {0, 0, 129, 255} }},
+	{{ {91, 84, 0}, 0, {960, 926}, {0, 0, 129, 255} }},
+	{{ {96, 76, 0}, 0, {986, 884}, {0, 0, 129, 255} }},
+	{{ {99, 67, 0}, 0, {1003, 838}, {0, 0, 129, 255} }},
+	{{ {100, 57, 0}, 0, {1008, 790}, {0, 0, 129, 255} }},
+	{{ {100, -57, 0}, 0, {1008, 202}, {0, 0, 129, 255} }},
+	{{ {99, -67, 0}, 0, {1003, 154}, {0, 0, 129, 255} }},
+	{{ {91, -84, 0}, 0, {960, 66}, {0, 0, 129, 255} }},
+	{{ {96, -76, 0}, 0, {986, 108}, {0, 0, 129, 255} }},
+	{{ {57, -100, 0}, 0, {790, -16}, {0, 0, 129, 255} }},
+	{{ {76, -96, 0}, 0, {884, 6}, {0, 0, 129, 255} }},
+	{{ {84, -91, 0}, 0, {926, 32}, {0, 0, 129, 255} }},
+	{{ {67, -99, 0}, 0, {838, -11}, {0, 0, 129, 255} }},
+	{{ {-57, -100, 0}, 0, {202, -16}, {0, 0, 129, 255} }},
+	{{ {-67, -99, 0}, 0, {154, -11}, {0, 0, 129, 255} }},
+	{{ {-84, -91, 0}, 0, {66, 32}, {0, 0, 129, 255} }},
+	{{ {-76, -96, 0}, 0, {108, 6}, {0, 0, 129, 255} }},
+	{{ {-100, -57, 0}, 0, {-16, 202}, {0, 0, 129, 255} }},
+	{{ {-84, -91, 0}, 0, {66, 32}, {0, 0, 129, 255} }},
+	{{ {-96, -76, 0}, 0, {6, 108}, {0, 0, 129, 255} }},
+	{{ {-100, -57, 0}, 0, {-16, 202}, {0, 0, 129, 255} }},
+	{{ {-91, -84, 0}, 0, {32, 66}, {0, 0, 129, 255} }},
+	{{ {-99, -67, 0}, 0, {-11, 154}, {0, 0, 129, 255} }},
+	{{ {-57, 100, 0}, 0, {202, 1008}, {0, 0, 129, 255} }},
+	{{ {100, 57, 0}, 0, {1008, 790}, {0, 0, 129, 255} }},
+	{{ {57, -100, 0}, 0, {790, -16}, {0, 0, 129, 255} }},
+};
+
+Gfx tagger_trail_Plane_mesh_layer_1_tri_0[] = {
+	gsSPVertex(tagger_trail_Plane_mesh_layer_1_vtx_0 + 0, 16, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(0, 2, 3, 0),
+	gsSP1Triangle(2, 4, 3, 0),
+	gsSP1Triangle(0, 3, 5, 0),
+	gsSP1Triangle(3, 6, 5, 0),
+	gsSP1Triangle(3, 7, 6, 0),
+	gsSP1Triangle(6, 8, 5, 0),
+	gsSP1Triangle(5, 9, 10, 0),
+	gsSP1Triangle(5, 10, 11, 0),
+	gsSP1Triangle(10, 12, 11, 0),
+	gsSP1Triangle(5, 11, 13, 0),
+	gsSP1Triangle(11, 14, 13, 0),
+	gsSP1Triangle(11, 15, 14, 0),
+	gsSPVertex(tagger_trail_Plane_mesh_layer_1_vtx_0 + 16, 16, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(2, 3, 4, 0),
+	gsSP1Triangle(2, 4, 5, 0),
+	gsSP1Triangle(4, 6, 5, 0),
+	gsSP1Triangle(2, 5, 7, 0),
+	gsSP1Triangle(5, 8, 7, 0),
+	gsSP1Triangle(5, 9, 8, 0),
+	gsSP1Triangle(8, 10, 7, 0),
+	gsSP1Triangle(7, 11, 12, 0),
+	gsSP1Triangle(7, 12, 13, 0),
+	gsSP1Triangle(12, 14, 13, 0),
+	gsSP1Triangle(7, 13, 15, 0),
+	gsSPVertex(tagger_trail_Plane_mesh_layer_1_vtx_0 + 32, 8, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(0, 3, 1, 0),
+	gsSP1Triangle(1, 4, 2, 0),
+	gsSP1Triangle(2, 5, 6, 0),
+	gsSP1Triangle(6, 7, 2, 0),
+	gsSPEndDisplayList(),
+};
+
+
+Gfx mat_tagger_trail_f3dlite_material[] = {
+	gsDPPipeSync(),
+	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
+	gsSPClearGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+	gsSPTexture(65535, 65535, 0, 0, 1),
+	gsSPSetLights1(tagger_trail_f3dlite_material_lights),
+	gsSPEndDisplayList(),
+};
+
+Gfx mat_revert_tagger_trail_f3dlite_material[] = {
+	gsDPPipeSync(),
+	gsSPSetGeometryMode(G_CULL_BACK | G_SHADING_SMOOTH),
+	gsSPEndDisplayList(),
+};
+
+Gfx tagger_trail_Plane_mesh_layer_1[] = {
+	gsSPDisplayList(mat_tagger_trail_f3dlite_material),
+	gsSPDisplayList(tagger_trail_Plane_mesh_layer_1_tri_0),
+	gsSPDisplayList(mat_revert_tagger_trail_f3dlite_material),
+	gsSPEndDisplayList(),
+};
+
+Gfx tagger_trail_material_revert_render_settings[] = {
+	gsDPPipeSync(),
+	gsSPSetGeometryMode(G_LIGHTING),
+	gsSPClearGeometryMode(G_TEXTURE_GEN),
+	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
+	gsSPTexture(65535, 65535, 0, 0, 0),
+	gsDPSetEnvColor(255, 255, 255, 255),
+	gsDPSetAlphaCompare(G_AC_NONE),
+	gsSPEndDisplayList(),
+};
+
