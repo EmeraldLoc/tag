@@ -792,6 +792,18 @@ local function reset_setting_selections()
     local resetEntries = entries == settingEntries
 
     settingEntries = {
+        -- gamemode selection
+        {name = "Gamemode",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = set_gamemode,
+        valueText = get_gamemode_including_random(gGlobalSyncTable.gamemode)},
+        -- modifier selection
+        {name = "Modifiers",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = set_modifier,
+        valueText = get_modifier_including_random()},
         -- general settings selection
         {name = "General Settings",
         permission = PERMISSION_NONE,
@@ -877,18 +889,6 @@ local function reset_general_selection()
     local resetGeneralEntries = entries == generalEntries
 
     generalEntries = {
-        -- gamemode selection
-        {name = "Gamemode",
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_JOYSTICK,
-        func = set_gamemode,
-        valueText = get_gamemode_including_random(gGlobalSyncTable.gamemode)},
-        -- modifier selection
-        {name = "Modifiers",
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_JOYSTICK,
-        func = set_modifier,
-        valueText = get_modifier_including_random()},
         -- blj selection
         {name = "Bljs",
         permission = PERMISSION_MODERATORS,
