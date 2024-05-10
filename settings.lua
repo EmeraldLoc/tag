@@ -709,6 +709,7 @@ local function settings_text()
     local text = "Options"
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     local y = (djui_hud_get_screen_height() - bgHeight) / 2
+    if y - scrollOffset < -20 then return end
     djui_hud_set_color(220, 220, 220, 255)
     djui_hud_print_text(text, x + ((bgWidth / 2) - djui_hud_measure_text(text)), y + 50 - scrollOffset, 2)
     text = version
