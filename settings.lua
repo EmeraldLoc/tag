@@ -24,6 +24,23 @@ local function on_off_text(bool)
     if bool then return "On" else return "Off" end
 end
 
+local function is_entry_visible(entryIndex)
+    local entryHeight = 90
+    for i = 1, #entries do
+        entryHeight = entryHeight + 60
+        if entries[i].seperator ~= nil then
+            entryHeight = entryHeight + 30
+        end
+
+        if i == entryIndex then break end
+    end
+
+    if entryHeight - scrollOffset < 30 then return false end
+    if entryHeight - scrollOffset > 810 then return false end
+
+    return true
+end
+
 local function get_controller_dir()
     -- get which direction we are facing
     local m = gMarioStates[0]
@@ -689,7 +706,6 @@ local function background()
 end
 
 local function settings_text()
-    if scrollOffset / 60 > 1.5 then return end
     local text = "Options"
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     local y = (djui_hud_get_screen_height() - bgHeight) / 2
@@ -1959,18 +1975,27 @@ local function hud_render()
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
+    scrollOffset = 0
+
     -- get entry to start scrolling at
     scrollEntry = 12
     for i = 1, #entries do
-        if entries[i].seperator ~= nil then
-            scrollEntry = scrollEntry - 0.4
+        if  entries[i].seperator ~= nil
+        and i < scrollEntry - 1 then
+            scrollEntry = scrollEntry - (2/3)
         end
     end
 
-    if selection >= math.ceil(scrollEntry) then
-        scrollOffset = 60 * (selection - scrollEntry)
-    else
-        scrollOffset = 0
+    scrollEntry = math.floor(scrollEntry)
+
+    if selection > scrollEntry then
+        for i = scrollEntry + 1, selection do
+            scrollOffset = scrollOffset + 60
+
+            if entries[i].seperator ~= nil then
+                scrollOffset = scrollOffset + 30
+            end
+        end
     end
 
     background()
@@ -1982,12 +2007,10 @@ local function hud_render()
 
     for i = 1, #entries do
         if entries[i].seperator ~= nil then
-            if i > math.ceil(scrollEntry + scrollOffset / 60)
-            or i < math.floor((scrollOffset / 60) - 1) then
-                height = height + 60
+            if not is_entry_visible(i) then
+                height = height + 90
                 goto continue
             end
-
             height = height + 45
 
             djui_hud_set_color(220, 220, 220, 255)
@@ -1996,9 +2019,9 @@ local function hud_render()
             height = height + 45
         else
             height = height + 60
-            if i > math.ceil(scrollEntry + scrollOffset / 60)
-            or i < math.floor((scrollOffset / 60) - 1) then goto continue end
         end
+
+        if not is_entry_visible(i) then goto continue end
 
         if entries[i].text ~= nil then
 
