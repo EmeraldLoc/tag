@@ -1,7 +1,6 @@
 
 ---@param m MarioState
 local function mario_update(m)
-
     if gGlobalSyncTable.modifier ~= MODIFIER_SAND then return end
 
     if m.floor.type ~= SURFACE_DEATH_PLANE
