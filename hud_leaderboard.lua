@@ -19,7 +19,7 @@ end
 
 local function hud_winner_group_render()
 
-    local text = ""
+    local text = "What the heck is happening."
 
     if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
         if gGlobalSyncTable.gamemode == FREEZE_TAG and gGlobalSyncTable.freezeHealthDrain > 0 then
@@ -158,8 +158,15 @@ local function hud_leaderboard()
     end
 
     local position = 1
+    local offsetX = 0
+
+    if #winners > 16 then offsetX = -300 end
 
     for w = 1, #winners do
+        if w > 16 and offsetX ~= 300 then
+            offsetX = 300
+            renderedIndex = 0
+        end
         local i = winners[w]
         if gNetworkPlayers[i].connected then
             local displayName = get_player_name(i)
@@ -170,21 +177,21 @@ local function hud_leaderboard()
             local width = 550
 
             local x = (screenWidth - width) / 2
-            local y = 80 + (renderedIndex * 50)
+            local y = 110 + (renderedIndex * 50)
 
             djui_hud_set_color(32, 32, 32, fade)
-            djui_hud_render_rect_outlined(x, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
+            djui_hud_render_rect_outlined(x + offsetX, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
 
             local r, g, b = hex_to_rgb(network_get_player_text_color_string(i))
             width = djui_hud_measure_text(text)
             x = (screenWidth - 390) / 2
 
             djui_hud_set_color(r, g, b, fade)
-            djui_hud_print_colored_text(text, x, y, 1, fade)
+            djui_hud_print_colored_text(text, x + offsetX, y, 1, fade)
 
             x = (screenWidth - 470) / 2
 
-            render_player_head(i, x, y, 1.9, 1.9)
+            render_player_head(i, x + offsetX, y, 1.9, 1.9)
 
             x = (screenWidth - 530) / 2
 
@@ -212,7 +219,7 @@ local function hud_leaderboard()
                 djui_hud_set_color(220, 220, 220, 255)
             end
 
-            djui_hud_print_text(text, x, y, 1)
+            djui_hud_print_text(text, x + offsetX, y, 1)
 
             if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
                 if gGlobalSyncTable.gamemode ~= FREEZE_TAG then
@@ -240,7 +247,7 @@ local function hud_leaderboard()
                 djui_hud_set_color(255, 255, 255, fade)
             end
 
-            djui_hud_print_text(text, x, y, 1)
+            djui_hud_print_text(text, x + offsetX, y, 1)
 
             renderedIndex = renderedIndex + 1
         end
@@ -266,7 +273,7 @@ local function hud_leaderboard()
         local y = 80 + (renderedIndex * 47)
 
         djui_hud_set_color(255, 255, 255, fade)
-        djui_hud_print_text("Sardine", x, y, 1)
+        djui_hud_print_text("Sardine", x + offsetX, y, 1)
 
         renderedIndex = renderedIndex + 1
 
@@ -281,18 +288,18 @@ local function hud_leaderboard()
         y = 80 + (renderedIndex * 47)
 
         djui_hud_set_color(32, 32, 32, fade)
-        djui_hud_render_rect_outlined(x, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
+        djui_hud_render_rect_outlined(x + offsetX, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
 
         local r, g, b = hex_to_rgb(network_get_player_text_color_string(sardine))
         width = djui_hud_measure_text(text)
         x = (screenWidth - 450) / 2
 
         djui_hud_set_color(r, g, b, fade)
-        djui_hud_print_colored_text(text, x, y, 1, fade)
+        djui_hud_print_colored_text(text, x + offsetX, y, 1, fade)
 
         x = (screenWidth - 530) / 2
 
-        render_player_head(sardine, x, y, 1.9, 1.9)
+        render_player_head(sardine, x + offsetX, y, 1.9, 1.9)
 
         text = "Time as runner: " .. math.floor(gPlayerSyncTable[sardine].amountOfTimeAsRunner / 30) .. "s"
 
@@ -300,7 +307,7 @@ local function hud_leaderboard()
         x = ((screenWidth + 550 - ((width * 2))) / 2)
 
         djui_hud_set_color(255, 255, 255, fade)
-        djui_hud_print_text(text, x, y, 1)
+        djui_hud_print_text(text, x + offsetX, y, 1)
 
         ::continue::
     end
@@ -416,7 +423,6 @@ local function hud_render()
     hud_voting_begins_in()
     hud_gamemode()
     hud_modifier()
-    hud_did_you_know(fade)
 end
 
 hook_event(HOOK_UPDATE, update)

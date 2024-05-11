@@ -213,7 +213,8 @@ local function hud_render()
         hudTimer = 5 * 30
         -- see if someone has won
         for i = 0, MAX_PLAYERS - 1 do
-            if gPlayerSyncTable[i].tournamentPoints >= gGlobalSyncTable.tournamentPointsReq
+            if  gPlayerSyncTable[i].tournamentPoints ~= nil
+            and gPlayerSyncTable[i].tournamentPoints >= gGlobalSyncTable.tournamentPointsReq
             and gNetworkPlayers[i].connected then
                 hudTimer = 10 * 30
             end

@@ -1,6 +1,6 @@
 
 local didYouKnowHudRendering = 0
-local randomDidYouKnow = 0
+local randomDidYouKnow = 1
 
 ---@param m MarioState
 local function mario_update(m)
