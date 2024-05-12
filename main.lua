@@ -160,6 +160,10 @@ gGlobalSyncTable.romhackOverride       = nil
 gGlobalSyncTable.tournamentMode        = false
 -- points needed to win a tournament
 gGlobalSyncTable.tournamentPointsReq   = 50
+-- bomb cooldown
+gGlobalSyncTable.maxBombCooldown       = 2 * 30
+-- blaster cooldown
+gGlobalSyncTable.maxBlasterCooldown    = 0.8 * 30
 
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then

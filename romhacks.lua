@@ -1522,7 +1522,8 @@ local function check_mods()
                     configure_romhacks(gActiveMods[i])
 
                 -- check for nametags mod by looking at incompatible tag
-                elseif string.match(gActiveMods[i].incompatible, "nametags") then
+                elseif (usingCoopDX and gServerSettings.nametags)
+                or string.match(gActiveMods[i].incompatible, "nametags") then
                     -- set nametagsEnabled to true
                     nametagsEnabled = true
                 end

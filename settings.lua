@@ -219,6 +219,56 @@ local function set_boost_cooldown()
     end
 end
 
+local function set_bomb_cooldown()
+
+    -- get which direction we are facing
+    local m = gMarioStates[0]
+    local direction = get_controller_dir()
+
+    -- get speed
+    local speed = 1 * 30
+
+    if m.controller.buttonPressed & R_JPAD ~= 0
+    or m.controller.buttonPressed & L_JPAD ~= 0 then
+        speed = 5 * 30
+    end
+
+    if direction == CONT_LEFT then
+        gGlobalSyncTable.maxBombCooldown = gGlobalSyncTable.maxBombCooldown - speed
+
+        if gGlobalSyncTable.maxBombCooldown <= 0 then
+            gGlobalSyncTable.maxBombCooldown = 0
+        end
+    else
+        gGlobalSyncTable.maxBombCooldown = gGlobalSyncTable.maxBombCooldown + speed
+    end
+end
+
+local function set_blaster_cooldown()
+
+    -- get which direction we are facing
+    local m = gMarioStates[0]
+    local direction = get_controller_dir()
+
+    -- get speed
+    local speed = 0.1 * 30
+
+    if m.controller.buttonPressed & R_JPAD ~= 0
+    or m.controller.buttonPressed & L_JPAD ~= 0 then
+        speed = 1 * 30
+    end
+
+    if direction == CONT_LEFT then
+        gGlobalSyncTable.maxBlasterCooldown = gGlobalSyncTable.maxBlasterCooldown - speed
+
+        if gGlobalSyncTable.maxBlasterCooldown <= 0 then
+            gGlobalSyncTable.maxBlasterCooldown = 0
+        end
+    else
+        gGlobalSyncTable.maxBlasterCooldown = gGlobalSyncTable.maxBlasterCooldown + speed
+    end
+end
+
 local function toggle_hazards()
     gGlobalSyncTable.hazardSurfaces = not gGlobalSyncTable.hazardSurfaces
     save_bool("hazardSurfaces", gGlobalSyncTable.hazardSurfaces)
@@ -496,6 +546,8 @@ settingEntries = {}
 generalEntries = {}
 -- gamemode entries
 gamemodeEntries = {}
+-- modifier entries
+modifierEntries = {}
 -- start round selections
 startEntries = {}
 -- players
@@ -822,6 +874,15 @@ local function reset_setting_selections()
             selection = 1
         end,
         valueText = ">",},
+        -- modifier settings selection
+        {name = "Modifier Settings",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = modifierEntries
+            selection = 1
+        end,
+        valueText = ">",},
         -- players selection
         {name = "Players",
         permission = PERMISSION_NONE,
@@ -1108,6 +1169,41 @@ local function reset_gamemode_selection()
     if resetGamemodeEntries then
         entries = gamemodeEntries
     end
+end
+
+local function reset_modifier_selection()
+    local resetEntries = entries == modifierEntries
+
+    modifierEntries = {
+        {
+            name = "Cooldown",
+            permission = PERMISSION_MODERATORS,
+            input = INPUT_JOYSTICK,
+            func = set_bomb_cooldown,
+            valueText = gGlobalSyncTable.maxBombCooldown / 30 .. "s",
+            seperator = get_modifier_text(MODIFIER_BOMBS),
+        },
+        {
+            name = "Cooldown",
+            permission = PERMISSION_MODERATORS,
+            input = INPUT_JOYSTICK,
+            func = set_blaster_cooldown,
+            valueText = gGlobalSyncTable.maxBlasterCooldown / 30 .. "s",
+            seperator = get_modifier_text(MODIFIER_BLASTER),
+        },
+        {
+            name = "Back",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = settingEntries
+                selection = 1
+            end,
+            seperator = ""
+        }
+    }
+
+    if resetEntries then entries = modifierEntries end
 end
 
 local function reset_start_selection()
@@ -2180,6 +2276,7 @@ local function mario_update(m)
     reset_setting_selections()
     reset_general_selection()
     reset_gamemode_selection()
+    reset_modifier_selection()
     reset_start_selection()
     reset_player_selection()
     reset_blacklist_levels_entries()

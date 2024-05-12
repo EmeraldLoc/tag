@@ -267,7 +267,7 @@ local function mario_update(m)
         bombCooldown = bombCooldown + 1
 
         if  m.controller.buttonPressed & binds[BIND_BOMBS].btn ~= 0
-        and bombCooldown >= 2 * 30 then
+        and bombCooldown >= gGlobalSyncTable.maxBombCooldown then
             bombCooldown = 0
 
             spawn_bomb()
@@ -276,7 +276,7 @@ local function mario_update(m)
         bombCooldown = 0
     end
 
-    bombCooldown = clampf(bombCooldown, 0, 2 * 30)
+    bombCooldown = clampf(bombCooldown, 0, gGlobalSyncTable.maxBombCooldown)
 end
 
 local function hud_bombs()
@@ -293,7 +293,7 @@ local function hud_bombs()
     local height       = 16 * scale
     local x            = math.floor((screenWidth - width) / 2)
     local y            = math.floor(screenHeight - height - 4 * scale)
-    local bombTime     = bombCooldown / 30 / 2
+    local bombTime     = bombCooldown / 30 / (gGlobalSyncTable.maxBombCooldown / 30)
 
     if gGlobalSyncTable.gamemode == JUGGERNAUT then
         y = y - 32
@@ -310,7 +310,7 @@ local function hud_bombs()
     djui_hud_set_color(242, 143, 36, 128)
     djui_hud_render_rect(x, y, width, height)
 
-    if bombCooldown < 2 * 30 then
+    if bombCooldown < gGlobalSyncTable.maxBombCooldown then
         text = "Reloading"
     else
         text = "Throw Bomb (" .. button_to_text(binds[BIND_BOMBS].btn) .. ")"
