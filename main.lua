@@ -246,6 +246,8 @@ isPaused = false
 useRomhackCam = true
 -- auto hide hud option
 autoHideHud = true
+-- auto hide hud always show timer option
+autoHideHudAlwaysShowTimer = true
 -- amount of times the pipe has been used
 pipeUse = 0
 -- how long it has been since we last entered a pipe
@@ -661,7 +663,7 @@ local function server_update()
             gGlobalSyncTable.roundState = ROUND_ACTIVE
         end
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        if timer > 0 then
+        if timer > 0 and gGlobalSyncTable.gamemode ~= ODDBALL then
             timer = timer - (1 * hotPotatoTimerMultiplier) -- subtract timer by one multiplied by hot potato multiplyer
             gGlobalSyncTable.displayTimer = timer          -- set display timer to timer
         end
@@ -1064,6 +1066,7 @@ local function mario_update(m)
             end
             if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
             if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
+            if load_bool("autoHideHudAlwaysShowTimer") ~= nil then autoHideHudAlwaysShowTimer = load_bool("autoHideHudAlwaysShowTimer") end
             -- binds
             for i = 0, BIND_MAX do
                 if load_int("bind_" .. tostring(i)) ~= nil then
@@ -1461,22 +1464,47 @@ local function hud_round_status()
                 end
             end
 
-            local time = tostring(math.floor(s.oddballTimer / 30))
+            local time = tostring(s.oddballTimer)
 
             if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
                 time = "???"
             end
 
-            text = get_player_name(runner) .. "\\#FFFFFF\\: " .. time
+            text = get_player_name(runner) .. "\\#FFFFFF\\: " .. math.floor(time / 30)
+
+            -- if auto hide hud is on, and we are less than 20 seconds away from the round ending, make fade hud peek
+            if math.floor(time / 30) <= 20 then
+                fade = hudFade + linear_interpolation(clampf(time / 30, 15, 20), 128, 0, 15, 20)
+
+                if autoHideHudAlwaysShowTimer then
+                    fade = fade + 128
+                end
+
+                fade = clampf(fade, 0, 255)
+            else
+                if autoHideHudAlwaysShowTimer then
+                    fade = fade + 128
+                    fade = clampf(fade, 0, 255)
+                end
+            end
         else
             text = "Time Remaining: " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
-        end
 
-        -- if auto hide hud is on, and we are less than 20 seconds away from the round ending, make fade hud peek
-        if math.floor(gGlobalSyncTable.displayTimer / 30) <= 20 then
-            fade = hudFade + linear_interpolation(clampf(gGlobalSyncTable.displayTimer / 30, 15, 20), 128, 0, 15, 20)
+            -- if auto hide hud is on, and we are less than 20 seconds away from the round ending, make fade hud peek
+            if math.floor(gGlobalSyncTable.displayTimer / 30) <= 20 then
+                fade = hudFade + linear_interpolation(clampf(gGlobalSyncTable.displayTimer / 30, 15, 20), 128, 0, 15, 20)
 
-            fade = clampf(fade, 0, 255)
+                if autoHideHudAlwaysShowTimer then
+                    fade = fade + 128
+                end
+
+                fade = clampf(fade, 0, 255)
+            else
+                if autoHideHudAlwaysShowTimer then
+                    fade = fade + 128
+                    fade = clampf(fade, 0, 255)
+                end
+            end
         end
     elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
         text = "You have " ..
@@ -1488,7 +1516,16 @@ local function hud_round_status()
         and gPlayerSyncTable[0].state == RUNNER then
             fade = hudFade + linear_interpolation(clampf(gGlobalSyncTable.displayTimer / 30, 7, 10), 128, 0, 7, 10)
 
+            if autoHideHudAlwaysShowTimer then
+                fade = fade + 128
+            end
+
             fade = clampf(fade, 0, 255)
+        else
+            if autoHideHudAlwaysShowTimer then
+                fade = fade + 128
+                fade = clampf(fade, 0, 255)
+            end
         end
     elseif gGlobalSyncTable.roundState == ROUND_WAIT then
         text = "Starting in " ..

@@ -408,7 +408,7 @@ achievements = {
         description = "Win a Tournament.",
         ---@type Reward
         reward = {
-            title = "nil",
+            title = nil,
             trail = nil
         },
         initFunc = nil,
@@ -430,6 +430,86 @@ achievements = {
         initFunc = nil,
         loopFunc = function ()
             if stats.globalStats.totalTournamentWins >= 5 then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "5 Assassins wins, not quite an assassin!",
+        description = "Win 5 games of Assassins.",
+        ---@type Reward
+        reward = {
+            title = nil,
+            trail = nil
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats[ASSASSINS].taggerVictories >= 5 then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "15 Assassins wins, now that's an assassin!",
+        description = "Win 15 games of Assassins.",
+        ---@type Reward
+        reward = {
+            title = "\\#FF0000\\Assassin",
+            trail = nil
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats[ASSASSINS].taggerVictories >= 15 then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "You're throwing an oddball!",
+        description = "Win 1 game of Oddball as the Oddball.",
+        ---@type Reward
+        reward = {
+            title = nil,
+            trail = nil
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats[ODDBALL].runnerVictories >= 1 then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "Now that's an oddball!",
+        description = "Win 15 games of Oddball as the Oddball.",
+        ---@type Reward
+        reward = {
+            title = "\\#919AA1\\Oddball",
+            trail = nil
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats[ODDBALL].runnerVictories >= 15 then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "That's a freezer! (or saver)",
+        description = "Freeze 50 players in Freeze Tag.",
+        ---@type Reward
+        reward = {
+            title = "\\#7EC0EE\\Freezer",
+            trail = nil
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats[FREEZE_TAG].totalTags >= 50 then
                 return true
             end
         end
@@ -458,7 +538,6 @@ local function mario_update(m)
 
     -- loop thru all achievements
     for i, achievement in pairs(achievements) do
-
         if completedAchievements[i] then goto continue end
 
         if not initializedAchievements then

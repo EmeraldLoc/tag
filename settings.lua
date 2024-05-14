@@ -289,6 +289,11 @@ local function toggle_auto_hide_hud()
     save_bool("autoHideHud", autoHideHud)
 end
 
+local function toggle_auto_hide_hud_always_show_timer()
+    autoHideHudAlwaysShowTimer = not autoHideHudAlwaysShowTimer
+    save_bool("autoHideHudAlwaysShowTimer", autoHideHudAlwaysShowTimer)
+end
+
 local function reset_general_settings()
     if network_is_server()
     or network_is_moderator() then
@@ -1029,6 +1034,13 @@ local function reset_general_selection()
         input = INPUT_JOYSTICK,
         func = toggle_auto_hide_hud,
         valueText = on_off_text(autoHideHud),},
+        -- auto hide hud always show timer selection
+        {name = "Always Show Timer",
+        permission = PERMISSION_NONE,
+        input = INPUT_JOYSTICK,
+        func = toggle_auto_hide_hud_always_show_timer,
+        valueText = on_off_text(autoHideHudAlwaysShowTimer),
+        disabled = not autoHideHud},
         -- reset settings selection
         {name = "Reset Settings",
         permission = PERMISSION_NONE,
