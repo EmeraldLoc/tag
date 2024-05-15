@@ -140,6 +140,8 @@ for i = MIN_GAMEMODE, MAX_GAMEMODE do
 end
 -- other timers
 gGlobalSyncTable.sardinesHidingTimer   = 30  * 30
+-- amount of lives for juggernaut
+gGlobalSyncTable.juggernautLivesCount  = 3
 -- amount of lives for hunt
 gGlobalSyncTable.huntLivesCount        = 3
 -- amount of lives for deathmatch
@@ -475,7 +477,6 @@ local function server_update()
                     or  gGlobalSyncTable.gamemode  == SARDINES
                     or  gGlobalSyncTable.gamemode  == JUGGERNAUT)
                     and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
-                    or  gGlobalSyncTable.modifier  == MODIFIER_INCOGNITO
                     or  gGlobalSyncTable.modifier  == MODIFIER_ONE_RUNNER) then
                         goto selectmodifier
                     end
@@ -578,7 +579,7 @@ local function server_update()
             local amountOfTaggersNeeded = math.floor(numPlayers / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
 
             -- set tag max lives for gamemodes like juggernaut, hunt, and deathmatch
-            if gGlobalSyncTable.gamemode == JUGGERNAUT then gGlobalSyncTable.tagMaxLives = clampf(math.floor(numPlayers * 2), 1, 16) end
+            if gGlobalSyncTable.gamemode == JUGGERNAUT then gGlobalSyncTable.tagMaxLives = gGlobalSyncTable.juggernautLivesCount end
             if gGlobalSyncTable.gamemode == HUNT then gGlobalSyncTable.tagMaxLives = gGlobalSyncTable.huntLivesCount end
             if gGlobalSyncTable.gamemode == DEATHMATCH then gGlobalSyncTable.tagMaxLives = gGlobalSyncTable.deathmatchLivesCount end
 

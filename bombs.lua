@@ -16,12 +16,16 @@ define_custom_obj_fields({
 local function can_hold_bomb(i)
     local s = gPlayerSyncTable[i]
 
+    if  gGlobalSyncTable.roundState ~= ROUND_ACTIVE
+    and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then return false end
+    -- check juggernaut
+    if s.state == RUNNER and gGlobalSyncTable.gamemode == JUGGERNAUT then return true end
+
     -- check modifier
-    if gGlobalSyncTable.modifier ~= MODIFIER_BOMBS then return end
+    if gGlobalSyncTable.modifier ~= MODIFIER_BOMBS then return false end
 
     -- check if we can hold a bomb
-    if s.state ~= RUNNER and gGlobalSyncTable.gamemode == JUGGERNAUT then return false end
-    if s.state ~= TAGGER and gGlobalSyncTable.gamemode ~= JUGGERNAUT then return false end
+    if s.state ~= TAGGER then return false end
 
     -- check round state
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return false end
@@ -260,7 +264,6 @@ end
 
 ---@param m MarioState
 local function mario_update(m)
-
     if m.playerIndex ~= 0 then return end
 
     if can_hold_bomb(0) then

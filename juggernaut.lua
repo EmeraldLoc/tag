@@ -21,8 +21,16 @@ local function before_phys_step(m)
     if gGlobalSyncTable.gamemode ~= JUGGERNAUT then return end
 
     if gPlayerSyncTable[0].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        m.vel.x = m.vel.x * 0.7
-        m.vel.z = m.vel.z * 0.7
+        if  m.action ~= ACT_BACKWARD_AIR_KB
+        and m.action ~= ACT_FORWARD_AIR_KB
+        and m.action ~= ACT_HARD_BACKWARD_AIR_KB
+        and m.action ~= ACT_HARD_FORWARD_AIR_KB
+        and m.action ~= ACT_BACKWARD_AIR_KB
+        and m.action ~= ACT_FORWARD_AIR_KB then
+            -- give juggernaut a slight constant speed boost
+            m.vel.x = m.vel.x * 1.03
+            m.vel.z = m.vel.z * 1.03
+        end
     end
 end
 
@@ -127,7 +135,7 @@ function juggernaut_handle_pvp(aI, vI)
     if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
         -- decrease tag lives
         v.tagLives = v.tagLives - 1
-        -- set inviniciblity to 3 seconds, and increase tag count 
+        -- set inviniciblity to 3 seconds, and increase tag count
         v.invincTimer = 3 * 30
         a.amountOfTags = a.amountOfTags + 1
     end

@@ -386,8 +386,8 @@ achievements = {
     },
     ---@type Achievement
     {
-        name = "Uh oh, not Juggernaut :E",
-        description = "Play as the Juggernaut.",
+        name = "Juggernaut W",
+        description = "Win 5 times as the Juggernaut.",
         ---@type Reward
         reward = {
             title = nil,
@@ -395,9 +395,23 @@ achievements = {
         },
         initFunc = nil,
         loopFunc = function ()
-            if gGlobalSyncTable.gamemode == JUGGERNAUT
-            and gGlobalSyncTable.roundState == ROUND_ACTIVE
-            and gPlayerSyncTable[0].state == RUNNER then
+            if stats[JUGGERNAUT].runnerVictories >= 5 then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "Now that's a Juggernaut",
+        description = "Win 20 times as the Juggernaut.",
+        ---@type Reward
+        reward = {
+            title = "\\#42B0F5\\Juggernaut",
+            trail = nil
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats[JUGGERNAUT].runnerVictories >= 20 then
                 return true
             end
         end
@@ -424,12 +438,28 @@ achievements = {
         description = "Win 5 Tournaments.",
         ---@type Reward
         reward = {
-            title = "Tournament Victor",
+            title = "Tournament Player",
             trail = nil
         },
         initFunc = nil,
         loopFunc = function ()
             if stats.globalStats.totalTournamentWins >= 5 then
+                return true
+            end
+        end
+    },
+    ---@type Achievement
+    {
+        name = "20 Tournament wins, now that's a gamer!",
+        description = "Win 20 Tournaments.",
+        ---@type Reward
+        reward = {
+            title = "Tournament Victor",
+            trail = nil
+        },
+        initFunc = nil,
+        loopFunc = function ()
+            if stats.globalStats.totalTournamentWins >= 20 then
                 return true
             end
         end

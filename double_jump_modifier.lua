@@ -5,7 +5,10 @@ local airTimer = 0
 ---@param m MarioState
 local function mario_update(m)
     if m.playerIndex ~= 0 then return end
+    if gGlobalSyncTable.gamemode == JUGGERNAUT and gPlayerSyncTable[0].state == RUNNER then goto doublejump end
     if gGlobalSyncTable.modifier ~= MODIFIER_DOUBLE_JUMP then return end
+
+    ::doublejump::
 
     if m.action == ACT_SOFT_BONK
     or m.action == ACT_BACKWARD_AIR_KB

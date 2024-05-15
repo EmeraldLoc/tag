@@ -378,7 +378,13 @@ local function set_lives(gamemode)
     -- get which direction we are facing
     local direction = get_controller_dir()
 
-    if gamemode == HUNT then
+    if gamemode == JUGGERNAUT then
+        if direction == CONT_LEFT then
+            gGlobalSyncTable.juggernautLivesCount = gGlobalSyncTable.juggernautLivesCount - 1
+        elseif direction == CONT_RIGHT then
+            gGlobalSyncTable.juggernautLivesCount = gGlobalSyncTable.juggernautLivesCount + 1
+        end
+    elseif gamemode == HUNT then
         if direction == CONT_LEFT then
             gGlobalSyncTable.huntLivesCount = gGlobalSyncTable.huntLivesCount - 1
         elseif direction == CONT_RIGHT then
@@ -392,6 +398,7 @@ local function set_lives(gamemode)
         end
     end
 
+    gGlobalSyncTable.juggernautLivesCount = clamp(gGlobalSyncTable.juggernautLivesCount, 1, 20)
     gGlobalSyncTable.huntLivesCount = clamp(gGlobalSyncTable.huntLivesCount, 2, 20)
     gGlobalSyncTable.deathmatchLivesCount = clamp(gGlobalSyncTable.deathmatchLivesCount, 1, 20)
 end
@@ -478,7 +485,9 @@ local function set_player_role(i)
     end
 
     if gPlayerSyncTable[i].state == RUNNER then
-        if gGlobalSyncTable.gamemode == HUNT then
+        if gGlobalSyncTable.gamemode == JUGGERNAUT then
+            gPlayerSyncTable[i].tagLives = gGlobalSyncTable.juggernautLivesCount
+        elseif gGlobalSyncTable.gamemode == HUNT then
             gPlayerSyncTable[i].tagLives = gGlobalSyncTable.huntLivesCount
         elseif gGlobalSyncTable.gamemode == DEATHMATCH then
             gPlayerSyncTable[i].tagLives = gGlobalSyncTable.deathmatchLivesCount
@@ -1117,6 +1126,12 @@ local function reset_gamemode_selection()
         func = function () set_time_limit(JUGGERNAUT) end,
         valueText = tostring(math.floor(get_active_timer(JUGGERNAUT) / 30)) .. "s",
         seperator = get_gamemode(JUGGERNAUT)},
+
+        {name = "Lives",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = function () set_lives(JUGGERNAUT) end,
+        valueText = tostring(gGlobalSyncTable.juggernautLivesCount)},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
