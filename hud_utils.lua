@@ -233,13 +233,15 @@ WING_HUD = get_texture_info("hud_wing")
 --- @param y integer
 --- @param scaleX number
 --- @param scaleY number
-function render_player_head(index, x, y, scaleX, scaleY)
+--- @param opacity number|nil
+function render_player_head(index, x, y, scaleX, scaleY, opacity)
+    if opacity == nil then opacity = 255 end
     local m = gMarioStates[index]
     local np = gNetworkPlayers[index]
 
-    local alpha = 255
+    local alpha = 255 / (255 / opacity)
     if m.marioBodyState.modelState & MODEL_STATE_NOISE_ALPHA ~= 0 then
-        alpha = 100 -- vanish effect
+        alpha = 100 / (255 / opacity) -- vanish effect
     end
     local isMetal = false
 

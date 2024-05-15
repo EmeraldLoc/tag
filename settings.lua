@@ -752,6 +752,7 @@ rewardEntries = {
 }
 
 enemyEntries = {}
+muteEntries = {}
 
 entries = mainEntries
 
@@ -829,6 +830,15 @@ local function reset_main_selections()
         input = INPUT_A,
         func = function ()
             entries = helpEntries
+            selection = 1
+        end,
+        valueText = ">",},
+        -- mute selection
+        {name = "Mute",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_A,
+        func = function ()
+            entries = muteEntries
             selection = 1
         end,
         valueText = ">",},
@@ -2072,6 +2082,48 @@ local function reset_enemy_entries()
     end
 end
 
+local function reset_mute_entries()
+
+    local resetEntries = entries == muteEntries
+
+    muteEntries = {}
+
+    for i = 1, MAX_PLAYERS - 1 do
+        if not gNetworkPlayers[i].connected then goto continue end
+        local mutedText = "Unmuted"
+        if gPlayerSyncTable[i].muted then mutedText = "Muted" end
+        table.insert(muteEntries, {
+            name = get_player_name(i),
+            permission = PERMISSION_MODERATORS,
+            input = INPUT_JOYSTICK,
+            func = function ()
+                gPlayerSyncTable[i].muted = not gPlayerSyncTable[i].muted
+
+                if gPlayerSyncTable[i].muted then
+                    djui_popup_create_global(get_player_name(i) .. "\\#dcdcdc\\ has been muted", 2)
+                else
+                    djui_popup_create_global(get_player_name(i) .. "\\#dcdcdc\\ has been unmuted", 2)
+                end
+            end,
+            valueText = mutedText,
+            disabled = network_global_index_from_local(i) == 0
+        })
+        ::continue::
+    end
+
+    table.insert(muteEntries, {
+        name = "Back",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_A,
+        func = function ()
+            entries = mainEntries
+            selection = 1
+        end
+    })
+
+    if resetEntries then entries = muteEntries end
+end
+
 local function hud_render()
 
     if not showSettings then
@@ -2306,6 +2358,7 @@ local function mario_update(m)
     reset_title_reward_entries()
     reset_trails_reward_entries()
     reset_enemy_entries()
+    reset_mute_entries()
 end
 
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
