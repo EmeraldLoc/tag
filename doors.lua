@@ -1,4 +1,7 @@
 
+local doorsClosing = false
+local doorsCanClose = false
+
 -- make doors open when mario gets close to it
 ---@param m MarioState
 ---@param o Object
@@ -98,7 +101,7 @@ function star_door_loop(o)
         end
         doorsCanClose = false
     elseif o.oAction == 3 then
-        if doorsCanClose == false and not doorsClosing then
+        if not doorsCanClose and not doorsClosing then
             o.oAction = 2
             doorsCanClose = true
         else

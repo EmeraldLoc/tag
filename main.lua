@@ -71,7 +71,8 @@ MODIFIER_BLJS                          = 15
 MODIFIER_FRIENDLY_FIRE                 = 16
 MODIFIER_HARD_SURFACE                  = 17
 MODIFIER_SAND                          = 18
-MODIFIER_MAX                           = 18
+MODIFIER_SWAP                          = 19
+MODIFIER_MAX                           = 19
 
 -- binds
 BIND_BOOST                             = 0
@@ -166,6 +167,8 @@ gGlobalSyncTable.tournamentPointsReq   = 50
 gGlobalSyncTable.maxBombCooldown       = 2 * 30
 -- blaster cooldown
 gGlobalSyncTable.maxBlasterCooldown    = 0.8 * 30
+-- swap timer
+gGlobalSyncTable.swapTimer             = 0
 
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then
