@@ -191,7 +191,7 @@ local function hud_leaderboard()
 
             x = (screenWidth - 470) / 2
 
-            render_player_head(i, x + offsetX, y, 1.9, 1.9)
+            render_player_head(i, x + offsetX, y, 1.9, 1.9, fade)
 
             x = (screenWidth - 530) / 2
 
@@ -210,13 +210,13 @@ local function hud_leaderboard()
 
             text = "#" .. position
             if position == 1 then
-                djui_hud_set_color(255, 215, 0, 255)
+                djui_hud_set_color(255, 215, 0, fade)
             elseif position == 2 then
-                djui_hud_set_color(169, 169, 169, 255)
+                djui_hud_set_color(169, 169, 169, fade)
             elseif position == 3 then
-                djui_hud_set_color(205, 127, 50, 255)
+                djui_hud_set_color(205, 127, 50, fade)
             else
-                djui_hud_set_color(220, 220, 220, 255)
+                djui_hud_set_color(220, 220, 220, fade)
             end
 
             djui_hud_print_text(text, x + offsetX, y, 1)
