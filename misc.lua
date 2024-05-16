@@ -506,9 +506,9 @@ function get_modifier_text(m)
 	elseif m == MODIFIER_SWAP then
 		text = "\\#FF0000\\Sw\\#48AD16\\ap"
 	elseif m == MODIFIER_BUTTON_CHALLENGE then
-		local hexCode = "\\#011DA9\\"
+		local hexCode = "\\#2A4DFA\\"
 		if gGlobalSyncTable.buttonChallengeButton == Z_TRIG then
-			hexCode = "\\#C1BEDD1\\"
+			hexCode = "\\#C1BED1\\"
 		end
 		text = hexCode .. button_to_text(gGlobalSyncTable.buttonChallengeButton) .. " Button Challenge"
 	elseif m == MODIFIER_NONE
