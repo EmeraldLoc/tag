@@ -1213,7 +1213,7 @@ romhacks = {
             {
                 name = "gh",
                 level = LEVEL_CASTLE,
-                painting = get_texture_info("painting_ttown_cg"),
+                painting = get_texture_info("painting_ldd_gh"),
                 area = 1,
                 pipes = nil,
                 overrideName = "Grassy Hub"
@@ -1221,7 +1221,7 @@ romhacks = {
             {
                 name = "sh",
                 level = LEVEL_CASTLE_COURTYARD,
-                painting = get_texture_info("painting_ttown_cg"),
+                painting = get_texture_info("painting_ldd_sh"),
                 area = 1,
                 pipes = nil,
                 overrideName = "Sandy Hub"
@@ -1229,7 +1229,7 @@ romhacks = {
             {
                 name = "lh",
                 level = LEVEL_CASTLE,
-                painting = get_texture_info("painting_ttown_cg"),
+                painting = get_texture_info("painting_ldd_lh"),
                 area = 2,
                 pipes = nil,
                 overrideName = "Lava Hub"
@@ -1237,14 +1237,14 @@ romhacks = {
             {
                 name = "asd",
                 level = LEVEL_BITS,
-                painting = get_texture_info("painting_ttown_eoo"),
+                painting = get_texture_info("painting_ldd_asd"),
                 area = 1,
                 pipes = nil
             },
             {
                 name = "cp",
                 level = LEVEL_BOB,
-                painting = get_texture_info("painting_ttown_mmh"),
+                painting = get_texture_info("painting_ldd_cp"),
                 area = 1,
                 pipes = {
                     {
@@ -1257,7 +1257,7 @@ romhacks = {
             {
                 name = "qqys",
                 level = LEVEL_PSS,
-                painting = get_texture_info("painting_ttown_mmh"),
+                painting = get_texture_info("painting_ldd_qqys"),
                 area = 1,
                 pipes = {
                     {
@@ -1265,12 +1265,12 @@ romhacks = {
                         { x = -323, y = -4500, z = -2290 }
                     }
                 },
-                spawnLocation = { x = -469, y = 168, z = -2134 }
+                spawnLocation = { x = -109, y = 2176, z = -126 }
             },
             {
                 name = "lt",
                 level = LEVEL_WF,
-                painting = get_texture_info("painting_ttown_sod"),
+                painting = get_texture_info("painting_ldd_lt"),
                 area = 1,
                 pipes = {
                     {
@@ -1286,7 +1286,7 @@ romhacks = {
             {
                 name = "qqgs",
                 level = LEVEL_COTMC,
-                painting = get_texture_info("painting_ttown_sod"),
+                painting = get_texture_info("painting_ldd_qqgs"),
                 area = 1,
                 pipes = {
                     {
@@ -1299,7 +1299,7 @@ romhacks = {
             {
                 name = "ssf",
                 level = LEVEL_JRB,
-                painting = get_texture_info("painting_ttown_sod"),
+                painting = get_texture_info("painting_ldd_ssf"),
                 area = 1,
                 pipes = {
                     {
@@ -1307,12 +1307,12 @@ romhacks = {
                         { x = -4173, y = -900, z = -791 }
                     }
                 },
-                spawnLocation = { x = -31, y = 2350, z = 1084 }
+                spawnLocation = { x = 2267, y = 2748, z = -2147 }
             },
             {
                 name = "qqbs",
                 level = LEVEL_VCUTM,
-                painting = get_texture_info("painting_ttown_sod"),
+                painting = get_texture_info("painting_ldd_qqbs"),
                 area = 1,
                 pipes = {
                     {
@@ -1325,19 +1325,20 @@ romhacks = {
             {
                 name = "oo",
                 level = LEVEL_CCM,
-                painting = get_texture_info("painting_ttown_hcc"),
+                painting = get_texture_info("painting_ldd_oo"),
                 area = 1,
                 pipes = {
                     {
                         { x = 2600, y = 570, z = 2026 },
                         { x = 95, y = 2445, z = 3168 }
                     }
-                }
+                },
+                unwantedBhvs = { id_bhvBlueCoinJumping }, { id_bhvBlueCoinSliding }, { id_bhvBlueCoinSwitch }
             },
             {
                 name = "qqrs",
                 level = LEVEL_TOTWC,
-                painting = get_texture_info("painting_ttown_eoo"),
+                painting = get_texture_info("painting_ldd_qqrs"),
                 area = 1,
                 pipes = {
                     {
@@ -1345,12 +1346,13 @@ romhacks = {
                         { x = -913, y = 5375, z = 994 }
                     }
                 },
-                spawnLocation = { x = -28, y = 2350, z = 84 }
+                spawnLocation = { x = -28, y = 2350, z = 84 },
+                unwantedBhvs = { id_bhvExclamationBox }
             },
             {
                 name = "roat",
                 level = LEVEL_BBH,
-                painting = get_texture_info("painting_ttown_eoo"),
+                painting = get_texture_info("painting_ldd_roat"),
                 area = 1,
                 pipes = {
                     {
@@ -1362,7 +1364,7 @@ romhacks = {
             {
                 name = "qqos",
                 level = LEVEL_SA,
-                painting = get_texture_info("painting_ttown_eoo"),
+                painting = get_texture_info("painting_ldd_qqos"),
                 area = 1,
                 pipes = {
                     {
@@ -1378,7 +1380,7 @@ romhacks = {
             {
                 name = "sj",
                 level = LEVEL_HMC,
-                painting = get_texture_info("painting_ttown_eoo"),
+                painting = get_texture_info("painting_ldd_sj"),
                 area = 1,
                 pipes = {
                     {
@@ -1394,7 +1396,7 @@ romhacks = {
             {
                 name = "qqps",
                 level = LEVEL_WMOTR,
-                painting = get_texture_info("painting_ttown_eoo"),
+                painting = get_texture_info("painting_ldd_qqps"),
                 area = 1,
                 pipes = {
                     {
@@ -1406,14 +1408,14 @@ romhacks = {
             {
                 name = "ss",
                 level = LEVEL_BITFS,
-                painting = get_texture_info("painting_ttown_eoo"),
+                painting = get_texture_info("painting_ldd_ss"),
                 area = 1,
                 pipes = nil
             },
             {
                 name = "ls",
                 level = LEVEL_LLL,
-                painting = get_texture_info("painting_ttown_eoo"),
+                painting = get_texture_info("painting_ldd_ls"),
                 area = 1,
                 pipes = {
                     {
@@ -1425,7 +1427,7 @@ romhacks = {
             {
                 name = "qqt",
                 level = LEVEL_BITDW,
-                painting = get_texture_info("painting_ttown_eoo"),
+                painting = get_texture_info("painting_ldd_qqt"),
                 area = 1,
                 pipes = nil
             }

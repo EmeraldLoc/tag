@@ -172,6 +172,8 @@ local function bomb_loop(o)
     -- step object
     local step = object_step_without_floor_orient()
 
+    if network_player_from_global_index(o.oBombOwner) == nil then obj_mark_for_deletion(o); return end
+
     -- explode if we hit a wall or land
     if (step & AIR_STEP_HIT_WALL ~= 0
     or step & AIR_STEP_LANDED ~= 0
