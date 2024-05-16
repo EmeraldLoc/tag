@@ -1255,19 +1255,6 @@ romhacks = {
                 spawnLocation = { x = -469, y = 168, z = -2134 }
             },
             {
-                name = "qqys",
-                level = LEVEL_PSS,
-                painting = get_texture_info("painting_ldd_qqys"),
-                area = 1,
-                pipes = {
-                    {
-                        { x = 910, y = 2560, z = -1383 },
-                        { x = -323, y = -4500, z = -2290 }
-                    }
-                },
-                spawnLocation = { x = -109, y = 2176, z = -126 }
-            },
-            {
                 name = "lt",
                 level = LEVEL_WF,
                 painting = get_texture_info("painting_ldd_lt"),
@@ -1281,20 +1268,8 @@ romhacks = {
                         { x = -90, y = 4617, z = 2379 },
                         { x = -73, y = -1377, z = 2298 }
                     }
-                }
-            },
-            {
-                name = "qqgs",
-                level = LEVEL_COTMC,
-                painting = get_texture_info("painting_ldd_qqgs"),
-                area = 1,
-                pipes = {
-                    {
-                        { x = 75, y = 2463, z = 816 },
-                        { x = 1915, y = -80, z = -1003 }
-                    }
                 },
-                spawnLocation = { x = -453, y = 2360, z = -297 }
+                unwantedBhvs = { id_bhvExclamationBox, id_bhvBlueCoinSwitch }
             },
             {
                 name = "ssf",
@@ -1303,24 +1278,12 @@ romhacks = {
                 area = 1,
                 pipes = {
                     {
-                        { x = 22, y = 2350, z = -1574 },
-                        { x = -4173, y = -900, z = -791 }
+                        { x = -31, y = 765, z = 144 },
+                        { x = -34, y = 2695, z = 156 }
                     }
                 },
-                spawnLocation = { x = 2267, y = 2748, z = -2147 }
-            },
-            {
-                name = "qqbs",
-                level = LEVEL_VCUTM,
-                painting = get_texture_info("painting_ldd_qqbs"),
-                area = 1,
-                pipes = {
-                    {
-                        { x = 22, y = 2350, z = -1574 },
-                        { x = -4173, y = -900, z = -791 }
-                    }
-                },
-                spawnLocation = { x = -31, y = 2350, z = 1084 }
+                spawnLocation = { x = 2267, y = 2748, z = -2147 },
+                unwantedBhvs = { id_bhvBreakableBox, id_bhvBobombBuddy, id_bhvBlueCoinSwitch, id_bhvFloorSwitchHardcodedModel, id_bhvPurpleSwitchHiddenBoxes }
             },
             {
                 name = "oo",
@@ -1333,21 +1296,7 @@ romhacks = {
                         { x = 95, y = 2445, z = 3168 }
                     }
                 },
-                unwantedBhvs = { id_bhvBlueCoinJumping }, { id_bhvBlueCoinSliding }, { id_bhvBlueCoinSwitch }
-            },
-            {
-                name = "qqrs",
-                level = LEVEL_TOTWC,
-                painting = get_texture_info("painting_ldd_qqrs"),
-                area = 1,
-                pipes = {
-                    {
-                        { x = 831, y = 2350, z = 160 },
-                        { x = -913, y = 5375, z = 994 }
-                    }
-                },
-                spawnLocation = { x = -28, y = 2350, z = 84 },
-                unwantedBhvs = { id_bhvExclamationBox }
+                unwantedBhvs = { id_bhvBlueCoinSwitch }
             },
             {
                 name = "roat",
@@ -1359,23 +1308,8 @@ romhacks = {
                         { x = 901, y = 94, z = 691 },
                         { x = 1128, y = 1650, z = -1348 }
                     }
-                }
-            },
-            {
-                name = "qqos",
-                level = LEVEL_SA,
-                painting = get_texture_info("painting_ldd_qqos"),
-                area = 1,
-                pipes = {
-                    {
-                        { x = 4120, y = 1000, z = -1021 },
-                        { x = 579, y = 4167, z = -89 }
-                    },
-                    {
-                        { x = 1150, y = 1433, z = -803 },
-                        { x = 825, y = -521, z = 4130 }
-                    }
-                }
+                },
+                unwantedBhvs = { id_bhvBlueCoinSwitch }
             },
             {
                 name = "sj",
@@ -1394,23 +1328,16 @@ romhacks = {
                 }
             },
             {
-                name = "qqps",
-                level = LEVEL_WMOTR,
-                painting = get_texture_info("painting_ldd_qqps"),
-                area = 1,
-                pipes = {
-                    {
-                        { x = 241, y = 2600, z = 530 },
-                        { x = -844, y = -4300, z = 1382 }
-                    }
-                }
-            },
-            {
                 name = "ss",
                 level = LEVEL_BITFS,
                 painting = get_texture_info("painting_ldd_ss"),
                 area = 1,
-                pipes = nil
+                pipes = {
+                    {
+                        { x = 0, y = 2400, z = -512 },
+                        { x = 0, y = 0, z = -512 },
+                    }
+                }
             },
             {
                 name = "ls",
@@ -1424,13 +1351,6 @@ romhacks = {
                     }
                 }
             },
-            {
-                name = "qqt",
-                level = LEVEL_BITDW,
-                painting = get_texture_info("painting_ldd_qqt"),
-                area = 1,
-                pipes = nil
-            }
         }
     },
 }
