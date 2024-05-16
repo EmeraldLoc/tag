@@ -7,13 +7,14 @@ define_custom_obj_fields({
 ---@param o Object
 local function bullet_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE
-    o.hitboxRadius = 100
-    o.hitboxHeight = 100
-    o.oDamageOrCoinValue = 2
+    o.hitboxRadius = 200
+    o.hitboxHeight = 200
     obj_set_billboard(o)
     local localOwner = network_local_index_from_global(o.oBulletOwner)
     local m = gMarioStates[localOwner]
-    o.oMoveAnglePitch = m.faceAngle.x
+    if gGlobalSyncTable.modifier == MODIFIER_FLY then
+        o.oMoveAnglePitch = m.faceAngle.x
+    end
     o.oMoveAngleYaw = m.faceAngle.y
     local speed = m.forwardVel + 150
     -- shoot backwards
@@ -21,8 +22,10 @@ local function bullet_init(o)
         speed = -speed
     end
     o.oVelX = speed * coss(o.oFaceAnglePitch) * sins(o.oFaceAngleYaw)
-    o.oVelY = speed * sins(o.oFaceAnglePitch)
-    o.oVelY = -o.oVelY
+    if gGlobalSyncTable.modifier == MODIFIER_FLY then
+        o.oVelY = speed * sins(o.oFaceAnglePitch)
+        o.oVelY = -o.oVelY
+    end
     o.oVelZ = speed * coss(o.oFaceAnglePitch) * coss(o.oFaceAngleYaw)
 end
 
@@ -34,8 +37,7 @@ local function bullet_loop(o)
 
     cur_obj_move_using_vel()
 
-    if o.oMoveFlags & OBJ_MOVE_HIT_WALL ~= 0
-    or o.oMoveFlags & OBJ_MOVE_LANDED ~= 0 then
+    if collision_find_floor(o.oPosX, o.oPosY, o.oPosZ) == nil then
         obj_mark_for_deletion(o)
     end
 
