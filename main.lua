@@ -72,7 +72,8 @@ MODIFIER_FRIENDLY_FIRE                 = 16
 MODIFIER_HARD_SURFACE                  = 17
 MODIFIER_SAND                          = 18
 MODIFIER_SWAP                          = 19
-MODIFIER_MAX                           = 19
+MODIFIER_BUTTON_CHALLENGE              = 20
+MODIFIER_MAX                           = 20
 
 -- binds
 BIND_BOOST                             = 0
@@ -86,11 +87,16 @@ BOOST_STATE_RECHARGING                 = 0
 BOOST_STATE_READY                      = 1
 BOOST_STATE_BOOSTING                   = 2
 
+-- button challenge buttons
+BUTTON_CHALLENGE_A                     = 0
+BUTTON_CHALLENGE_Z                     = 1
+BUTTON_CHALLENGE_RANDOM                = 2
+
 -- textures
-TEXTURE_TAG_LOGO = get_texture_info("logo")
+TEXTURE_TAG_LOGO                       = get_texture_info("logo")
 
 -- models
-E_MODEL_BOOST_TRAIL = smlua_model_util_get_id("boost_trail_geo")
+E_MODEL_BOOST_TRAIL                    = smlua_model_util_get_id("boost_trail_geo")
 
 -- globals and sync tables
 -- this is the round state, this variable tells you what current round it is
@@ -173,6 +179,19 @@ gGlobalSyncTable.maxBombCooldown       = 2 * 30
 gGlobalSyncTable.maxBlasterCooldown    = 0.8 * 30
 -- swap timer
 gGlobalSyncTable.swapTimer             = 0
+--  button challenge modifier
+gGlobalSyncTable.buttonChallenge       = BUTTON_CHALLENGE_RANDOM
+gGlobalSyncTable.buttonChallengeButton = A_BUTTON
+-- blacklisted courses, gamemodes, and modifiers
+gGlobalSyncTable.blacklistedCourses    = {}
+gGlobalSyncTable.blacklistedGamemodes  = {}
+for i = MIN_GAMEMODE, MAX_GAMEMODE do
+    gGlobalSyncTable.blacklistedGamemodes[i] = false
+end
+gGlobalSyncTable.blacklistedModifiers  = {}
+for i = MIN_GAMEMODE, MAX_GAMEMODE do
+    gGlobalSyncTable.blacklistedModifiers[i] = false
+end
 
 for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we are the server
     if network_is_server() then
@@ -235,16 +254,6 @@ nametagsEnabled = false
 -- owner and developer vars
 isOwner = false
 isDeveloper = false
--- blacklisted courses, gamemodes, and modifiers
-gGlobalSyncTable.blacklistedCourses = {}
-gGlobalSyncTable.blacklistedGamemodes = {}
-for i = MIN_GAMEMODE, MAX_GAMEMODE do
-    gGlobalSyncTable.blacklistedGamemodes[i] = false
-end
-gGlobalSyncTable.blacklistedModifiers = {}
-for i = MIN_GAMEMODE, MAX_GAMEMODE do
-    gGlobalSyncTable.blacklistedModifiers[i] = false
-end
 -- the previous level, used for when the server selects levels to pick
 prevLevel = 1 -- make it the same as the selected level so it selects a new level
 -- These are levels that are failed to be warped to for romhacks
@@ -505,6 +514,13 @@ local function server_update()
                 end
             end
 
+            -- if the modifier is set to the button challenge, select random button
+            if  gGlobalSyncTable.buttonChallenge == BUTTON_CHALLENGE_RANDOM
+            and gGlobalSyncTable.modifier == MODIFIER_BUTTON_CHALLENGE then
+                -- terenary operator
+                gGlobalSyncTable.buttonChallengeButton = math.random(0, 1) == 0 and A_BUTTON or Z_TRIG
+            end
+
             -- if we select a random gamemode, select that random gamemode now
             if gGlobalSyncTable.randomGamemode then
                 if numPlayers >= 3 then -- 3 is the minimum player count for random gamemodes
@@ -541,7 +557,7 @@ local function server_update()
                 PLAYERS_NEEDED = 3
             end
 
-            log_to_console("Tag: Modifier is set to " .. get_modifier_text_without_hex() .. " and the gamemode is set to " .. get_gamemode_without_hex(gGlobalSyncTable.gamemode))
+            log_to_console("Tag: Modifier is set to " .. strip_hex(get_modifier_text()) .. " and the gamemode is set to " .. strip_hex(get_gamemode(gGlobalSyncTable.gamemode)))
         end
 
         for i = 0, MAX_PLAYERS - 1 do

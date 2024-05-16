@@ -269,6 +269,28 @@ local function set_blaster_cooldown()
     end
 end
 
+local function set_button_challenge_button()
+    -- get which direction we are facing
+    local direction = get_controller_dir()
+
+    if direction == CONT_LEFT then
+        gGlobalSyncTable.buttonChallenge = gGlobalSyncTable.buttonChallenge - 1
+
+        if gGlobalSyncTable.buttonChallenge < 0 then gGlobalSyncTable.buttonChallenge = 2 end
+    else
+        gGlobalSyncTable.buttonChallenge = gGlobalSyncTable.buttonChallenge + 1
+        if gGlobalSyncTable.buttonChallenge > 2 then gGlobalSyncTable.buttonChallenge = 0 end
+    end
+end
+
+local function get_button_challenge_text()
+    if gGlobalSyncTable.buttonChallenge == BUTTON_CHALLENGE_RANDOM then return "Random" end
+    if gGlobalSyncTable.buttonChallenge == BUTTON_CHALLENGE_A then return "\\#2A4DFA\\A Button" end
+    if gGlobalSyncTable.buttonChallenge == BUTTON_CHALLENGE_Z then return "\\#C1BED1\\Z Button" end
+
+    return "Unknown"
+end
+
 local function toggle_hazards()
     gGlobalSyncTable.hazardSurfaces = not gGlobalSyncTable.hazardSurfaces
     save_bool("hazardSurfaces", gGlobalSyncTable.hazardSurfaces)
@@ -1234,6 +1256,14 @@ local function reset_modifier_selection()
             func = set_blaster_cooldown,
             valueText = gGlobalSyncTable.maxBlasterCooldown / 30 .. "s",
             seperator = get_modifier_text(MODIFIER_BLASTER),
+        },
+        {
+            name = "Button",
+            permission = PERMISSION_MODERATORS,
+            input = INPUT_JOYSTICK,
+            func = set_button_challenge_button,
+            valueText = get_button_challenge_text(),
+            seperator = "\\#dcdcdc\\The Button Challenge",
         },
         {
             name = "Back",

@@ -505,6 +505,12 @@ function get_modifier_text(m)
 		text = "\\#E7C496\\Sandy Floor"
 	elseif m == MODIFIER_SWAP then
 		text = "\\#FF0000\\Sw\\#48AD16\\ap"
+	elseif m == MODIFIER_BUTTON_CHALLENGE then
+		local hexCode = "\\#011DA9\\"
+		if gGlobalSyncTable.buttonChallengeButton == Z_TRIG then
+			hexCode = "\\#C1BEDD1\\"
+		end
+		text = hexCode .. button_to_text(gGlobalSyncTable.buttonChallengeButton) .. " Button Challenge"
 	elseif m == MODIFIER_NONE
 	and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
@@ -516,100 +522,9 @@ function get_modifier_text(m)
 	return text
 end
 
-function get_modifier_text_without_hex()
-	local text = ''
-
-	-- set modifier text depending on current modifier
-	if gGlobalSyncTable.modifier == MODIFIER_BOMBS then
-		text = "Bombs"
-	elseif gGlobalSyncTable.modifier == MODIFIER_LOW_GRAVITY then
-		text = "Low Gravity"
-	elseif gGlobalSyncTable.modifier == MODIFIER_NO_RADAR then
-		text = "No Radar"
-	elseif gGlobalSyncTable.modifier == MODIFIER_NO_BOOST then
-		if gGlobalSyncTable.boosts then
-			text = "No Boost"
-		else
-			text = "Boosts"
-		end
-	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
-		text = "One Tagger"
-	elseif gGlobalSyncTable.modifier == MODIFIER_FOG then
-		text = "Fog"
-	elseif gGlobalSyncTable.modifier == MODIFIER_SPEED then
-		text = "Speed"
-	elseif gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
-		text = "Incognito"
-	elseif gGlobalSyncTable.modifier == MODIFIER_HIGH_GRAVITY then
-		text = "High Gravity"
-	elseif gGlobalSyncTable.modifier == MODIFIER_FLY then
-		text = "Fly"
-	elseif gGlobalSyncTable.modifier == MODIFIER_BLASTER then
-		text = "Blaster"
-	elseif gGlobalSyncTable.modifier == MODIFIER_ONE_RUNNER then
-		text = "One Runner"
-	elseif gGlobalSyncTable.modifier == MODIFIER_DOUBLE_JUMP then
-		text = "Double Jump"
-	elseif gGlobalSyncTable.modifier == MODIFIER_SHELL then
-		text = "Shell"
-	elseif gGlobalSyncTable.modifier == MODIFIER_BLJS then
-		if gGlobalSyncTable.bljs then
-			text = "No Bljs"
-		else
-			text = "Bljs"
-		end
-	elseif gGlobalSyncTable.modifier == MODIFIER_FRIENDLY_FIRE then
-		text = "Friendly Fire"
-	elseif gGlobalSyncTable.modifier == MODIFIER_HARD_SURFACE then
-		text = "Hard Floor"
-	elseif gGlobalSyncTable.modifier == MODIFIER_SAND then
-		text = "Sandy Floor"
-	elseif gGlobalSyncTable.modifier == MODIFIER_SWAP then
-		text = "Swap"
-	elseif gGlobalSyncTable.modifier == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
-		text = "None"
-	elseif gGlobalSyncTable.modifier == MODIFIER_NONE then
-		text = "Disabled"
-	end
-
-	-- return the modifier
-	return text
-end
-
-function get_gamemode_including_random(g)
-    if gGlobalSyncTable.randomGamemode then return "Random" end
-    return get_gamemode(g)
-end
-
 function get_modifier_including_random()
     if gGlobalSyncTable.randomModifiers then return "Random" end
     return get_modifier_text()
-end
-
-function get_gamemode_hex_color(g)
-	if g == TAG then
-		return "\\#316BE8\\"
-	elseif g == FREEZE_TAG then
-		return "\\#7EC0EE\\"
-	elseif g == INFECTION then
-		return "\\#24D636\\"
-	elseif g == HOT_POTATO then
-		return "\\#FC9003\\"
-	elseif g == JUGGERNAUT then
-		return "\\#42B0F5\\"
-	elseif g == ASSASSINS then
-		return "\\#FF0000\\"
-	elseif g == SARDINES then
-		return "\\#BBBEA1\\"
-	elseif g == HUNT then
-		return "\\#C74444\\"
-	elseif g == DEATHMATCH then
-		return "\\#B83333\\"
-	elseif g == TERMINATOR then
-		return "\\#7D2A24\\"
-	elseif g == ODDBALL then
-		return "\\#919AA1\\"
-	end
 end
 
 function get_gamemode(g)
@@ -640,6 +555,11 @@ function get_gamemode(g)
 	return "Uhhhhhhhhhh"
 end
 
+function get_gamemode_including_random(g)
+    if gGlobalSyncTable.randomGamemode then return "Random" end
+    return get_gamemode(g)
+end
+
 ---@param localIndex integer
 ---@return string
 function get_player_name(localIndex)
@@ -650,6 +570,12 @@ function get_player_name(localIndex)
 		title = "\\" .. get_hex_from_string(s.playerTitle) .. "\\" .. "[" .. strip_hex(s.playerTitle) .. "] "
 	end
 	return title .. network_get_player_text_color_string(localIndex) .. gNetworkPlayers[localIndex].name
+end
+
+---@param localIndex integer
+---@return string
+function get_player_name_without_title(localIndex)
+	return network_get_player_text_color_string(localIndex) .. gNetworkPlayers[localIndex].name
 end
 
 function get_gamemode_without_hex(g)
