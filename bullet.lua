@@ -53,7 +53,6 @@ local function bullet_loop(o)
 end
 
 function hud_bullet(gunCooldown, maxGunCooldown)
-
     if gPlayerSyncTable[0].state == SPECTATOR
     or gPlayerSyncTable[0].state == WILDCARD_ROLE then return end
 
@@ -73,8 +72,7 @@ function hud_bullet(gunCooldown, maxGunCooldown)
     local y            = math.floor(screenHeight - height - 4 * scale)
     local gunTime      = gunCooldown / 30 / (maxGunCooldown / 30)
 
-    if  (gPlayerSyncTable[0].state == TAGGER
-    and boosts_enabled())
+    if  boosts_enabled()
     or  (gPlayerSyncTable[0].state == RUNNER
     and gGlobalSyncTable.roundState == ROUND_ACTIVE
     and (gGlobalSyncTable.gamemode == JUGGERNAUT
@@ -106,8 +104,7 @@ function hud_bullet(gunCooldown, maxGunCooldown)
     x = (screenWidth - width) / 2
     y = screenHeight - 28
 
-    if  (gPlayerSyncTable[0].state == TAGGER
-    and boosts_enabled())
+    if  boosts_enabled()
     or  (gPlayerSyncTable[0].state == RUNNER
     and gGlobalSyncTable.roundState == ROUND_ACTIVE
     and (gGlobalSyncTable.gamemode == JUGGERNAUT

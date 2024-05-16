@@ -128,7 +128,7 @@ local function hud_leaderboard()
 
             x = (screenWidth - 470) / 2
 
-            render_player_head(i, x, y, 1.9, 1.9)
+            render_player_head(i, x, y, 1.9, 1.9, fade)
 
             x = (screenWidth - 530) / 2
 
@@ -139,13 +139,13 @@ local function hud_leaderboard()
 
             text = "#" .. position
             if position == 1 then
-                djui_hud_set_color(255, 215, 0, 255)
+                djui_hud_set_color(255, 215, 0, fade)
             elseif position == 2 then
-                djui_hud_set_color(169, 169, 169, 255)
+                djui_hud_set_color(169, 169, 169, fade)
             elseif position == 3 then
-                djui_hud_set_color(205, 127, 50, 255)
+                djui_hud_set_color(205, 127, 50, fade)
             else
-                djui_hud_set_color(220, 220, 220, 255)
+                djui_hud_set_color(220, 220, 220, fade)
             end
 
             djui_hud_print_text(text, x, y, 1)
@@ -232,6 +232,15 @@ local function hud_render()
         end
     else
         fade = fade - 20
+
+        for i = 0, MAX_PLAYERS - 1 do
+            if  gPlayerSyncTable[i].tournamentPoints ~= nil
+            and gPlayerSyncTable[i].tournamentPoints >= gGlobalSyncTable.tournamentPointsReq
+            and gNetworkPlayers[i].connected then
+                gPlayerSyncTable[0].tournamentPoints = 0
+                break
+            end
+        end
     end
 
     fade = clamp(fade, 0, 255)
@@ -242,7 +251,6 @@ local function hud_render()
     hud_voting_begins_in()
     hud_gamemode()
     hud_modifier()
-    hud_did_you_know(fade)
 end
 
 hook_event(HOOK_UPDATE, update)

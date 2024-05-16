@@ -691,6 +691,13 @@ helpEntries = {
         get_rules(TERMINATOR)
     end},
 
+    {name = get_gamemode(ODDBALL),
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        get_rules(ODDBALL)
+    end},
+
     {name = "Spectating",
     permission = PERMISSION_NONE,
     input = INPUT_A,

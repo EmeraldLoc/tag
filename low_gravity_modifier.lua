@@ -8,10 +8,9 @@ local function before_phys_step(m)
         if  m.action ~= ACT_TWIRLING
         and m.action ~= ACT_GETTING_BLOWN
         and m.action ~= ACT_FLYING_TRIPLE_JUMP
+        and m.action ~= ACT_SHOT_FROM_CANNON
         and not interactedWithSpring  then
             m.vel.y = m.vel.y * 1.05
-        else
-            m.vel.y = m.vel.y * 1.01
         end
     else
         m.vel.y = m.vel.y / 1.05

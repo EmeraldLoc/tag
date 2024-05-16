@@ -12,7 +12,8 @@ local function mario_update(m)
 
     if m.action == ACT_SOFT_BONK
     or m.action == ACT_BACKWARD_AIR_KB
-    or m.action == ACT_AIR_HIT_WALL then
+    or m.action == ACT_AIR_HIT_WALL
+    or m.action == ACT_FLYING then
         airTimer = 0
     end
 

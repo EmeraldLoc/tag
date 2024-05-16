@@ -764,6 +764,7 @@ function get_role_name(role)
 end
 
 function boosts_enabled()
+	if gPlayerSyncTable[0].state ~= TAGGER then return false end
 	if  gGlobalSyncTable.boosts
 	and gGlobalSyncTable.modifier ~= MODIFIER_NO_BOOST
 	and gGlobalSyncTable.modifier ~= MODIFIER_BOMBS

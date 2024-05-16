@@ -22,10 +22,7 @@ local function mario_update(m)
     and shellTimer >= 1 * 30
     and m.action ~= ACT_IN_CANNON
     and m.action ~= ACT_SHOT_FROM_CANNON
-    and m.action ~= ACT_GRAB_POLE_SLOW
-    and m.action ~= ACT_GRAB_POLE_FAST
-    and m.action ~= ACT_HOLDING_POLE
-    and m.action ~= ACT_TOP_OF_POLE)
+    and m.action & ACT_FLAG_ON_POLE ~= 0)
     or m.action == ACT_RIDING_SHELL_GROUND then
         if m.action == ACT_RIDING_SHELL_GROUND then
             set_mario_action(m, ACT_SHELL_GROUND_CUSTOM, m.actionArg)

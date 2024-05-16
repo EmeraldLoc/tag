@@ -77,8 +77,7 @@ function hud_render()
     local y            = math.floor(screenHeight - height - 4 * scale)
     local swapTime     = gGlobalSyncTable.swapTimer / 30 / 5
 
-    if  (gPlayerSyncTable[0].state == TAGGER
-    and boosts_enabled())
+    if  boosts_enabled()
     or  (gPlayerSyncTable[0].state == RUNNER
     and gGlobalSyncTable.roundState == ROUND_ACTIVE
     and (gGlobalSyncTable.gamemode == JUGGERNAUT
@@ -106,8 +105,7 @@ function hud_render()
     x = (screenWidth - width) / 2
     y = screenHeight - 28
 
-    if  (gPlayerSyncTable[0].state == TAGGER
-    and boosts_enabled())
+    if  boosts_enabled()
     or  (gPlayerSyncTable[0].state == RUNNER
     and gGlobalSyncTable.roundState == ROUND_ACTIVE
     and (gGlobalSyncTable.gamemode == JUGGERNAUT

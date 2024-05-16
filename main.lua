@@ -1,4 +1,4 @@
--- name: \\#316BE8\\Tag (v2.4 Beta)\\#dcdcdc\\
+-- name: \\#316BE8\\Tag (v2.4 Very Beta)\\#dcdcdc\\
 -- description: All Tag Related Gamemodes!\n\nThis mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and more, with modifiers, and full romhack support!\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\, \\#ff7f00\\ Agent X\\#dcdcdc\\, Sunk, and Blocky\n\nPainting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi\n\n\\#dcdcdc\\Romhack Porters are in the romhacks.lua file.
 -- incompatible: gamemode tag
 
@@ -137,6 +137,10 @@ for i = MIN_GAMEMODE, MAX_GAMEMODE do
 
     if i == HOT_POTATO then
         gGlobalSyncTable.activeTimers[i] = 35 * 30
+    end
+
+    if i == ODDBALL then
+        gGlobalSyncTable.activeTimers[i] = 60 * 30
     end
 end
 -- other timers
@@ -393,6 +397,7 @@ local function server_update()
             gPlayerSyncTable[i].amountOfTimeAsRunner = 0
             gPlayerSyncTable[i].amountOfTags = 0
             gPlayerSyncTable[i].tagLives = 0
+            gPlayerSyncTable[i].tournamentPoints = 0
         end
     end
 
@@ -772,18 +777,10 @@ local function server_update()
 
         if timer <= 0 then
             if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
-                for i = 0, MAX_PLAYERS - 1 do
-                    local s = gPlayerSyncTable[i]
-                    s.tournamentPoints = 0
-                end
                 gGlobalSyncTable.roundState = ROUND_VOTING
                 timer = 11 * 30 -- 11 seconds
                 log_to_console("Tag: Settings round state to ROUND_VOTING...")
             else
-                for i = 0, MAX_PLAYERS - 1 do
-                    local s = gPlayerSyncTable[i]
-                    s.tournamentPoints = 0
-                end
                 if not gGlobalSyncTable.autoMode then
                     for i = 0, MAX_PLAYERS - 1 do
                         if gPlayerSyncTable[i].state ~= SPECTATOR then
@@ -942,13 +939,6 @@ local function update()
 
         -- set prev romhack override
         prevRomhackOverride = gGlobalSyncTable.romhackOverride
-    end
-
-    -- handle speed boost
-    if gPlayerSyncTable[0].state == TAGGER and boosts_enabled() then
-
-    elseif gPlayerSyncTable[0].state ~= TAGGER or not boosts_enabled() then
-
     end
 
     -- set some variables if we are a spectator
@@ -1131,29 +1121,6 @@ local function mario_update(m)
             isOwner = achievements[-1] ~= nil
             isDeveloper = achievements[-2] ~= nil
 
-            -- load selected player title
-            local title = load_int("playerTitle")
-            if title ~= nil then
-                if (completedAchievements[title] ~= nil or title < 0)
-                and achievements[title] ~= nil
-                and achievements[title].reward ~= nil
-                and achievements[title].reward.title ~= nil then
-                    gPlayerSyncTable[0].playerTitle = achievements[title].reward.title
-                end
-            end
-
-            -- load selected trail
-            local trail = load_int("playerTrail")
-
-            if trail ~= nil then
-                if  completedAchievements[trail] ~= nil
-                and achievements[trail] ~= nil
-                and achievements[trail].reward ~= nil
-                and achievements[trail].reward.trail ~= nil then
-                    gPlayerSyncTable[0].playerTrail = achievements[trail].reward.trail.model
-                end
-            end
-
             -- print some stats so players can get a gist of this guy's skill
             if stats.globalStats.runnerVictories > 0 then
                 djui_chat_message_create_global(get_player_name(0) .. " \\#dcdcdc\\has won \\#FFE557\\" .. stats.globalStats.runnerVictories .. " \\#dcdcdc\\times as a \\#316BE8\\Runner")
@@ -1315,7 +1282,6 @@ local function mario_update(m)
             speedBoostTimer = gGlobalSyncTable.boostCooldown
 
             if  m.controller.buttonPressed & binds[BIND_BOOST].btn ~= 0
-            and gPlayerSyncTable[0].state == TAGGER
             and boosts_enabled() then
                 boostState = BOOST_STATE_BOOSTING
                 speedBoostTimer = 5 * 30
@@ -1326,6 +1292,11 @@ local function mario_update(m)
             if speedBoostTimer <= 0 then
                 boostState = BOOST_STATE_RECHARGING
             end
+        end
+
+        if not boosts_enabled() then
+            boostState = BOOST_STATE_RECHARGING
+            speedBoostTimer = 0
         end
 
         -- set our initial state
@@ -1604,7 +1575,6 @@ end
 
 local function hud_boost()
     if gGlobalSyncTable.roundState == ROUND_VOTING then return end
-    if gPlayerSyncTable[0].state ~= TAGGER then return end
     if not boosts_enabled() then return end
 
     djui_hud_set_font(FONT_NORMAL)
@@ -1675,8 +1645,9 @@ local function hud_render()
     hudFade = clampf(hudFade, 0, 255)
 
     -- render hud
-    if gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN
-    and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN then
+    if  gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN
+    and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN
+    and gGlobalSyncTable.roundState ~= ROUND_TOURNAMENT_LEADERBOARD then
         hud_round_status()
         hud_gamemode()
         hud_modifier()

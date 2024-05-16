@@ -567,11 +567,11 @@ local function mario_update(m)
     if not np.currAreaSyncValid then return end
 
     -- loop thru all achievements
-    for i, achievement in pairs(achievements) do
+    for i, achievement in ipairs(achievements) do
         if completedAchievements[i] then goto continue end
 
         if not initializedAchievements then
-            -- load achievement
+            -- load achievements
             local completed = load_bool("achievement_" .. tostring(i))
 
             if completed == true then
@@ -595,6 +595,35 @@ local function mario_update(m)
         end
 
         ::continue::
+    end
+
+    if not initializedAchievements then
+        -- load selected player title
+        local title = load_int("playerTitle")
+        if title ~= nil then
+            if (completedAchievements[title] ~= nil or title < 0)
+            and achievements[title] ~= nil
+            and achievements[title].reward ~= nil
+            and achievements[title].reward.title ~= nil then
+                gPlayerSyncTable[0].playerTitle = achievements[title].reward.title
+            else
+                gPlayerSyncTable[0].playerTitle = nil
+            end
+        end
+
+        -- load selected trail
+        local trail = load_int("playerTrail")
+
+        if trail ~= nil then
+            if  completedAchievements[trail] ~= nil
+            and achievements[trail] ~= nil
+            and achievements[trail].reward ~= nil
+            and achievements[trail].reward.trail ~= nil then
+                gPlayerSyncTable[0].playerTrail = achievements[trail].reward.trail.model
+            else
+                gPlayerSyncTable[0].playerTrail = E_MODEL_BOOST_TRAIL
+            end
+        end
     end
 
     initializedAchievements = true

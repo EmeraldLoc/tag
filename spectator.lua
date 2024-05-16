@@ -256,7 +256,8 @@ local function on_render()
     or gGlobalSyncTable.gamemode == FREEZE_TAG) then return end
     if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
     or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
-    or gGlobalSyncTable.roundState == ROUND_VOTING then return end
+    or gGlobalSyncTable.roundState == ROUND_VOTING
+    or gGlobalSyncTable.roundState == ROUND_TOURNAMENT_LEADERBOARD then return end
 
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)

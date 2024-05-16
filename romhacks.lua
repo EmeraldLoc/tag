@@ -100,15 +100,6 @@ romhacks = {
                 }
             },
             {
-                -- ported by Murioz
-                name = "totwc",
-                level = LEVEL_TOTWC,
-                painting = get_texture_info("totwc_painting"),
-                area = 1,
-                pipes = nil,
-                spawnLocation = { x = 2, y = -1620, z = 7 }
-            },
-            {
                 name = "ttm",
                 level = LEVEL_TTM,
                 painting = get_texture_info("ttm_painting"),
