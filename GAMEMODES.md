@@ -31,7 +31,7 @@ function get_gamemode(g)
 	if g == GAMEMODE_1 then
 		return "\\#316BE8\\Gamemde!!\\#DCDCDC\\"
 	elseif g == GAMEMODE_2 then
-        return "\\#E82E2E\\Gamemde 2!!\\#DCDCDC\\"
+        	return "\\#E82E2E\\Gamemde 2!!\\#DCDCDC\\"
 	end
 
 	return "Uhhhhhhhhhh"
@@ -44,7 +44,7 @@ function get_gamemode(g)
 	if g == GAMEMODE_1 then
 		return "\\#316BE8\\Gamemde!!\\#DCDCDC\\"
 	elseif g == GAMEMODE_2 then
-        return "\\#E82E2E\\Gamemde 2!!\\#DCDCDC\\"
+        	return "\\#E82E2E\\Gamemde 2!!\\#DCDCDC\\"
 	elseif g == GAMEMODE_3 then
 		return "\\#F9F000\\Gamemode 3!\\#DCDCDC\\"
 	end
