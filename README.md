@@ -38,7 +38,7 @@ Each player can now unlock achievements! This isn't just for bragging rights eit
 
 ### Contributing
 
-If you'd like to contribute to the repo, all you have to do is [fork the repo]((https://github.com/EmeraldLoc/tag/fork)), and make a pull request with your changes. To learn more about the actual code stuff, take a look at the [documentation.](docs/DOCUMENTATION.md).
+If you'd like to contribute to the repo, all you have to do is [fork the repo](https://github.com/EmeraldLoc/tag/fork), and make a pull request with your changes. To learn more about the actual code stuff, take a look at the [documentation.](docs/DOCUMENTATION.md).
 
 ### Frequently Asked Questions
 
