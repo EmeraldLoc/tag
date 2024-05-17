@@ -1,5 +1,6 @@
 
 version = "v2.4"
+updateAvailable = false
 local prevVersion = "v2.32"
 local finishedChecking = false
 local updateFile = nil
@@ -53,9 +54,8 @@ local function check_for_updates(m)
             url = "https://github.com/EmeraldLoc/Tag/raw/main/" .. prevVersion .. ".mp3"
             updateFile = audio_stream_load_url(url)
             if updateFile == nil or not updateFile.loaded or updateFile.handle == 0 then
-                djui_popup_create("An update is available for Tag!", 2)
-            else
-                djui_popup_create("Enjoy the beta test for Tag!", 2)
+                djui_popup_create("An update for Tag is available!", 2)
+                updateAvailable = true
             end
         end
 
