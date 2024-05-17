@@ -1279,11 +1279,11 @@ romhacks = {
                 pipes = {
                     {
                         { x = -31, y = 765, z = 144 },
-                        { x = -34, y = 2695, z = 156 }
+                        { x = -34, y = 2680, z = 156 }
                     }
                 },
                 spawnLocation = { x = 2267, y = 2748, z = -2147 },
-                unwantedBhvs = { id_bhvBreakableBox, id_bhvBobombBuddy, id_bhvBlueCoinSwitch, id_bhvFloorSwitchHardcodedModel, id_bhvPurpleSwitchHiddenBoxes }
+                unwantedBhvs = { id_bhvBreakableBox, id_bhvBobombBuddy, id_bhvBlueCoinSwitch, id_bhvFloorSwitchHiddenObjects }
             },
             {
                 name = "oo",

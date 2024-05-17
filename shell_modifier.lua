@@ -22,7 +22,7 @@ local function mario_update(m)
     and shellTimer >= 1 * 30
     and m.action ~= ACT_IN_CANNON
     and m.action ~= ACT_SHOT_FROM_CANNON
-    and m.action & ACT_FLAG_ON_POLE ~= 0)
+    and m.action & ACT_FLAG_ON_POLE == 0)
     or m.action == ACT_RIDING_SHELL_GROUND then
         if m.action == ACT_RIDING_SHELL_GROUND then
             set_mario_action(m, ACT_SHELL_GROUND_CUSTOM, m.actionArg)
@@ -78,7 +78,7 @@ local function act_riding_shell_ground(m)
     adjust_sound_for_speed(m)
 
     reset_rumble_timers(m)
-    return 0
+    return false
 end
 
 hook_mario_action(ACT_SHELL_GROUND_CUSTOM, act_riding_shell_ground)
