@@ -21,6 +21,10 @@ local function bullet_init(o)
     if m.controller.buttonDown & D_JPAD ~= 0 then
         speed = -speed
     end
+    -- flip if our action is set to turning around
+    if m.action == ACT_TURNING_AROUND then
+        speed = -speed
+    end
     o.oVelX = speed * coss(o.oFaceAnglePitch) * sins(o.oFaceAngleYaw)
     if gGlobalSyncTable.modifier == MODIFIER_FLY then
         o.oVelY = speed * sins(o.oFaceAnglePitch)
