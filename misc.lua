@@ -608,7 +608,10 @@ end
 ---@return string
 function get_role_name_without_hex(role)
 
-	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+	if  gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
+	and gPlayerSyncTable[0].state ~= SPECTATOR
+	and (gPlayerSyncTable[0].state ~= WILDCARD_ROLE
+	or gGlobalSyncTable.gamemode == FREEZE_TAG) then
 		return "Incognito"
 	end
 
