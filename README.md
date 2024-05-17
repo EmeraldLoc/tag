@@ -36,6 +36,10 @@ Each player has stats! These stats go from playtime, total tags, and total time 
 
 Each player can now unlock achievements! This isn't just for bragging rights either, you also get rewards like titles and boost trails! You can view what each achievements unlocks, and how to get it in the "Achievements" section in Tag.
 
+### Contributing
+
+If you'd like to contribute to the repo, all you have to do is [fork the repo]((https://github.com/EmeraldLoc/tag/fork)), and make a pull request with your changes. To learn more about the actual code stuff, take a look at the [documentation.](docs/DOCUMENTATION.md).
+
 ### Frequently Asked Questions
 
 - Does this support sm64ex-coop/sm64coopdx
@@ -46,8 +50,6 @@ Each player can now unlock achievements! This isn't just for bragging rights eit
   - Usually yes, credit is not required, just make sure you understand how the code your copying works, and that you aren't just copying massive blobs of code, and I'm fine with it.
 - Can I publish custom versions of this mod?
   - If you haven't considered a contribution to the repo instead, then consider that. Otherwise, it's fine so long as it does not contain code taken from newer, unreleased versions of tag, and does not contain code from other mods without credit. I would also like to be in the credits of these mods. I would also hold the right to take any code of the mod and add it to base tag (credit would be added to the creator of said mod). You get to use my code with credit, I get to use yours with credit, fair?
-- How can I contribute to the repo?
-  - You can fork the repo [here](https://github.com/EmeraldLoc/tag/fork), then contribute to the repo by creating a pull request.
 - Where can I report bugs or suggestions?
   - You may report bugs or suggestions [here](https://github.com/EmeraldLoc/tag/issues).
 - How will I know that a update has released?
