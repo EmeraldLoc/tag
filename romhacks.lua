@@ -204,6 +204,7 @@ romhacks = {
                         { x = -1515, y = 96, z = 610 },
                     }
                 },
+                overrideName = "The Volcano",
                 overrideWater = true
             },
             {
@@ -212,6 +213,20 @@ romhacks = {
                 painting = get_texture_info("ssl_painting"),
                 area = 1,
                 pipes = nil
+            },
+            {
+                name = "bs",
+                level = LEVEL_DDD,
+                painting = get_texture_info("bs_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 3390, y = -3319, z = -525 },
+                        { x = 1283, y = 110, z = 4037 },
+                    }
+                },
+                overrideName = "Bowser's Sub",
+                spawnLocation = { x = 3899, y = 571, z = -1295 }
             },
             {
                 name = "thi",
