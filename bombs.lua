@@ -300,7 +300,9 @@ local function hud_bombs()
     local y            = math.floor(screenHeight - height - 4 * scale)
     local bombTime     = bombCooldown / 30 / (gGlobalSyncTable.maxBombCooldown / 30)
 
-    if gGlobalSyncTable.gamemode == JUGGERNAUT then
+    if (gGlobalSyncTable.gamemode == JUGGERNAUT
+    and gPlayerSyncTable[0].state == RUNNER)
+    or gGlobalSyncTable.gamemode == DEATHMATCH then
         y = y - 32
     end
 
@@ -328,7 +330,9 @@ local function hud_bombs()
     x = (screenWidth - width) / 2
     y = screenHeight - 28
 
-    if gGlobalSyncTable.gamemode == JUGGERNAUT then
+    if (gGlobalSyncTable.gamemode == JUGGERNAUT
+    and gPlayerSyncTable[0].state == RUNNER)
+    or gGlobalSyncTable.gamemode == DEATHMATCH then
         y = y - 32
     end
 
