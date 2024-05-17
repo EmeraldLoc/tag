@@ -68,7 +68,8 @@ local function hud_map_vote()
 
         djui_hud_set_color(255, 255, 255, fade)
         if i ~= 4 and levels[voteRandomLevels[i]].painting ~= nil then
-            djui_hud_render_texture(levels[voteRandomLevels[i]].painting, x, y, 4, 4)
+            local dimensions = levels[voteRandomLevels[i]].painting.width
+            djui_hud_render_texture(levels[voteRandomLevels[i]].painting, x, y, 256 / dimensions, 256 / dimensions)
         elseif i == 4 then
             djui_hud_render_texture(TEXTURE_RANDOM_PAINTING, x, y, 1, 1)
         end

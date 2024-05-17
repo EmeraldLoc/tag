@@ -973,7 +973,8 @@ end
 
 ---@param m MarioState
 local function mario_update(m)
-    if not gGlobalSyncTable.water then
+    if levels[gGlobalSyncTable.selectedLevel].overrideWater ~= true
+    and not gGlobalSyncTable.water then
         -- get rid of water
         for i = 1, 10 do
             set_environment_region(i, -10000)
@@ -1241,7 +1242,8 @@ local function mario_update(m)
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
 
         -- water level diamond breaks water being disabled, so just get rid of it
-        if not gGlobalSyncTable.water then
+        if levels[gGlobalSyncTable.selectedLevel].overrideWater ~= true
+        and not gGlobalSyncTable.water then
             obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWaterLevelDiamond))
         end
 
@@ -1736,7 +1738,9 @@ local function level_init()
     -- get rid of water
     for i = 1, 10 do
         waterRegions[i] = get_environment_region(i)
-        if not gGlobalSyncTable.water then
+        if levels[gGlobalSyncTable.selectedLevel] and
+        levels[gGlobalSyncTable.selectedLevel].overrideWater ~= true
+        and not gGlobalSyncTable.water then
             set_environment_region(i, -10000)
         end
     end

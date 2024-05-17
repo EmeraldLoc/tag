@@ -194,6 +194,19 @@ romhacks = {
                 pipes = nil
             },
             {
+                name = "vol",
+                level = LEVEL_LLL,
+                painting = get_texture_info("vol_painting"),
+                area = 2,
+                pipes = {
+                    {
+                        { x = 2525, y = 3591, z = -899 },
+                        { x = -1515, y = 96, z = 610 },
+                    }
+                },
+                overrideWater = true
+            },
+            {
                 name = "ssl",
                 level = LEVEL_SSL,
                 painting = get_texture_info("ssl_painting"),
