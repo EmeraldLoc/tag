@@ -168,7 +168,24 @@ romhacks = {
                 overrideName = "Toxic Maze",
                 room = 3,
                 unwantedBhvs = { id_bhvHmcElevatorPlatform },
-                disabledBhvs = { id_bhvDoor }
+                disabledBhvs = { id_bhvDoor },
+            },
+            {
+                name = "dd",
+                level = LEVEL_HMC,
+                painting = get_texture_info("dd_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -3718, y = -4279, z = 3058 },
+                        { x = -133, y = -4689, z = 3327 }
+                    }
+                },
+                spawnLocation = { x = -3547, y = -2559, z = -6975 },
+                overrideName = "Dorrie's Domain",
+                room = 6,
+                unwantedBhvs = { id_bhvHmcElevatorPlatform },
+                disabledBhvs = { id_bhvDoor },
             },
             {
                 name = "wdt",
