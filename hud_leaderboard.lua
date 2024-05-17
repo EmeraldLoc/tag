@@ -22,12 +22,12 @@ local function hud_winner_group_render()
     local text = "What the heck is happening."
 
     if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
+        text = "Runners Win"
         if gGlobalSyncTable.gamemode == FREEZE_TAG and gGlobalSyncTable.freezeHealthDrain > 0 then
             text = "Runners and Frozen Win"
-        else
-            text = "Runners Win"
         end
     elseif gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
+        text = "Taggers Win"
         if gGlobalSyncTable.gamemode == INFECTION then
             text = "Infected Win"
         elseif gGlobalSyncTable.gamemode == HOT_POTATO then
@@ -35,9 +35,7 @@ local function hud_winner_group_render()
         elseif gGlobalSyncTable.gamemode == ASSASSINS then
             text = "Assassins Win"
         elseif gGlobalSyncTable.gamemode == SARDINES then
-            text = "Leaderboards"
-        else
-            text = "Taggers Win"
+            text = "Leaderboard"
         end
     end
 

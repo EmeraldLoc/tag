@@ -578,82 +578,13 @@ function get_player_name_without_title(localIndex)
 	return network_get_player_text_color_string(localIndex) .. gNetworkPlayers[localIndex].name
 end
 
-function get_gamemode_without_hex(g)
-	if g == TAG then
-		return "Tag"
-	elseif g == FREEZE_TAG then
-		return "Freeze Tag"
-	elseif g == INFECTION then
-		return "Infection"
-	elseif g == HOT_POTATO then
-		return "Hot Potato"
-	elseif g == JUGGERNAUT then
-		return "Juggernaut"
-	elseif g == ASSASSINS then
-		return "Assassins"
-	elseif g == SARDINES then
-		return "Sardines"
-	elseif g == HUNT then
-		return "Hunt"
-	elseif g == DEATHMATCH then
-		return "Deathmatch"
-	elseif g == TERMINATOR then
-		return "Terminator"
-	elseif g == ODDBALL then
-		return "Oddball"
-	end
-end
-
 ---@param role integer
 ---@return string
-function get_role_name_without_hex(role)
-
+function get_role_name(role)
 	if  gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
 	and gPlayerSyncTable[0].state ~= SPECTATOR
 	and (gPlayerSyncTable[0].state ~= WILDCARD_ROLE
 	or gGlobalSyncTable.gamemode == FREEZE_TAG) then
-		return "Incognito"
-	end
-
-	if role == RUNNER then
-		if gGlobalSyncTable.gamemode == ASSASSINS then
-			return "Assassin"
-		elseif gGlobalSyncTable.gamemode == SARDINES then
-			return "Sardine"
-		elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-			return "The Jugger"
-		end
-
-		return "Runner"
-	elseif role == TAGGER then
-		if gGlobalSyncTable.gamemode == INFECTION then
-			return "Infected"
-		elseif gGlobalSyncTable.gamemode == ASSASSINS then
-			return "Assassin"
-		elseif gGlobalSyncTable.gamemode == HUNT then
-			return "Hunter"
-		end
-
-		return "Tagger"
-	elseif role == WILDCARD_ROLE then
-		if gGlobalSyncTable.gamemode == FREEZE_TAG then
-			return "Frozen"
-		elseif gGlobalSyncTable.gamemode == SARDINES then
-			return "Finished"
-		end
-
-		return "Eliminated"
-	elseif role == SPECTATOR then
-		return "Spectator"
-	end
-
-	return "None"
-end
-
----@param role integer
----@return string
-function get_role_name(role)
-	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
 		return "\\#4A4A4A\\Incognito"
 	end
 
@@ -662,8 +593,6 @@ function get_role_name(role)
 			return "\\#FF0000\\Assassin"
 		elseif gGlobalSyncTable.gamemode == SARDINES then
 			return "\\#BBBEA1\\Sardine"
-		elseif gGlobalSyncTable.gamemode == JUGGERNAUT then
-			return "\\#42B0F5\\The Jugger"
 		end
 
 		return "\\#316BE8\\Runner"
@@ -674,9 +603,9 @@ function get_role_name(role)
 			return "\\#FF0000\\Assassin"
 		elseif gGlobalSyncTable.gamemode == HUNT then
 			return "\\#C74444\\Hunter"
-		else
-			return "\\#E82E2E\\Tagger"
 		end
+
+		return "\\#E82E2E\\Tagger"
 	elseif role == WILDCARD_ROLE then
 		if gGlobalSyncTable.gamemode == FREEZE_TAG then
 			return "\\#7EC0EE\\Frozen"
