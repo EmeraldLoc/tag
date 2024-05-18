@@ -109,6 +109,10 @@ local function hud_current_sardine()
 
     local text = "The Sardine is " .. get_player_name(sardine)
 
+    if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+        text = "Unable to retrieve sardine data. Reason: Incognito"
+    end
+
     local x = 40
     local y = 60
 
