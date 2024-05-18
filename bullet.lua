@@ -22,7 +22,7 @@ local function bullet_init(o)
         speed = -speed
     end
     -- flip if our action is set to turning around
-    if m.action == ACT_TURNING_AROUND then
+    if m.action == ACT_SIDE_FLIP then
         speed = -speed
     end
     o.oVelX = speed * coss(o.oFaceAnglePitch) * sins(o.oFaceAngleYaw)
