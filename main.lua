@@ -967,7 +967,12 @@ local function update()
     for i = 0, MAX_PLAYERS - 1 do
         local np = gNetworkPlayers[i]
         local s = gPlayerSyncTable[i]
-        network_player_set_description(np, get_role_name(s.state), 220, 220, 220, 255)
+        local text = get_role_name(s.state)
+        if  math.floor(gGlobalSyncTable.displayTimer / 30) % 2 == 0
+        and gGlobalSyncTable.tournamentMode then
+            text = "\\" .. get_hex_from_string(get_role_name(s.state)) .. "\\" .. "Points: " .. gPlayerSyncTable[i].tournamentPoints
+        end
+        network_player_set_description(np, text, 220, 220, 220, 255)
     end
 end
 
