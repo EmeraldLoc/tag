@@ -152,6 +152,11 @@ local function hud_leaderboard()
 
             -- add to our points
             gPlayerSyncTable[0].tournamentPoints = gPlayerSyncTable[0].tournamentPoints + addedPoints
+
+            -- increment tournament round
+            if network_is_server() then
+                gGlobalSyncTable.tournamentRound = gGlobalSyncTable.tournamentRound + 1
+            end
         end
     end
 
@@ -167,9 +172,7 @@ local function hud_leaderboard()
         end
         local i = winners[w]
         if gNetworkPlayers[i].connected then
-            local displayName = get_player_name(i)
-
-            local text = displayName
+            local text = get_player_name(i)
 
             local screenWidth = djui_hud_get_screen_width()
             local width = 550
@@ -180,11 +183,10 @@ local function hud_leaderboard()
             djui_hud_set_color(32, 32, 32, fade)
             djui_hud_render_rect_outlined(x + offsetX, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
 
-            local r, g, b = hex_to_rgb(network_get_player_text_color_string(i))
             width = djui_hud_measure_text(text)
             x = (screenWidth - 390) / 2
 
-            djui_hud_set_color(r, g, b, fade)
+            djui_hud_set_color(220, 220, 220, fade)
             djui_hud_print_colored_text(text, x + offsetX, y, 1, fade)
 
             x = (screenWidth - 470) / 2
@@ -275,9 +277,7 @@ local function hud_leaderboard()
 
         renderedIndex = renderedIndex + 1
 
-        local displayName = get_player_name(sardine)
-
-        local text = displayName
+        local text = get_player_name(sardine)
 
         screenWidth = djui_hud_get_screen_width()
         width = 550
@@ -288,11 +288,10 @@ local function hud_leaderboard()
         djui_hud_set_color(32, 32, 32, fade)
         djui_hud_render_rect_outlined(x + offsetX, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
 
-        local r, g, b = hex_to_rgb(network_get_player_text_color_string(sardine))
         width = djui_hud_measure_text(text)
         x = (screenWidth - 450) / 2
 
-        djui_hud_set_color(r, g, b, fade)
+        djui_hud_set_color(220, 220, 220, fade)
         djui_hud_print_colored_text(text, x + offsetX, y, 1, fade)
 
         x = (screenWidth - 530) / 2

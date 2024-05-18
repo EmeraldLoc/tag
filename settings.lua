@@ -316,6 +316,11 @@ local function toggle_auto_hide_hud_always_show_timer()
     save_bool("autoHideHudAlwaysShowTimer", autoHideHudAlwaysShowTimer)
 end
 
+local function toggle_show_titles()
+    showTitles = not showTitles
+    save_bool("showTitles", showTitles)
+end
+
 local function reset_general_settings()
     if network_is_server()
     or network_is_moderator() then
@@ -517,6 +522,24 @@ local function set_player_role(i)
     end
 end
 
+local function set_tournament_system()
+    local direction = get_controller_dir()
+
+    if direction == CONT_LEFT then
+        gGlobalSyncTable.tournamentPointSystem = gGlobalSyncTable.tournamentPointSystem - 1
+        if gGlobalSyncTable.tournamentPointSystem < TOURNAMENT_SYSTEM_MIN then
+            gGlobalSyncTable.tournamentPointSystem = TOURNAMENT_SYSTEM_MAX
+        end
+    else
+        gGlobalSyncTable.tournamentPointSystem = gGlobalSyncTable.tournamentPointSystem + 1
+        if gGlobalSyncTable.tournamentPointSystem > TOURNAMENT_SYSTEM_MAX then
+            gGlobalSyncTable.tournamentPointSystem = TOURNAMENT_SYSTEM_MIN
+        end
+    end
+
+    save_int("tournamentPointSystem", gGlobalSyncTable.tournamentPointSystem)
+end
+
 local function set_tournament_points_req()
     local m = gMarioStates[0]
     local direction = get_controller_dir()
@@ -538,6 +561,29 @@ local function set_tournament_points_req()
     gGlobalSyncTable.tournamentPointsReq = clamp(gGlobalSyncTable.tournamentPointsReq, 10, 200)
 
     save_int("tournamentPointsReq", gGlobalSyncTable.tournamentPointsReq)
+end
+
+local function set_tournament_round_limit()
+    local m = gMarioStates[0]
+    local direction = get_controller_dir()
+
+    -- get speed
+    local speed = 1
+
+    if m.controller.buttonPressed & R_JPAD ~= 0
+    or m.controller.buttonPressed & L_JPAD ~= 0 then
+        speed = 10
+    end
+
+    if direction == CONT_LEFT then
+        gGlobalSyncTable.tournamentRoundLimit = gGlobalSyncTable.tournamentRoundLimit - speed
+    else
+        gGlobalSyncTable.tournamentRoundLimit = gGlobalSyncTable.tournamentRoundLimit + speed
+    end
+
+    gGlobalSyncTable.tournamentRoundLimit = clamp(gGlobalSyncTable.tournamentRoundLimit, 3, 20)
+
+    save_int("tournamentRoundLimit", gGlobalSyncTable.tournamentRoundLimit)
 end
 
 local function get_rules(gamemode)
@@ -1561,6 +1607,12 @@ end
 local function reset_tournament_entries()
     local resetEntries = entries == tournamentEntries
 
+    local tournamentSystem = "Point Threshold"
+
+    if gGlobalSyncTable.tournamentPointSystem == TOURNAMENT_SYSTEM_ROUND_LIMIT then
+        tournamentSystem = "Round Limit"
+    end
+
     tournamentEntries = {
         {name = "Tournaments",
         permission = PERMISSION_MODERATORS,
@@ -1569,11 +1621,21 @@ local function reset_tournament_entries()
             gGlobalSyncTable.tournamentMode = not gGlobalSyncTable.tournamentMode
         end,
         valueText = on_off_text(gGlobalSyncTable.tournamentMode)},
+        {name = "Tournament System",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = set_tournament_system,
+        valueText = tournamentSystem},
         {name = "Points Needed To Win",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = set_tournament_points_req,
         valueText = gGlobalSyncTable.tournamentPointsReq},
+        {name = "Round Limit",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = set_tournament_round_limit,
+        valueText = gGlobalSyncTable.tournamentRoundLimit},
         {name = "Back",
         permission = PERMISSION_NONE,
         input = INPUT_A,
@@ -1592,7 +1654,7 @@ local function reset_stat_player_selections_entries()
 
     for i = 0, MAX_PLAYERS - 1 do
         if not gNetworkPlayers[i].connected then goto continue end
-        local name = network_get_player_text_color_string(i) .. gNetworkPlayers[i].name
+        local name = get_player_name(i)
         table.insert(statPlayerSelectionEntries, {
             name = name,
             permission = PERMISSION_NONE,
@@ -1987,6 +2049,13 @@ local function reset_title_reward_entries()
     end
 
     titleRewardEntries = {
+        {
+            name = "Show Titles",
+            permission = PERMISSION_NONE,
+            input = INPUT_JOYSTICK,
+            func = toggle_show_titles,
+            valueText = on_off_text(showTitles)
+        },
         {
             name = "None",
             permission = PERMISSION_NONE,

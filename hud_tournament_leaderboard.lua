@@ -21,6 +21,12 @@ local function hud_tournament_leaderboard_text_render()
 
     local text = "Tournament Leaderboard"
 
+    if gGlobalSyncTable.tournamentPointSystem == TOURNAMENT_SYSTEM_POINT_LIMIT then
+        text = "Points needed to win: " .. gGlobalSyncTable.tournamentPointsReq
+    elseif gGlobalSyncTable.tournamentPointSystem == TOURNAMENT_SYSTEM_ROUND_LIMIT then
+        text = "Round's Remaining: " .. gGlobalSyncTable.tournamentRoundLimit - gGlobalSyncTable.tournamentRound
+    end
+
     local screenWidth = djui_hud_get_screen_width()
     local width = djui_hud_measure_text(text)
 
@@ -106,9 +112,8 @@ local function hud_leaderboard()
     for sp = 1, #sortedPlayers do
         local i = sortedPlayers[sp]
         if gNetworkPlayers[i].connected then
-            local displayName = get_player_name(i)
 
-            local text = displayName
+            local text = get_player_name(i)
 
             local screenWidth = djui_hud_get_screen_width()
             local width = 550
@@ -119,11 +124,10 @@ local function hud_leaderboard()
             djui_hud_set_color(32, 32, 32, fade)
             djui_hud_render_rect_outlined(x, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
 
-            local r, g, b = hex_to_rgb(network_get_player_text_color_string(i))
             width = djui_hud_measure_text(text)
             x = (screenWidth - 390) / 2
 
-            djui_hud_set_color(r, g, b, fade)
+            djui_hud_set_color(220, 220, 220, fade)
             djui_hud_print_colored_text(text, x, y, 1, fade)
 
             x = (screenWidth - 470) / 2
@@ -212,12 +216,8 @@ local function hud_render()
         fade = 0
         hudTimer = 5 * 30
         -- see if someone has won
-        for i = 0, MAX_PLAYERS - 1 do
-            if  gPlayerSyncTable[i].tournamentPoints ~= nil
-            and gPlayerSyncTable[i].tournamentPoints >= gGlobalSyncTable.tournamentPointsReq
-            and gNetworkPlayers[i].connected then
-                hudTimer = 10 * 30
-            end
+        if has_tournament_ended() then
+            hudTimer = 10 * 30
         end
         return
     end
@@ -233,13 +233,9 @@ local function hud_render()
     else
         fade = fade - 20
 
-        for i = 0, MAX_PLAYERS - 1 do
-            if  gPlayerSyncTable[i].tournamentPoints ~= nil
-            and gPlayerSyncTable[i].tournamentPoints >= gGlobalSyncTable.tournamentPointsReq
-            and gNetworkPlayers[i].connected then
-                gPlayerSyncTable[0].tournamentPoints = 0
-                break
-            end
+        if has_tournament_ended() then
+            gPlayerSyncTable[0].tournamentPoints = 0
+            gGlobalSyncTable.tournamentRound = 0
         end
     end
 

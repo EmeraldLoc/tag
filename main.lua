@@ -92,6 +92,12 @@ BUTTON_CHALLENGE_A                     = 0
 BUTTON_CHALLENGE_Z                     = 1
 BUTTON_CHALLENGE_RANDOM                = 2
 
+-- tournament point systems
+TOURNAMENT_SYSTEM_MIN                  = 0
+TOURNAMENT_SYSTEM_POINT_LIMIT          = 0
+TOURNAMENT_SYSTEM_ROUND_LIMIT          = 1
+TOURNAMENT_SYSTEM_MAX                  = 1
+
 -- textures
 TEXTURE_TAG_LOGO                       = get_texture_info("logo")
 
@@ -171,6 +177,12 @@ gGlobalSyncTable.pipes                 = true
 gGlobalSyncTable.romhackOverride       = nil
 -- if we are in tournament mode or not
 gGlobalSyncTable.tournamentMode        = false
+-- tournament point system
+gGlobalSyncTable.tournamentPointSystem = TOURNAMENT_SYSTEM_POINT_LIMIT
+-- current round number
+gGlobalSyncTable.tournamentRound       = 0
+-- rounds needed to end a tournament
+gGlobalSyncTable.tournamentRoundLimit  = 5
 -- points needed to win a tournament
 gGlobalSyncTable.tournamentPointsReq   = 50
 -- bomb cooldown
@@ -268,6 +280,8 @@ useRomhackCam = true
 autoHideHud = true
 -- auto hide hud always show timer option
 autoHideHudAlwaysShowTimer = true
+-- show titles or not
+showTitles = true
 -- amount of times the pipe has been used
 pipeUse = 0
 -- how long it has been since we last entered a pipe
@@ -408,6 +422,11 @@ local function server_update()
             gPlayerSyncTable[i].tagLives = 0
             gPlayerSyncTable[i].tournamentPoints = 0
         end
+    end
+
+    -- reset tournament rounds if tournaments are off
+    if not gGlobalSyncTable.tournamentMode then
+        gGlobalSyncTable.tournamentRound = 0
     end
 
     -- get number of players
@@ -743,11 +762,8 @@ local function server_update()
                 gGlobalSyncTable.roundState = ROUND_TOURNAMENT_LEADERBOARD
                 timer = 5 * 30 -- 5 seconds
                 -- see if someone has won
-                for i = 0, MAX_PLAYERS - 1 do
-                    if gPlayerSyncTable[i].tournamentPoints >= gGlobalSyncTable.tournamentPointsReq
-                    and gNetworkPlayers[i].connected then
-                        timer = 10 * 30
-                    end
+                if has_tournament_ended() then
+                    timer = 10 * 30
                 end
                 log_to_console("Tag: Setting round state to ROUND_TOURNAMENT_LEADERBOARD...")
             elseif gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
@@ -1080,7 +1096,9 @@ local function mario_update(m)
                 if load_bool("boost") ~= nil then gGlobalSyncTable.boosts = load_bool("boost") end
                 if load_bool("hazardSurfaces") ~= nil then gGlobalSyncTable.hazardSurfaces = load_bool("hazardSurfaces") end
                 if load_bool("pipes") ~= nil then gGlobalSyncTable.pipes = load_bool("pipes") end
+                if load_int("tournamentPointSystem") ~= nil then gGlobalSyncTable.tournamentPointSystem = load_int("tournamentPointSystem") end
                 if load_int("tournamentPointsReq") ~= nil then gGlobalSyncTable.tournamentPointsReq = load_int("tournamentPointsReq") end
+                if load_int("tournamentRoundLimit") ~= nil then gGlobalSyncTable.tournamentRoundLimit = load_int("tournamentRoundLimit") end
             end
             if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
             if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end

@@ -563,6 +563,7 @@ end
 ---@param localIndex integer
 ---@return string
 function get_player_name(localIndex)
+	if not showTitles then return get_player_name_without_title(localIndex) end
 	local s = gPlayerSyncTable[localIndex]
 	local title = ""
 
@@ -889,6 +890,33 @@ function convert_s16(num)
         num = min + (num - max)
     end
     return num
+end
+
+function has_tournament_ended_using_round_state()
+	for i = 0, MAX_PLAYERS - 1 do
+		if  gGlobalSyncTable.tournamentRound >= gGlobalSyncTable.tournamentRoundLimit
+		and gNetworkPlayers[i].connected then
+			return true
+		end
+	end
+end
+
+function has_tournament_ended_using_points_state()
+	for i = 0, MAX_PLAYERS - 1 do
+		if  gPlayerSyncTable[i].tournamentPoints ~= nil
+		and gPlayerSyncTable[i].tournamentPoints >= gGlobalSyncTable.tournamentPointsReq
+		and gNetworkPlayers[i].connected then
+			return true
+		end
+	end
+end
+
+function has_tournament_ended()
+	if gGlobalSyncTable.tournamentPointSystem == TOURNAMENT_SYSTEM_POINT_LIMIT then
+		return has_tournament_ended_using_points_state()
+	elseif gGlobalSyncTable.tournamentPointSystem == TOURNAMENT_SYSTEM_ROUND_LIMIT then
+		return has_tournament_ended_using_round_state()
+	end
 end
 
 -- pure destruction
