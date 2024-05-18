@@ -235,7 +235,7 @@ romhacks = {
                 name = "bs",
                 level = LEVEL_DDD,
                 painting = get_texture_info("bs_painting"),
-                area = 1,
+                area = 2,
                 pipes = {
                     {
                         { x = 3390, y = -3319, z = -525 },
@@ -1154,6 +1154,7 @@ romhacks = {
         }
     },
     {
+        -- ported to tag by Murioz
         name = "Super Mario Rainbow Road",
         shortName = "rr",
         water = true,
@@ -1199,7 +1200,7 @@ romhacks = {
                     },
                     {
                         { x = 2092, y = -1492, z = 4441 },
-                        { x = -4976, y = 5567, z = -3535 }
+                        { x = -4976, y = 5667, z = -3535 }
                     }
                 }
             },
@@ -1236,6 +1237,38 @@ romhacks = {
                 }
             },
             {
+                name = "lll",
+                level = LEVEL_LLL,
+                painting = get_texture_info("cg_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -5277, y = 4016, z = 2523 },
+                        { x = 4137, y = -1183, z = 3234 }
+                    },
+                    {
+                        { x = 3328, y = 1216, z = -1451 },
+                        { x = -5911, y = -1183, z = -3381 }
+                    }
+                }
+            },
+            {
+                name = "hmc",
+                level = LEVEL_HMC,
+                painting = get_texture_info("cg_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 5919, y = -537, z = 5195 },
+                        { x = 2248, y = 3212, z = -3930 }
+                    },
+                    {
+                        { x = 5387, y = 2937, z = 511 },
+                        { x = -5195, y = 2582, z = 5539 }
+                    }
+                }
+            },
+            {
                 name = "pss",
                 level = LEVEL_PSS,
                 painting = get_texture_info("cg_painting"),
@@ -1246,6 +1279,33 @@ romhacks = {
                         { x = 23, y = -458, z = -1349 }
                     }
                 }
+            },
+            {
+                name = "bitdw",
+                level = LEVEL_BITDW,
+                painting = get_texture_info("cg_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -2178, y = 4029, z = -407 },
+                        { x = -453, y = 529, z = 6235 }
+                    },
+                    {
+                        { x = 3639, y = -3810, z = 6356 },
+                        { x = 4011, y = -1220, z = -2345 }
+                    },
+                    {
+                        { x = -5620, y = 2805, z = -5933 },
+                        { x = 155, y = 1229, z = -5131 }
+                    }
+                }
+            },
+            {
+                name = "sa",
+                level = LEVEL_SA,
+                painting = get_texture_info("cg_painting"),
+                area = 1,
+                pipes = nil,
             },
         },
     },
