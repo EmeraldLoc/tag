@@ -1852,6 +1852,7 @@ hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
 -- this hook allows us to walk on lava and quicksand
 hook_event(HOOK_ALLOW_HAZARD_SURFACE, function (m)
     if gGlobalSyncTable.modifier == MODIFIER_SAND and m.floor.type == SURFACE_DEEP_QUICKSAND then return end
+    if gPlayerSyncTable[0].state == SPECTATOR or gPlayerSyncTable[0].state == WILDCARD_ROLE then return end
     return gGlobalSyncTable.hazardSurfaces
 end)
 -- disables dialogs
