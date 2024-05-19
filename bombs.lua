@@ -76,6 +76,7 @@ local function bomb_explosion_loop(o)
     -- if we interacted...
     if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
         if m.playerIndex == localBombOwner then goto interactset end
+        if m.invincTimer > 0 then goto interactset end
         -- run handle_player_pvp for designated gamemode
         handle_projectile_pvp(localBombOwner, m.playerIndex)
 

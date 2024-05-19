@@ -51,6 +51,7 @@ local function bullet_loop(o)
     -- if we get hit, and we are the victim, handle pvp
     if dist_between_objects(o, m.marioObj) < 200
     and m.playerIndex == 0
+    and m.invincTimer <= 0
     and localOwner ~= 0 then
         handle_projectile_pvp(localOwner, m.playerIndex, o)
 
