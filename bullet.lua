@@ -83,7 +83,8 @@ function hud_bullet(gunCooldown, maxGunCooldown)
     or  (gPlayerSyncTable[0].state == RUNNER
     and gGlobalSyncTable.roundState == ROUND_ACTIVE
     and (gGlobalSyncTable.gamemode == JUGGERNAUT
-    or  gGlobalSyncTable.gamemode == HUNT)) then
+    or  gGlobalSyncTable.gamemode == HUNT
+    or  gGlobalSyncTable.gamemode == DEATHMATCH)) then
         y = y - 32
     end
 
@@ -115,7 +116,8 @@ function hud_bullet(gunCooldown, maxGunCooldown)
     or  (gPlayerSyncTable[0].state == RUNNER
     and gGlobalSyncTable.roundState == ROUND_ACTIVE
     and (gGlobalSyncTable.gamemode == JUGGERNAUT
-    or  gGlobalSyncTable.gamemode == HUNT)) then
+    or  gGlobalSyncTable.gamemode == HUNT
+    or  gGlobalSyncTable.gamemode == DEATHMATCH)) then
         y = y - 32
     end
 
