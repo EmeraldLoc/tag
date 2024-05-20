@@ -1,4 +1,6 @@
 
+TEXTURE_CIRCLE = get_texture_info("circle")
+
 local didYouKnowHudRendering = 0
 local randomDidYouKnow = 1
 
@@ -204,6 +206,15 @@ function djui_hud_print_colored_text(text, x, y, scale, opacity)
 	end
 end
 
+---@param x number|integer
+---@param y number|integer
+---@param width number|integer
+---@param height number|integer
+---@param oR number|integer
+---@param oG number|integer
+---@param oB number|integer
+---@param thickness number|integer
+---@param opacity number|integer|nil
 function djui_hud_render_rect_outlined(x, y, width, height, oR, oG, oB, thickness, opacity)
     if opacity == nil then opacity = 255 end
     -- render main rect
@@ -216,6 +227,46 @@ function djui_hud_render_rect_outlined(x, y, width, height, oR, oG, oB, thicknes
     djui_hud_render_rect(x, y - thickness, width + thickness, thickness)
     djui_hud_render_rect(x, y + (height - thickness) + thickness, width, thickness)
 end
+
+---@param x number|integer
+---@param y number|integer
+---@param width number|integer
+---@param height number|integer
+---@param cornerRaidus number|integer
+function djui_hud_render_rect_rounded(x, y, width, height, cornerRaidus)
+    djui_hud_render_rect(x + (cornerRaidus / 2), y, width - cornerRaidus, height)
+    djui_hud_render_rect(x, y + (cornerRaidus / 2), width, height - cornerRaidus)
+    -- render corners
+    local circleDimensions = (1 / 128) * cornerRaidus
+    -- top left corner
+    djui_hud_render_texture(TEXTURE_CIRCLE, x, y, circleDimensions, circleDimensions)
+    -- bottom left corner
+    djui_hud_render_texture(TEXTURE_CIRCLE, x, y + height - cornerRaidus, circleDimensions, circleDimensions)
+    -- top right corner
+    djui_hud_render_texture(TEXTURE_CIRCLE, x + width - cornerRaidus, y, circleDimensions, circleDimensions)
+    -- bottom right corner
+    djui_hud_render_texture(TEXTURE_CIRCLE, x + width - cornerRaidus, y + height - cornerRaidus, circleDimensions, circleDimensions)
+end
+
+-- not viable without having ability to get current djui color
+--[[---@param x number|integer
+---@param y number|integer
+---@param width number|integer
+---@param height number|integer
+---@param cornerRaidus number|integer
+---@param oR number|integer
+---@param oG number|integer
+---@param oB number|integer
+---@param thickness number|integer
+---@param opacity number|integer
+function djui_hud_render_rect_rounded_outlined(x, y, width, height, cornerRaidus, oR, oG, oB, thickness, opacity)
+    -- render outline rect
+    djui_hud_set_color(oR, oG, oB, 255)
+    djui_hud_render_rect_rounded(x - thickness / 2, y - thickness / 2, width + thickness, height + thickness, cornerRaidus)
+    -- render rounded rect
+    djui_hud_set_color(255, 0, 0, 255)
+    djui_hud_render_rect_rounded(x, y, width, height, cornerRaidus)
+end--]]
 
 -- this entire snippet for the player head was made by EmilyEmmi (with adjustments for tag made by me :), thanks!
 local PART_ORDER = {

@@ -2246,8 +2246,30 @@ local function reset_mute_entries()
     if resetEntries then entries = muteEntries end
 end
 
-local function hud_render()
+local function scroll_bar_render()
+    local height = bgHeight - 12
+    for i = scrollEntry + 1, #entries do
+        height = height - 30
 
+        if entries[i].seperator ~= nil then
+            height = height - 15
+        end
+    end
+    local x = (djui_hud_get_screen_width() / 2) + (bgWidth / 2 - 8) - 4
+    local y = djui_hud_get_screen_height() / 2 - bgHeight / 2 + 6
+    for i = scrollEntry + 1, selection do
+        y = y + 30
+
+        if entries[i].seperator ~= nil then
+            y = y + 15
+        end
+    end
+    djui_hud_set_color(35, 35, 37, 250)
+    djui_hud_render_rect_rounded(x, y, 8, height, 8)
+end
+
+local function hud_render()
+    djui_hud_set_color(255, 0, 0, 255)
     if not showSettings then
         entries = mainEntries
         selection = 1
@@ -2283,6 +2305,7 @@ local function hud_render()
 
     background()
     settings_text()
+    scroll_bar_render()
 
     local height = 90
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
