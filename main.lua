@@ -138,32 +138,16 @@ gGlobalSyncTable.eliminateOnDeath      = true
 gGlobalSyncTable.lateJoining           = false
 -- toggles vote level system
 gGlobalSyncTable.doVoting              = true
--- all gamemode active timers
+-- gamemode active timers
 gGlobalSyncTable.activeTimers          = {}
-for i = MIN_GAMEMODE, MAX_GAMEMODE do
-    gGlobalSyncTable.activeTimers[i]   = 120 * 30
-
-    if i == FREEZE_TAG or i == HUNT or i == DEATHMATCH
-    or i == TERMINATOR then
-        gGlobalSyncTable.activeTimers[i] = 180 * 30
-    end
-
-    if i == HOT_POTATO then
-        gGlobalSyncTable.activeTimers[i] = 35 * 30
-    end
-
-    if i == ODDBALL then
-        gGlobalSyncTable.activeTimers[i] = 60 * 30
-    end
-end
--- other timers
-gGlobalSyncTable.sardinesHidingTimer   = 30  * 30
--- amount of lives for juggernaut
-gGlobalSyncTable.juggernautLivesCount  = 3
--- amount of lives for hunt
-gGlobalSyncTable.huntLivesCount        = 3
--- amount of lives for deathmatch
-gGlobalSyncTable.deathmatchLivesCount  = 3
+-- other gamemode timers
+gGlobalSyncTable.sardinesHidingTimer   = 0
+-- gamemode max lives
+gGlobalSyncTable.maxLives              = {}
+-- other gamemode specific vars
+gGlobalSyncTable.freezeHealthDrain     = 0
+-- reset gamemode vars
+reset_gamemode_settings()
 -- auto mode
 gGlobalSyncTable.autoMode              = true
 -- enable tagger boosts or not
@@ -623,9 +607,7 @@ local function server_update()
             local amountOfTaggersNeeded = math.floor(numPlayers / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
 
             -- set tag max lives for gamemodes like juggernaut, hunt, and deathmatch
-            if gGlobalSyncTable.gamemode == JUGGERNAUT then gGlobalSyncTable.tagMaxLives = gGlobalSyncTable.juggernautLivesCount end
-            if gGlobalSyncTable.gamemode == HUNT then gGlobalSyncTable.tagMaxLives = gGlobalSyncTable.huntLivesCount end
-            if gGlobalSyncTable.gamemode == DEATHMATCH then gGlobalSyncTable.tagMaxLives = gGlobalSyncTable.deathmatchLivesCount end
+            gGlobalSyncTable.tagMaxLives = gGlobalSyncTable.maxLives[gGlobalSyncTable.gamemode]
 
             for i = 0, MAX_PLAYERS - 1 do
                 gPlayerSyncTable[i].tagLives = gGlobalSyncTable.tagMaxLives
@@ -1109,6 +1091,25 @@ local function mario_update(m)
                 if load_int("bind_" .. tostring(i)) ~= nil then
                     binds[i].btn = load_int("bind_" .. tostring(i))
                 end
+            end
+            -- gamemode settings
+            -- active timers and max lives
+            for i = MIN_GAMEMODE, MAX_GAMEMODE do
+                if load_int("activeTimers_" .. i) ~= nil then
+                    gGlobalSyncTable.activeTimers[i] = load_int("activeTimers_" .. i)
+                end
+
+                if load_int("maxLives_" .. i) ~= nil then
+                    gGlobalSyncTable.maxLives[i] = load_int("maxLives_" .. i)
+                end
+            end
+            -- freeze tag frozen health drain
+            if load_int("freezeHealthDrain") ~= nil then
+                gGlobalSyncTable.freezeHealthDrain = load_int("freezeHealthDrain")
+            end
+            -- sardine hiding timer
+            if load_int("sardinesHidingTimer") ~= nil then
+                gGlobalSyncTable.sardinesHidingTimer = load_int("sardinesHidingTimer")
             end
             -- stats
             -- load global stats

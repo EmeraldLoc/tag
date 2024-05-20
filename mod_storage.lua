@@ -7,7 +7,7 @@
 ---@param value string
 function save_string(key, value)
     -- save directly to storage, no conversion needed
-    mod_storage_save(key, encrypt_string(value))
+    mod_storage_save(tostring(key), encrypt_string(value))
 end
 
 ---@param key string
@@ -18,8 +18,7 @@ function save_bool(key, value)
     -- add tag_bool_ to the beginning
     strValue = "tag_bool_" .. strValue
     -- save
-    mod_storage_save(key, encrypt_string(strValue))
-    encrypt_string(strValue)
+    mod_storage_save(tostring(key), encrypt_string(strValue))
 end
 
 ---@param key string
@@ -30,7 +29,7 @@ function save_int(key, value)
     -- add tag_int_ to the beginning
     strValue = "tag_int_" .. strValue
     -- save
-    mod_storage_save(key, encrypt_string(strValue))
+    mod_storage_save(tostring(key), encrypt_string(strValue))
 end
 
 -----------------------

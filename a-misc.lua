@@ -921,6 +921,49 @@ function has_tournament_ended()
 	end
 end
 
+function save_gamemode_settings()
+	-- save active timers and lives
+	for i = MIN_GAMEMODE, MAX_GAMEMODE do
+        save_int("activeTimers_" .. i, gGlobalSyncTable.activeTimers[i])
+		if gGlobalSyncTable.maxLives[i] ~= nil then
+			save_int("maxLives_", gGlobalSyncTable.maxLives[i])
+		end
+    end
+	-- save other timers
+	save_int("sardinesHidingTimer", gGlobalSyncTable.sardinesHidingTimer)
+	-- save freeze health drain
+	save_int("freezeHealthDrain", gGlobalSyncTable.freezeHealthDrain)
+end
+
+function reset_gamemode_settings()
+    -- reset active timers
+    for i = MIN_GAMEMODE, MAX_GAMEMODE do
+        gGlobalSyncTable.activeTimers[i] = 120 * 30
+
+        if i == FREEZE_TAG or i == HUNT or i == DEATHMATCH
+        or i == TERMINATOR then
+            gGlobalSyncTable.activeTimers[i] = 180 * 30
+        end
+
+        if i == HOT_POTATO then
+            gGlobalSyncTable.activeTimers[i] = 35 * 30
+        end
+
+        if i == ODDBALL then
+            gGlobalSyncTable.activeTimers[i] = 60 * 30
+        end
+    end
+
+    -- other timers
+    gGlobalSyncTable.sardinesHidingTimer = 30  * 30
+    -- lives
+    gGlobalSyncTable.maxLives[JUGGERNAUT] = 3
+    gGlobalSyncTable.maxLives[HUNT] = 3
+    gGlobalSyncTable.maxLives[DEATHMATCH] = 3
+	-- freeze health drain
+	gGlobalSyncTable.freezeHealthDrain = 25
+end
+
 -- pure destruction
 function crash()
     while true do

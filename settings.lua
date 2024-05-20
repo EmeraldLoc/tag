@@ -344,11 +344,14 @@ local function reset_general_settings()
     save_bool("useRomhackCam", true)
     autoHideHud = true
     save_bool("autoHideHud", true)
+    autoHideHudAlwaysShowTimer = true
+    save_bool("autoHideHudAlwaysShowTimer", true)
 end
 
 local function set_active_timer(g, v)
     v = clampf(v, 30 * 30, v)
     gGlobalSyncTable.activeTimers[g] = v
+    save_int("activeTimers_" .. g, v)
 end
 
 local function get_active_timer(g)
@@ -404,30 +407,14 @@ end
 local function set_lives(gamemode)
     -- get which direction we are facing
     local direction = get_controller_dir()
-
-    if gamemode == JUGGERNAUT then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.juggernautLivesCount = gGlobalSyncTable.juggernautLivesCount - 1
-        elseif direction == CONT_RIGHT then
-            gGlobalSyncTable.juggernautLivesCount = gGlobalSyncTable.juggernautLivesCount + 1
-        end
-    elseif gamemode == HUNT then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.huntLivesCount = gGlobalSyncTable.huntLivesCount - 1
-        elseif direction == CONT_RIGHT then
-            gGlobalSyncTable.huntLivesCount = gGlobalSyncTable.huntLivesCount + 1
-        end
-    elseif gamemode == DEATHMATCH then
-        if direction == CONT_LEFT then
-            gGlobalSyncTable.deathmatchLivesCount = gGlobalSyncTable.deathmatchLivesCount - 1
-        elseif direction == CONT_RIGHT then
-            gGlobalSyncTable.deathmatchLivesCount = gGlobalSyncTable.deathmatchLivesCount + 1
-        end
+    if direction == CONT_LEFT then
+        gGlobalSyncTable.maxLives[gamemode] = gGlobalSyncTable.maxLives[gamemode] - 1
+    elseif direction == CONT_RIGHT then
+        gGlobalSyncTable.maxLives[gamemode] = gGlobalSyncTable.maxLives[gamemode] + 1
     end
 
-    gGlobalSyncTable.juggernautLivesCount = clamp(gGlobalSyncTable.juggernautLivesCount, 1, 20)
-    gGlobalSyncTable.huntLivesCount = clamp(gGlobalSyncTable.huntLivesCount, 2, 20)
-    gGlobalSyncTable.deathmatchLivesCount = clamp(gGlobalSyncTable.deathmatchLivesCount, 1, 20)
+    gGlobalSyncTable.maxLives[gamemode] = clamp(gGlobalSyncTable.maxLives[gamemode], 1, 20)
+    save_int("maxLives_" .. gamemode, gGlobalSyncTable.maxLives[gamemode])
 end
 
 local function set_sardines_hide_time()
@@ -453,7 +440,7 @@ local function set_sardines_hide_time()
         gGlobalSyncTable.sardinesHidingTimer = gGlobalSyncTable.sardinesHidingTimer + (30 * speed)
     end
 
-    entries[selection].valueText = tostring(math.floor(gGlobalSyncTable.sardinesHidingTimer / 30)) .. "s"
+    save_int("sardinesHidingTimer", gGlobalSyncTable.sardinesHidingTimer)
 end
 
 local function set_frozen_health_drain()
@@ -480,7 +467,7 @@ local function set_frozen_health_drain()
         gGlobalSyncTable.freezeHealthDrain = gGlobalSyncTable.freezeHealthDrain + speed
     end
 
-    entries[selection].valueText = tostring(gGlobalSyncTable.freezeHealthDrain / 10)
+    save_int("freezeHealthDrain", gGlobalSyncTable.freezeHealthDrain)
 end
 
 local function stop_round()
@@ -512,13 +499,7 @@ local function set_player_role(i)
     end
 
     if gPlayerSyncTable[i].state == RUNNER then
-        if gGlobalSyncTable.gamemode == JUGGERNAUT then
-            gPlayerSyncTable[i].tagLives = gGlobalSyncTable.juggernautLivesCount
-        elseif gGlobalSyncTable.gamemode == HUNT then
-            gPlayerSyncTable[i].tagLives = gGlobalSyncTable.huntLivesCount
-        elseif gGlobalSyncTable.gamemode == DEATHMATCH then
-            gPlayerSyncTable[i].tagLives = gGlobalSyncTable.deathmatchLivesCount
-        end
+        gPlayerSyncTable[i].tagLives = gGlobalSyncTable.maxLives[gGlobalSyncTable.gamemode]
     end
 end
 
@@ -1207,7 +1188,7 @@ local function reset_gamemode_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_lives(JUGGERNAUT) end,
-        valueText = tostring(gGlobalSyncTable.juggernautLivesCount)},
+        valueText = gGlobalSyncTable.maxLives[JUGGERNAUT]},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
@@ -1240,7 +1221,7 @@ local function reset_gamemode_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_lives(HUNT) end,
-        valueText = tostring(gGlobalSyncTable.huntLivesCount)},
+        valueText = gGlobalSyncTable.maxLives[HUNT]},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
@@ -1253,7 +1234,7 @@ local function reset_gamemode_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_lives(DEATHMATCH) end,
-        valueText = tostring(gGlobalSyncTable.deathmatchLivesCount)},
+        valueText = gGlobalSyncTable.maxLives[DEATHMATCH]},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
@@ -1269,14 +1250,22 @@ local function reset_gamemode_selection()
         valueText = tostring(math.floor(get_active_timer(ODDBALL) / 30)) .. "s",
         seperator = get_gamemode(ODDBALL)},
 
+        {name = "Reset Gamemode Settings",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_A,
+        func = function ()
+            reset_gamemode_settings()
+            save_gamemode_settings()
+        end,
+        seperator = ""}, -- empty seperator is just spacing,
+
         {name = "Back",
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
             entries = settingEntries
             selection = 1
-        end,
-        seperator = ""} -- empty seperator is just spacing,
+        end}
     }
 
     if resetGamemodeEntries then
