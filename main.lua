@@ -73,7 +73,8 @@ MODIFIER_HARD_SURFACE                  = 17
 MODIFIER_SAND                          = 18
 MODIFIER_SWAP                          = 19
 MODIFIER_BUTTON_CHALLENGE              = 20
-MODIFIER_MAX                           = 20
+MODIFIER_NO_WALLKICKS                  = 21
+MODIFIER_MAX                           = 21
 
 -- binds
 BIND_BOOST                             = 0

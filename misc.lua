@@ -511,6 +511,8 @@ function get_modifier_text(m)
 			hexCode = "\\#C1BED1\\"
 		end
 		text = hexCode .. button_to_text(gGlobalSyncTable.buttonChallengeButton) .. " Button Challenge"
+	elseif m == MODIFIER_NO_WALLKICKS then
+		text = "\\#FF0000\\No Wallkicks"
 	elseif m == MODIFIER_NONE
 	and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
