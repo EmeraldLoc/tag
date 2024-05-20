@@ -511,8 +511,8 @@ function get_modifier_text(m)
 			hexCode = "\\#C1BED1\\"
 		end
 		text = hexCode .. button_to_text(gGlobalSyncTable.buttonChallengeButton) .. " Button Challenge"
-	elseif m == MODIFIER_NO_WALLKICKS then
-		text = "\\#FF0000\\No Wallkicks"
+	elseif m == MODIFIER_ONLY_FIRSTIES then
+		text = "\\#EDB834\\Only Firsties"
 	elseif m == MODIFIER_NONE
 	and gGlobalSyncTable.randomModifiers then
 		text = "\\#FFFFFF\\None"
@@ -921,18 +921,13 @@ function has_tournament_ended()
 	end
 end
 
-function save_gamemode_settings()
-	-- save active timers and lives
-	for i = MIN_GAMEMODE, MAX_GAMEMODE do
-        save_int("activeTimers_" .. i, gGlobalSyncTable.activeTimers[i])
-		if gGlobalSyncTable.maxLives[i] ~= nil then
-			save_int("maxLives_", gGlobalSyncTable.maxLives[i])
-		end
-    end
-	-- save other timers
-	save_int("sardinesHidingTimer", gGlobalSyncTable.sardinesHidingTimer)
-	-- save freeze health drain
-	save_int("freezeHealthDrain", gGlobalSyncTable.freezeHealthDrain)
+function init_gamemode_settings()
+	-- set active timers
+	gGlobalSyncTable.activeTimers = {}
+	-- lives
+	gGlobalSyncTable.maxLives = {}
+	-- reset settings
+	reset_gamemode_settings()
 end
 
 function reset_gamemode_settings()
@@ -962,6 +957,40 @@ function reset_gamemode_settings()
     gGlobalSyncTable.maxLives[DEATHMATCH] = 3
 	-- freeze health drain
 	gGlobalSyncTable.freezeHealthDrain = 25
+end
+
+function save_gamemode_settings()
+	-- save active timers and lives
+	for i = MIN_GAMEMODE, MAX_GAMEMODE do
+        save_int("activeTimers_" .. i, gGlobalSyncTable.activeTimers[i])
+		if gGlobalSyncTable.maxLives[i] ~= nil then
+			save_int("maxLives_", gGlobalSyncTable.maxLives[i])
+		end
+    end
+	-- save other timers
+	save_int("sardinesHidingTimer", gGlobalSyncTable.sardinesHidingTimer)
+	-- save freeze health drain
+	save_int("freezeHealthDrain", gGlobalSyncTable.freezeHealthDrain)
+end
+
+function init_modifier_settings()
+	-- this function currently exists if any modifier tables get created, so futureproofing
+	reset_modifier_settings()
+end
+
+function reset_modifier_settings()
+	-- bomb cooldown
+	gGlobalSyncTable.maxBombCooldown = 2 * 30
+	-- blaster cooldown
+	gGlobalSyncTable.maxBlasterCooldown = 0.8 * 30
+	--  button challenge
+	gGlobalSyncTable.buttonChallenge = BUTTON_CHALLENGE_RANDOM
+end
+
+function save_modifier_settings()
+	save_int("maxBombCooldown", gGlobalSyncTable.maxBombCooldown)
+	save_int("maxBlasterCooldown", gGlobalSyncTable.maxBlasterCooldown)
+	save_int("buttonChallenge", gGlobalSyncTable.buttonChallenge)
 end
 
 -- pure destruction

@@ -73,7 +73,7 @@ MODIFIER_HARD_SURFACE                  = 17
 MODIFIER_SAND                          = 18
 MODIFIER_SWAP                          = 19
 MODIFIER_BUTTON_CHALLENGE              = 20
-MODIFIER_NO_WALLKICKS                  = 21
+MODIFIER_ONLY_FIRSTIES                 = 21
 MODIFIER_MAX                           = 21
 
 -- binds
@@ -138,16 +138,8 @@ gGlobalSyncTable.eliminateOnDeath      = true
 gGlobalSyncTable.lateJoining           = false
 -- toggles vote level system
 gGlobalSyncTable.doVoting              = true
--- gamemode active timers
-gGlobalSyncTable.activeTimers          = {}
--- other gamemode timers
-gGlobalSyncTable.sardinesHidingTimer   = 0
--- gamemode max lives
-gGlobalSyncTable.maxLives              = {}
--- other gamemode specific vars
-gGlobalSyncTable.freezeHealthDrain     = 0
--- reset gamemode vars
-reset_gamemode_settings()
+-- init gamemode vars
+init_gamemode_settings()
 -- auto mode
 gGlobalSyncTable.autoMode              = true
 -- enable tagger boosts or not
@@ -170,15 +162,12 @@ gGlobalSyncTable.tournamentRound       = 0
 gGlobalSyncTable.tournamentRoundLimit  = 5
 -- points needed to win a tournament
 gGlobalSyncTable.tournamentPointsReq   = 50
--- bomb cooldown
-gGlobalSyncTable.maxBombCooldown       = 2 * 30
--- blaster cooldown
-gGlobalSyncTable.maxBlasterCooldown    = 0.8 * 30
 -- swap timer
-gGlobalSyncTable.swapTimer             = 0
---  button challenge modifier
-gGlobalSyncTable.buttonChallenge       = BUTTON_CHALLENGE_RANDOM
+gGlobalSyncTable.swapTimer = 0
+-- current button challenge button
 gGlobalSyncTable.buttonChallengeButton = A_BUTTON
+-- init modifier settings
+init_modifier_settings()
 -- blacklisted courses, gamemodes, and modifiers
 gGlobalSyncTable.blacklistedCourses    = {}
 gGlobalSyncTable.blacklistedGamemodes  = {}
@@ -1110,6 +1099,19 @@ local function mario_update(m)
             -- sardine hiding timer
             if load_int("sardinesHidingTimer") ~= nil then
                 gGlobalSyncTable.sardinesHidingTimer = load_int("sardinesHidingTimer")
+            end
+            -- modifier settings
+            -- max bomb cooldown
+            if load_int("maxBombCooldown") ~= nil then
+                gGlobalSyncTable.maxBombCooldown = load_int("maxBombCooldown")
+            end
+            -- max blaster cooldown
+            if load_int("maxBlasterCooldown") ~= nil then
+                gGlobalSyncTable.maxBlasterCooldown = load_int("maxBlasterCooldown")
+            end
+            -- button challenge
+            if load_int("buttonChallenge") ~= nil then
+                gGlobalSyncTable.buttonChallenge = load_int("buttonChallenge")
             end
             -- stats
             -- load global stats

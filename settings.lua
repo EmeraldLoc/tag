@@ -242,6 +242,8 @@ local function set_bomb_cooldown()
     else
         gGlobalSyncTable.maxBombCooldown = gGlobalSyncTable.maxBombCooldown + speed
     end
+
+    save_int("maxBombCooldown", gGlobalSyncTable.maxBombCooldown)
 end
 
 local function set_blaster_cooldown()
@@ -267,6 +269,8 @@ local function set_blaster_cooldown()
     else
         gGlobalSyncTable.maxBlasterCooldown = gGlobalSyncTable.maxBlasterCooldown + speed
     end
+
+	save_int("maxBlasterCooldown", gGlobalSyncTable.maxBlasterCooldown)
 end
 
 local function set_button_challenge_button()
@@ -281,6 +285,8 @@ local function set_button_challenge_button()
         gGlobalSyncTable.buttonChallenge = gGlobalSyncTable.buttonChallenge + 1
         if gGlobalSyncTable.buttonChallenge > 2 then gGlobalSyncTable.buttonChallenge = 0 end
     end
+
+	save_int("buttonChallenge", gGlobalSyncTable.buttonChallenge)
 end
 
 local function get_button_challenge_text()
@@ -1302,6 +1308,16 @@ local function reset_modifier_selection()
             seperator = "\\#dcdcdc\\The Button Challenge",
         },
         {
+            name = "Reset Modifier Settings",
+            permission = PERMISSION_MODERATORS,
+            input = INPUT_A,
+            func = function ()
+                reset_modifier_settings()
+                save_modifier_settings()
+            end,
+            seperator = "" -- empty seperator is just spacing,
+        },
+        {
             name = "Back",
             permission = PERMISSION_NONE,
             input = INPUT_A,
@@ -1309,7 +1325,6 @@ local function reset_modifier_selection()
                 entries = settingEntries
                 selection = 1
             end,
-            seperator = ""
         }
     }
 
