@@ -198,6 +198,24 @@ local function mario_update(m)
                 end
             end
         end
+
+        -- if our follow taget index is invalid, go thru each player starting from index 1, and find a valid player
+        if not gNetworkPlayers[followTargetIndex].connected
+        or gPlayerSyncTable[followTargetIndex].state == SPECTATOR
+        or (gPlayerSyncTable[followTargetIndex].state == WILDCARD_ROLE
+        and gGlobalSyncTable.gamemode ~= FREEZE_TAG)
+        or  followTargetIndex == 0 then
+            followTargetIndex = 1
+
+            while not gNetworkPlayers[followTargetIndex].connected
+            or gPlayerSyncTable[followTargetIndex].state == SPECTATOR
+            or (gPlayerSyncTable[followTargetIndex].state == WILDCARD_ROLE
+            and gGlobalSyncTable.gamemode ~= FREEZE_TAG) do
+                followTargetIndex = followTargetIndex + 1
+
+                if followTargetIndex >= MAX_PLAYERS then followTargetIndex = 0 end
+            end
+        end
     end
 end
 
