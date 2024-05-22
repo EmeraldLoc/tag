@@ -19,7 +19,7 @@ ROUND_RUNNERS_WIN                      = 4
 ROUND_TOURNAMENT_LEADERBOARD           = 5
 ROUND_HOT_POTATO_INTERMISSION          = 6
 ROUND_VOTING                           = 7
-ROUND_HIDING_SARDINES                  = 8
+ROUND_HIDING                           = 8
 
 -- roles (gamemode-specific roles specified in designated gamemode files, and replace the wildcard role)
 RUNNER                                 = 0
@@ -612,8 +612,7 @@ local function server_update()
                     amountOfTaggersNeeded = numPlayers - 1
                 end
 
-                if gGlobalSyncTable.gamemode == JUGGERNAUT
-                or gGlobalSyncTable.gamemode == SARDINES then
+                if gGlobalSyncTable.gamemode == JUGGERNAUT then
                     amountOfTaggersNeeded = numPlayers - 1
                 end
 
@@ -667,14 +666,36 @@ local function server_update()
 
             gGlobalSyncTable.roundState = ROUND_ACTIVE -- begin round
 
-            -- if the gamemode is sardines set round state to hiding sardines
-            if gGlobalSyncTable.gamemode == SARDINES then gGlobalSyncTable.roundState = ROUND_HIDING_SARDINES end
+            -- if the gamemode is sardines set round state to hiding
+            if gGlobalSyncTable.gamemode == SARDINES then gGlobalSyncTable.roundState = ROUND_HIDING end
 
             log_to_console("Tag: Started the game")
         end
-    elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
+    elseif gGlobalSyncTable.roundState == ROUND_HIDING then
         timer = timer - 1
         gGlobalSyncTable.displayTimer = timer
+
+        -- attempt to find a runner
+        local doesRunnerExist = false
+        for i = 0, MAX_PLAYERS - 1 do
+            if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state == RUNNER then
+                doesRunnerExist = true
+                break
+            end
+        end
+
+        if not doesRunnerExist then
+            -- select random sardine
+            local randomIndex = math.random(0, MAX_PLAYERS - 1) -- select random index
+
+            if gPlayerSyncTable[randomIndex].state ~= RUNNER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
+                gPlayerSyncTable[randomIndex].state = RUNNER
+
+                log_to_console("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as " .. get_role_name(RUNNER))
+            end
+
+            timer = gGlobalSyncTable.sardinesHidingTimer
+        end
 
         if timer <= 0 then
             timer = gGlobalSyncTable.amountOfTime
@@ -1173,7 +1194,7 @@ local function mario_update(m)
         if gGlobalSyncTable.roundState == ROUND_ACTIVE
         or gGlobalSyncTable.roundState == ROUND_WAIT
         or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
-        or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
+        or gGlobalSyncTable.roundState == ROUND_HIDING then
             if np.currLevelNum ~= selectedLevel.level or np.currAreaIndex ~= selectedLevel.area then
                 -- attempt to warp to stage
                 local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, 0)
@@ -1340,7 +1361,7 @@ local function mario_update(m)
         if np.currAreaSyncValid and gPlayerSyncTable[0].state == -1 then
             if gGlobalSyncTable.roundState == ROUND_ACTIVE
             or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
-            or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
+            or gGlobalSyncTable.roundState == ROUND_HIDING then
                 if ((gGlobalSyncTable.gamemode == TAG
                 or  gGlobalSyncTable.gamemode == INFECTION)
                 and not gGlobalSyncTable.lateJoining)
@@ -1391,7 +1412,7 @@ local function mario_update(m)
 
         if gGlobalSyncTable.roundState == ROUND_ACTIVE
         or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
-        or gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
+        or gGlobalSyncTable.roundState == ROUND_HIDING then
             -- handle play time stats
             if stats[gGlobalSyncTable.gamemode].playTime ~= nil then
                 stats[gGlobalSyncTable.gamemode].playTime = stats[gGlobalSyncTable.gamemode].playTime + 1
@@ -1521,7 +1542,7 @@ local function hud_round_status()
                 end
             end
         end
-    elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES then
+    elseif gGlobalSyncTable.roundState == ROUND_HIDING then
         text = "You have " ..
         math.floor(gGlobalSyncTable.displayTimer / 30)
         .. " seconds to hide!" -- divide by 30 for seconds and not frames (all game logic runs at 30fps)

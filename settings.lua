@@ -759,24 +759,50 @@ helpEntries = {
     func = function ()
         get_rules(ODDBALL)
     end},
-
-    {name = "Spectating",
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        local text = get_spectator_help()
-        entries = {
-            {text = text},
-            {name = "Back",
-            permission = PERMISSION_NONE,
-            input = INPUT_A,
-            func = function ()
-                entries = helpEntries
-                selection = 1
-            end}}
-        selection = 1
-    end},
-
+    {
+        name = "Spectating",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = {
+                {
+                    text = get_spectator_help()
+                },
+                {
+                    name = "Back",
+                    permission = PERMISSION_NONE,
+                    input = INPUT_A,
+                    func = function ()
+                        entries = helpEntries
+                        selection = 1
+                    end
+                }
+            }
+            selection = 1
+        end
+    },
+    {
+        name = "Tournaments",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = {
+                {
+                    text = get_tournament_help()
+                },
+                {
+                    name = "Back",
+                    permission = PERMISSION_NONE,
+                    input = INPUT_A,
+                    func = function ()
+                        entries = helpEntries
+                        selection = 1
+                    end
+                }
+            }
+            selection = 1
+        end
+    },
     {name = "Back",
     permission = PERMISSION_NONE,
     input = INPUT_A,

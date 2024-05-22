@@ -17,7 +17,7 @@ local function mario_update(m)
 
     if  autoSpectateTimer <= 0 and gGlobalSyncTable.roundState ~= ROUND_ACTIVE
     and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION
-    and gGlobalSyncTable.roundState ~= ROUND_HIDING_SARDINES then
+    and gGlobalSyncTable.roundState ~= ROUND_HIDING then
         gPlayerSyncTable[0].state = SPECTATOR
     end
 end

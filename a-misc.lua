@@ -763,6 +763,10 @@ function get_spectator_help()
 	return "Spectators have multiple viewing experiences to choose from! \"Mario\" is the first view. When in Mario view, you play as Mario. You have a wing cap to fly around with, and other players can see you. The next viewing mode is Freecam. This allows you to move in whatever direction you wish, no gravity. Players cannot see you when in Freecam. The last viewing mode is Follow. This allows you to spectate certain players, as if you become them! Use the dpad to toggle between these players. To change the viewing mode, use dpad up/down."
 end
 
+function get_tournament_help()
+	return "Tournaments last for multiple rounds. In a tournament, each player has points. There are 2 types of tournamnets, a Point Threshold system, and a Round Limit system. The Point Threshold system makes it so if you reach " .. gGlobalSyncTable.tournamentPointsReq .. " points, you win! The Round Limit system makes it so when you reach the " .. gGlobalSyncTable.tournamentRoundLimit .. " round, the game ends. You get 5, 3, and 1 points for 1st, 2nd, and 3rd respectively. For each tag, you get half a point, rounded down."
+end
+
 function get_general_rules()
 	-- ack, long text
 	return "Tag is a set of 6 gamemodes, Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, Sardines, and Hunt. These gamemodes are selected randomly, or selected by the server. Modifiers are, well, modifiers that modify parts of a game. These are either selected by the server, or selected by random. During a round, you may have special abilities (indicated by a ui element at the bottom of your screen), hit whatever button is binded to Y to use these ablities. At the end of a round, you can see what placement you got via the leaderboards, this is pretty self explanitory. The voting system is a way to vote for a map to play on.\n\nThat's the general \"rules\" of Tag, enjoy!"

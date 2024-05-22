@@ -26,10 +26,10 @@ local function mario_update(m)
         m.flags = m.flags | MARIO_WING_CAP
     end
 
-    if gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES
+    if gGlobalSyncTable.roundState == ROUND_HIDING
     and gPlayerSyncTable[0].state ~= RUNNER then
         m.freeze = 1
-    elseif gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES
+    elseif gGlobalSyncTable.roundState == ROUND_HIDING
     and gPlayerSyncTable[0].state == RUNNER then
         vec3f_copy(hidingPos, m.pos)
     end
@@ -166,7 +166,7 @@ local function hud_render()
         end
     end
 
-    if gGlobalSyncTable.roundState == ROUND_HIDING_SARDINES
+    if gGlobalSyncTable.roundState == ROUND_HIDING
     and gPlayerSyncTable[0].state ~= RUNNER then
         fade = fade + 20
     else
