@@ -168,12 +168,29 @@ function check_round_status()
 	if  not hasRunner
 	and gGlobalSyncTable.gamemode ~= ASSASSINS
 	and gGlobalSyncTable.gamemode ~= DEATHMATCH then
-		if roundStatusTimer < 0 then
-			timer = 5 * 30 -- 5 seconds
+		if gGlobalSyncTable.gamemode == ODDBALL then
+			if roundStatusTimer < 0 then
+				-- select random runner
+				local randomIndex = math.random(0, MAX_PLAYERS - 1) -- select random index
 
-			gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
+				if gPlayerSyncTable[randomIndex].state ~= RUNNER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
+					gPlayerSyncTable[randomIndex].state = RUNNER
+
+					log_to_console("Tag: " .. get_role_name(RUNNER) .. " disconnected. Assigned " .. gNetworkPlayers[randomIndex].name .. " as " .. get_role_name(RUNNER))
+				end
+
+				timer = gGlobalSyncTable.sardinesHidingTimer
+			else
+				roundStatusTimer = roundStatusTimer - 1
+			end
 		else
-			roundStatusTimer = roundStatusTimer - 1
+			if roundStatusTimer < 0 then
+				timer = 5 * 30 -- 5 seconds
+
+				gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN
+			else
+				roundStatusTimer = roundStatusTimer - 1
+			end
 		end
 
 		return
