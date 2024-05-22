@@ -44,7 +44,8 @@ romhacks = {
                         { x = -4221, y = 6451, z = -5885 },
                         { x = 2125, y = -1833, z = 2079 }
                     }
-                }
+                },
+                overrideSurfaceType = { [SURFACE_DEFAULT] = SURFACE_HARD_NOT_SLIPPERY }
             },
             {
                 name = "ccm",
