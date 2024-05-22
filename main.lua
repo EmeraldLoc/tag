@@ -612,7 +612,9 @@ local function server_update()
                     amountOfTaggersNeeded = numPlayers - 1
                 end
 
-                if gGlobalSyncTable.gamemode == JUGGERNAUT then
+                if gGlobalSyncTable.gamemode == JUGGERNAUT
+                or gGlobalSyncTable.gamemode == SARDINES
+                or gGlobalSyncTable.gamemode == ODDBALL then
                     amountOfTaggersNeeded = numPlayers - 1
                 end
 
@@ -1485,27 +1487,28 @@ local function hud_round_status()
         end
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
         if gGlobalSyncTable.gamemode == ODDBALL then
-            -- find runner that's doing the best
+            -- find runner
             local runner = -1
             local np = gNetworkPlayers[0]
             local s = gPlayerSyncTable[0]
             for i = 0, MAX_PLAYERS - 1 do
                 np = gNetworkPlayers[i]
                 s = gPlayerSyncTable[i]
-                if np.connected and (runner < 0 or s.oddballTimer < gPlayerSyncTable[runner].oddballTimer) then
+                if  np.connected and s.state == RUNNER
+                and (runner < 0 or s.oddballTimer > gPlayerSyncTable[runner].oddballTimer) then
                     runner = i
                 end
             end
 
             np = gNetworkPlayers[runner]
             s = gPlayerSyncTable[runner]
-            djui_chat_message_create(tostring(runner))
+
             local time = s.oddballTimer
 
             if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
-                text = "Best: ???"
+                text = "???"
             else
-                text = "Best: " .. get_player_name(runner) .. "\\#FFFFFF\\: " .. math.floor(time / 30)
+                text = get_player_name(runner) .. "\\#FFFFFF\\: " .. math.floor(time / 30)
             end
 
             -- if auto hide hud is on, and we are less than 20 seconds away from the round ending, make fade hud peek

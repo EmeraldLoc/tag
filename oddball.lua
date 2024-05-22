@@ -36,6 +36,8 @@ local function hud_side_panel_render()
         return gPlayerSyncTable[a].oddballTimer < gPlayerSyncTable[b].oddballTimer
     end)
 
+    if #runners <= 1 then return end
+
     -- get height
     local height = 30 * #runners + 30 + 10
 
