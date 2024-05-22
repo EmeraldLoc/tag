@@ -68,11 +68,13 @@ local function hud_side_panel_render()
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
-    local x = djui_hud_get_screen_width() - djui_hud_measure_text("-------------------") + 3
+    local textMaxWidth = djui_hud_measure_text("-------------------")
+
+    local x = djui_hud_get_screen_width() - textMaxWidth + 3
     local y = djui_hud_get_screen_height() / 2 - 30
 
-    djui_hud_set_color(0, 0, 0, 127)
-    djui_hud_render_rect(x, y + 1, djui_hud_measure_text("-------------------") + 3, 60)
+    djui_hud_set_color(20, 20, 22, 255 / 1.4)
+    djui_hud_render_rect_rounded_outlined(x, y + 1, djui_hud_measure_text("-------------------") + 3, 60, 35, 35, 35, 4, 255 / 1.4)
 
     djui_hud_set_color(255, 255, 255, 255)
     djui_hud_print_text("Target:", x + 10, y, 1)
