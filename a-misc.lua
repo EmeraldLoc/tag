@@ -615,6 +615,8 @@ function get_role_name(role)
 			return "\\#FF0000\\Assassin"
 		elseif gGlobalSyncTable.gamemode == SARDINES then
 			return "\\#BBBEA1\\Sardine"
+		elseif gGlobalSyncTable.gamemode == ODDBALL then
+			return "\\#919AA1\\Oddball"
 		end
 
 		return "\\#316BE8\\Runner"
