@@ -498,7 +498,11 @@ function get_modifier_text(m)
 			text = "\\#FF0000\\Bljs"
 		end
 	elseif m == MODIFIER_FRIENDLY_FIRE then
-		text = "\\#F26D13\\Friendly Fire"
+		if gGlobalSyncTable.friendlyFire then
+			text = "\\#F26D13\\No Friendly Fire"
+		else
+			text = "\\#F26D13\\Friendly Fire"
+		end
 	elseif m == MODIFIER_HARD_SURFACE then
 		text = "\\#686C73\\Hard Floors"
 	elseif m == MODIFIER_SAND then
@@ -649,6 +653,18 @@ function bljs_enabled()
 		return true
 	elseif not gGlobalSyncTable.bljs
 	and gGlobalSyncTable.modifier == MODIFIER_BLJS then
+		return true
+	end
+
+	return false
+end
+
+function friendly_fire_enabled()
+	if gGlobalSyncTable.friendlyFire
+	and gGlobalSyncTable.modifier ~= MODIFIER_FRIENDLY_FIRE then
+		return true
+	elseif not gGlobalSyncTable.friendlyFire
+	and gGlobalSyncTable.modifier == MODIFIER_FRIENDLY_FIRE then
 		return true
 	end
 

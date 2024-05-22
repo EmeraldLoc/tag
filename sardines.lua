@@ -200,7 +200,7 @@ local function allow_pvp(a, v)
     local aS = gPlayerSyncTable[a.playerIndex]
     local vS = gPlayerSyncTable[v.playerIndex]
 
-    if gGlobalSyncTable.modifier == MODIFIER_FRIENDLY_FIRE
+    if friendly_fire_enabled()
     and aS.state ~= RUNNER and vS.state ~= RUNNER then return end
 
     return false

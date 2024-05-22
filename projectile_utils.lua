@@ -7,8 +7,8 @@ function handle_projectile_pvp(aI, vI, o)
 
     -- don't allow spectators to attack players, vice versa
     if gPlayerSyncTable[aI].state == SPECTATOR or gPlayerSyncTable[aI].state == SPECTATOR then return end
-    -- if the modifier is not friendly fire, check runners and taggers
-    if gGlobalSyncTable.modifier ~= MODIFIER_FRIENDLY_FIRE then
+    -- if friendly fire isn't enabled, check runners and taggers
+    if not friendly_fire_enabled() then
         -- check if 2 runners are trying to attack eachother
         if gPlayerSyncTable[vI].state == RUNNER and gPlayerSyncTable[aI].state == RUNNER then return end
         -- check if 2 taggers are trying to attack eachother

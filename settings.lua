@@ -194,6 +194,11 @@ local function toggle_boost()
     save_bool("boost", gGlobalSyncTable.boosts)
 end
 
+local function toggle_friendly_fire()
+    gGlobalSyncTable.friendlyFire = not gGlobalSyncTable.friendlyFire
+    save_bool("friendlyFire", gGlobalSyncTable.friendlyFire)
+end
+
 local function set_boost_cooldown()
 
     -- get which direction we are facing
@@ -344,6 +349,8 @@ local function reset_general_settings()
         save_bool("autoMode", true)
         gGlobalSyncTable.boosts = true
         save_bool("boosts", true)
+        gGlobalSyncTable.friendlyFire = false
+        save_bool("friendlyFire", false)
     end
 
     useRomhackCam = true
@@ -1086,6 +1093,12 @@ local function reset_general_selection()
         input = INPUT_JOYSTICK,
         func = toggle_boost,
         valueText = on_off_text(gGlobalSyncTable.boosts),},
+        -- friendly fire selection
+        {name = "Friendly Fire",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = toggle_friendly_fire,
+        valueText = on_off_text(gGlobalSyncTable.friendlyFire),},
         -- boost cooldown selection
         {name = "Boost Cooldown",
         permission = PERMISSION_MODERATORS,

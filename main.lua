@@ -144,6 +144,8 @@ init_gamemode_settings()
 gGlobalSyncTable.autoMode              = true
 -- enable tagger boosts or not
 gGlobalSyncTable.boosts                = true
+-- enable friendly fire or not
+gGlobalSyncTable.friendlyFire          = false
 -- boost cooldown
 gGlobalSyncTable.boostCooldown         = 15 * 30
 -- enable or disable hazardous surfaces
@@ -1066,6 +1068,7 @@ local function mario_update(m)
                 if load_bool("voting") ~= nil then gGlobalSyncTable.voting = load_bool("voting") end
                 if load_bool("autoMode") ~= nil then gGlobalSyncTable.autoMode = load_bool("autoMode") end
                 if load_bool("boost") ~= nil then gGlobalSyncTable.boosts = load_bool("boost") end
+                if load_bool("friendlyFire") ~= nil then gGlobalSyncTable.friendlyFire = load_bool("friendlyFire") end
                 if load_bool("hazardSurfaces") ~= nil then gGlobalSyncTable.hazardSurfaces = load_bool("hazardSurfaces") end
                 if load_bool("pipes") ~= nil then gGlobalSyncTable.pipes = load_bool("pipes") end
                 if load_int("tournamentPointSystem") ~= nil then gGlobalSyncTable.tournamentPointSystem = load_int("tournamentPointSystem") end
@@ -1697,8 +1700,8 @@ end
 local function allow_pvp(a, v)
     -- don't allow spectators to attack players, vice versa
     if gPlayerSyncTable[v.playerIndex].state == SPECTATOR or gPlayerSyncTable[a.playerIndex].state == SPECTATOR then return false end
-    -- if the modifier is friendly fire, don't continue
-    if gGlobalSyncTable.modifier == MODIFIER_FRIENDLY_FIRE then return end
+    -- if friendly fire is enabled, don't continue
+    if friendly_fire_enabled() then return end
     -- check if 2 runners are trying to attack eachother
     if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == RUNNER then return false end
     -- check if 2 taggers are trying to attack eachother
