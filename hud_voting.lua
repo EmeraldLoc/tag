@@ -92,7 +92,7 @@ local function hud_map_vote()
             djui_hud_set_color(32, 32, 32, fade)
         end
         x = (screenWidth - (256 * 4 + 100 * 3)) / 2 + (256 + 100) * (i - 1) - 18.125 -- help me
-        djui_hud_render_rect_outlined(x, y, 290, 50, outlineColor.r, outlineColor.g, outlineColor.b, 3, fade)
+        djui_hud_render_rect_rounded_outlined(x, y, 290, 50, outlineColor.r, outlineColor.g, outlineColor.b, 3, fade)
         djui_hud_set_color(255, 255, 255, fade)
         if i ~= 4 then
             text = tostring(name_of_level(levels[voteRandomLevels[i]].level, levels[voteRandomLevels[i]].area, levels[voteRandomLevels[i]])) .. ": " .. tostring(votes)

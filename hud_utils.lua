@@ -1,5 +1,5 @@
 
-TEXTURE_CIRCLE = get_texture_info("circle")
+TEXTURE_QUARTER_CIRCLE = get_texture_info("quarter_circle")
 
 local didYouKnowHudRendering = 0
 local randomDidYouKnow = 1
@@ -234,39 +234,62 @@ end
 ---@param height number|integer
 ---@param cornerRaidus number|integer
 function djui_hud_render_rect_rounded(x, y, width, height, cornerRaidus)
+    -- it's called black magic
     djui_hud_render_rect(x + (cornerRaidus / 2), y, width - cornerRaidus, height)
-    djui_hud_render_rect(x, y + (cornerRaidus / 2), width, height - cornerRaidus)
+    djui_hud_render_rect(x, y + (cornerRaidus / 2), cornerRaidus / 2, height - cornerRaidus)
+    djui_hud_render_rect(x + width - cornerRaidus / 2, y + (cornerRaidus / 2), cornerRaidus / 2, height - cornerRaidus)
     -- render corners
-    local circleDimensions = (1 / 128) * cornerRaidus
+    local circleDimensions = (1 / 64) * cornerRaidus / 2
     -- top left corner
-    djui_hud_render_texture(TEXTURE_CIRCLE, x, y, circleDimensions, circleDimensions)
+    djui_hud_render_texture(TEXTURE_QUARTER_CIRCLE, x, y, circleDimensions, circleDimensions)
     -- bottom left corner
-    djui_hud_render_texture(TEXTURE_CIRCLE, x, y + height - cornerRaidus, circleDimensions, circleDimensions)
+    djui_hud_set_rotation(0x4000, 0, 0)
+    djui_hud_render_texture(TEXTURE_QUARTER_CIRCLE, x, y + height, circleDimensions, circleDimensions)
     -- top right corner
-    djui_hud_render_texture(TEXTURE_CIRCLE, x + width - cornerRaidus, y, circleDimensions, circleDimensions)
+    djui_hud_set_rotation(-0x4000, 0, 0)
+    djui_hud_render_texture(TEXTURE_QUARTER_CIRCLE, x + width, y, circleDimensions, circleDimensions)
     -- bottom right corner
-    djui_hud_render_texture(TEXTURE_CIRCLE, x + width - cornerRaidus, y + height - cornerRaidus, circleDimensions, circleDimensions)
+    djui_hud_set_rotation(0x8000, 0, 0)
+    djui_hud_render_texture(TEXTURE_QUARTER_CIRCLE, x + width, y + height, circleDimensions, circleDimensions)
+    djui_hud_set_rotation(0, 0, 0)
 end
 
--- not viable without having ability to get current djui color
---[[---@param x number|integer
+-- currently only viable with coopdx
+---@param x number|integer
 ---@param y number|integer
 ---@param width number|integer
 ---@param height number|integer
----@param cornerRaidus number|integer
 ---@param oR number|integer
 ---@param oG number|integer
 ---@param oB number|integer
 ---@param thickness number|integer
----@param opacity number|integer
-function djui_hud_render_rect_rounded_outlined(x, y, width, height, cornerRaidus, oR, oG, oB, thickness, opacity)
-    -- render outline rect
-    djui_hud_set_color(oR, oG, oB, 255)
-    djui_hud_render_rect_rounded(x - thickness / 2, y - thickness / 2, width + thickness, height + thickness, cornerRaidus)
-    -- render rounded rect
-    djui_hud_set_color(255, 0, 0, 255)
-    djui_hud_render_rect_rounded(x, y, width, height, cornerRaidus)
-end--]]
+---@param opacity number|integer|nil
+function djui_hud_render_rect_rounded_outlined(x, y, width, height, oR, oG, oB, thickness, opacity)
+    if opacity == nil then opacity = 255 end
+    local cornerRaidus = thickness
+    -- render rounded rect using those saved colors
+    djui_hud_render_rect(x, y, width, height)
+    -- render rect outside of each side
+    djui_hud_set_color(oR, oG, oB, opacity)
+    djui_hud_render_rect(x - thickness, y, thickness, height)
+    djui_hud_render_rect(x + (width - thickness) + thickness, y, thickness, height)
+    djui_hud_render_rect(x, y - thickness, width, thickness)
+    djui_hud_render_rect(x, y + (height - thickness) + thickness, width, thickness)
+    -- render outline corners
+    local circleDimensions = (1 / 64) * cornerRaidus
+    -- top left corner
+    djui_hud_render_texture(TEXTURE_QUARTER_CIRCLE, x - thickness, y - thickness, circleDimensions, circleDimensions)
+    -- bottom left corner
+    djui_hud_set_rotation(0x4000, 0, 0)
+    djui_hud_render_texture(TEXTURE_QUARTER_CIRCLE, x - thickness, y + height + thickness, circleDimensions, circleDimensions)
+    -- top right corner
+    djui_hud_set_rotation(-0x4000, 0, 0)
+    djui_hud_render_texture(TEXTURE_QUARTER_CIRCLE, x + width + thickness, y - thickness, circleDimensions, circleDimensions)
+    -- bottom right corner
+    djui_hud_set_rotation(0x8000, 0, 0)
+    djui_hud_render_texture(TEXTURE_QUARTER_CIRCLE, x + width + thickness, y + height + thickness, circleDimensions, circleDimensions)
+    djui_hud_set_rotation(0, 0, 0)
+end
 
 -- this entire snippet for the player head was made by EmilyEmmi (with adjustments for tag made by me :), thanks!
 local PART_ORDER = {

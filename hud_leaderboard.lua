@@ -181,7 +181,7 @@ local function hud_leaderboard()
             local y = 110 + (renderedIndex * 50)
 
             djui_hud_set_color(32, 32, 32, fade)
-            djui_hud_render_rect_outlined(x + offsetX, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
+            djui_hud_render_rect_rounded_outlined(x + offsetX, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
 
             width = djui_hud_measure_text(text)
             x = (screenWidth - 390) / 2
@@ -286,7 +286,7 @@ local function hud_leaderboard()
         y = 80 + (renderedIndex * 47)
 
         djui_hud_set_color(32, 32, 32, fade)
-        djui_hud_render_rect_outlined(x + offsetX, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
+        djui_hud_render_rect_rounded_outlined(x + offsetX, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
 
         width = djui_hud_measure_text(text)
         x = (screenWidth - 450) / 2

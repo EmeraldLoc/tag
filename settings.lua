@@ -831,7 +831,7 @@ local function background()
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     local y = djui_hud_get_screen_height() - bgHeight
     djui_hud_set_color(20, 20, 22, 250)
-    djui_hud_render_rect_outlined(x, y / 2, bgWidth, bgHeight, 45, 45, 47, 10)
+    djui_hud_render_rect_rounded_outlined(x, y / 2, bgWidth, bgHeight, 45, 45, 47, 10)
 end
 
 local function settings_text()
@@ -2379,7 +2379,7 @@ local function hud_render()
             djui_hud_set_color(32, 32, 32, 200)
         end
 
-        djui_hud_render_rect_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor, outlineColor, outlineColor, 3)
+        djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor, outlineColor, outlineColor, 3)
 
         if not has_permission(entries[i].permission)
         or entries[i].disabled then
