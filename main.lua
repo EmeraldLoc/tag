@@ -583,7 +583,7 @@ local function server_update()
             timer = gGlobalSyncTable.amountOfTime -- set timer to amount of time in a round
 
             -- set timer to sardines hiding timer if we are in the gamemode sardines
-            if gGlobalSyncTable.gamemode == SARDINES then timer = gGlobalSyncTable.sardinesHidingTimer end
+            if gGlobalSyncTable.gamemode == SARDINES then timer = gGlobalSyncTable.hidingTimer end
 
             -- if we have custom roles, skip straight to actually starting the round
             local skipTaggerSelection = false
@@ -696,7 +696,7 @@ local function server_update()
                 log_to_console("Tag: Assigned " .. gNetworkPlayers[randomIndex].name .. " as " .. get_role_name(RUNNER))
             end
 
-            timer = gGlobalSyncTable.sardinesHidingTimer
+            timer = gGlobalSyncTable.hidingTimer
         end
 
         if timer <= 0 then
@@ -1123,7 +1123,7 @@ local function mario_update(m)
             end
             -- sardine hiding timer
             if load_int("sardinesHidingTimer") ~= nil then
-                gGlobalSyncTable.sardinesHidingTimer = load_int("sardinesHidingTimer")
+                gGlobalSyncTable.hidingTimer = load_int("sardinesHidingTimer")
             end
             -- modifier settings
             -- max bomb cooldown

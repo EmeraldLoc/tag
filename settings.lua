@@ -444,16 +444,16 @@ local function set_sardines_hide_time()
     end
 
     if direction == CONT_LEFT then
-        gGlobalSyncTable.sardinesHidingTimer = gGlobalSyncTable.sardinesHidingTimer - (30 * speed)
+        gGlobalSyncTable.hidingTimer = gGlobalSyncTable.hidingTimer - (30 * speed)
 
-        if gGlobalSyncTable.sardinesHidingTimer <= 15 * 30 then
-            gGlobalSyncTable.sardinesHidingTimer = 15 * 30
+        if gGlobalSyncTable.hidingTimer <= 15 * 30 then
+            gGlobalSyncTable.hidingTimer = 15 * 30
         end
     else
-        gGlobalSyncTable.sardinesHidingTimer = gGlobalSyncTable.sardinesHidingTimer + (30 * speed)
+        gGlobalSyncTable.hidingTimer = gGlobalSyncTable.hidingTimer + (30 * speed)
     end
 
-    save_int("sardinesHidingTimer", gGlobalSyncTable.sardinesHidingTimer)
+    save_int("sardinesHidingTimer", gGlobalSyncTable.hidingTimer)
 end
 
 local function set_frozen_health_drain()
@@ -1253,7 +1253,7 @@ local function reset_gamemode_selection()
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
         func = function () set_sardines_hide_time() end,
-        valueText = tostring(math.floor(gGlobalSyncTable.sardinesHidingTimer / 30)) .. "s",},
+        valueText = tostring(math.floor(gGlobalSyncTable.hidingTimer / 30)) .. "s",},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
