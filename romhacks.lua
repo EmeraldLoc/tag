@@ -35,17 +35,22 @@ romhacks = {
                 }
             },
             {
-                name = "rr",
-                level = LEVEL_RR,
-                painting = get_texture_info("rr_painting"),
+                name = "wf",
+                level = LEVEL_WF,
+                painting = get_texture_info("wf_painting"),
+                area = 1,
+                pipes = nil
+            },
+            {
+                name = "jrb",
+                level = LEVEL_JRB,
+                painting = get_texture_info("jrb_painting"),
                 area = 1,
                 pipes = {
                     {
-                        { x = -4221, y = 6451, z = -5885 },
-                        { x = 2125, y = -1833, z = 2079 }
+                        { x = 3000, y = -5119, z = 2688 },  { x = -6398, y = 1126, z = 191 }
                     }
-                },
-                overrideSurfaceType = { [SURFACE_DEFAULT] = SURFACE_HARD_NOT_SLIPPERY }
+                }
             },
             {
                 name = "ccm",
@@ -60,31 +65,16 @@ romhacks = {
                 }
             },
             {
-                name = "itp",
-                level = LEVEL_SSL,
-                painting = get_texture_info("itp_painting"),
-                area = 2,
-                pipes = {
-                    {
-                        { x = -460, y = 0, z = 4247 },
-                        { x = 997, y = 3942, z = 1234 }
-                    }
-                }, overrideName = "Inside The Pyramid"
-            },
-            {
-                name = "bitfs",
-                level = LEVEL_BITFS,
-                painting = get_texture_info("bitfs_painting"),
+                -- level added by Murioz
+                name = "cc",
+                level = LEVEL_CASTLE_COURTYARD,
+                painting = get_texture_info("cc_painting"),
                 area = 1,
-                pipes = {
-                    {
-                        { x = -154, y = -2866, z = -102 },
-                        { x = 1205, y = 5478, z = 58 }
-                    }
-                }
+                pipes = nil,
+                unwantedBhvs = { id_bhvBooCage }
             },
             {
-                -- ported by Murioz
+                -- ported by Murioz, painting by jzzle
                 name = "bbh",
                 level = LEVEL_BBH,
                 painting = get_texture_info("bbh_painting"),
@@ -101,51 +91,44 @@ romhacks = {
                 }
             },
             {
-                name = "ttm",
-                level = LEVEL_TTM,
-                painting = get_texture_info("ttm_painting"),
+                name = "lll",
+                level = LEVEL_LLL,
+                painting = get_texture_info("lll_painting"),
                 area = 1,
-                pipes = {
-                    {
-                        { x = -1080, y = -4634, z = 4176 },
-                        { x = 1031, y = 2306, z = -198 }
-                    }
-                }
+                pipes = nil
             },
             {
-                name = "ttc",
-                level = LEVEL_TTC,
-                painting = get_texture_info("ttc_painting"),
-                area = 1,
-                 pipes = {
-                    {
-                        { x = 1361, y = -4822, z = 176 },
-                        { x = 1594, y = 5284, z = 1565 }
-                    }
-                }
-            },
-            {
-                name = "jrb",
-                level = LEVEL_JRB,
-                painting = get_texture_info("jrb_painting"),
-                area = 1,
+                name = "vol",
+                level = LEVEL_LLL,
+                painting = get_texture_info("vol_painting"),
+                area = 2,
                 pipes = {
                     {
-                        { x = 3000, y = -5119, z = 2688 },  { x = -6398, y = 1126, z = 191 }
+                        { x = 2525, y = 3591, z = -899 },
+                        { x = -1515, y = 96, z = 610 },
                     }
-                }
+                },
+                overrideName = "The Volcano",
+                overrideWater = true
             },
             {
-                name = "wdw",
-                level = LEVEL_WDW,
-                painting = get_texture_info("wdw_painting"),
+                name = "ssl",
+                level = LEVEL_SSL,
+                painting = get_texture_info("ssl_painting"),
                 area = 1,
+                pipes = nil
+            },
+            {
+                name = "itp",
+                level = LEVEL_SSL,
+                painting = get_texture_info("itp_painting"),
+                area = 2,
                 pipes = {
                     {
-                        { x = 3346, y = 154, z = 2918 },
-                        { x = -3342, y = 3584, z = -3353 }
+                        { x = -460, y = 0, z = 4247 },
+                        { x = 997, y = 3942, z = 1234 }
                     }
-                }
+                }, overrideName = "Inside The Pyramid"
             },
             {
                 name = "rhmc",
@@ -189,50 +172,6 @@ romhacks = {
                 disabledBhvs = { id_bhvDoor },
             },
             {
-                name = "wdt",
-                level = LEVEL_WDW,
-                painting = get_texture_info("twdw_painting"),
-                area = 2,
-                pipes = nil,
-                spawnLocation = { x = -773, y = -2559, z = 220 },
-                overrideName = "Wet-Dry Town"
-            },
-            {
-                name = "wf",
-                level = LEVEL_WF,
-                painting = get_texture_info("wf_painting"),
-                area = 1,
-                pipes = nil
-            },
-            {
-                name = "lll",
-                level = LEVEL_LLL,
-                painting = get_texture_info("lll_painting"),
-                area = 1,
-                pipes = nil
-            },
-            {
-                name = "vol",
-                level = LEVEL_LLL,
-                painting = get_texture_info("vol_painting"),
-                area = 2,
-                pipes = {
-                    {
-                        { x = 2525, y = 3591, z = -899 },
-                        { x = -1515, y = 96, z = 610 },
-                    }
-                },
-                overrideName = "The Volcano",
-                overrideWater = true
-            },
-            {
-                name = "ssl",
-                level = LEVEL_SSL,
-                painting = get_texture_info("ssl_painting"),
-                area = 1,
-                pipes = nil
-            },
-            {
                 name = "bs",
                 level = LEVEL_DDD,
                 painting = get_texture_info("bs_painting"),
@@ -245,6 +184,51 @@ romhacks = {
                 },
                 overrideName = "Bowser's Sub",
                 spawnLocation = { x = 3899, y = 571, z = -1295 }
+            },
+            {
+                name = "bitfs",
+                level = LEVEL_BITFS,
+                painting = get_texture_info("bitfs_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -154, y = -2866, z = -102 },
+                        { x = 1205, y = 5478, z = 58 }
+                    }
+                }
+            },
+            {
+                name = "wdw",
+                level = LEVEL_WDW,
+                painting = get_texture_info("wdw_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 3346, y = 154, z = 2918 },
+                        { x = -3342, y = 3584, z = -3353 }
+                    }
+                }
+            },
+            {
+                name = "wdt",
+                level = LEVEL_WDW,
+                painting = get_texture_info("twdw_painting"),
+                area = 2,
+                pipes = nil,
+                spawnLocation = { x = -773, y = -2559, z = 220 },
+                overrideName = "Wet-Dry Town"
+            },
+            {
+                name = "ttm",
+                level = LEVEL_TTM,
+                painting = get_texture_info("ttm_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -1080, y = -4634, z = 4176 },
+                        { x = 1031, y = 2306, z = -198 }
+                    }
+                }
             },
             {
                 name = "thi",
@@ -274,6 +258,31 @@ romhacks = {
                 pipes = nil
             },
             {
+                name = "ttc",
+                level = LEVEL_TTC,
+                painting = get_texture_info("ttc_painting"),
+                area = 1,
+                 pipes = {
+                    {
+                        { x = 1361, y = -4822, z = 176 },
+                        { x = 1594, y = 5284, z = 1565 }
+                    }
+                }
+            },
+            {
+                name = "rr",
+                level = LEVEL_RR,
+                painting = get_texture_info("rr_painting"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -4221, y = 6451, z = -5885 },
+                        { x = 2125, y = -1833, z = 2079 }
+                    }
+                },
+                overrideSurfaceType = { [SURFACE_DEFAULT] = SURFACE_HARD_NOT_SLIPPERY }
+            },
+            {
                 name = "bowser 1",
                 level = LEVEL_BOWSER_1,
                 painting = get_texture_info("bitdw_painting"),
@@ -293,15 +302,6 @@ romhacks = {
                     }
                 },
                 overrideName = "Under The Moat"
-            },
-            {
-                -- level added by Murioz
-                name = "cc",
-                level = LEVEL_CASTLE_COURTYARD,
-                painting = get_texture_info("cc_painting"),
-                area = 1,
-                pipes = nil,
-                unwantedBhvs = { id_bhvBooCage }
             },
         },
     },
