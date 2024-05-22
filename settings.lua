@@ -1957,6 +1957,15 @@ local function reset_achievement_entries()
     end
 
     table.insert(achievementEntries, {
+        progressBar = {
+            minLimit = 0,
+            maxLimit = #achievements,
+            value = #completedAchievements
+        },
+        seperator = "Completed Achievements (" .. #completedAchievements .. "/" .. #achievements .. ")"
+    })
+
+    table.insert(achievementEntries, {
         name = "Back",
         permission = PERMISSION_NONE,
         input = INPUT_A,
@@ -2385,14 +2394,35 @@ local function hud_render()
 
         local outlineColor = 50
 
-        if selection == i then
-            djui_hud_set_color(40, 40, 40, 215)
-            outlineColor = 60
-        else
-            djui_hud_set_color(32, 32, 32, 200)
-        end
+        if entries[i].progressBar ~= nil then
+            if selection == i then
+                djui_hud_set_color(40, 40, 40, 215)
+                outlineColor = 60
+            else
+                djui_hud_set_color(32, 32, 32, 200)
+            end
 
-        djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor, outlineColor, outlineColor, 3)
+            djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor, outlineColor, outlineColor, 3)
+
+            if selection == i then
+                djui_hud_set_color(55, 55, 55, 215)
+            else
+                djui_hud_set_color(45, 45, 45, 200)
+            end
+
+            local rectWidth = linear_interpolation(entries[i].progressBar.value, 0, bgWidth - 40, entries[i].progressBar.minLimit, entries[i].progressBar.maxLimit)
+
+            djui_hud_render_rect(x + 20, y + height - scrollOffset, rectWidth, 40)
+        else
+            if selection == i then
+                djui_hud_set_color(40, 40, 40, 215)
+                outlineColor = 60
+            else
+                djui_hud_set_color(32, 32, 32, 200)
+            end
+
+            djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor, outlineColor, outlineColor, 3)
+        end
 
         if not has_permission(entries[i].permission)
         or entries[i].disabled then
