@@ -8,7 +8,8 @@ local function mario_update(m)
     if gGlobalSyncTable.gamemode == JUGGERNAUT and gPlayerSyncTable[0].state == RUNNER then goto doublejump end
     if  gGlobalSyncTable.modifier ~= MODIFIER_DOUBLE_JUMP
     and gPlayerSyncTable[0].state ~= SPECTATOR
-    and gPlayerSyncTable[0].state ~= WILDCARD_ROLE then return end
+    and (gPlayerSyncTable[m.playerIndex].state ~= WILDCARD_ROLE
+    or gGlobalSyncTable.gamemode == FREEZE_TAG) then return end
 
     ::doublejump::
 
