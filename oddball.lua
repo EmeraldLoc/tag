@@ -10,6 +10,62 @@ local function mario_update(m)
     end
 end
 
+local function hud_side_panel_render()
+
+    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
+
+    -- set djui font and resolution
+    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_resolution(RESOLUTION_DJUI)
+
+    local textMaxWidth = djui_hud_measure_text("---------------------")
+
+    local x = djui_hud_get_screen_width() - textMaxWidth + 3
+    local y = djui_hud_get_screen_height() / 2 - 30
+
+    -- get list of runners
+    local runners = {}
+    for i = 0, MAX_PLAYERS - 1 do
+        if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state == RUNNER then
+            table.insert(runners, i)
+        end
+    end
+
+    -- sort table
+    table.sort(runners, function (a, b)
+        return gPlayerSyncTable[a].oddballTimer < gPlayerSyncTable[b].oddballTimer
+    end)
+
+    -- get height
+    local height = 30 * #runners + 30 + 10
+
+    djui_hud_set_color(20, 20, 22, 255 / 1.4)
+    djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, height, 35, 35, 35, 4, 255 / 1.4)
+
+    djui_hud_set_color(255, 255, 255, 255)
+    djui_hud_print_text("Runners:", x + 10, y, 1)
+
+    for _, i in ipairs(runners) do
+        y = y + 30
+        local name = get_player_name(i)
+        local hasStrippedTitle = false
+        while djui_hud_measure_text(strip_hex(name)) > 180 do
+            if not hasStrippedTitle then
+                hasStrippedTitle = true
+                name = get_player_name_without_title(i)
+            else
+                name = name:sub(1, #name - 1)
+            end
+        end
+        local text = name .. "\\#FFFFFF\\: " .. math.floor(gPlayerSyncTable[i].oddballTimer / 30)
+        if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+            text = name .. "\\#FFFFFF\\: ???"
+        end
+        djui_hud_set_color(255, 255, 255, 255)
+        djui_hud_print_colored_text(text, x + 10, y, 1)
+    end
+end
+
 local function hud_render()
 
     if gGlobalSyncTable.gamemode ~= ODDBALL then return end
@@ -17,6 +73,8 @@ local function hud_render()
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_N64)
+
+    hud_side_panel_render()
 
     -- check that we dont have the modifier MODIFIER_NO_RADAR enabled
     if gGlobalSyncTable.modifier ~= MODIFIER_NO_RADAR then

@@ -208,8 +208,6 @@ function check_round_status()
 						return
 					end
 				end
-
-				break
 			end
 		end
 	end

@@ -74,7 +74,7 @@ local function hud_side_panel_render()
     local y = djui_hud_get_screen_height() / 2 - 30
 
     djui_hud_set_color(20, 20, 22, 255 / 1.4)
-    djui_hud_render_rect_rounded_outlined(x, y + 1, djui_hud_measure_text("-------------------") + 3, 60, 35, 35, 35, 4, 255 / 1.4)
+    djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, 60, 35, 35, 35, 4, 255 / 1.4)
 
     djui_hud_set_color(255, 255, 255, 255)
     djui_hud_print_text("Target:", x + 10, y, 1)

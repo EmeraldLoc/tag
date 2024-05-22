@@ -1465,28 +1465,30 @@ local function hud_round_status()
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
         if gGlobalSyncTable.gamemode == ODDBALL then
             -- find runner that's doing the best
-            local runner = 0
+            local runner = -1
             local np = gNetworkPlayers[0]
             local s = gPlayerSyncTable[0]
             for i = 0, MAX_PLAYERS - 1 do
                 np = gNetworkPlayers[i]
                 s = gPlayerSyncTable[i]
-                if  np.connected and s.state == RUNNER
-                and s.oddballTimer > gPlayerSyncTable[runner].oddballTimer then
+                if np.connected and (runner < 0 or s.oddballTimer < gPlayerSyncTable[runner].oddballTimer) then
                     runner = i
                 end
             end
 
-            local time = tostring(s.oddballTimer)
+            np = gNetworkPlayers[runner]
+            s = gPlayerSyncTable[runner]
+            djui_chat_message_create(tostring(runner))
+            local time = s.oddballTimer
 
             if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
-                time = "Best: ???"
+                text = "Best: ???"
+            else
+                text = "Best: " .. get_player_name(runner) .. "\\#FFFFFF\\: " .. math.floor(time / 30)
             end
 
-            text = "Best: " .. get_player_name(runner) .. "\\#FFFFFF\\: " .. math.floor(time / 30)
-
             -- if auto hide hud is on, and we are less than 20 seconds away from the round ending, make fade hud peek
-            if math.floor(time / 30) <= 20 then
+            if math.floor(time / 30) <= 20 and gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO then
                 fade = hudFade + linear_interpolation(clampf(time / 30, 15, 20), 128, 0, 15, 20)
 
                 if autoHideHudAlwaysShowTimer then
