@@ -228,7 +228,6 @@ local function mario_update(m)
     end
 
     if m.controller.buttonPressed & A_BUTTON ~= 0
-    and gPlayerSyncTable[0].votingNumber == 0
     and math.floor(gGlobalSyncTable.displayTimer / 30) > 2
     and math.floor(gGlobalSyncTable.displayTimer / 30) <= 7 then
         gPlayerSyncTable[0].votingNumber = selectedLevel
