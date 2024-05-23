@@ -1983,12 +1983,13 @@ local function reset_achievement_entries()
     end
 
     table.insert(achievementEntries, {
+        name = "(" .. #completedAchievements .. "/" .. #achievements .. ")",
         progressBar = {
             minLimit = 0,
             maxLimit = #achievements,
             value = #completedAchievements
         },
-        seperator = "Completed Achievements (" .. #completedAchievements .. "/" .. #achievements .. ")"
+        seperator = "Completed Achievements"
     })
 
     table.insert(achievementEntries, {
