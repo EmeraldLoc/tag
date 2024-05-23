@@ -707,7 +707,7 @@ local function server_update()
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
         if timer > 0 and gGlobalSyncTable.gamemode ~= ODDBALL then
             timer = timer - (1 * hotPotatoTimerMultiplier) -- subtract timer by one multiplied by hot potato multiplyer
-            gGlobalSyncTable.displayTimer = timer          -- set display timer to timer
+            gGlobalSyncTable.displayTimer = clamp(timer, 0, timer)          -- set display timer to timer
         end
 
         for i = 0, MAX_PLAYERS - 1 do
