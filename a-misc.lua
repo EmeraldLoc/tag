@@ -800,7 +800,7 @@ function wrap_text(text, maxLength)
     for word in text:gmatch("%S+") do
 		-- if the length of our word plus the line length is less
 		-- than the max length, the continue
-        if #line + #word < maxLength then
+        if djui_hud_measure_text(line .. word) < maxLength then
             line = line .. word .. " "
         else
 			-- otherwise insert a line

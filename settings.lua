@@ -2397,9 +2397,7 @@ local function hud_render()
             end
 
             -- appreciate the free labor chatgpt (ok I did a little bit of cleanup)
-            local textAmount = 64
-            if usingCoopDX then textAmount = 55 end
-            local wrappedTextLines = wrap_text(entries[i].text, textAmount)
+            local wrappedTextLines = wrap_text(entries[i].text, bgWidth - 40)
 
             for j, line in ipairs(wrappedTextLines) do
                 if selection == i then
