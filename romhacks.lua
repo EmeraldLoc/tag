@@ -909,7 +909,8 @@ romhacks = {
                         { x = -259, y = -2213, z = 2789 },
                         { x = 654, y = -751, z = 893 }
                     }
-                }
+                },
+                unwantedBhvs = { id_bhvMips }
             },
             {
                 name = "mmm",
