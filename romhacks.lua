@@ -283,11 +283,19 @@ romhacks = {
                 overrideSurfaceType = { [SURFACE_DEFAULT] = SURFACE_HARD_NOT_SLIPPERY }
             },
             {
-                name = "bowser 1",
+                name = "b1",
                 level = LEVEL_BOWSER_1,
-                painting = get_texture_info("bitdw_painting"),
+                painting = get_texture_info("b1_painting"),
                 area = 1,
                 pipes = nil
+            },
+            {
+                name = "b3",
+                level = LEVEL_BOWSER_3,
+                painting = get_texture_info("b3_painting"),
+                area = 1,
+                pipes = nil,
+                unwantedBhvs = { id_bhvFallingBowserPlatform }
             },
             {
                 -- level added by Murioz
@@ -1614,4 +1622,13 @@ local function level_init()
     check_mods()
 end
 
+local function update()
+    local level = levels[gGlobalSyncTable.selectedLevel]
+
+    if level ~= nil and level.levelLoopFunc ~= nil then
+        level.levelLoopFunc()
+    end
+end
+
 hook_event(HOOK_ON_LEVEL_INIT, level_init)
+hook_event(HOOK_UPDATE, update)
