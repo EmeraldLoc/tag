@@ -278,7 +278,11 @@ romhacks = {
                     {
                         { x = -4221, y = 6451, z = -5885 },
                         { x = 2125, y = -1833, z = 2079 }
-                    }
+                    },
+                    {
+                        { x = 5545, y = 3322, z = -2345 },
+                        { x = 4487, y = 3819, z = 4060 }
+                    },
                 },
                 overrideSurfaceType = { [SURFACE_DEFAULT] = SURFACE_HARD_NOT_SLIPPERY }
             },

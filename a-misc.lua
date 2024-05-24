@@ -799,8 +799,8 @@ function wrap_text(text, maxLength)
 	-- find whitespace/space character
     for word in text:gmatch("%S+") do
 		-- if the length of our word plus the line length is less
-		-- than the max length, the continue
-        if djui_hud_measure_text(line .. word) < maxLength then
+		-- than the max length, then continue
+        if djui_hud_measure_text(strip_hex(line) .. strip_hex(word)) < maxLength then
             line = line .. word .. " "
         else
 			-- otherwise insert a line
