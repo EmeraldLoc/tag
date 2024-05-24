@@ -1,7 +1,5 @@
 
-version = "v2.4"
 updateAvailable = false
-local prevVersion = "v2.32"
 local finishedChecking = false
 local updateFile = nil
 local updateTimer = 0
@@ -36,7 +34,7 @@ local function check_for_updates(m)
         end
 
         -- attempt to load the current verion's audio file
-        local url = "https://github.com/EmeraldLoc/Tag/raw/main/" .. version .. ".mp3"
+        local url = "https://github.com/EmeraldLoc/Tag/raw/main/" .. versions[1] .. ".mp3"
         updateFile = audio_stream_load_url(url)
         -- ensure the version we're using actually has this function working
         if not updateFile.isStream then
@@ -51,7 +49,7 @@ local function check_for_updates(m)
         -- that you're up to date, slight downside
         if updateFile == nil or not updateFile.loaded or updateFile.handle == 0 then
             -- for beta lobbies, see if we're on a beta by loading the previous version
-            url = "https://github.com/EmeraldLoc/Tag/raw/main/" .. prevVersion .. ".mp3"
+            url = "https://github.com/EmeraldLoc/Tag/raw/main/" .. versions[2] .. ".mp3"
             updateFile = audio_stream_load_url(url)
             if updateFile == nil or not updateFile.loaded or updateFile.handle == 0 then
                 djui_popup_create("An update for Tag is available!", 2)

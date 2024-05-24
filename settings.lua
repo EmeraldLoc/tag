@@ -874,8 +874,8 @@ local function settings_text()
     if y - scrollOffset < -20 then return end
     djui_hud_set_color(220, 220, 220, 255)
     djui_hud_print_text(text, x + ((bgWidth / 2) - djui_hud_measure_text(text)), y + 50 - scrollOffset, 2)
-    text = version
-    if updateAvailable then text = "A new update is available. Current Version is " .. version end
+    text = versions[1]
+    if updateAvailable then text = "A new update is available. Current Version is " .. versions[1] end
     djui_hud_set_color(220, 220, 220, 255)
     djui_hud_print_text(text, x + (bgWidth / 2) - (djui_hud_measure_text(text) / 2), y + 105 - scrollOffset, 1)
 end
@@ -935,6 +935,34 @@ local function reset_main_selections()
         input = INPUT_A,
         func = function ()
             entries = helpEntries
+            selection = 1
+        end},
+        -- changelog selection
+        {name = "Changelog",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = {}
+            for k, v in pairs(changelogs) do
+                table.insert(entries, {
+                    name = k,
+                    permission = PERMISSION_NONE,
+                    input = INPUT_A,
+                    func = function ()
+                        showingChangelog = true
+                        selectedChangelog = k
+                    end
+                })
+            end
+            table.insert(entries, {
+                name = "Back",
+                permission = PERMISSION_NONE,
+                input = INPUT_A,
+                func = function ()
+                    entries = mainEntries
+                    selection = 1
+                end
+            })
             selection = 1
         end,
         valueText = ">",},

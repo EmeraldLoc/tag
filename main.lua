@@ -8,6 +8,18 @@
 -- anyways other than that, everything should be good, so
 -- wish you luck on your journey!
 
+-- tag versions
+versions = {
+    "v2.4",
+    "v2.32",
+    "v2.31",
+    "v2.3",
+    "v2.21",
+    "v2.2",
+    "v2.1",
+    "v2.0",
+}
+
 -- constants
 
 -- round states
