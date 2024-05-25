@@ -115,6 +115,75 @@ changelogs = {
             "Use saves instead of time as runner in Freeze Tag",
         }
     },
+    ["v2.21"] = {
+        title = "\\#316BE8\\Tag v2.21: Minor Update",
+        gamemodes = {
+            "No gamemode changes"
+        },
+        modifiers = {
+            "No modifier changes"
+        },
+        romhacks = {
+            "No romhack changes"
+        },
+        levels = {
+            "No level changes"
+        },
+        newFeatures = {
+            "Added Binds",
+            "Fixed clients not being able to see server settings",
+        }
+    },
+    ["v2.2"] = {
+        title = "\\#316BE8\\Tag v2.2: Major Update",
+        gamemodes = {
+            "No gamemode changes"
+        },
+        modifiers = {
+            "Added " .. get_modifier_text(MODIFIER_HIGH_GRAVITY),
+            "Added " .. get_modifier_text(MODIFIER_FOG),
+            "Improved " .. get_modifier_text(MODIFIER_INCOGNITO),
+            "Removed " .. get_modifier_text(MODIFIER_FLY),
+        },
+        romhacks = {
+            "No romhack changes"
+        },
+        levels = {
+            "Added Wet-Dry World",
+            "Added Inside of Tiny Huge Island (now known as Wiggler's Cave)",
+        },
+        newFeatures = {
+            "Added a new voting system",
+            "Added a custom pause menu",
+            "Added positions to the leaderboard",
+            "Added gamemode time limit customizations",
+            "Added elimination on death option",
+            "Added help menu to settings",
+            "Added blacklists to vanilla sm64",
+            "Added non-auto mode",
+        }
+    },
+    ["v2.1"] = {
+        title = "\\#316BE8\\Tag v2.1: Major Update",
+        gamemodes = {
+            "Added " .. get_gamemode(JUGGERNAUT),
+            "Added " .. get_gamemode(ASSASSINS),
+        },
+        modifiers = {
+            "Added " .. get_modifier_text(MODIFIER_INCOGNITO),
+            "Improved " .. get_modifier_text(MODIFIER_FLY),
+        },
+        romhacks = {
+            "No romhack changes"
+        },
+        levels = {
+            "No level changes"
+        },
+        newFeatures = {
+            "Added icon next to leaderboard",
+            "Added update notifier",
+        }
+    }
 }
 
 showingChangelog = false
