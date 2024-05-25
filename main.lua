@@ -1541,6 +1541,11 @@ local function hud_round_status()
         else
             text = "Time Remaining: " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
 
+            if  gGlobalSyncTable.gamemode == SARDINES
+            and gPlayerSyncTable[0].state == RUNNER then
+                text = "You're Hiding. " .. text
+            end
+
             -- if auto hide hud is on, and we are less than 20 seconds away from the round ending, make fade hud peek
             if math.floor(gGlobalSyncTable.displayTimer / 30) <= 20 then
                 fade = hudFade + linear_interpolation(clampf(gGlobalSyncTable.displayTimer / 30, 15, 20), 128, 0, 15, 20)
