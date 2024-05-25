@@ -107,6 +107,8 @@ local function bhv_arena_spring_launch(obj)
         m.faceAngle.y = yaw
         m.forwardVel = math.sqrt((vel.x * vel.x) + vel.z * vel.z)
     else
+        set_character_animation(m, CHAR_ANIM_BACKFLIP)
+        set_mario_animation(m, MARIO_ANIM_BACKFLIP)
         set_mario_action(m, ACT_TRIPLE_JUMP, 0)
         m.vel.y = vel.y
         m.forwardVel = 0
