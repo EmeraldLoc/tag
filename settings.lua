@@ -943,16 +943,18 @@ local function reset_main_selections()
         input = INPUT_A,
         func = function ()
             entries = {}
-            for k, v in pairs(changelogs) do
-                table.insert(entries, {
-                    name = k,
-                    permission = PERMISSION_NONE,
-                    input = INPUT_A,
-                    func = function ()
-                        showingChangelog = true
-                        selectedChangelog = k
-                    end
-                })
+            for k, v in ipairs(versions) do
+                if changelogs[v] ~= nil then
+                    table.insert(entries, {
+                        name = v,
+                        permission = PERMISSION_NONE,
+                        input = INPUT_A,
+                        func = function ()
+                            showingChangelog = true
+                            selectedChangelog = v
+                        end
+                    })
+                end
             end
             table.insert(entries, {
                 name = "Back",
@@ -2502,6 +2504,7 @@ local function mario_update(m)
 
     if m.playerIndex ~= 0 then return end
     if not showSettings then return end
+    if showingChangelog then return end
 
     -- if our stick is at 0, then set joystickCooldown to 0
     if m.controller.stickX == 0 and m.controller.stickY == 0 then joystickCooldown = 0 end
