@@ -775,6 +775,15 @@ romhacks = {
                 overrideSurfaceType = {[SURFACE_DEFAULT] = SURFACE_HARD_NOT_SLIPPERY}
             },
             {
+                name = "sew",
+                level = LEVEL_CASTLE_COURTYARD,
+                painting = get_texture_info("painting_sr_sew"),
+                area = 1,
+                pipes = nil,
+                spawnLocation = { x = 2289, y = -3284, z = 6310 },
+                overrideName = "The Sewers",
+            },
+            {
                 name = "fhub",
                 level = LEVEL_CASTLE,
                 painting = get_texture_info("painting_sr_castle"),
