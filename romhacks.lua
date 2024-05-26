@@ -172,6 +172,18 @@ romhacks = {
                 disabledBhvs = { id_bhvDoor },
             },
             {
+                name = "br",
+                level = LEVEL_HMC,
+                painting = get_texture_info("br_painting"),
+                area = 1,
+                pipes = nil,
+                spawnLocation = { x = -6152, y = 1536, z = 1084 },
+                overrideName = "Boulder Rush",
+                room = 4,
+                unwantedBhvs = { id_bhvHmcElevatorPlatform },
+                disabledBhvs = { id_bhvDoor },
+            },
+            {
                 name = "bs",
                 level = LEVEL_DDD,
                 painting = get_texture_info("bs_painting"),
