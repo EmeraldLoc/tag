@@ -66,7 +66,7 @@ local function mario_update(m)
 
         gunCooldown = gunCooldown + 1
     else
-        speed = 20
+        speed = m.forwardVel
     end
 
     gunCooldown = gunCooldown + 1
