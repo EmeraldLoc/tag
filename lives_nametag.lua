@@ -75,6 +75,9 @@ local function on_hud_render()
     for i = 1, MAX_PLAYERS - 1 do
         if  gPlayerSyncTable[i].state ~= RUNNER
         and gGlobalSyncTable.gamemode ~= DEATHMATCH then goto continue end
+        if  gPlayerSyncTable[i].state == SPECTATOR
+        or  gPlayerSyncTable[i].state == WILDCARD_ROLE
+        and gGlobalSyncTable.gamemode == DEATHMATCH then goto continue end
 
         local m = gMarioStates[i]
         local out = { x = 0, y = 0, z = 0 }
