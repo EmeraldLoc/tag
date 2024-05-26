@@ -1854,6 +1854,9 @@ local function reset_stat_entries()
             {name = "Tagger Victories",
             permission = PERMISSION_NONE,
             valueText = scopeStats.taggerVictories},
+            {name = "Total Victories",
+            permission = PERMISSION_NONE,
+            valueText = scopeStats.runnerVictories + scopeStats.taggerVictories},
             {name = "Total Time As Runner",
             permission = PERMISSION_NONE,
             valueText = math.floor(scopeStats.totalTimeAsRunner / 30 / 60) .. "m"},
@@ -1902,6 +1905,14 @@ local function reset_stat_entries()
                 name = name,
                 permission = PERMISSION_NONE,
                 valueText = scopeStats.taggerVictories
+            })
+        end
+        if  scopeStats.runnerVictories ~= nil
+        and scopeStats.taggerVictories ~= nil then
+            table.insert(statEntries, {
+                name = "Total Victories",
+                permission = PERMISSION_NONE,
+                valueText = scopeStats.runnerVictories + scopeStats.taggerVictories
             })
         end
         if scopeStats.totalTimeAsRunner ~= nil then
