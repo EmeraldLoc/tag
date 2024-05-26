@@ -26,7 +26,7 @@ local function hud_side_panel_render()
     -- get list of runners
     local runners = {}
     for i = 0, MAX_PLAYERS - 1 do
-        if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state == RUNNER then
+        if gNetworkPlayers[i].connected then
             table.insert(runners, i)
         end
     end
@@ -36,8 +36,6 @@ local function hud_side_panel_render()
         return gPlayerSyncTable[a].oddballTimer < gPlayerSyncTable[b].oddballTimer
     end)
 
-    if #runners <= 1 then return end
-
     -- get height
     local height = 30 * #runners + 30 + 10
 
@@ -45,7 +43,7 @@ local function hud_side_panel_render()
     djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, height, 35, 35, 35, 4, 255 / 1.4)
 
     djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_print_text("Runners:", x + 10, y, 1)
+    djui_hud_print_text("Scores:", x + 10, y, 1)
 
     for _, i in ipairs(runners) do
         y = y + 30
