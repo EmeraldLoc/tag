@@ -441,8 +441,11 @@ function name_of_level(level, area, levelTable)
 end
 
 function generate_boost_trail()
-	-- don't show if the incognito modifier is on
-	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
+	-- don't show if the incognito modifier is on, and we aren't a tagger
+	if  gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
+	and gPlayerSyncTable[0].state ~= TAGGER then
+		return
+	end
 
 	-- loop thru all players
 	for i = 0, MAX_PLAYERS - 1 do
