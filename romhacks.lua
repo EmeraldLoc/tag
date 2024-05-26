@@ -108,7 +108,7 @@ romhacks = {
                         { x = -1515, y = 96, z = 610 },
                     }
                 },
-                overrideName = "The Volcano",
+                overrideName = "Into the Volcano",
                 overrideWater = true
             },
             {
@@ -291,7 +291,8 @@ romhacks = {
                 level = LEVEL_BOWSER_1,
                 painting = get_texture_info("b1_painting"),
                 area = 1,
-                pipes = nil
+                pipes = nil,
+                overrideName = "Bowser's Dark Domain"
             },
             {
                 name = "b3",
@@ -299,7 +300,8 @@ romhacks = {
                 painting = get_texture_info("b3_painting"),
                 area = 1,
                 pipes = nil,
-                unwantedBhvs = { id_bhvFallingBowserPlatform }
+                unwantedBhvs = { id_bhvFallingBowserPlatform },
+                overrideName = "Bowser's Sky Domain"
             },
             {
                 -- level added by Murioz

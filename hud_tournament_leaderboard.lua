@@ -38,15 +38,20 @@ local function hud_tournament_leaderboard_text_render()
 end
 
 local function hud_leaderboard()
-
     if hudTimer > 5 * 30 then
         local winners = {}
 
         for i = 0, MAX_PLAYERS - 1 do
             local np = gNetworkPlayers[i]
             local s = gPlayerSyncTable[i]
-            if np.connected and s.tournamentPoints >= gGlobalSyncTable.tournamentPointsReq then
-                table.insert(winners, i)
+            if np.connected then
+                if  gGlobalSyncTable.tournamentPointSystem == TOURNAMENT_SYSTEM_POINT_LIMIT
+                and s.tournamentPoints >= gGlobalSyncTable.tournamentPointsReq then
+                    table.insert(winners, i)
+                elseif gGlobalSyncTable.tournamentPointSystem == TOURNAMENT_SYSTEM_ROUND_LIMIT
+                and s.tournamentPoints > 0 then
+                    table.insert(winners, i)
+                end
             end
         end
 
@@ -55,16 +60,23 @@ local function hud_leaderboard()
             return gPlayerSyncTable[a].tournamentPoints > gPlayerSyncTable[b].tournamentPoints
         end)
 
-        -- remove any winners that didnt get the max points
+        -- remove any winners that didnt get the highest points
         local topPoints = 0
         for w = 1, #winners do
             local i = winners[w]
+
+            if i == nil then
+                table.remove(winners, w)
+                goto continue
+            end
 
             if gPlayerSyncTable[i].tournamentPoints > topPoints then
                 topPoints = i
             elseif gPlayerSyncTable[i].tournamentPoints < topPoints then
                 table.remove(winners, w)
             end
+
+            ::continue::
         end
 
         local winnerText = ""

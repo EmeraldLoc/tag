@@ -5,7 +5,9 @@ local airTimer = 0
 ---@param m MarioState
 local function mario_update(m)
     if m.playerIndex ~= 0 then return end
-    if gGlobalSyncTable.gamemode == JUGGERNAUT and gPlayerSyncTable[0].state == RUNNER then goto doublejump end
+    if gGlobalSyncTable.gamemode == JUGGERNAUT
+    and gPlayerSyncTable[0].state == RUNNER
+    and gGlobalSyncTable.roundState == ROUND_ACTIVE then goto doublejump end
     if  gGlobalSyncTable.modifier ~= MODIFIER_DOUBLE_JUMP
     and gPlayerSyncTable[0].state ~= SPECTATOR
     and (gPlayerSyncTable[m.playerIndex].state ~= WILDCARD_ROLE

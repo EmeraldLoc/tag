@@ -1515,6 +1515,10 @@ local function hud_round_status()
             np = gNetworkPlayers[runner]
             s = gPlayerSyncTable[runner]
 
+            if s == nil then
+                text = "No " .. get_gamemode(ODDBALL)
+                goto render
+            end
             local time = s.oddballTimer
 
             if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
@@ -1594,6 +1598,8 @@ local function hud_round_status()
     else
         return
     end
+
+    ::render::
 
     local scale = 1.5
 
