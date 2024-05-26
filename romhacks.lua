@@ -948,7 +948,8 @@ romhacks = {
                         { x = 3928, y = -415, z = -39 },
                         { x = 3076, y = 584, z = 4523 }
                     }
-                }
+                },
+                overrideSurfaceType = { [SURFACE_DEFAULT] = SURFACE_HARD_NOT_SLIPPERY }
             },
             {
                 name = "ccc",

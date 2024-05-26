@@ -732,6 +732,11 @@ function tagged_popup(tagger, runner)
 		return
 	end
 
+	if gGlobalSyncTable.gamemode == ASSASSINS then
+		djui_popup_create_global(get_player_name(tagger) .. " \\#FF0000\\Assassinated\n" .. get_player_name(runner), 3)
+		return
+	end
+
 	if gGlobalSyncTable.gamemode == DEATHMATCH
 	or gGlobalSyncTable.gamemode == HUNT then
 		djui_popup_create_global(get_player_name(tagger) .. " \\#C74444\\Killed\n" .. get_player_name(runner), 3)
