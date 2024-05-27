@@ -178,8 +178,6 @@ function check_round_status()
 
 					log_to_console("Tag: " .. get_role_name(RUNNER) .. " disconnected. Assigned " .. gNetworkPlayers[randomIndex].name .. " as " .. get_role_name(RUNNER))
 				end
-
-				timer = gGlobalSyncTable.hidingTimer
 			else
 				roundStatusTimer = roundStatusTimer - 1
 			end
@@ -984,6 +982,8 @@ function init_gamemode_settings()
 	gGlobalSyncTable.activeTimers = {}
 	-- lives
 	gGlobalSyncTable.maxLives = {}
+	-- hiding timers
+	gGlobalSyncTable.hidingTimer = {}
 	-- reset settings
 	reset_gamemode_settings()
 end
@@ -1008,7 +1008,8 @@ function reset_gamemode_settings()
     end
 
     -- other timers
-    gGlobalSyncTable.hidingTimer = 30  * 30
+    gGlobalSyncTable.hidingTimer[SARDINES] = 30  * 30
+	gGlobalSyncTable.hidingTimer[SEARCH] = 30  * 30
     -- lives
     gGlobalSyncTable.maxLives[JUGGERNAUT] = 3
     gGlobalSyncTable.maxLives[HUNT] = 3
@@ -1026,7 +1027,8 @@ function save_gamemode_settings()
 		end
     end
 	-- save other timers
-	save_int("sardinesHidingTimer", gGlobalSyncTable.hidingTimer)
+	save_int("hidingTimer_" .. SARDINES, gGlobalSyncTable.hidingTimer[SARDINES])
+	save_int("hidingTimer_" .. SEARCH, gGlobalSyncTable.hidingTimer[SEARCH])
 	-- save freeze health drain
 	save_int("freezeHealthDrain", gGlobalSyncTable.freezeHealthDrain)
 end

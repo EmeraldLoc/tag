@@ -430,7 +430,7 @@ local function set_lives(gamemode)
     save_int("maxLives_" .. gamemode, gGlobalSyncTable.maxLives[gamemode])
 end
 
-local function set_sardines_hide_time()
+local function set_hide_time(g)
     -- get which direction we are facing
     local m = gMarioStates[0]
     local direction = get_controller_dir()
@@ -444,16 +444,16 @@ local function set_sardines_hide_time()
     end
 
     if direction == CONT_LEFT then
-        gGlobalSyncTable.hidingTimer = gGlobalSyncTable.hidingTimer - (30 * speed)
+        gGlobalSyncTable.hidingTimer[g] = gGlobalSyncTable.hidingTimer[g] - (30 * speed)
 
-        if gGlobalSyncTable.hidingTimer <= 15 * 30 then
-            gGlobalSyncTable.hidingTimer = 15 * 30
+        if gGlobalSyncTable.hidingTimer[g] <= 15 * 30 then
+            gGlobalSyncTable.hidingTimer[g] = 15 * 30
         end
     else
-        gGlobalSyncTable.hidingTimer = gGlobalSyncTable.hidingTimer + (30 * speed)
+        gGlobalSyncTable.hidingTimer[g] = gGlobalSyncTable.hidingTimer[g] + (30 * speed)
     end
 
-    save_int("sardinesHidingTimer", gGlobalSyncTable.hidingTimer)
+    save_int("hidingTimer_" .. g, gGlobalSyncTable.hidingTimer[g])
 end
 
 local function set_frozen_health_drain()
@@ -1287,11 +1287,11 @@ local function reset_gamemode_selection()
         valueText = tostring(math.floor(get_active_timer(SARDINES) / 30)) .. "s",
         seperator = get_gamemode(SARDINES)},
 
-        {name = "Picking Spot Time Limit",
+        {name = "Hide Time Limit",
         permission = PERMISSION_MODERATORS,
         input = INPUT_JOYSTICK,
-        func = function () set_sardines_hide_time() end,
-        valueText = tostring(math.floor(gGlobalSyncTable.hidingTimer / 30)) .. "s",},
+        func = function () set_hide_time(SARDINES) end,
+        valueText = tostring(math.floor(gGlobalSyncTable.hidingTimer[SARDINES] / 30)) .. "s",},
 
         {name = "Time Limit",
         permission = PERMISSION_MODERATORS,
@@ -1339,6 +1339,12 @@ local function reset_gamemode_selection()
         func = function () set_time_limit(SEARCH) end,
         valueText = tostring(math.floor(get_active_timer(SEARCH) / 30)) .. "s",
         seperator = get_gamemode(SEARCH)},
+
+        {name = "Hide Time Limit",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_JOYSTICK,
+        func = function () set_hide_time(SEARCH) end,
+        valueText = tostring(math.floor(gGlobalSyncTable.hidingTimer[SEARCH] / 30)) .. "s",},
 
         {name = "Reset Gamemode Settings",
         permission = PERMISSION_MODERATORS,
