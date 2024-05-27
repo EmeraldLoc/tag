@@ -19,13 +19,16 @@ changelogs = {
         romhacks = {
             "Added Lug's Delightful Dioramas (jzzle and TheMan)",
             "Added Super Mario Rainbow Road (Murioz)",
+            "Improved Star Road",
         },
         levels = {
             "Added Bowser's Sub",
             "Added Dorrie's Domain",
-            "Added Bowser 3",
+            "Added Boulder's Rush",
+            "Added Bowser Sky Domain",
             "Added Vanish Cap Under the Moat",
             "Added Big Boo's Haunt",
+            "Added Pipes to Thi",
         },
         newFeatures = {
             "Added achievements, and rewards. Rewards includes titles and trails",
