@@ -258,7 +258,7 @@ local function act_idle_search(m)
     -- get out of the action if round state is wait or wait players or we aren't a runner
     if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS
     or gGlobalSyncTable.roundState == ROUND_WAIT
-    or gPlayerSyncTable[0].state ~= RUNNER then
+    or gPlayerSyncTable[m.playerIndex].state ~= RUNNER then
         return set_mario_action(m, ACT_FREEFALL, 0)
     end
 
