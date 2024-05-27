@@ -1011,7 +1011,7 @@ function reset_gamemode_settings()
     gGlobalSyncTable.hidingTimer[SARDINES] = 30  * 30
 	gGlobalSyncTable.hidingTimer[SEARCH] = 30  * 30
     -- lives
-    gGlobalSyncTable.maxLives[JUGGERNAUT] = 3
+    gGlobalSyncTable.maxLives[JUGGERNAUT] = 4
     gGlobalSyncTable.maxLives[HUNT] = 3
     gGlobalSyncTable.maxLives[DEATHMATCH] = 3
 	-- freeze health drain
