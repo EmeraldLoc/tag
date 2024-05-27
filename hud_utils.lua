@@ -254,6 +254,25 @@ function djui_hud_render_rect_rounded(x, y, width, height, cornerRaidus)
     djui_hud_set_rotation(0, 0, 0)
 end
 
+---@param x number|integer
+---@param y number|integer
+---@param width number|integer
+---@param height number|integer
+---@param cornerRaidus number|integer
+function djui_hud_render_rect_rounded_ignore_bottom(x, y, width, height, cornerRaidus)
+    -- it's called black magic
+    djui_hud_render_rect(x + (cornerRaidus / 2), y, width - cornerRaidus, height)
+    djui_hud_render_rect(x, y + (cornerRaidus / 2), cornerRaidus / 2, height - cornerRaidus / 2)
+    djui_hud_render_rect(x + width - cornerRaidus / 2, y + (cornerRaidus / 2), cornerRaidus / 2, height - cornerRaidus / 2)
+    -- render corners
+    local circleDimensions = (1 / 64) * cornerRaidus / 2
+    -- top left corner
+    djui_hud_render_texture(TEXTURE_QUARTER_CIRCLE, x, y, circleDimensions, circleDimensions)
+    -- top right corner
+    djui_hud_set_rotation(-0x4000, 0, 0)
+    djui_hud_render_texture(TEXTURE_QUARTER_CIRCLE, x + width, y, circleDimensions, circleDimensions)
+end
+
 -- currently only viable with coopdx
 ---@param x number|integer
 ---@param y number|integer
@@ -324,6 +343,7 @@ function render_player_head(index, x, y, scaleX, scaleY, opacity)
         local color = {r = 255, g = 255, b = 255}
 		if m.marioBodyState.modelState & MODEL_STATE_METAL ~= 0 then -- metal
 			color = network_player_palette_to_color(np, METAL, color)
+            if color == nil then break end
 			djui_hud_set_color(color.r, color.g, color.b, alpha)
 			djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, 5 * 16, tileY * 16, 16, 16)
 			isMetal = true

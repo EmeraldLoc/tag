@@ -287,61 +287,12 @@ end
 
 local function hud_bombs()
     if not can_hold_bomb(0) then return end
-
-    djui_hud_set_font(FONT_NORMAL)
-    djui_hud_set_resolution(RESOLUTION_N64)
-
-    local screenWidth  = djui_hud_get_screen_width()
-    local screenHeight = djui_hud_get_screen_height()
-
-    local scale        = 1
-    local width        = 128 * scale
-    local height       = 16 * scale
-    local x            = math.floor((screenWidth - width) / 2)
-    local y            = math.floor(screenHeight - height - 4 * scale)
-    local bombTime     = bombCooldown / 30 / (gGlobalSyncTable.maxBombCooldown / 30)
-
-    if (gGlobalSyncTable.gamemode == JUGGERNAUT
-    and gPlayerSyncTable[0].state == RUNNER)
-    or gGlobalSyncTable.gamemode == DEATHMATCH then
-        y = y - 32
-    end
-
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x, y, width, height)
-
-    x = x + 2 * scale
-    y = y + 2 * scale
-    width = width - 4 * scale
-    height = height - 4 * scale
-    width = math.floor(width * bombTime)
-    djui_hud_set_color(242, 143, 36, 128)
-    djui_hud_render_rect(x, y, width, height)
-
     if bombCooldown < gGlobalSyncTable.maxBombCooldown then
         text = "Reloading"
     else
         text = "Throw Bomb (" .. button_to_text(binds[BIND_BOMBS].btn) .. ")"
     end
-    text = "Throw Bomb (" .. button_to_text(binds[BIND_BOMBS].btn) .. ")"
-
-    scale = 0.25
-    width = djui_hud_measure_text(text) * scale
-    height = 32 * scale
-    x = (screenWidth - width) / 2
-    y = screenHeight - 28
-
-    if (gGlobalSyncTable.gamemode == JUGGERNAUT
-    and gPlayerSyncTable[0].state == RUNNER)
-    or gGlobalSyncTable.gamemode == DEATHMATCH then
-        y = y - 32
-    end
-
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x - 6, y, width + 12, height)
-
-    djui_hud_set_color(242, 143, 36, 128)
-    djui_hud_print_text(text, x, y, scale)
+    render_bar(text, bombCooldown, 0, gGlobalSyncTable.maxBombCooldown, 242, 143, 36)
 end
 
 local function on_render()

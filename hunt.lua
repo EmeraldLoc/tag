@@ -14,7 +14,7 @@ local function hud_render()
     djui_hud_set_resolution(RESOLUTION_N64)
 
     if gPlayerSyncTable[0].state == RUNNER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        render_bar("Lives Remaining: " .. gPlayerSyncTable[0].tagLives, gPlayerSyncTable[0].tagLives, 0, gGlobalSyncTable.tagMaxLives)
+        render_bar("Lives Remaining: " .. gPlayerSyncTable[0].tagLives, gPlayerSyncTable[0].tagLives, 0, gGlobalSyncTable.tagMaxLives, 66, 176, 245)
     end
 
     -- check that we dont have the modifier MODIFIER_NO_RADAR enabled

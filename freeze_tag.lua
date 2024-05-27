@@ -48,43 +48,7 @@ local function hud_health_render()
     if gPlayerSyncTable[0].state ~= FROZEN then return end
     if gGlobalSyncTable.freezeHealthDrain == 0 then return end
 
-    local screenWidth  = djui_hud_get_screen_width()
-    local screenHeight = djui_hud_get_screen_height()
-
-    -- create variables
-    local scale = 1
-    local width = 128 * scale
-    local height = 16 * scale
-    local x = math.floor((screenWidth - width) / 2)
-    local y = math.floor(screenHeight - height - 4 * scale)
-
-    -- set the color to a transparent black, and render the rectangle
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x, y, width, height)
-
-    x = x + 2 * scale -- add 2 to x to compensate for smaller size
-    y = y + 2 * scale -- add 2 to y to compensate for smaller size
-    width = width - 4 * scale
-    height = height - 4 * scale
-    local health = mario_health_float(gMarioStates[0]) -- get mario's health between 0 and 1
-    width = width * health
-    djui_hud_set_color(126, 192, 238, 128)
-    djui_hud_render_rect(x, y, width, height)
-
-    local text = "Freezing to Death" -- AAA, HELP, IM DYING OF THE COLD, MOM, QUICK, IM DYING, THE SUNS COLD, AAA
-
-    scale = 0.25
-    width = djui_hud_measure_text(text) * scale
-    height = 32 * scale
-    x = (screenWidth - width) / 2
-    y = screenHeight - 28
-
-    -- render rectangle and text
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x - 6, y, width + 12, height)
-
-    djui_hud_set_color(126, 192, 238, 128)
-    djui_hud_print_text(text, x, y, scale)
+    render_bar("Freezing to Death", mario_health_float(gMarioStates[0]), 0, 1, 126, 192, 238)
 end
 
 local function hud_render()

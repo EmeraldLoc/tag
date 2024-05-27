@@ -23,55 +23,6 @@ local function mario_update(m)
     end
 end
 
-local function hud_bottom_render()
-    if gPlayerSyncTable[0].state == TAGGER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        local screenWidth  = djui_hud_get_screen_width()
-        local screenHeight = djui_hud_get_screen_height()
-
-        local scale = 1
-        local width = 128 * scale
-        local height = 16 * scale
-        local x = math.floor((screenWidth - width) / 2)
-        local y = math.floor(screenHeight - height - 4 * scale)
-        local tagLives = linear_interpolation(gPlayerSyncTable[0].tagLives, 0, 1, 0, gGlobalSyncTable.tagMaxLives)
-
-        if boosts_enabled()
-        or gGlobalSyncTable.modifier == MODIFIER_FLY then
-            y = y - 32
-        end
-
-        djui_hud_set_color(0, 0, 0, 128)
-        djui_hud_render_rect(x, y, width, height)
-
-        x = x + 2 * scale
-        y = y + 2 * scale
-        width = width - 4 * scale
-        height = height - 4 * scale
-        width = math.floor(width * tagLives)
-        djui_hud_set_color(66, 176, 245, 128)
-        djui_hud_render_rect(x, y, width, height)
-
-        local text = "Lives Remaining: " .. tostring(gPlayerSyncTable[0].tagLives)
-
-        scale = 0.25
-        width = djui_hud_measure_text(text) * scale
-        height = 32 * scale
-        x = (screenWidth - width) / 2
-        y = screenHeight - 28
-
-        if boosts_enabled()
-        or gGlobalSyncTable.modifier == MODIFIER_FLY then
-            y = y - 32
-        end
-
-        djui_hud_set_color(0, 0, 0, 128)
-        djui_hud_render_rect(x - 6, y, width + 12, height)
-
-        djui_hud_set_color(66, 176, 245, 128)
-        djui_hud_print_text(text, x, y, scale)
-    end
-end
-
 local function hud_render()
 
     if gGlobalSyncTable.gamemode ~= DEATHMATCH then return end
@@ -80,7 +31,9 @@ local function hud_render()
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_N64)
 
-    hud_bottom_render()
+    if gPlayerSyncTable[0].state == TAGGER and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+        render_bar("Lives Remaining: " .. tostring(gPlayerSyncTable[0].tagLives), gPlayerSyncTable[0].tagLives, 0, gGlobalSyncTable.tagMaxLives, 66, 176, 245)
+    end
 
     -- check that we dont have the modifier MODIFIER_NO_RADAR enabled
     if gGlobalSyncTable.modifier ~= MODIFIER_NO_RADAR then

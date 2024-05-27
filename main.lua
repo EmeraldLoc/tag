@@ -1685,34 +1685,6 @@ end
 local function hud_boost()
     if gGlobalSyncTable.roundState == ROUND_VOTING then return end
     if not boosts_enabled() then return end
-
-    djui_hud_set_font(FONT_NORMAL)
-    djui_hud_set_resolution(RESOLUTION_N64)
-
-    local screenWidth  = djui_hud_get_screen_width()
-    local screenHeight = djui_hud_get_screen_height()
-
-    local scale        = 1
-    local width        = 128 * scale
-    local height       = 16 * scale
-    local x            = math.floor((screenWidth - width) / 2)
-    local y            = math.floor(screenHeight - height - 4 * scale)
-    local boostTime    = speedBoostTimer / 30 / (gGlobalSyncTable.boostCooldown / 30)
-    if boostState == BOOST_STATE_BOOSTING then
-        boostTime      = speedBoostTimer / 30 / 5
-    end
-
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x, y, width, height)
-
-    x = x + 2 * scale
-    y = y + 2 * scale
-    width = width - 4 * scale
-    height = height - 4 * scale
-    width = width * boostTime
-    djui_hud_set_color(0, 137, 237, 128)
-    djui_hud_render_rect(x, y, width, height)
-
     if boostState == BOOST_STATE_BOOSTING then
         text = "Boosting"
     elseif boostState == BOOST_STATE_RECHARGING then
@@ -1720,18 +1692,12 @@ local function hud_boost()
     else
         text = "Boost (" .. button_to_text(binds[BIND_BOOST].btn) .. ")"
     end
+    local boostTime = speedBoostTimer / 30 / (gGlobalSyncTable.boostCooldown / 30)
+    if boostState == BOOST_STATE_BOOSTING then
+        boostTime = speedBoostTimer / 30 / 5
+    end
 
-    scale = 0.25
-    width = djui_hud_measure_text(text) * scale
-    height = 32 * scale
-    x = (screenWidth - width) / 2
-    y = screenHeight - 28
-
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x - 6, y, width + 12, height)
-
-    djui_hud_set_color(0, 162, 255, 128)
-    djui_hud_print_text(text, x, y, scale)
+    render_bar(text, boostTime, 0, 1, 0, 162, 255)
 end
 
 local function hud_render()
