@@ -27,9 +27,9 @@ local function before_phys_step(m)
         and m.action ~= ACT_HARD_FORWARD_AIR_KB
         and m.action ~= ACT_BACKWARD_AIR_KB
         and m.action ~= ACT_FORWARD_AIR_KB then
-            -- give juggernaut a slight constant speed boost
-            m.vel.x = m.vel.x * 1.03
-            m.vel.z = m.vel.z * 1.03
+            -- give juggernaut a constant speed boost
+            m.vel.x = m.vel.x * 1.15
+            m.vel.z = m.vel.z * 1.15
         end
     end
 end
