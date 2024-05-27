@@ -1122,6 +1122,7 @@ local function mario_update(m)
                 if load_int("tournamentPointSystem") ~= nil then gGlobalSyncTable.tournamentPointSystem = load_int("tournamentPointSystem") end
                 if load_int("tournamentPointsReq") ~= nil then gGlobalSyncTable.tournamentPointsReq = load_int("tournamentPointsReq") end
                 if load_int("tournamentRoundLimit") ~= nil then gGlobalSyncTable.tournamentRoundLimit = load_int("tournamentRoundLimit") end
+                gGlobalSyncTable.tournamentRoundLimit = 1
             end
             if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
             if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
@@ -1149,11 +1150,11 @@ local function mario_update(m)
             end
             -- sardine hiding timer
             if load_int("hidingTimer_" .. SARDINES) ~= nil then
-                gGlobalSyncTable.hidingTimer = load_int("hidingTimer_" .. SARDINES)
+                gGlobalSyncTable.hidingTimer[SARDINES] = load_int("hidingTimer_" .. SARDINES)
             end
             -- search hiding timer
             if load_int("hidingTimer_" .. SEARCH) ~= nil then
-                gGlobalSyncTable.hidingTimer = load_int("hidingTimer_" .. SEARCH)
+                gGlobalSyncTable.hidingTimer[SEARCH] = load_int("hidingTimer_" .. SEARCH)
             end
             -- modifier settings
             -- max bomb cooldown
