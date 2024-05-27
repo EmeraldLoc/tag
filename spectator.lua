@@ -169,6 +169,7 @@ local function mario_update(m)
 
             while not gNetworkPlayers[followTargetIndex].connected
             or (gPlayerSyncTable[followTargetIndex].state == SPECTATOR
+            or gPlayerSyncTable[followTargetIndex].state == -1
             or (gPlayerSyncTable[followTargetIndex].state == WILDCARD_ROLE
             and gGlobalSyncTable.gamemode ~= FREEZE_TAG)) do
                 followTargetIndex = followTargetIndex + 1
@@ -188,6 +189,7 @@ local function mario_update(m)
 
             while not gNetworkPlayers[followTargetIndex].connected
             or gPlayerSyncTable[followTargetIndex].state == SPECTATOR
+            or gPlayerSyncTable[followTargetIndex].state == -1
             or (gPlayerSyncTable[followTargetIndex].state == WILDCARD_ROLE
             and gGlobalSyncTable.gamemode ~= FREEZE_TAG) do
                 followTargetIndex = followTargetIndex - 1
@@ -204,7 +206,8 @@ local function mario_update(m)
         or gPlayerSyncTable[followTargetIndex].state == SPECTATOR
         or (gPlayerSyncTable[followTargetIndex].state == WILDCARD_ROLE
         and gGlobalSyncTable.gamemode ~= FREEZE_TAG)
-        or  followTargetIndex == 0 then
+        or  followTargetIndex == 0
+        or  gPlayerSyncTable[followTargetIndex].state == -1 then
             followTargetIndex = 1
 
             while not gNetworkPlayers[followTargetIndex].connected
