@@ -2,34 +2,41 @@
 -- constants
 -- this is another player role, a custom one, you will notice it's set to the same thing
 -- as main.lua's WILDCARD_ROLE variable, this is intentional
-local FINISHED = 2
+local CAUGHT = 2
 
 -- variables
 local fade = 0
 local hidingPos = { x = 0, y = 0, z = 0 }
 
-ACT_IDLE_SARDINE = ACT_GROUP_AIRBORNE | allocate_mario_action(ACT_FLAG_AIR)
+ACT_IDLE_SEARCH = ACT_GROUP_AIRBORNE | allocate_mario_action(ACT_FLAG_AIR)
 
 ---@param m MarioState
 local function mario_update(m)
 
-    if gGlobalSyncTable.gamemode ~= SARDINES then return end
-    if m.playerIndex ~= 0 then return end
+    if gGlobalSyncTable.gamemode ~= SEARCH then return end
 
     m.health = 0x880 -- set mario's health to full
 
-    if gPlayerSyncTable[m.playerIndex].state == FINISHED then
-        -- set model state
+    -- if we are caught or we are a spectator...
+    if gPlayerSyncTable[m.playerIndex].state == CAUGHT
+    or gPlayerSyncTable[m.playerIndex].state == SPECTATOR then
+        -- ...set model state
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA -- vanish cap style
         -- make mario have vanish cap and wing cap (wait so why did I do the line above? Idk)
         m.flags = m.flags | MARIO_VANISH_CAP
         m.flags = m.flags | MARIO_WING_CAP
+        -- make mario invisible
+        obj_set_model_extended(m.marioObj, E_MODEL_NONE)
+        -- remove all particle flags
+        m.particleFlags = 0
     end
 
-    if gGlobalSyncTable.roundState == ROUND_SARDINE_HIDING
+    if m.playerIndex ~= 0 then return end
+
+    if gGlobalSyncTable.roundState == ROUND_SEARCH_HIDING
     and gPlayerSyncTable[0].state ~= RUNNER then
         m.freeze = 1
-    elseif gGlobalSyncTable.roundState == ROUND_SARDINE_HIDING
+    elseif gGlobalSyncTable.roundState == ROUND_SEARCH_HIDING
     and gPlayerSyncTable[0].state == RUNNER then
         vec3f_copy(hidingPos, m.pos)
     end
@@ -41,7 +48,7 @@ local function mario_update(m)
             vec3f_copy(m.pos, hidingPos)
         end
 
-        set_mario_action(m, ACT_IDLE_SARDINE, 0)
+        set_mario_action(m, ACT_IDLE_SEARCH, 0)
 
         m.vel.x = 0
         m.vel.y = 0
@@ -73,7 +80,7 @@ local function hud_waiting()
     djui_hud_set_color(255, 255, 255, fade)
     djui_hud_print_text(text, x, y, 1)
 
-    text = "The Sardine is Hiding..."
+    text = "The Hiders are Hiding..."
 
     -- get width of screen and text
     local screenHeight = djui_hud_get_screen_height()
@@ -92,29 +99,6 @@ local function hud_gamemode()
 
     local x = 40
     local y = 20
-
-    djui_hud_set_color(255, 255, 255, fade)
-    djui_hud_print_colored_text(text, x, y, 1, fade)
-end
-
-local function hud_current_sardine()
-
-    local sardine = 0
-    for i = 1, MAX_PLAYERS - 1 do
-        if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state == RUNNER then
-            sardine = i
-            break
-        end
-    end
-
-    local text = "The Sardine is " .. get_player_name(sardine)
-
-    if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
-        text = "Unable to retrieve sardine data. Reason: Incognito"
-    end
-
-    local x = 40
-    local y = 60
 
     djui_hud_set_color(255, 255, 255, fade)
     djui_hud_print_colored_text(text, x, y, 1, fade)
@@ -147,7 +131,7 @@ local function hud_modifier()
 end
 
 local function hud_render()
-    if gGlobalSyncTable.gamemode ~= SARDINES then return end
+    if gGlobalSyncTable.gamemode ~= SEARCH then return end
 
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
@@ -166,7 +150,7 @@ local function hud_render()
         end
     end
 
-    if gGlobalSyncTable.roundState == ROUND_SARDINE_HIDING
+    if gGlobalSyncTable.roundState == ROUND_SEARCH_HIDING
     and gPlayerSyncTable[0].state ~= RUNNER then
         fade = fade + 20
     else
@@ -181,7 +165,6 @@ local function hud_render()
     hud_black_bg()
     hud_waiting()
     hud_gamemode()
-    hud_current_sardine()
     hud_level()
     hud_modifier()
     hud_did_you_know(fade)
@@ -190,12 +173,12 @@ end
 ---@param a MarioState
 ---@param v MarioState
 local function allow_pvp(a, v)
-    if gGlobalSyncTable.gamemode ~= SARDINES then return end
+    if gGlobalSyncTable.gamemode ~= SEARCH then return end
 
-    -- use allow pvp instead of on pvp so that the sardine never takes kb (pvp hit reg isn't that important here)
+    -- use allow pvp instead of on pvp so that the hider never takes kb (pvp hit reg isn't that important here)
     if v.playerIndex ~= 0 then return false end
     -- handle pvp if we are the victim
-    sardines_handle_pvp(a.playerIndex, v.playerIndex)
+    search_handle_pvp(a.playerIndex, v.playerIndex)
 
     local aS = gPlayerSyncTable[a.playerIndex]
     local vS = gPlayerSyncTable[v.playerIndex]
@@ -208,7 +191,7 @@ end
 
 ---@param aI number
 ---@param vI number
-function sardines_handle_pvp(aI, vI)
+function search_handle_pvp(aI, vI)
     -- this checks and sets our states
     local a = gPlayerSyncTable[aI]
     local v = gPlayerSyncTable[vI]
@@ -216,14 +199,13 @@ function sardines_handle_pvp(aI, vI)
     -- check if tagger tagged runner
     if v.state == RUNNER and a.state == TAGGER and v.invincTimer <= 0
     and gGlobalSyncTable.roundState == ROUND_ACTIVE then
-        -- set us to be finished
-        a.state = FINISHED
+        -- set us to be caught
+        v.state = CAUGHT
 
         -- create popup
-        found_sardine_popup(aI)
-        -- increase amount of tags and set invincibility timer to 1 second
+        tagged_popup(aI, vI)
+        -- increase amount of tags
         a.amountOfTags = a.amountOfTags + 1
-        a.invincTimer = 1 * 30
     end
 end
 
@@ -231,14 +213,14 @@ end
 ---@param o Object
 ---@param intee InteractionType
 local function allow_interact(m, o, intee)
-    if gGlobalSyncTable.gamemode ~= SARDINES then return end
+    if gGlobalSyncTable.gamemode ~= SEARCH then return end
 
     -- check if player interacts with another player
     if intee == INTERACT_PLAYER then
         for i = 0, MAX_PLAYERS - 1 do
             if gNetworkPlayers[i].connected then
                 -- find the other player and check his state
-                if gMarioStates[i].marioObj == o and (gPlayerSyncTable[m.playerIndex].state == FINISHED or gPlayerSyncTable[i].state == FINISHED) then
+                if gMarioStates[i].marioObj == o and (gPlayerSyncTable[m.playerIndex].state == CAUGHT or gPlayerSyncTable[i].state == CAUGHT) then
                     -- don't allow the interaction
                     return false
                 end
@@ -250,18 +232,18 @@ end
 ---@param m MarioState
 local function character_sound(m)
 
-    if gGlobalSyncTable.gamemode ~= SARDINES then return end
+    if gGlobalSyncTable.gamemode ~= SEARCH then return end
 
     local s = gPlayerSyncTable[m.playerIndex]
 
-    if  s.state == FINISHED or s.state == RUNNER
+    if  s.state == CAUGHT or s.state == RUNNER
     and m.playerIndex ~= 0 then
         return 0
     end
 end
 
 ---@param m MarioState
-local function act_idle_sardine(m)
+local function act_idle_search(m)
 
     -- set velocity varaibles to none
     m.forwardVel = 0
@@ -273,9 +255,10 @@ local function act_idle_sardine(m)
     -- freeze mario's animation
     m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - (m.marioObj.header.gfx.animInfo.animAccel + 1)
 
-    -- get out of the action if round state is wait or wait players
+    -- get out of the action if round state is wait or wait players or we aren't a runner
     if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS
-    or gGlobalSyncTable.roundState == ROUND_WAIT then
+    or gGlobalSyncTable.roundState == ROUND_WAIT
+    or gPlayerSyncTable[0].state ~= RUNNER then
         return set_mario_action(m, ACT_FREEFALL, 0)
     end
 
@@ -288,4 +271,4 @@ hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp)
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 hook_event(HOOK_CHARACTER_SOUND, character_sound)
 
-hook_mario_action(ACT_IDLE_SARDINE, act_idle_sardine)
+hook_mario_action(ACT_IDLE_SEARCH, act_idle_search)

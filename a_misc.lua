@@ -574,6 +574,8 @@ function get_gamemode(g)
 		return "\\#7D2A24\\Terminator\\#DCDCDC\\"
 	elseif g == ODDBALL then
 		return "\\#919AA1\\Oddball\\#DCDCDC\\"
+	elseif g == SEARCH then
+		return "\\#7B7FA8\\Search\\#DCDCDC\\"
 	end
 
 	return "Uhhhhhhhhhh"
@@ -620,6 +622,8 @@ function get_role_name(role)
 			return "\\#BBBEA1\\Sardine"
 		elseif gGlobalSyncTable.gamemode == ODDBALL then
 			return "\\#919AA1\\Oddball"
+		elseif gGlobalSyncTable.gamemode == SEARCH then
+			return "\\#FF0000\\Hider"
 		end
 
 		return "\\#316BE8\\Runner"
@@ -638,6 +642,8 @@ function get_role_name(role)
 			return "\\#7EC0EE\\Frozen"
 		elseif gGlobalSyncTable.gamemode == SARDINES then
 			return "\\#FFBF00\\Finished"
+		elseif gGlobalSyncTable.gamemode == SEARCH then
+			return "\\#BF3636\\Caught"
 		else
 			return "\\#BF3636\\Eliminated"
 		end
@@ -751,6 +757,11 @@ function tagged_popup(tagger, runner)
 		return
 	end
 
+	if gGlobalSyncTable.gamemode == SEARCH then
+		djui_popup_create_global(get_player_name(tagger) .. " \\#FF0000\\Found\n" .. get_player_name(runner), 3)
+		return
+	end
+
 	djui_popup_create_global(get_player_name(tagger) .. " \\#E82E2E\\Tagged\n" .. get_player_name(runner), 3)
 end
 
@@ -783,6 +794,8 @@ function get_rules_for_gamemode(gamemode)
 		return "This gamemode is pretty much juggernaut but flipped. There's one Terminator that gets selected, the reset of the players are Runners. The terminator's goal is to tag all the runners. You become eliminated on death as a runner if elimination on death is on. Leaderboard works by using time as runner for runner, and for terminator the amount of tags."
 	elseif gamemode == ODDBALL then
 		return "In this gamemode, there is 1 runner, and everyone else is a tagger. You have to be the runner for a certain amount of time to win. When you die as a runner, another player becomes a runner randomly."
+	elseif gamemode == SEARCH then
+		-- TODO: Build rules for gamemode
 	end
 end
 

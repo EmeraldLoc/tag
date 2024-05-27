@@ -6,6 +6,7 @@ changelogs = {
         title = "\\#316BE8\\Tag v2.4: Major Update",
         gamemodes = {
             "Added " .. get_gamemode(ODDBALL),
+            "Added " .. get_gamemode(SEARCH),
             "Revamped " .. get_gamemode(JUGGERNAUT),
         },
         modifiers = {

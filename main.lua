@@ -31,7 +31,8 @@ ROUND_RUNNERS_WIN                      = 4
 ROUND_TOURNAMENT_LEADERBOARD           = 5
 ROUND_HOT_POTATO_INTERMISSION          = 6
 ROUND_VOTING                           = 7
-ROUND_HIDING                           = 8
+ROUND_SARDINE_HIDING                   = 8
+ROUND_SEARCH_HIDING                    = 9
 
 -- roles (gamemode-specific roles specified in designated gamemode files, and replace the wildcard role)
 RUNNER                                 = 0
@@ -52,7 +53,8 @@ HUNT                                   = 8
 DEATHMATCH                             = 9
 TERMINATOR                             = 10
 ODDBALL                                = 11
-MAX_GAMEMODE                           = 11
+SEARCH                                 = 12
+MAX_GAMEMODE                           = 12
 
 -- spectator states
 SPECTATOR_STATE_MARIO                  = 0
@@ -366,6 +368,13 @@ stats = {
         totalTimeAsRunner = 0,
         runnerVictories = 0,
     },
+    [SEARCH] = {
+        playTime = 0,
+        totalTags = 0,
+        totalTimeAsRunner = 0,
+        runnerVictories = 0,
+        taggerVictories = 0,
+    },
 }
 
 remoteStats = {
@@ -499,7 +508,8 @@ local function server_update()
 
                     if  (gGlobalSyncTable.gamemode == ASSASSINS
                     or  gGlobalSyncTable.gamemode  == SARDINES
-                    or  gGlobalSyncTable.gamemode  == JUGGERNAUT)
+                    or  gGlobalSyncTable.gamemode  == JUGGERNAUT
+                    or  gGlobalSyncTable.gamemode  == SEARCH)
                     and (gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
                     or  gGlobalSyncTable.modifier  == MODIFIER_ONE_RUNNER) then
                         goto selectmodifier
@@ -594,8 +604,9 @@ local function server_update()
 
             timer = gGlobalSyncTable.amountOfTime -- set timer to amount of time in a round
 
-            -- set timer to sardines hiding timer if we are in the gamemode sardines
-            if gGlobalSyncTable.gamemode == SARDINES then timer = gGlobalSyncTable.hidingTimer end
+            -- set timer to hiding timer if we are in the gamemodes which require it
+            if gGlobalSyncTable.gamemode == SARDINES
+            or gGlobalSyncTable.gamemode == SEARCH then timer = gGlobalSyncTable.hidingTimer end
 
             -- if we have custom roles, skip straight to actually starting the round
             local skipTaggerSelection = false
@@ -618,7 +629,8 @@ local function server_update()
 
             if not skipTaggerSelection then
                 if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER
-                or gGlobalSyncTable.gamemode == TERMINATOR then
+                or gGlobalSyncTable.gamemode == TERMINATOR
+                or gGlobalSyncTable.gamemode == SEARCH then
                     amountOfTaggersNeeded = 1
                 elseif gGlobalSyncTable.modifier == MODIFIER_ONE_RUNNER then
                     amountOfTaggersNeeded = numPlayers - 1
@@ -680,12 +692,14 @@ local function server_update()
 
             gGlobalSyncTable.roundState = ROUND_ACTIVE -- begin round
 
-            -- if the gamemode is sardines set round state to hiding
-            if gGlobalSyncTable.gamemode == SARDINES then gGlobalSyncTable.roundState = ROUND_HIDING end
+            -- if the gamemode is sardines or search, set round state to hiding
+            if gGlobalSyncTable.gamemode == SARDINES then gGlobalSyncTable.roundState = ROUND_SARDINE_HIDING end
+            if gGlobalSyncTable.gamemode == SEARCH then gGlobalSyncTable.roundState = ROUND_SEARCH_HIDING end
 
             log_to_console("Tag: Started the game")
         end
-    elseif gGlobalSyncTable.roundState == ROUND_HIDING then
+    elseif gGlobalSyncTable.roundState == ROUND_SARDINE_HIDING
+    or gGlobalSyncTable.roundState == ROUND_SEARCH_HIDING then
         timer = timer - 1
         gGlobalSyncTable.displayTimer = timer
 
@@ -1208,7 +1222,8 @@ local function mario_update(m)
         if gGlobalSyncTable.roundState == ROUND_ACTIVE
         or gGlobalSyncTable.roundState == ROUND_WAIT
         or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
-        or gGlobalSyncTable.roundState == ROUND_HIDING then
+        or gGlobalSyncTable.roundState == ROUND_SARDINE_HIDING
+        or gGlobalSyncTable.roundState == ROUND_SEARCH_HIDING then
             if np.currLevelNum ~= selectedLevel.level or np.currAreaIndex ~= selectedLevel.area then
                 -- attempt to warp to stage
                 local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, 0)
@@ -1375,7 +1390,8 @@ local function mario_update(m)
         if np.currAreaSyncValid and gPlayerSyncTable[0].state == -1 then
             if gGlobalSyncTable.roundState == ROUND_ACTIVE
             or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
-            or gGlobalSyncTable.roundState == ROUND_HIDING then
+            or gGlobalSyncTable.roundState == ROUND_SARDINE_HIDING
+            or gGlobalSyncTable.roundState == ROUND_SEARCH_HIDING then
                 if ((gGlobalSyncTable.gamemode == TAG
                 or  gGlobalSyncTable.gamemode == INFECTION)
                 and not gGlobalSyncTable.lateJoining)
@@ -1426,7 +1442,8 @@ local function mario_update(m)
 
         if gGlobalSyncTable.roundState == ROUND_ACTIVE
         or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
-        or gGlobalSyncTable.roundState == ROUND_HIDING then
+        or gGlobalSyncTable.roundState == ROUND_SARDINE_HIDING
+        or gGlobalSyncTable.roundState == ROUND_SEARCH_HIDING then
             -- handle play time stats
             if stats[gGlobalSyncTable.gamemode].playTime ~= nil then
                 stats[gGlobalSyncTable.gamemode].playTime = stats[gGlobalSyncTable.gamemode].playTime + 1
@@ -1545,7 +1562,8 @@ local function hud_round_status()
         else
             text = "Time Remaining: " .. math.floor(gGlobalSyncTable.displayTimer / 30) -- divide by 30 for seconds and not frames (all game logic runs at 30fps)
 
-            if  gGlobalSyncTable.gamemode == SARDINES
+            if (gGlobalSyncTable.gamemode == SARDINES
+            or gGlobalSyncTable.gamemode == SEARCH)
             and gPlayerSyncTable[0].state == RUNNER then
                 text = "You're Hiding. " .. text
             end
@@ -1566,7 +1584,8 @@ local function hud_round_status()
                 end
             end
         end
-    elseif gGlobalSyncTable.roundState == ROUND_HIDING then
+    elseif gGlobalSyncTable.roundState == ROUND_SARDINE_HIDING
+    or gGlobalSyncTable.roundState == ROUND_SEARCH_HIDING then
         text = "You have " ..
         math.floor(gGlobalSyncTable.displayTimer / 30)
         .. " seconds to hide!" -- divide by 30 for seconds and not frames (all game logic runs at 30fps)

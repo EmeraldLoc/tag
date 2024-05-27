@@ -14,7 +14,8 @@ local function update()
     if gGlobalSyncTable.roundState == ROUND_ACTIVE
     or gGlobalSyncTable.roundState == ROUND_WAIT
     or gGlobalSyncTable.roundState == ROUND_HOT_POTATO_INTERMISSION
-    or gGlobalSyncTable.roundState == ROUND_HIDING then
+    or gGlobalSyncTable.roundState == ROUND_SARDINE_HIDING
+    or gGlobalSyncTable.roundState == ROUND_SEARCH_HIDING then
         if np.currLevelNum ~= gNetworkPlayers[network_local_index_from_global(0)].currLevelNum or not np.currAreaSyncValid then
             -- a desync happened, begin the desync timer
             desyncTimer = desyncTimer - 1
