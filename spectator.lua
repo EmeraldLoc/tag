@@ -213,7 +213,7 @@ local function mario_update(m)
             and gGlobalSyncTable.gamemode ~= FREEZE_TAG) do
                 followTargetIndex = followTargetIndex + 1
 
-                if followTargetIndex >= MAX_PLAYERS then followTargetIndex = 0 end
+                if followTargetIndex >= MAX_PLAYERS then followTargetIndex = 0; break end
             end
         end
     end
