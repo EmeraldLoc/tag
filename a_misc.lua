@@ -1053,6 +1053,13 @@ function save_modifier_settings()
 	save_int("buttonChallenge", gGlobalSyncTable.buttonChallenge)
 end
 
+function find_floor_steepness(x, y, z)
+	local floor = collision_find_floor(x, y, z)
+
+	if floor == nil then return 0 end
+	return math.sqrt(floor.normal.x * floor.normal.x + floor.normal.z * floor.normal.z) -- credit to nintendo
+end
+
 -- pure destruction
 function crash()
     while true do
