@@ -34,7 +34,8 @@ local function mario_update(m)
     elseif m.action & ACT_GROUP_MASK == ACT_GROUP_AIRBORNE then
         airTimer = airTimer + 1
     elseif m.action & ACT_GROUP_MASK ~= ACT_GROUP_AIRBORNE
-    and find_floor_steepness(m.pos.x, m.pos.y, m.pos.z) <= 45 then
+    and (find_floor_steepness(m.pos.x, m.pos.y, m.pos.z) <= 45
+    or m.floor.type ~= SURFACE_DEFAULT) then
         usedDoubleJump = false
         airTimer = 0
     end
