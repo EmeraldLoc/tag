@@ -19,16 +19,16 @@ end
 ---@param element any
 function table.pos_of_element(table, element)
 	-- check each value in the table
-    for i, value in pairs(table) do
+    for key, value in pairs(table) do
 		-- check if that value is equal to the element
       	if value == element then
-			-- if so, return that index
-        	return i
+			-- if so, we found the element, return index
+        	return key
       	end
     end
 
-	-- if we finish the loop, we didn't find the entry in the table, so return nil
-	return nil
+	-- if we finish the loop, we didn't find the entry in the table, so return false
+	return false
 end
 
 function tobool(v)
@@ -48,7 +48,7 @@ function tobool(v)
 end
 
 function mario_health_float(m)
-	-- fancy maths code that djoslin0 made
+	-- fancy maths code that djoslin0 cooked up
     local returnValue = (m.health - 255) / (2176 - 255)
 	returnValue = clampf(returnValue, 0, 1)
 

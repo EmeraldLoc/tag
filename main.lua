@@ -1,4 +1,4 @@
--- name: \\#316BE8\\Tag (v2.4 Very Beta)\\#dcdcdc\\
+-- name: \\#316BE8\\Tag (v2.4 Beta)\\#dcdcdc\\
 -- description: All Tag Related Gamemodes!\n\nThis mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and more, with modifiers, and full romhack support!\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\, \\#ff7f00\\ Agent X\\#dcdcdc\\, Sunk, and \#F2F3AE\B\#EDD382\l\#FC9E4F\o\#F4442E\c\#9B1D20\ky\n\nPainting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi\n\n\\#dcdcdc\\Romhack Porters are in the romhacks.lua file.
 -- incompatible: gamemode tag
 
