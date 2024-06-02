@@ -283,7 +283,7 @@ binds[BIND_BOOST] = {name = "Boost", btn = Y_BUTTON}
 -- bomb bind
 binds[BIND_BOMBS] = {name = "Bombs", btn = Y_BUTTON}
 -- gun bind
-binds[BIND_GUN] = {name = "Gun", btn = X_BUTTON}
+binds[BIND_GUN] = {name = "Blaster", btn = X_BUTTON}
 -- double jump bind
 binds[BIND_DOUBLE_JUMP] = {name = "Double Jump", btn = A_BUTTON}
 -- stats
@@ -1230,39 +1230,7 @@ local function mario_update(m)
         or gGlobalSyncTable.roundState == ROUND_SARDINE_HIDING
         or gGlobalSyncTable.roundState == ROUND_SEARCH_HIDING then
             if np.currLevelNum ~= selectedLevel.level or np.currAreaIndex ~= selectedLevel.area then
-                -- attempt to warp to stage
-                local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, 0)
-
-                if not warpSuccesful then
-                    -- warping failed, so try a few common warp nodes
-                    if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, 10) then
-                        return
-                    end
-
-                    if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, 0) then
-                        return
-                    end
-
-                    -- try randomly warping to warp nodes
-                    for i = 1, 100 do
-                        if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, i) then
-                            return
-                        end
-                    end
-
-                    if network_is_server() then
-                        -- if it failed and we are the server, assign it to the bad levels table
-                        table.insert(badLevels, gGlobalSyncTable.selectedLevel)
-
-                        local level = levels[gGlobalSyncTable.selectedLevel]
-
-                        while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
-                            gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_MAX)) -- select a random level
-                        end
-
-                        prevLevel = gGlobalSyncTable.selectedLevel
-                    end
-                end
+                warp_to_tag_level(gGlobalSyncTable.selectedLevel)
             end
         elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS and not gGlobalSyncTable.autoMode then
             if np.currLevelNum ~= gLevelValues.entryLevel then
@@ -1685,16 +1653,17 @@ end
 local function hud_boost()
     if gGlobalSyncTable.roundState == ROUND_VOTING then return end
     if not boosts_enabled() then return end
-    if boostState == BOOST_STATE_BOOSTING then
-        text = "Boosting"
-    elseif boostState == BOOST_STATE_RECHARGING then
-        text = "Recharging"
-    else
-        text = "Boost (" .. button_to_text(binds[BIND_BOOST].btn) .. ")"
-    end
     local boostTime = speedBoostTimer / 30 / (gGlobalSyncTable.boostCooldown / 30)
     if boostState == BOOST_STATE_BOOSTING then
         boostTime = speedBoostTimer / 30 / 5
+    end
+    local text = ""
+    if boostState == BOOST_STATE_BOOSTING then
+        text = "Boosting"
+    elseif boostState == BOOST_STATE_RECHARGING then
+        text = "Recharging (" .. math.floor((gGlobalSyncTable.boostCooldown - speedBoostTimer) / 30 * 10) / 10 .. ")"
+    else
+        text = "Boost (" .. button_to_text(binds[BIND_BOOST].btn) .. ")"
     end
 
     render_bar(text, boostTime, 0, 1, 0, 162, 255)

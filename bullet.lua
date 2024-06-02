@@ -70,7 +70,7 @@ function hud_bullet(gunCooldown, maxGunCooldown)
     local text = ""
 
     if gunCooldown < maxGunCooldown then
-        text = "Recharging"
+        text = "Recharging (" .. math.floor((maxGunCooldown - gunCooldown) / 30 * 10) / 10 .. ")"
     else
         text = "Shoot (" .. button_to_text(binds[BIND_GUN].btn) .. ")"
     end

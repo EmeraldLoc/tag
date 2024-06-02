@@ -22,7 +22,7 @@ local function mario_update(m)
     if  m.action & ACT_GROUP_MASK == ACT_GROUP_AIRBORNE
     and m.controller.buttonPressed & binds[BIND_DOUBLE_JUMP].btn ~= 0
     and not usedDoubleJump
-    and airTimer > 0.2 * 30 then
+    and airTimer > 0.1 * 30 then
         usedDoubleJump = true
 
         set_mario_action(m, ACT_TRIPLE_JUMP, 0)

@@ -57,13 +57,13 @@ local function mario_update(m)
     end
 end
 
-function hud_render()
+local function hud_render()
     if gPlayerSyncTable[0].state == SPECTATOR
     or gPlayerSyncTable[0].state == WILDCARD_ROLE then return end
     if gGlobalSyncTable.modifier ~= MODIFIER_SWAP then return end
     if gGlobalSyncTable.swapTimer > 5 * 30 then return end
 
-    render_bar("Swapping in " .. math.floor(gGlobalSyncTable.swapTimer / 30) .. "s", gGlobalSyncTable.swapTimer, 0, 5 * 30)
+    render_bar("Swapping in " .. math.floor(gGlobalSyncTable.swapTimer / 30) .. "s", gGlobalSyncTable.swapTimer, 0, 5 * 30, 255, 0, 0)
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)

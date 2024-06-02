@@ -9,7 +9,10 @@ local function mario_update(m)
     if  gGlobalSyncTable.modifier ~= MODIFIER_SHELL
     or (gGlobalSyncTable.roundState ~= ROUND_ACTIVE
     and gGlobalSyncTable.roundState ~= ROUND_WAIT
-    and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION)
+    and gGlobalSyncTable.roundState ~= ROUND_WAIT_PLAYERS
+    and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION
+    and gGlobalSyncTable.roundState ~= ROUND_SARDINE_HIDING
+    and gGlobalSyncTable.roundState ~= ROUND_SEARCH_HIDING)
     or  gPlayerSyncTable[0].state == WILDCARD_ROLE
     or  gPlayerSyncTable[0].state == SPECTATOR then
         if m.action & ACT_FLAG_RIDING_SHELL ~= 0 then
@@ -107,7 +110,8 @@ end
 local function custom_shell_loop(o)
     local m = gMarioStates[o.heldByPlayerIndex]
 
-    if m.action & ACT_FLAG_RIDING_SHELL ~= 0 then
+    if  m.action & ACT_FLAG_RIDING_SHELL ~= 0
+    and gNetworkPlayers[m.playerIndex].connected then
         cur_obj_unhide()
 
         o.oPosX = m.pos.x

@@ -39,7 +39,12 @@ romhacks = {
                 level = LEVEL_WF,
                 painting = get_texture_info("wf_painting"),
                 area = 1,
-                pipes = nil
+                pipes = {
+                    {
+                        { x = 4623, y = 300, z = 129 },
+                        { x = -618, y = 3584, z = 1154 }
+                    }
+                }
             },
             {
                 name = "jrb",

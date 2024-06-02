@@ -14,7 +14,11 @@ local function before_phys_step(m)
             m.vel.y = m.vel.y * 1.05
         end
     else
-        m.vel.y = m.vel.y / 1.05
+        if m.action == ACT_GROUND_POUND then
+            m.vel.y = m.vel.y / 1.025
+        else
+            m.vel.y = m.vel.y / 1.05
+        end
     end
 end
 

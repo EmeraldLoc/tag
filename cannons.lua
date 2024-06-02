@@ -68,5 +68,14 @@ id_bhvCannonClosed = hook_behavior(id_bhvCannonClosed, OBJ_LIST_SURFACE, false, 
     o.activeFlags = ACTIVE_FLAG_DEACTIVATED
 end, nil, nil)
 
+local function hud_render()
+    local m = gMarioStates[0]
+    if  m.action == ACT_IN_CANNON
+    and m.actionState == 2 then
+        render_bar("Cannon Will Fire in " .. 5 - math.floor(timeSpentInCannon / 30), 5 - timeSpentInCannon / 30, 0, 5, 0, 70, 252)
+    end
+end
+
 hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 hook_event(HOOK_BEFORE_MARIO_UPDATE, before_mario_update)
+hook_event(HOOK_ON_HUD_RENDER, hud_render)

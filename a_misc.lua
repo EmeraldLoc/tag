@@ -609,7 +609,11 @@ function get_role_name(role)
 	if  gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
 	and gPlayerSyncTable[0].state ~= SPECTATOR
 	and (gPlayerSyncTable[0].state ~= WILDCARD_ROLE
-	or gGlobalSyncTable.gamemode == FREEZE_TAG) then
+	or gGlobalSyncTable.gamemode == FREEZE_TAG)
+	and gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN
+	and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN
+	and gGlobalSyncTable.roundState ~= ROUND_TOURNAMENT_LEADERBOARD
+	and gGlobalSyncTable.roundState ~= ROUND_VOTING then
 		return "\\#4A4A4A\\Incognito"
 	end
 
@@ -1058,6 +1062,43 @@ function find_floor_steepness(x, y, z)
 
 	if floor == nil then return 0 end
 	return math.sqrt(floor.normal.x * floor.normal.x + floor.normal.z * floor.normal.z) -- credit to nintendo
+end
+
+function warp_to_tag_level(levelIndex)
+	local selectedLevel = levels[levelIndex]
+	-- attempt to warp to stage
+	local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, 0)
+
+	if not warpSuccesful then
+		-- warping failed, so try a few common warp nodes
+		if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, 10) then
+			return
+		end
+
+		if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, 0) then
+			return
+		end
+
+		-- try randomly warping to warp nodes
+		for i = 1, 100 do
+			if warp_to_warpnode(selectedLevel.level, selectedLevel.area, 0, i) then
+				return
+			end
+		end
+
+		if network_is_server() then
+			-- if it failed and we are the server, assign it to the bad levels table
+			table.insert(badLevels, gGlobalSyncTable.selectedLevel)
+
+			local level = levels[gGlobalSyncTable.selectedLevel]
+
+			while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+				gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_MAX)) -- select a random level
+			end
+
+			prevLevel = gGlobalSyncTable.selectedLevel
+		end
+	end
 end
 
 -- pure destruction

@@ -288,7 +288,7 @@ end
 local function hud_bombs()
     if not can_hold_bomb(0) then return end
     if bombCooldown < gGlobalSyncTable.maxBombCooldown then
-        text = "Reloading"
+        text = "Reloading (" .. math.floor((gGlobalSyncTable.maxBombCooldown - bombCooldown) / 30 * 10) / 10 .. ")"
     else
         text = "Throw Bomb (" .. button_to_text(binds[BIND_BOMBS].btn) .. ")"
     end

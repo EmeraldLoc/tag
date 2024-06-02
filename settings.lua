@@ -1789,7 +1789,8 @@ local function reset_stat_group_entries()
             entries = statEntries
             statGroupIndex = -1
             selection = 1
-        end},
+        end,
+        seperator = get_player_name(statIndex)},
     }
 
     for i = MIN_GAMEMODE, MAX_GAMEMODE do
@@ -1835,7 +1836,8 @@ local function reset_stat_entries()
                 func = function ()
                     entries = statGroupEntries
                     selection = 1
-                end
+                end,
+                seperator = get_player_name(statIndex)
             })
 
             if not sentStatPacket then
@@ -1868,7 +1870,8 @@ local function reset_stat_entries()
         statEntries = {
             {name = "Play Time",
             permission = PERMISSION_NONE,
-            valueText = math.floor(scopeStats.playTime / 30 / 60) .. "m"},
+            valueText = math.floor(scopeStats.playTime / 30 / 60) .. "m",
+            seperator = get_player_name(statIndex)},
             {name = "Runner Victories",
             permission = PERMISSION_NONE,
             valueText = scopeStats.runnerVictories},
@@ -1908,7 +1911,8 @@ local function reset_stat_entries()
             table.insert(statEntries, {
                 name = "Play Time",
                 permission = PERMISSION_NONE,
-                valueText = math.floor(scopeStats.playTime / 30 / 60) .. "m"
+                valueText = math.floor(scopeStats.playTime / 30 / 60) .. "m",
+                seperator = get_player_name(statIndex)
             })
         end
         if scopeStats.runnerVictories ~= nil then
@@ -2043,6 +2047,9 @@ local function reset_achievement_entries()
             end,
             valueText = valueText
         })
+        if i == 1 then
+            achievementEntries[1].seperator = get_player_name(network_local_index_from_global(achievementIndex))
+        end
     end
 
     table.insert(achievementEntries, {
@@ -2115,7 +2122,8 @@ local function reset_achievement_entry()
         achievementEntry = {
             {
                 name = "Name",
-                valueText = achievement.name
+                valueText = achievement.name,
+                seperator = get_player_name(network_global_index_from_local(achievementIndex))
             },
             {
                 name = "Description",

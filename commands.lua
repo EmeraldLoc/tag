@@ -1,11 +1,5 @@
 ---@param msg string
 function start_command(msg)
-    if network_player_connected_count() < PLAYERS_NEEDED then
-        djui_chat_message_create("Not enough players to start the round")
-
-        return true
-    end
-
     if msg ~= "" then
         if tonumber(msg) ~= nil then
             for i, level in pairs(levels) do
@@ -16,6 +10,10 @@ function start_command(msg)
                     gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
 
                     djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area, level))
+
+                    if network_player_connected_count() < PLAYERS_NEEDED then
+                        warp_to_tag_level(gGlobalSyncTable.selectedLevel)
+                    end
 
                     return true
                 end
@@ -31,6 +29,10 @@ function start_command(msg)
                     gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
 
                     djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area, level))
+
+                    if network_player_connected_count() < PLAYERS_NEEDED then
+                        warp_to_tag_level(gGlobalSyncTable.selectedLevel)
+                    end
 
                     return true
                 end
@@ -57,6 +59,10 @@ function start_command(msg)
     log_to_console("Tag: Settings round state to ROUND_WAIT...")
 
     djui_chat_message_create("Starting round")
+
+    if network_player_connected_count() < PLAYERS_NEEDED then
+        warp_to_tag_level(gGlobalSyncTable.selectedLevel)
+    end
 
     return true
 end

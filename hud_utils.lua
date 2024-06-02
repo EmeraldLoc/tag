@@ -124,13 +124,16 @@ function hud_did_you_know(fade)
     elseif randomDidYouKnow == 31 then
         text = "Check out Arena Bitforts, a super dope level made by Chilly!"
     elseif randomDidYouKnow == 32 then
-        text = "Check out Shine Thief, a Mario Kart style game of Shine Thief, items and all!"
+        text = "Check out Kart Battle Modes (formally known as Shine Thief), a Mario Kart style gamemode with each and every battle mode, items and all!"
         text2 = "Made by EmilyEmmi"
     elseif randomDidYouKnow == 33 then
         text = "A mod you should check out is Duels. It's pretty much in the title of what the mod does."
         text2 = "Made by EmilyEmmi, the mod is a blast and really test's your skills!"
     elseif randomDidYouKnow == 34 then
         text = "Romhack not showing up? Try going to the tag settings and seeing if the hack is there."
+    elseif randomDidYouKnow == 35 then
+        text = "Did you know that you can shoot backward with the blaster? You can do this with D-Pad Down."
+        text2 = "This applies to both the Blaster modifier and the Fly modifier."
     end
 
     local scale = 1
@@ -234,6 +237,8 @@ end
 ---@param height number|integer
 ---@param cornerRaidus number|integer
 function djui_hud_render_rect_rounded(x, y, width, height, cornerRaidus)
+    if cornerRaidus > width then cornerRaidus = width end
+    if cornerRaidus > height then cornerRaidus = height end
     -- it's called black magic
     djui_hud_render_rect(x + (cornerRaidus / 2), y, width - cornerRaidus, height)
     djui_hud_render_rect(x, y + (cornerRaidus / 2), cornerRaidus / 2, height - cornerRaidus)
