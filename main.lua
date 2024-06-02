@@ -1256,6 +1256,21 @@ local function mario_update(m)
             end
         end
 
+        -- spawn arena springs
+        if  selectedLevel.springs ~= nil
+        and obj_get_first_with_behavior_id(id_bhvArenaSpring) == nil
+        and np.currLevelNum == selectedLevel.level
+        and network_is_server() then
+            -- spawn springs
+            for _, spring in ipairs(selectedLevel.springs) do
+                spawn_sync_object(id_bhvArenaSpring, E_MODEL_SPRING_BOTTOM, spring.x, spring.y, spring.z, function (o)
+                    o.oBehParams = spring.strength
+                    o.oFaceAnglePitch = spring.pitch
+                    o.oFaceAngleYaw = spring.yaw
+                end)
+            end
+        end
+
         -- handle pipe invinc timers and such, too lazy to write what this does
         pipeTimer = pipeTimer + 1
         if pipeTimer > 3 * 30 then

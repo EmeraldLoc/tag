@@ -1084,6 +1084,170 @@ romhacks = {
         }
     },
     {
+        -- ported to tag by Bear
+        name = "SM64: The Green Stars",
+        shortName = "green stars",
+        water = false,
+        levels = {
+            {
+                name = "ow1",
+                level = LEVEL_CASTLE_GROUNDS,
+                painting = get_texture_info("painting_gs_ow1"),
+                area = 1,
+                pipes = nil,
+                springs = {
+                    { x = -333, y = -556, z = 259, pitch = 0, yaw = 0, strength = 120 },
+                },
+                unwantedBhvs = { id_bhvToadMessage },
+                spawnLocation = { x = -1500, y = -509, z = 2102 },
+                overrideName = "Overworld"
+            },
+            {
+                name = "bop",
+                level = LEVEL_BOB,
+                painting = get_texture_info("painting_gs_bop"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -470, y = -1036, z = 647 },
+                        { x = -2979, y = 1455, z = -3408 }
+                    }
+                },
+                overrideName = "Bob-omb Plains"
+            },
+            {
+                name = "wforest",
+                level = LEVEL_WF,
+                painting = get_texture_info("painting_gs_wforest"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -3019, y = -1139, z = -1877 },
+                        { x = 2394, y = 2038, z = -493 }
+                    },
+                    {
+                        { x = 2969, y = -1314, z = 4302 },
+                        { x = 6228, y = -3071, z = 6125 }
+                    }
+                }
+
+            },
+            {
+                name = "sspeaks",
+                level = LEVEL_CCM,
+                painting = get_texture_info("painting_gs_sspeaks"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 3080, y = -2147, z = 951 },
+                        { x = 1411, y = 1808, z = -2782 }
+                    },
+                    {
+                        { x = -1536, y = -690, z = 1076 },
+                        { x = 4522, y = 5028, z = -1194 }
+                    }
+                },
+                springs = {
+                    { x = -1193, y = -2692, z = -3216, pitch = 0, yaw = 0, strength = 680 },
+                    { x = -3747, y = -2106, z = 7425, pitch = -10000, yaw = -6000, strength = 110 },
+                    { x = -4830, y = -1402, z = 4068, pitch = -10000, yaw = 0x8000 + 1000, strength = 60 },
+                }
+            },
+            {
+                name = "fiery",
+                level = LEVEL_BBH,
+                painting = get_texture_info("painting_gs_fiery"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -269, y = -2433, z = 1433 },
+                        { x = 1420, y = 723, z = 5108 }
+                    }
+                },
+                springs = {
+                    { x = -4301, y = -1026, z = 6008, pitch = 0, yaw = 0, strength = 375 },
+                },
+                unwantedBhvs = { id_bhvExclamationBox }
+             },
+             {
+                name = "wcp",
+                level = LEVEL_TOTWC,
+                painting = get_texture_info("painting_gs_wcp"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 1113, y = -3003, z = -4057 },
+                        { x = -377, y = 2808, z = 514 }
+                    },
+                },
+                unwantedBhvs = { id_bhvCapSwitch, id_bhvCapSwitchBase }
+            },
+            {
+                name = "sd",
+                level = LEVEL_SSL,
+                painting = get_texture_info("painting_gs_sd"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -4095, y = 324, z = 888 },
+                        { x = 4827, y = 3180, z = -4556 }
+                    }
+                },
+                unwantedBhvs = { id_bhvPurpleSwitchHiddenBoxes }
+            },
+            {
+                name = "seasidebay",
+                level = LEVEL_DDD,
+                painting = get_texture_info("painting_gs_seasidebay"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = 5333, y = -666, z = -3070 },
+                        { x = 6435, y = -4866, z = -6210 }
+                    },
+                },
+                unwantedBhvs = { id_bhvWigglerBody, id_bhvWigglerHead },
+            },
+            {
+                name = "mmg",
+                level = LEVEL_SL,
+                painting = get_texture_info("painting_gs_mmg"),
+                area = 1,
+                pipes = nil,
+                unwantedBhvs = { id_bhvBigBullyWithMinions },
+            },
+            {
+                name = "cq",
+                level = LEVEL_TTC,
+                painting = get_texture_info("painting_gs_cq"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -4222, y = -2180, z = 1997 },
+                        { x = -184, y = 5985, z = -5033 }
+                    },
+                },
+                unwantedBhvs = { id_bhvThwomp, id_bhvThwomp2, id_bhvExclamationBox },
+            },
+            {
+                name = "bc",
+                level = LEVEL_CASTLE,
+                painting = get_texture_info("painting_gs_bc"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -3037, y = 1261, z = 40 },
+                        { x = 576, y = -1846, z = 56 }
+                    }
+                },
+                springs = {
+                    { x = -71, y = 955, z = -2295, pitch = 0, yaw = 0, strength = 80 }
+                },
+                overrideName = "Bowser's Castle"
+            },
+        }
+    },
+    {
         -- ported to tag by EmeraldLockdown
         name = "Royal Legacy",
         shortName = "rl",
