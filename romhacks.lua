@@ -520,6 +520,14 @@ romhacks = {
                         { x = 4434, y = -350, z = -8335 }
                     }
                 }
+            },
+            {
+                name = "bga",
+                level = LEVEL_BOWSER_3,
+                painting = get_texture_info("painting_sapphire_bga"),
+                area = 1,
+                pipes = nil,
+                overrideName = "Bowser's Gloomy Arena"
             }
         }
     },
