@@ -386,7 +386,7 @@ remoteStats = {
 }
 
 -- selected theme
-selectedTheme = 1
+selectedTheme = 2
 
 -- speed boost timer
 local speedBoostTimer = 0
@@ -1325,11 +1325,7 @@ local function mario_update(m)
         and current_mario_room_check(selectedLevel.room) ~= 1
         and np.currAreaSyncValid and (roomTimer > 5 * 30
         or gGlobalSyncTable.roundState == ROUND_WAIT) then
-            local randomLevel = gGlobalSyncTable.selectedLevel + 1
-            if levels[randomLevel] == nil then
-                randomLevel = gGlobalSyncTable.selectedLevel - 1
-            end
-            warp_to_level(levels[randomLevel].level, 1, 0)
+            warp_to_tag_level(gGlobalSyncTable.selectedLevel)
         elseif selectedLevel.room ~= nil and np.currAreaSyncValid
         and current_mario_room_check(selectedLevel.room) ~= 1 then
             roomTimer = roomTimer + 1
@@ -1342,11 +1338,7 @@ local function mario_update(m)
         end
 
         if m.pos.y <= -10000 then
-            local randomLevel = gGlobalSyncTable.selectedLevel + 1
-            if levels[randomLevel] == nil then
-                randomLevel = gGlobalSyncTable.selectedLevel - 1
-            end
-            warp_to_level(levels[randomLevel].level, 1, 0)
+            warp_to_tag_level(gGlobalSyncTable.selectedLevel)
         end
 
         -- handle speed boost
