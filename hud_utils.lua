@@ -8,7 +8,7 @@ local randomDidYouKnow = 1
 local function mario_update(m)
     didYouKnowHudRendering = didYouKnowHudRendering - 1
     if didYouKnowHudRendering <= 0 then
-        randomDidYouKnow = math.random(1, 46)
+        randomDidYouKnow = math.random(1, 45)
     end
 end
 
