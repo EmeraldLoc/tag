@@ -8,7 +8,7 @@ local randomDidYouKnow = 1
 local function mario_update(m)
     didYouKnowHudRendering = didYouKnowHudRendering - 1
     if didYouKnowHudRendering <= 0 then
-        randomDidYouKnow = math.random(1, 34)
+        randomDidYouKnow = math.random(1, 46)
     end
 end
 
@@ -134,6 +134,38 @@ function hud_did_you_know(fade)
     elseif randomDidYouKnow == 35 then
         text = "Did you know that you can shoot backward with the blaster? You can do this with D-Pad Down."
         text2 = "This applies to both the Blaster modifier and the Fly modifier."
+    elseif randomDidYouKnow == 36 then
+        text = "Pipes not showing up correctly? Make sure you have dashes (-) when they're supposed to be there, and vice versa."
+    elseif randomDidYouKnow == 37 then
+        text = "On https://mods.sm64coopdx.com/, there are a ton of ported romhacks you can check out."
+        text2 = "You can even port them to tag if you want."
+    elseif randomDidYouKnow == 38 then
+        text = "whats ligma?"
+    elseif randomDidYouKnow == 39 then
+        text = "If there is an issue, or you want to suggest something, report it"
+        text2 = "to me at https://github.com/EmeraldLoc/tag/issues/."
+    elseif randomDidYouKnow == 40 then 
+        text = "You can color your name however you'd like with {backslash}RRGGBB{backslash}."
+        text2 =  "You can even add a star to your name with U+007F."
+    elseif randomDidYouKnow == 41 then
+        text = "Assassins is peak - Bear"
+    elseif randomDidYouKnow == 42 then
+        text = "You can contribute to Tag by opening a Pull Request!"
+    elseif randomDidYouKnow == 43 then
+        text = "if you've ever wanted to port a hack to Coop, then Sunk and Isaac have made a great guide on that."
+        text2 = "It's somewhere on the modsite."
+    elseif randomDidYouKnow == 44 then
+        text = "Remember when I said there were 26 tips? There's more."
+    elseif randomDidYouKnow == 45 then
+        text = "Did you know that these tips are actually stored in"
+        text = "a file named hud_utils.lua?"
+    elseif randomDidYouKnow == 46 then
+        text = "Have you ever checked out GeoGuessr in SM64? Well now you can!"
+        text2 = "It's a great mod made by EmilyEmmi."
+    elseif randomDidYouKnow == 47 then
+        text = "Did you know there's an entire repo just dedicated to arena stages being ported to Tag?"
+        text2 = "You can find it on https://github.com/EmeraldLoc/tag-arena-maps."
+        text3 = "You can even make a PR to get an arena stage there if you've ported one."
     end
 
     local scale = 1
