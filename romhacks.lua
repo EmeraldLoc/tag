@@ -1011,7 +1011,8 @@ romhacks = {
                         { x = -4713, y = 1778, z = 518 },
                         { x = 4505, y = 3709, z = 3203 }
                     }
-                }
+                },
+                unwantedBhvs = { id_bhvBigChillBully }
             },
             {
                 name = "fff",
