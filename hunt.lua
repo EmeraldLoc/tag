@@ -41,9 +41,9 @@ local function on_warp()
     if not gGlobalSyncTable.eliminateOnDeath then return end
     if m.playerIndex ~= 0 then return end
 
-    -- set lives to 1
+    -- subtract lives bh 1
     if gPlayerSyncTable[0].state == RUNNER then
-        gPlayerSyncTable[0].tagLives = 1
+        gPlayerSyncTable[0].tagLives = gPlayerSyncTable[0].tagLives - 1
     end
 end
 
