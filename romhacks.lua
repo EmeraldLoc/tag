@@ -55,7 +55,8 @@ romhacks = {
                     {
                         { x = 3000, y = -5119, z = 2688 },  { x = -6398, y = 1126, z = 191 }
                     }
-                }
+                },
+                unwantedBhvs = { id_bhvUnagi, id_bhvUnagiSubobject }
             },
             {
                 name = "ccm",
