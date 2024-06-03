@@ -23,7 +23,7 @@ GAMEMODE_3       = 3
 MAX_GAMEMODE     = 3
 ```
 
-Once you do that, head to the `get_gamemode` function in `misc.lua`. Scroll to the bottom of the function, and add your gamemode entry there. Example:
+Once you do that, head to the `get_gamemode` function in `a-misc.lua`. Scroll to the bottom of the function, and add your gamemode entry there. Example:
 
 Old:
 ```
@@ -73,7 +73,7 @@ for i = MIN_GAMEMODE, MAX_GAMEMODE do
 end
 ```
 
-Optional: If you want override runner/tagger names (like in Infection, or Juggernaut), you can head to the `get_role_name` function in `misc.lua`. There, head to the role checked, and add an exception for your gamemode. Example:
+Optional: If you want override runner/tagger names (like in Infection, or Juggernaut), you can head to the `get_role_name` function in `a-misc.lua`. There, head to the role checked, and add an exception for your gamemode. Example:
 
 Old:
 ```

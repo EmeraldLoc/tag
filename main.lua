@@ -3,7 +3,7 @@
 -- incompatible: gamemode tag
 
 -- if your trying to learn this code, I hope I've done a good job.
--- This file is pretty much (other than misc.lua) the most unorganized file of them all
+-- This file is pretty much (other than a-misc.lua) the most unorganized file of them all
 -- threw so much crap in here that isn't even apart of the actual game loop or anything
 -- anyways other than that, everything should be good, so
 -- wish you luck on your journey!
