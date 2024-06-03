@@ -233,7 +233,7 @@ local function mario_update(m)
     and gPlayerSyncTable[0].votingNumber == 0 then
         gPlayerSyncTable[0].votingNumber = selectedLevel
         play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
-    elseif m.controller.buttonPressed & A_BUTTON ~= 0
+    elseif m.controller.buttonPressed & B_BUTTON ~= 0
     and math.floor(gGlobalSyncTable.displayTimer / 30) > 2
     and math.floor(gGlobalSyncTable.displayTimer / 30) <= 7 then
         gPlayerSyncTable[0].votingNumber = 0
