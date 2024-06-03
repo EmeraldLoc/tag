@@ -1125,11 +1125,11 @@ local function mario_update(m)
                 if load_int("tournamentPointSystem") ~= nil then gGlobalSyncTable.tournamentPointSystem = load_int("tournamentPointSystem") end
                 if load_int("tournamentPointsReq") ~= nil then gGlobalSyncTable.tournamentPointsReq = load_int("tournamentPointsReq") end
                 if load_int("tournamentRoundLimit") ~= nil then gGlobalSyncTable.tournamentRoundLimit = load_int("tournamentRoundLimit") end
-                gGlobalSyncTable.tournamentRoundLimit = 1
             end
             if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
             if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
             if load_bool("autoHideHudAlwaysShowTimer") ~= nil then autoHideHudAlwaysShowTimer = load_bool("autoHideHudAlwaysShowTimer") end
+            if load_int("theme") ~= nil then selectedTheme = load_int("theme") end
             -- binds
             for i = 0, BIND_MAX do
                 if load_int("bind_" .. tostring(i)) ~= nil then

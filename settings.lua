@@ -497,6 +497,8 @@ local function set_theme()
             selectedTheme = 1
         end
     end
+
+    save_int("theme", selectedTheme)
 end
 
 local function stop_round()
@@ -2408,6 +2410,15 @@ local function reset_theme_entries()
             input = INPUT_JOYSTICK,
             func = set_theme,
             valueText = tagThemes[selectedTheme].name
+        },
+        {
+            name = "Back",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = mainEntries
+                selection = 1
+            end,
         }
     }
 
