@@ -71,6 +71,8 @@ local function hud_render()
         updateTimer = updateTimer + 1
     end
 
+    local theme = tagThemes[selectedTheme]
+
     local text = "Checking for Updates"
     local scale = 2
 
@@ -80,7 +82,7 @@ local function hud_render()
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 
-    djui_hud_set_color(28, 28, 30, fade)
+    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, fade)
     djui_hud_render_rect(0, 0, screenWidth, screenHeight)
 
     local width = djui_hud_measure_text(text) * scale
@@ -88,7 +90,7 @@ local function hud_render()
     local x = (screenWidth - width) / 2
     local y = screenHeight - 100
 
-    djui_hud_set_color(255, 255, 255, fade);
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade);
     djui_hud_print_text(text, x, y, scale)
 
     scale = 0.5
@@ -96,6 +98,7 @@ local function hud_render()
     x = (screenWidth - (TEXTURE_TAG_LOGO.width * scale)) / 2
     y = ((screenHeight - (TEXTURE_TAG_LOGO.height * scale)) / 2) - 50
 
+    djui_hud_set_color(255, 255, 255, fade)
     djui_hud_render_texture(TEXTURE_TAG_LOGO, x, y, scale, scale)
 end
 

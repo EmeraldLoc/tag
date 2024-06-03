@@ -385,6 +385,9 @@ remoteStats = {
     taggerVictories = 0,
 }
 
+-- selected theme
+selectedTheme = 1
+
 -- speed boost timer
 local speedBoostTimer = 0
 -- boost state
@@ -1494,6 +1497,7 @@ local function hud_round_status()
 
     local text = ""
     local fade = hudFade
+    local theme = tagThemes[selectedTheme]
 
     -- set text
     if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
@@ -1618,15 +1622,18 @@ local function hud_round_status()
     local y = 0
 
     -- render rect
-    djui_hud_set_color(20, 20, 22, fade / 1.4)
-    djui_hud_render_rect_rounded_outlined(x - (12 * scale), y, width + (24 * scale), (32 * scale), 35, 35, 35, 4, fade / 1.4)
+    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, fade / 1.4)
+    djui_hud_render_rect_rounded_outlined(x - (12 * scale), y, width + (24 * scale), (32 * scale), theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 4, fade / 1.4)
 
     -- render text
-    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
     djui_hud_print_colored_text(text, x, y, scale, fade)
 end
 
 local function hud_gamemode()
+
+    local theme = tagThemes[selectedTheme]
+
     local text = get_gamemode(gGlobalSyncTable.gamemode)
     local scale = 1
 
@@ -1637,15 +1644,18 @@ local function hud_gamemode()
     local y = 0
 
     -- render rect
-    djui_hud_set_color(20, 20, 22, hudFade / 1.4)
-    djui_hud_render_rect_rounded_outlined(x - (12 * scale), y, width + (24 * scale), (32 * scale), 35, 35, 35, 4 / 1.5, hudFade / 1.4)
+    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, hudFade / 1.4)
+    djui_hud_render_rect_rounded_outlined(x - (12 * scale), y, width + (24 * scale), (32 * scale), theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 4 / 1.5, hudFade / 1.4)
 
     -- render text
-    djui_hud_set_color(220, 220, 220, hudFade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, hudFade)
     djui_hud_print_colored_text(text, x, y, scale, hudFade)
 end
 
 local function hud_modifier()
+
+    local theme = tagThemes[selectedTheme]
+
     local text = get_modifier_text()
     local scale = 1
 
@@ -1657,11 +1667,11 @@ local function hud_modifier()
     local y = 0
 
     -- render rect
-    djui_hud_set_color(20, 20, 22, hudFade / 1.4)
-    djui_hud_render_rect_rounded_outlined(x - (12 * scale), y, width + (24 * scale), (32 * scale), 35, 35, 35, 4 / 1.5, hudFade / 1.4)
+    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, hudFade / 1.4)
+    djui_hud_render_rect_rounded_outlined(x - (12 * scale), y, width + (24 * scale), (32 * scale), theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 4 / 1.5, hudFade / 1.4)
 
     -- render text
-    djui_hud_set_color(220, 220, 220, hudFade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, hudFade)
     djui_hud_print_colored_text(text, x, y, scale, hudFade)
 end
 

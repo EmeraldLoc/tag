@@ -43,7 +43,7 @@ elseif m == MODIFIER_2 then
 elseif m == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
     text = "\\#FFFFFF\\None"
 elseif m == MODIFIER_NONE then
-    text = "\\#FFFFFF\\Disabled"
+    text = "Disabled"
 end
 ```
 
@@ -58,7 +58,7 @@ elseif m == MODIFIER_3 then
 elseif m == MODIFIER_NONE and gGlobalSyncTable.randomModifiers then
     text = "\\#FFFFFF\\None"
 elseif m == MODIFIER_NONE then
-    text = "\\#FFFFFF\\Disabled"
+    text = "Disabled"
 end
 ```
 

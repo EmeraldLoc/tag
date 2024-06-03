@@ -483,6 +483,22 @@ local function set_frozen_health_drain()
     save_int("freezeHealthDrain", gGlobalSyncTable.freezeHealthDrain)
 end
 
+local function set_theme()
+    local direction = get_controller_dir()
+
+    if direction == CONT_LEFT then
+        selectedTheme = selectedTheme - 1
+        if tagThemes[selectedTheme] == nil then
+            selectedTheme = #tagThemes
+        end
+    else
+        selectedTheme = selectedTheme + 1
+        if tagThemes[selectedTheme] == nil then
+            selectedTheme = 1
+        end
+    end
+end
+
 local function stop_round()
     gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
 
@@ -865,26 +881,29 @@ rewardEntries = {
 
 enemyEntries = {}
 muteEntries = {}
+themeEntries = {}
 
 entries = mainEntries
 
 local function background()
+    local theme = tagThemes[selectedTheme]
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     local y = djui_hud_get_screen_height() - bgHeight
-    djui_hud_set_color(20, 20, 22, 250)
-    djui_hud_render_rect_rounded_outlined(x, y / 2, bgWidth, bgHeight, 45, 45, 47, 10)
+    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, 250)
+    djui_hud_render_rect_rounded_outlined(x, y / 2, bgWidth, bgHeight, theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 10)
 end
 
 local function settings_text()
+    local theme = tagThemes[selectedTheme]
     local text = "Options"
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     local y = (djui_hud_get_screen_height() - bgHeight) / 2
     if y - scrollOffset < -20 then return end
-    djui_hud_set_color(220, 220, 220, 255)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_text(text, x + ((bgWidth / 2) - djui_hud_measure_text(text)), y + 50 - scrollOffset, 2)
     text = versions[1]
     if updateAvailable then text = "A new update is available. Current Version is " .. versions[1] end
-    djui_hud_set_color(220, 220, 220, 255)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_text(text, x + (bgWidth / 2) - (djui_hud_measure_text(text) / 2), y + 105 - scrollOffset, 1)
 end
 
@@ -985,6 +1004,15 @@ local function reset_main_selections()
             selection = 1
         end,
         valueText = ">",},
+         -- theme selection
+         {name = "Themes",
+         permission = PERMISSION_NONE,
+         input = INPUT_A,
+         func = function ()
+             entries = themeEntries
+             selection = 1
+         end,
+         valueText = ">",},
         -- done selection
         {name = "Done",
         permission = PERMISSION_NONE,
@@ -2370,7 +2398,24 @@ local function reset_mute_entries()
     if resetEntries then entries = muteEntries end
 end
 
+local function reset_theme_entries()
+    local resetEntries = entries == themeEntries
+
+    themeEntries = {
+        {
+            name = "Theme",
+            permission = PERMISSION_NONE,
+            input = INPUT_JOYSTICK,
+            func = set_theme,
+            valueText = tagThemes[selectedTheme].name
+        }
+    }
+
+    if resetEntries then entries = themeEntries end
+end
+
 local function scroll_bar_render()
+    local theme = tagThemes[selectedTheme]
     local height = bgHeight - 12
     for i = scrollEntry + 1, #entries do
         height = height - 30
@@ -2388,7 +2433,7 @@ local function scroll_bar_render()
             y = y + 15
         end
     end
-    djui_hud_set_color(35, 35, 37, 250)
+    djui_hud_set_color(theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 250)
     djui_hud_render_rect_rounded(x, y, 8, height, 8)
 end
 
@@ -2400,6 +2445,8 @@ local function hud_render()
         scrollOffset = 0
         return
     end
+
+    local theme = tagThemes[selectedTheme]
 
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
@@ -2443,7 +2490,7 @@ local function hud_render()
             end
             height = height + 45
 
-            djui_hud_set_color(220, 220, 220, 255)
+            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
             djui_hud_print_colored_text(entries[i].seperator, x + 30, y + height + 4 - scrollOffset, 1)
 
             height = height + 45
@@ -2458,9 +2505,9 @@ local function hud_render()
             -- if there's a name, print that first
             if entries[i].name ~= nil then
                 if selection == i then
-                    djui_hud_set_color(240, 240, 240, 255)
+                    djui_hud_set_color(theme.selectedText.r, theme.selectedText.g, theme.selectedText.b, 255)
                 else
-                    djui_hud_set_color(200, 200, 200, 255)
+                    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
                 end
 
                 djui_hud_print_text(entries[i].name, x + 20, y + height - scrollOffset, 1)
@@ -2473,9 +2520,9 @@ local function hud_render()
 
             for j, line in ipairs(wrappedTextLines) do
                 if selection == i then
-                    djui_hud_set_color(240, 240, 240, 255)
+                    djui_hud_set_color(theme.selectedText.r, theme.selectedText.g, theme.selectedText.b, 255)
                 else
-                    djui_hud_set_color(200, 200, 200, 255)
+                    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
                 end
 
                 djui_hud_print_text(line, x + 20, y + height - scrollOffset + (j - 1) * 28, 1)
@@ -2488,43 +2535,31 @@ local function hud_render()
             goto continue
         end
 
-        local outlineColor = 50
+        local outlineColor = nil
+
+        if selection == i then
+            djui_hud_set_color(theme.hoverRect.r, theme.hoverRect.g, theme.hoverRect.b, 215)
+            outlineColor = theme.hoverRectOutline
+        else
+            djui_hud_set_color(theme.rect.r, theme.rect.g, theme.rect.b, 215)
+            outlineColor = theme.rectOutline
+        end
 
         if entries[i].progressBar ~= nil then
-            if selection == i then
-                djui_hud_set_color(40, 40, 40, 215)
-                outlineColor = 60
-            else
-                djui_hud_set_color(32, 32, 32, 200)
-            end
-
-            djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor, outlineColor, outlineColor, 3)
-
-            if selection == i then
-                djui_hud_set_color(55, 55, 55, 215)
-            else
-                djui_hud_set_color(45, 45, 45, 200)
-            end
+            djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor.r, outlineColor.g, outlineColor.b, 3)
 
             local rectWidth = linear_interpolation(entries[i].progressBar.value, 0, bgWidth - 40, entries[i].progressBar.minLimit, entries[i].progressBar.maxLimit)
 
             djui_hud_render_rect(x + 20, y + height - scrollOffset, rectWidth, 40)
         else
-            if selection == i then
-                djui_hud_set_color(40, 40, 40, 215)
-                outlineColor = 60
-            else
-                djui_hud_set_color(32, 32, 32, 200)
-            end
-
-            djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor, outlineColor, outlineColor, 3)
+            djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor.r, outlineColor.g, outlineColor.b, 3)
         end
 
         if not has_permission(entries[i].permission)
         or entries[i].disabled then
-            djui_hud_set_color(150, 150, 150, 255)
+            djui_hud_set_color(theme.disabledText.r, theme.disabledText.g, theme.disabledText.b, 255)
         else
-            djui_hud_set_color(220, 220, 220, 255)
+            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
         end
 
         if entries[i].name ~= nil then
@@ -2532,7 +2567,7 @@ local function hud_render()
         end
 
         if entries[i].valueText ~= nil then
-            djui_hud_set_color(220, 220, 220, 255)
+            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
             djui_hud_print_colored_text(tostring(entries[i].valueText), x + (bgWidth - 30) - djui_hud_measure_text(strip_hex(tostring(entries[i].valueText))), y + height + 4 - scrollOffset, 1)
         end
 
@@ -2648,6 +2683,7 @@ local function mario_update(m)
     reset_trails_reward_entries()
     reset_enemy_entries()
     reset_mute_entries()
+    reset_theme_entries()
 end
 
 hook_event(HOOK_ON_HUD_RENDER, hud_render)

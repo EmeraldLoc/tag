@@ -535,9 +535,9 @@ function get_modifier_text(m)
 		text = "\\#EDB834\\Only Firsties"
 	elseif m == MODIFIER_NONE
 	and gGlobalSyncTable.randomModifiers then
-		text = "\\#FFFFFF\\None"
+		text = "None"
 	elseif m == MODIFIER_NONE then
-		text = "\\#FFFFFF\\Disabled"
+		text = "Disabled"
 	end
 
 	-- return the modifier

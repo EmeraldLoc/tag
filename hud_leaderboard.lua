@@ -10,15 +10,16 @@ local function update()
 end
 
 local function hud_black_bg()
+    local theme = tagThemes[selectedTheme]
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 
-    djui_hud_set_color(28, 28, 30, fade)
+    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, fade)
     djui_hud_render_rect(0, 0, screenWidth, screenHeight)
 end
 
 local function hud_winner_group_render()
-
+    local theme = tagThemes[selectedTheme]
     local text = "What the heck is happening."
 
     if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
@@ -45,11 +46,13 @@ local function hud_winner_group_render()
     local x = (screenWidth - width) / 2
     local y = 20
 
-    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
     djui_hud_print_text(text, x, y, 1)
 end
 
 local function hud_leaderboard()
+
+    local theme = tagThemes[selectedTheme]
 
     local renderedIndex = 0
     local winners = {}
@@ -180,13 +183,13 @@ local function hud_leaderboard()
             local x = (screenWidth - width) / 2
             local y = 110 + (renderedIndex * 50)
 
-            djui_hud_set_color(32, 32, 32, fade)
-            djui_hud_render_rect_rounded_outlined(x + offsetX, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
+            djui_hud_set_color(theme.rect.r, theme.rect.g, theme.rect.b, fade)
+            djui_hud_render_rect_rounded_outlined(x + offsetX, y - 5, width + 15, 42, theme.rectOutline.r, theme.rectOutline.g, theme.rectOutline.b, 3, fade)
 
             width = djui_hud_measure_text(text)
             x = (screenWidth - 390) / 2
 
-            djui_hud_set_color(220, 220, 220, fade)
+            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
             djui_hud_print_colored_text(text, x + offsetX, y, 1, fade)
 
             x = (screenWidth - 470) / 2
@@ -216,7 +219,7 @@ local function hud_leaderboard()
             elseif position == 3 then
                 djui_hud_set_color(205, 127, 50, fade)
             else
-                djui_hud_set_color(220, 220, 220, fade)
+                djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
             end
 
             djui_hud_print_text(text, x + offsetX, y, 1)
@@ -239,12 +242,12 @@ local function hud_leaderboard()
             x = ((screenWidth + 550 - ((width * 2))) / 2)
 
             if gPlayerSyncTable[i].amountOfTimeAsRunner / 30 < gGlobalSyncTable.amountOfTime / 30 or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
-                djui_hud_set_color(255, 255, 255, fade)
+                djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
             elseif gPlayerSyncTable[i].amountOfTimeAsRunner / 30 >= gGlobalSyncTable.amountOfTime / 30
             and gGlobalSyncTable.gamemode ~= HOT_POTATO and gGlobalSyncTable.gamemode ~= FREEZE_TAG then
                 djui_hud_set_color(255, 215, 0, fade)
             else
-                djui_hud_set_color(255, 255, 255, fade)
+                djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
             end
 
             djui_hud_print_text(text, x + offsetX, y, 1)
@@ -272,7 +275,7 @@ local function hud_leaderboard()
         local x = (screenWidth - 530) / 2
         local y = 80 + (renderedIndex * 47)
 
-        djui_hud_set_color(255, 255, 255, fade)
+        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
         djui_hud_print_text("Sardine", x + offsetX, y, 1)
 
         renderedIndex = renderedIndex + 1
@@ -285,13 +288,13 @@ local function hud_leaderboard()
         x = (screenWidth - width) / 2
         y = 80 + (renderedIndex * 47)
 
-        djui_hud_set_color(32, 32, 32, fade)
-        djui_hud_render_rect_rounded_outlined(x + offsetX, y - 5, width + 15, 42, 50, 50, 50, 3, fade)
+        djui_hud_set_color(theme.rect.r, theme.rect.g, theme.rect.b, fade)
+        djui_hud_render_rect_rounded_outlined(x + offsetX, y - 5, width + 15, 42, theme.rectOutline.r, theme.rectOutline.g, theme.rectOutline.b, 3, fade)
 
         width = djui_hud_measure_text(text)
         x = (screenWidth - 450) / 2
 
-        djui_hud_set_color(220, 220, 220, fade)
+        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
         djui_hud_print_colored_text(text, x + offsetX, y, 1, fade)
 
         x = (screenWidth - 530) / 2
@@ -303,7 +306,7 @@ local function hud_leaderboard()
         width = djui_hud_measure_text(text)
         x = ((screenWidth + 550 - ((width * 2))) / 2)
 
-        djui_hud_set_color(255, 255, 255, fade)
+        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
         djui_hud_print_text(text, x + offsetX, y, 1)
 
         ::continue::
@@ -339,12 +342,13 @@ local function hud_leaderboard()
         local x = (screenWidth - width) / 2
         local y = screenHeight / 2
 
-        djui_hud_set_color(255, 255, 255, fade)
+        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
         djui_hud_print_text(text, x, y, 1)
     end
 end
 
 local function hud_voting_begins_in()
+    local theme = tagThemes[selectedTheme]
     local text = tostring(math.floor(gGlobalSyncTable.displayTimer / 30) + 1) .. " seconds"
 
     if gGlobalSyncTable.tournamentMode then
@@ -360,11 +364,12 @@ local function hud_voting_begins_in()
     local x = 40
     local y = 20
 
-    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
     djui_hud_print_text(text, x, y, 1)
 end
 
 local function hud_gamemode()
+    local theme = tagThemes[selectedTheme]
     local text = "Gamemode is set to " .. get_gamemode_including_random(gGlobalSyncTable.gamemode)
 
     local screenWidth = djui_hud_get_screen_width()
@@ -373,11 +378,12 @@ local function hud_gamemode()
     local x = screenWidth - width - 40
     local y = 60
 
-    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
     djui_hud_print_colored_text(text, x, y, 1, fade)
 end
 
 local function hud_modifier()
+    local theme = tagThemes[selectedTheme]
     local text = "Modifier is set to " .. get_modifier_including_random()
 
     local screenWidth = djui_hud_get_screen_width()
@@ -386,7 +392,7 @@ local function hud_modifier()
     local x = screenWidth - width - 40
     local y = 20
 
-    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
     djui_hud_print_colored_text(text, x, y, 1, fade)
 end
 

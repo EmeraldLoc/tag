@@ -35,6 +35,7 @@ changelogs = {
         newFeatures = {
             "Added achievements, and rewards. Rewards includes titles and trails",
             "Added a Tournament system (more information in the help menu)",
+            "Added hud themes",
             "Reorganized settings for the 1000th time",
             "Save gamemode settings",
             "Save modifier settings",

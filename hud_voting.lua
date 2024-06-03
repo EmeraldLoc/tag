@@ -12,11 +12,15 @@ local joystickCooldown = 0
 local justEnabled = true
 
 local function hud_black_bg()
-    djui_hud_set_color(28, 28, 30, fade)
+    local theme = tagThemes[selectedTheme]
+
+    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, fade)
     djui_hud_render_rect(0, 0, screenWidth, screenHeight)
 end
 
 local function hud_map_vote()
+
+    local theme = tagThemes[selectedTheme]
 
     if voteRandomLevels[1] == nil then
         -- render loading
@@ -24,7 +28,7 @@ local function hud_map_vote()
         local x = (screenWidth - djui_hud_measure_text("Loading...")) / 2
         local y = screenHeight / 2
 
-        djui_hud_set_color(220, 220, 220, fade)
+        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
         djui_hud_print_text(text, x, y, 1)
 
         return
@@ -32,7 +36,7 @@ local function hud_map_vote()
 
     -- render top text
     local text = "Vote for a Map"
-    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
     djui_hud_print_text(text, (screenWidth - djui_hud_measure_text(text)) / 2, 50, 1)
 
     local currentMapWinner = -1
@@ -60,10 +64,10 @@ local function hud_map_vote()
         local y = (screenHeight - 400) / 2
 
         -- render question mark if there's no painting assigned
-        djui_hud_set_color(35, 35, 37, fade)
+        djui_hud_set_color(theme.rect.r, theme.rect.g, theme.rect.b, fade)
         djui_hud_render_rect(x, y, 256, 256)
 
-        djui_hud_set_color(220, 220, 220, fade) -- #dcdcdc
+        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
         djui_hud_print_text("?", x + ((128 - djui_hud_measure_text("?"))) - 16, y + 32, 5) -- don't ask #2
 
         djui_hud_set_color(255, 255, 255, fade)
@@ -76,24 +80,21 @@ local function hud_map_vote()
 
         y = (screenHeight + 200) / 2
 
-        local outlineColor = { r = 50, g = 50, b = 50 }
+        local outlineColor = nil
 
         if gPlayerSyncTable[0].votingNumber == i then
-            djui_hud_set_color(83, 153, 77, fade)
-            outlineColor.r = 113
-            outlineColor.g = 183
-            outlineColor.b = 107
+            djui_hud_set_color(theme.confirmedRect.r, theme.confirmedRect.g, theme.confirmedRect.b, fade)
+            outlineColor = theme.confirmedRectOutline
         elseif selectedLevel == i then
-            djui_hud_set_color(40, 40, 40, fade)
-            outlineColor.r = 60
-            outlineColor.g = 60
-            outlineColor.b = 60
+            djui_hud_set_color(theme.hoverRect.r, theme.hoverRect.g, theme.hoverRect.b, fade)
+            outlineColor = theme.hoverRectOutline
         else
-            djui_hud_set_color(32, 32, 32, fade)
+            djui_hud_set_color(theme.rect.r, theme.rect.g, theme.rect.b, fade)
+            outlineColor = theme.rectOutline
         end
         x = (screenWidth - (256 * 4 + 100 * 3)) / 2 + (256 + 100) * (i - 1) - 18.125 -- help me
         djui_hud_render_rect_rounded_outlined(x, y, 290, 50, outlineColor.r, outlineColor.g, outlineColor.b, 3, fade)
-        djui_hud_set_color(255, 255, 255, fade)
+        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
         if i ~= 4 then
             text = tostring(name_of_level(levels[voteRandomLevels[i]].level, levels[voteRandomLevels[i]].area, levels[voteRandomLevels[i]])) .. ": " .. tostring(votes)
         else
@@ -116,21 +117,23 @@ local function hud_map_vote()
             text = name_of_level(level, area, levels[voteRandomLevels[currentMapWinner]]) .. " has been selected!"
         end
     end
-    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
     djui_hud_print_text(text, (screenWidth - djui_hud_measure_text(text)) / 2, screenHeight - 50, 1)
 end
 
 local function hud_gamemode()
+    local theme = tagThemes[selectedTheme]
     local text = "Gamemode is set to " .. get_gamemode_including_random(gGlobalSyncTable.gamemode)
 
     local x = 40
     local y = 20
 
-    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
     djui_hud_print_colored_text(text, x, y, 1, fade)
 end
 
 local function hud_modifier()
+    local theme = tagThemes[selectedTheme]
     local text = "Modifier is set to " .. get_modifier_including_random()
 
     local width = djui_hud_measure_text(strip_hex(text))
@@ -138,7 +141,7 @@ local function hud_modifier()
     local x = screenWidth - width - 40
     local y = 20
 
-    djui_hud_set_color(255, 255, 255, fade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
     djui_hud_print_colored_text(text, x, y, 1, fade)
 end
 
