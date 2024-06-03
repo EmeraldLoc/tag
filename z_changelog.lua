@@ -19,6 +19,7 @@ changelogs = {
         romhacks = {
             "Added Lug's Delightful Dioramas (jzzle and TheMan)",
             "Added Super Mario Rainbow Road (Murioz)",
+            "Added SM64: The Green Stars (Bear)",
             "Improved Star Road",
         },
         levels = {
@@ -28,7 +29,8 @@ changelogs = {
             "Added Bowser Sky Domain",
             "Added Vanish Cap Under the Moat",
             "Added Big Boo's Haunt",
-            "Added Pipes to Thi",
+            "Added Pipes to Tiny Huge Island",
+            "Added Pipes to Whomp's Fortress"
         },
         newFeatures = {
             "Added achievements, and rewards. Rewards includes titles and trails",
