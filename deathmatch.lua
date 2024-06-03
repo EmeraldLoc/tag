@@ -55,10 +55,9 @@ local function on_warp()
     if gNetworkPlayers[0].currLevelNum ~= levels[gGlobalSyncTable.selectedLevel].level then return end
     if not gGlobalSyncTable.eliminateOnDeath then return end
 
-    -- subtract lives by 1 with a cap of 1
+    -- subtract lives by 1
     if gPlayerSyncTable[0].state == TAGGER then
         gPlayerSyncTable[0].tagLives = gPlayerSyncTable[0].tagLives - 1
-        if gPlayerSyncTable[0].tagLives < 1 then gPlayerSyncTable[0].tagLives = 1 end
     end
 end
 
