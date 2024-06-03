@@ -159,7 +159,7 @@ function hud_did_you_know(fade)
     elseif randomDidYouKnow == 44 then
         text = "Have you ever wanted to play out GeoGuessr in SM64? Well now you can!"
         text2 = "Released on the modding site, this is a great mod to test your knowledge of all the levels!"
-	tex3 = "Made by EmilyEmmi."
+	text3 = "Made by EmilyEmmi."
     elseif randomDidYouKnow == 45 then
         text = "Did you know there's an entire repo just dedicated to arena stages being ported to Tag?"
         text2 = "You can find it on https://github.com/EmeraldLoc/tag-arena-maps."
