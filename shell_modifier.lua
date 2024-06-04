@@ -1,6 +1,4 @@
 
-ACT_SHELL_GROUND_CUSTOM = allocate_mario_action(ACT_FLAG_RIDING_SHELL | ACT_FLAG_ATTACKING)
-
 local shellTimer = 0
 
 ---@param m MarioState
@@ -26,13 +24,8 @@ local function mario_update(m)
     and m.action ~= ACT_IN_CANNON
     and m.action ~= ACT_SHOT_FROM_CANNON
     and m.action & ACT_FLAG_ON_POLE == 0
-    and m.squishTimer <= 0)
-    or m.action == ACT_RIDING_SHELL_GROUND then
-        if m.action == ACT_RIDING_SHELL_GROUND then
-            set_mario_action(m, ACT_SHELL_GROUND_CUSTOM, m.actionArg)
-        else
-            set_mario_action(m, ACT_SHELL_GROUND_CUSTOM, 0)
-        end
+    and m.squishTimer <= 0) then
+        set_mario_action(m, ACT_RIDING_SHELL_GROUND, 0)
     elseif m.action & ACT_FLAG_RIDING_SHELL == 0 then
         shellTimer = shellTimer + 1
     else
@@ -49,6 +42,7 @@ local function level_init()
     end
 end
 
+---@param m MarioState
 local function act_riding_shell_ground(m)
     local startYaw = m.faceAngle.y
 
@@ -72,6 +66,7 @@ local function act_riding_shell_ground(m)
     end
 
     tilt_body_ground_shell(m, startYaw)
+
     if m.floor and m.floor.type == SURFACE_BURNING then
         play_sound(SOUND_MOVING_RIDING_SHELL_LAVA, m.marioObj.header.gfx.cameraToObject)
     else
@@ -85,7 +80,7 @@ local function act_riding_shell_ground(m)
     return false
 end
 
-hook_mario_action(ACT_SHELL_GROUND_CUSTOM, act_riding_shell_ground)
+hook_mario_action(ACT_RIDING_SHELL_GROUND, act_riding_shell_ground)
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
 hook_event(HOOK_ON_LEVEL_INIT, level_init)
