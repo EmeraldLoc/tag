@@ -10,7 +10,7 @@ local function update()
 end
 
 local function hud_black_bg()
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 
@@ -20,7 +20,7 @@ end
 
 local function hud_tournament_leaderboard_text_render()
 
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
     local text = "Tournament Leaderboard"
 
     if gGlobalSyncTable.tournamentPointSystem == TOURNAMENT_SYSTEM_POINT_LIMIT then
@@ -40,7 +40,7 @@ local function hud_tournament_leaderboard_text_render()
 end
 
 local function hud_leaderboard()
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
     if hudTimer > 5 * 30 then
         local winners = {}
 
@@ -182,7 +182,7 @@ local function hud_leaderboard()
 end
 
 local function hud_voting_begins_in()
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
     local text = tostring(math.floor(gGlobalSyncTable.displayTimer / 30) + 1) .. " seconds"
 
     if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
@@ -201,7 +201,7 @@ local function hud_voting_begins_in()
 end
 
 local function hud_gamemode()
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
     local text = "Gamemode is set to " .. get_gamemode_including_random(gGlobalSyncTable.gamemode)
 
     local screenWidth = djui_hud_get_screen_width()
@@ -215,7 +215,7 @@ local function hud_gamemode()
 end
 
 local function hud_modifier()
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
     local text = "Modifier is set to " .. get_modifier_including_random()
 
     local screenWidth = djui_hud_get_screen_width()

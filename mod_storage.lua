@@ -1,4 +1,3 @@
--- an easy to use mod storage system, also requires encryption.lua
 
 ----------------------
 -- saving functions --
@@ -40,7 +39,7 @@ end
 ---@return string
 function load_string(key)
     -- return storage data
-    return tostring(decrypt_string(mod_storage_load(key)))
+    return decrypt_string(mod_storage_load(key))
 end
 
 ---@param key string
@@ -61,7 +60,7 @@ end
 ---@return integer|nil
 function load_int(key)
     -- get storage data
-    local data = decrypt_string(mod_storage_load(key))
+    local data = decrypt_string(mod_storage_load(tostring(key)))
     -- sanity check
     if data == nil then return nil end
     if data == "" then return nil end

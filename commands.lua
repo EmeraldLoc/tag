@@ -1,3 +1,6 @@
+
+requestingThemeName = nil
+
 ---@param msg string
 function start_command(msg)
     if msg ~= "" then
@@ -73,7 +76,19 @@ function spectator_command(msg)
     return true
 end
 
+---@param msg string
 function tag_command(msg)
+    if requestingThemeName ~= nil then
+        if msg:find("-", 1, true) or msg:find("_", 1, true) then
+            djui_chat_message_create("Invalid characters found in name. Please do not use -, _, or .")
+            requestingThemeName = nil
+            return true
+        end
+        tagThemes[requestingThemeName].name = msg
+        requestingThemeName = nil
+        return true
+    end
+
     showSettings = not showSettings
     if not isPaused then
         isPaused = true

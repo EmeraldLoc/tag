@@ -26,7 +26,7 @@ pauseEntries = {
     func = function() showSettings = true end},
 }
 
-local function on_render()
+local function hud_render()
     if not isPaused then
         joystickCooldown = 0
         selection = 1
@@ -113,5 +113,5 @@ local function mario_update(m)
     end
 end
 
-hook_event(HOOK_ON_HUD_RENDER, on_render)
+hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_MARIO_UPDATE, mario_update)

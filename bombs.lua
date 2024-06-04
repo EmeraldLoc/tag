@@ -295,7 +295,7 @@ local function hud_bombs()
     render_bar(text, bombCooldown, 0, gGlobalSyncTable.maxBombCooldown, 242, 143, 36)
 end
 
-local function on_render()
+local function hud_render()
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
@@ -316,5 +316,5 @@ id_bhvBomb = hook_behavior(nil, OBJ_LIST_DEFAULT, false, bomb_init, bomb_loop, n
 id_bhvBombItem = hook_behavior(nil, OBJ_LIST_DEFAULT, false, bomb_held_init, bomb_held_loop, nil)
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
-hook_event(HOOK_ON_HUD_RENDER, on_render)
+hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ON_LEVEL_INIT, level_init)

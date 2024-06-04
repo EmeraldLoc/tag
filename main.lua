@@ -241,7 +241,7 @@ gLevelValues.disableActs = true
 levels = {}
 
 -- if we are using coopdx or not
-usingCoopDX = SM64COOPDX_VERSION ~= nil
+usingCoopDX = get_coop_compatibility_enabled ~= nil
 
 -- initialized mh api for chat stuff
 _G.mhApi = {}
@@ -386,7 +386,7 @@ remoteStats = {
 }
 
 -- selected theme
-selectedTheme = 2
+selectedTheme = 1
 
 -- speed boost timer
 local speedBoostTimer = 0
@@ -1129,7 +1129,18 @@ local function mario_update(m)
             if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
             if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
             if load_bool("autoHideHudAlwaysShowTimer") ~= nil then autoHideHudAlwaysShowTimer = load_bool("autoHideHudAlwaysShowTimer") end
+
+            local themeIndex = 1
+            while themeIndex <= 5 do
+                if load_string("theme_" .. themeIndex) ~= nil then
+                    load_theme(themeIndex)
+                end
+
+                themeIndex = themeIndex + 1
+            end
+
             if load_int("theme") ~= nil then selectedTheme = load_int("theme") end
+
             -- binds
             for i = 0, BIND_MAX do
                 if load_int("bind_" .. tostring(i)) ~= nil then
@@ -1489,7 +1500,7 @@ local function hud_round_status()
 
     local text = ""
     local fade = hudFade
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
 
     -- set text
     if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
@@ -1624,7 +1635,7 @@ end
 
 local function hud_gamemode()
 
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
 
     local text = get_gamemode(gGlobalSyncTable.gamemode)
     local scale = 1
@@ -1646,7 +1657,7 @@ end
 
 local function hud_modifier()
 
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
 
     local text = get_modifier_text()
     local scale = 1

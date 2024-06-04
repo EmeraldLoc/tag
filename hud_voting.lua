@@ -12,7 +12,7 @@ local joystickCooldown = 0
 local justEnabled = true
 
 local function hud_black_bg()
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
 
     djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, fade)
     djui_hud_render_rect(0, 0, screenWidth, screenHeight)
@@ -20,7 +20,7 @@ end
 
 local function hud_map_vote()
 
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
 
     if voteRandomLevels[1] == nil then
         -- render loading
@@ -122,7 +122,7 @@ local function hud_map_vote()
 end
 
 local function hud_gamemode()
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
     local text = "Gamemode is set to " .. get_gamemode_including_random(gGlobalSyncTable.gamemode)
 
     local x = 40
@@ -133,7 +133,7 @@ local function hud_gamemode()
 end
 
 local function hud_modifier()
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
     local text = "Modifier is set to " .. get_modifier_including_random()
 
     local width = djui_hud_measure_text(strip_hex(text))
@@ -145,7 +145,7 @@ local function hud_modifier()
     djui_hud_print_colored_text(text, x, y, 1, fade)
 end
 
-local function on_render()
+local function hud_render()
     if gGlobalSyncTable.roundState ~= ROUND_VOTING then
         justEnabled = true
         selectedLevel = 1
@@ -244,5 +244,5 @@ local function mario_update(m)
     end
 end
 
-hook_event(HOOK_ON_HUD_RENDER, on_render)
+hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_MARIO_UPDATE, mario_update)

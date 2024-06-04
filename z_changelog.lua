@@ -249,15 +249,17 @@ local function is_within_view(y)
     return true
 end
 
-local function on_render()
+local function hud_render()
     if firstLaunch == nil then firstLaunch = true end
     if firstLaunch then return end
     if not showingChangelog then return end
 
+    local theme = get_selected_theme()
+
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     local y = djui_hud_get_screen_height() - bgHeight
-    djui_hud_set_color(20, 20, 22, 250)
-    djui_hud_render_rect_rounded_outlined(x, y / 2, bgWidth, bgHeight, 45, 45, 47, 10)
+    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, 250)
+    djui_hud_render_rect_rounded_outlined(x, y / 2, bgWidth, bgHeight, theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 10)
 
     local changelog = changelogs[selectedChangelog]
     local text = ""
@@ -270,7 +272,7 @@ local function on_render()
     x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     y = (djui_hud_get_screen_height() - bgHeight) / 2
 
-    djui_hud_set_color(220, 220, 220, 255)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_colored_text(text, x + ((bgWidth / 2) - djui_hud_measure_text(strip_hex(text))), y + 50, 2)
 
     if changelog == nil then return end
@@ -280,7 +282,7 @@ local function on_render()
     y = y + 60
     if not is_within_view(y) then goto endgamemodeheader end
     text = "Gamemodes"
-    djui_hud_set_color(220, 220, 220, 255)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_colored_text(text, x, y + 50 + scrollOffset, 1.1)
     ::endgamemodeheader::
     y = y + 15
@@ -293,7 +295,7 @@ local function on_render()
             y = y + 30
             if not is_within_view(y) then goto continue end
 
-            djui_hud_set_color(220, 220, 220, 255)
+            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
             djui_hud_print_colored_text(wS, x, y + 50 + scrollOffset, 1)
             ::continue::
         end
@@ -303,7 +305,7 @@ local function on_render()
     y = y + 45
     if not is_within_view(y) then goto endmodifierheader end
     text = "Modifiers"
-    djui_hud_set_color(220, 220, 220, 255)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_colored_text(text, x, y + 50 + scrollOffset, 1.1)
     ::endmodifierheader::
     y = y + 15
@@ -316,7 +318,7 @@ local function on_render()
             y = y + 30
             if not is_within_view(y) then goto continue end
 
-            djui_hud_set_color(220, 220, 220, 255)
+            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
             djui_hud_print_colored_text(wS, x, y + 50 + scrollOffset, 1)
             ::continue::
         end
@@ -326,7 +328,7 @@ local function on_render()
     y = y + 45
     if not is_within_view(y) then goto endromhackheader end
     text = "Romhacks"
-    djui_hud_set_color(220, 220, 220, 255)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_colored_text(text, x, y + 50 + scrollOffset, 1.1)
     ::endromhackheader::
     y = y + 15
@@ -339,7 +341,7 @@ local function on_render()
             y = y + 30
             if not is_within_view(y) then goto continue end
 
-            djui_hud_set_color(220, 220, 220, 255)
+            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
             djui_hud_print_colored_text(wS, x, y + 50 + scrollOffset, 1)
             ::continue::
         end
@@ -349,7 +351,7 @@ local function on_render()
     y = y + 45
     if not is_within_view(y) then goto endlevelsheader end
     text = "Levels"
-    djui_hud_set_color(220, 220, 220, 255)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_colored_text(text, x, y + 50 + scrollOffset, 1.1)
     ::endlevelsheader::
     y = y + 15
@@ -362,7 +364,7 @@ local function on_render()
             y = y + 30
             if not is_within_view(y) then goto continue end
 
-            djui_hud_set_color(220, 220, 220, 255)
+            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
             djui_hud_print_colored_text(wS, x, y + 50 + scrollOffset, 1)
             ::continue::
         end
@@ -372,7 +374,7 @@ local function on_render()
     y = y + 45
     if not is_within_view(y) then goto endnewfeaturesheader end
     text = "New Features"
-    djui_hud_set_color(220, 220, 220, 255)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_colored_text(text, x, y + 50 + scrollOffset, 1.1)
     ::endnewfeaturesheader::
     y = y + 15
@@ -385,7 +387,7 @@ local function on_render()
             y = y + 30
             if not is_within_view(y) then goto continue end
 
-            djui_hud_set_color(220, 220, 220, 255)
+            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
             djui_hud_print_colored_text(wS, x, y + 50 + scrollOffset, 1)
             ::continue::
         end
@@ -402,7 +404,7 @@ local function on_render()
     -- set scroll offset clamp
     scrollOffsetClamp = -clamp(y + 50 - (bgHeight - 110), 0, y + 50 - (bgHeight - 110))
 
-    djui_hud_set_color(35, 35, 37, 250)
+    djui_hud_set_color(theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 250)
     djui_hud_render_rect_rounded(x, scrollY, 8, height, 8)
 
     -- render complete text
@@ -411,9 +413,9 @@ local function on_render()
     x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     y = bgHeight
 
-    djui_hud_set_color(220, 220, 220, 255)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_colored_text(text, x + ((bgWidth / 2) - djui_hud_measure_text(strip_hex(text))), y - 50, 2)
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
-hook_event(HOOK_ON_HUD_RENDER, on_render)
+hook_event(HOOK_ON_HUD_RENDER, hud_render)

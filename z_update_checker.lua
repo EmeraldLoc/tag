@@ -71,7 +71,7 @@ local function hud_render()
         updateTimer = updateTimer + 1
     end
 
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
 
     local text = "Checking for Updates"
     local scale = 2

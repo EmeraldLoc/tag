@@ -72,7 +72,7 @@ local function mario_update(m)
     end
 end
 
-local function on_render()
+local function hud_render()
     if not obj_get_first_with_behavior_id(id_bhvFog) then return end
 
     ---@type MarioState
@@ -110,5 +110,5 @@ end
 
 id_bhvFog = hook_behavior(nil, OBJ_LIST_DEFAULT, false, fog_init, fog_loop)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
-hook_event(HOOK_ON_HUD_RENDER, on_render)
+hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)

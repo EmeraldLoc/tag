@@ -270,7 +270,7 @@ local function hud_bottom_render()
     djui_hud_print_text(text, x, y, scale);
 end
 
-local function on_render()
+local function hud_render()
     -- sanity checks
     if gPlayerSyncTable[0].state ~= SPECTATOR
     and (gPlayerSyncTable[0].state ~= WILDCARD_ROLE
@@ -287,7 +287,7 @@ local function on_render()
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
-hook_event(HOOK_ON_HUD_RENDER, on_render)
+hook_event(HOOK_ON_HUD_RENDER, hud_render)
 
 hook_mario_action(ACT_FREECAM, freecam)
 hook_mario_action(ACT_FREECAM_SUBMERGED, freecam)

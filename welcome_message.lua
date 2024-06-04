@@ -18,7 +18,7 @@ local function mario_update(m)
     end
 end
 
-local function on_render()
+local function hud_render()
     if firstLaunch == nil then firstLaunch = true end
     if not firstLaunch then return end
 
@@ -106,4 +106,4 @@ local function on_render()
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
-hook_event(HOOK_ON_HUD_RENDER, on_render)
+hook_event(HOOK_ON_HUD_RENDER, hud_render)

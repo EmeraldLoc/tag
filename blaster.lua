@@ -22,11 +22,11 @@ local function mario_update(m)
     gunCooldown = gunCooldown + 1
 end
 
-local function on_render()
+local function hud_render()
     if gGlobalSyncTable.modifier ~= MODIFIER_BLASTER then return end
 
     hud_bullet(gunCooldown, gGlobalSyncTable.maxBlasterCooldown)
 end
 
 hook_event(HOOK_MARIO_UPDATE, mario_update)
-hook_event(HOOK_ON_HUD_RENDER, on_render)
+hook_event(HOOK_ON_HUD_RENDER, hud_render)

@@ -19,6 +19,9 @@ local sentStatPacket = false
 local achievementIndex = 0
 local achievementEntryIndex = 0
 local sentAchievementPacket = false
+local previousRgbValue = nil
+local rgbValue = nil
+local oldTheme = nil
 
 local function on_off_text(bool)
     if bool then return "On" else return "Off" end
@@ -501,6 +504,34 @@ local function set_theme()
     save_int("theme", selectedTheme)
 end
 
+local function set_color_value(c)
+    local m = gMarioStates[0]
+    local direction = get_controller_dir()
+    local speed = 1
+
+    if m.controller.buttonPressed & R_JPAD ~= 0
+    or m.controller.buttonPressed & L_JPAD ~= 0 then
+        speed = 10
+    end
+
+    if direction == CONT_LEFT then
+        c = c - speed
+        if c < 0 then c = 255 end
+    else
+        c = c + speed
+        if c > 255 then c = 0 end
+    end
+
+    return c
+end
+
+local function create_rgb_slider(rgb)
+    entries = rgbSliderEntries
+    selection = 1
+    rgbValue = rgb
+    previousRgbValue = table.copy(rgbValue)
+end
+
 local function stop_round()
     gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
 
@@ -884,11 +915,14 @@ rewardEntries = {
 enemyEntries = {}
 muteEntries = {}
 themeEntries = {}
+themeBuilderEntries = {}
+themeManagerEntries = {}
+rgbSliderEntries = {}
 
 entries = mainEntries
 
 local function background()
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     local y = djui_hud_get_screen_height() - bgHeight
     djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, 250)
@@ -896,7 +930,7 @@ local function background()
 end
 
 local function settings_text()
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
     local text = "Options"
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     local y = (djui_hud_get_screen_height() - bgHeight) / 2
@@ -1023,9 +1057,7 @@ local function reset_main_selections()
         valueText = nil,},
     }
 
-    if resetEntries then
-        entries = mainEntries
-    end
+    if resetEntries then entries = mainEntries end
 end
 
 local function reset_setting_selections()
@@ -2409,7 +2441,16 @@ local function reset_theme_entries()
             permission = PERMISSION_NONE,
             input = INPUT_JOYSTICK,
             func = set_theme,
-            valueText = tagThemes[selectedTheme].name
+            valueText = get_selected_theme().name
+        },
+        {
+            name = "Manage Themes",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = themeManagerEntries
+                selection = 1
+            end
         },
         {
             name = "Back",
@@ -2425,8 +2466,296 @@ local function reset_theme_entries()
     if resetEntries then entries = themeEntries end
 end
 
+local function reset_theme_manager_entries()
+
+    local resetEntries = entries == themeManagerEntries
+
+    local builtinThemes = 0
+    for _, v in ipairs(tagThemes) do
+        if v.builtin then
+            builtinThemes = builtinThemes + 1
+        end
+    end
+
+    themeManagerEntries = {
+        {
+            name = "Create a Theme",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                local prevSelectedTheme = selectedTheme
+                oldTheme = nil
+                selectedTheme = #tagThemes + 1
+                tagThemes[selectedTheme] = table.copy(tagThemes[prevSelectedTheme])
+                tagThemes[selectedTheme].builtin = false
+                entries = themeBuilderEntries
+                selection = 1
+            end,
+            disabled = not usingCoopDX or #tagThemes - builtinThemes > 5
+        },
+    }
+
+    for k, theme in ipairs(tagThemes) do
+        if theme.builtin then goto continue end
+
+        table.insert(themeManagerEntries, {
+            name = theme.name,
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                selectedTheme = k
+                oldTheme = table.copy(tagThemes[selectedTheme])
+                entries = themeBuilderEntries
+                selection = 1
+            end
+        })
+
+        ::continue::
+    end
+
+    table.insert(themeManagerEntries, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = themeEntries
+            selection = 1
+        end
+    })
+
+    if resetEntries then entries = themeManagerEntries end
+end
+
+local function reset_theme_builder_entries()
+    local resetEntries = entries == themeBuilderEntries
+    local theme = get_selected_theme()
+
+    themeBuilderEntries = {
+        {
+            name = "Name",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                requestingThemeName = selectedTheme
+                djui_chat_message_create("Run /tag name to input your name.")
+            end,
+            valueText = theme.name
+        },
+        {
+            name = "Background",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function () create_rgb_slider(theme.background) end,
+            valueText = rgb_to_hex(theme.background.r, theme.background.g, theme.background.b)
+        },
+        {
+            name = "Background Outline",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function () create_rgb_slider(theme.backgroundOutline) end,
+            valueText = rgb_to_hex(theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b)
+        },
+        {
+            name = "Rect",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function () create_rgb_slider(theme.rect) end,
+            valueText = rgb_to_hex(theme.rect.r, theme.rect.g, theme.rect.b)
+        },
+        {
+            name = "Rect Outline",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function () create_rgb_slider(theme.rectOutline) end,
+            valueText = rgb_to_hex(theme.rectOutline.r, theme.rectOutline.g, theme.rectOutline.b)
+        },
+        {
+            name = "Hover Rect",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function () create_rgb_slider(theme.hoverRect) end,
+            valueText = rgb_to_hex(theme.hoverRect.r, theme.hoverRect.g, theme.hoverRect.b)
+        },
+        {
+            name = "Hover Rect Outline",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function () create_rgb_slider(theme.hoverRectOutline) end,
+            valueText = rgb_to_hex(theme.hoverRectOutline.r, theme.hoverRectOutline.g, theme.hoverRectOutline.b)
+        },
+        {
+            name = "Confirmed Rect",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function () create_rgb_slider(theme.confirmedRect) end,
+            valueText = rgb_to_hex(theme.confirmedRect.r, theme.confirmedRect.g, theme.confirmedRect.b)
+        },
+        {
+            name = "Confirmed Rect Outline",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function () create_rgb_slider(theme.confirmedRectOutline) end,
+            valueText = rgb_to_hex(theme.confirmedRectOutline.r, theme.confirmedRectOutline.g, theme.confirmedRectOutline.b)
+        },
+        {
+            name = "Text",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function () create_rgb_slider(theme.text) end,
+            valueText = rgb_to_hex(theme.text.r, theme.text.g, theme.text.b)
+        },
+        {
+            name = "Selected Text",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function () create_rgb_slider(theme.selectedText) end,
+            valueText = rgb_to_hex(theme.selectedText.r, theme.selectedText.g, theme.selectedText.b)
+        },
+        {
+            name = "Disabled Text",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function () create_rgb_slider(theme.disabledText) end,
+            valueText = rgb_to_hex(theme.disabledText.r, theme.disabledText.g, theme.disabledText.b)
+        },
+        {
+            name = "Save",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                save_theme(selectedTheme)
+                if load_int("theme") ~= nil then
+                    selectedTheme = load_int("theme")
+                else
+                    selectedTheme = 1
+                end
+                entries = themeManagerEntries
+                selection = 1
+            end
+        },
+        {
+            name = "Delete",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                local builtinThemes = 0
+                for _, v in ipairs(tagThemes) do
+                    if v.builtin then
+                        builtinThemes = builtinThemes + 1
+                    end
+                end
+                mod_storage_remove("theme_" .. selectedTheme - builtinThemes)
+                table.remove(tagThemes, selectedTheme)
+                if load_int("theme") ~= nil then
+                    selectedTheme = load_int("theme")
+                else
+                    selectedTheme = 1
+                end
+                if tagThemes[selectedTheme] == nil then
+                    selectedTheme = 1
+                end
+                entries = themeManagerEntries
+                selection = 1
+            end
+        }
+    }
+
+    if oldTheme ~= nil then
+        table.insert(themeBuilderEntries, {
+            name = "Cancel",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                tagThemes[selectedTheme] = oldTheme
+                if load_int("theme") ~= nil then
+                    selectedTheme = load_int("theme")
+                else
+                    selectedTheme = 1
+                end
+                entries = themeManagerEntries
+                selection = 1
+            end
+        })
+    end
+
+    if resetEntries then
+        entries = themeBuilderEntries
+    else
+        requestingThemeName = nil
+    end
+end
+
+local function reset_rgb_slider_entries()
+    local resetEntries = entries == rgbSliderEntries
+
+    if rgbValue == nil then return end
+    if previousRgbValue == nil then return end
+
+    rgbSliderEntries = {
+        {
+            name = "R",
+            permission = PERMISSION_NONE,
+            input = INPUT_JOYSTICK,
+            func = function ()
+                rgbValue.r = set_color_value(rgbValue.r)
+            end,
+            valueText = rgbValue.r
+        },
+        {
+            name = "G",
+            permission = PERMISSION_NONE,
+            input = INPUT_JOYSTICK,
+            func = function ()
+                rgbValue.g = set_color_value(rgbValue.g)
+            end,
+            valueText = rgbValue.g
+        },
+        {
+            name = "B",
+            permission = PERMISSION_NONE,
+            input = INPUT_JOYSTICK,
+            func = function ()
+                rgbValue.b = set_color_value(rgbValue.b)
+            end,
+            valueText = rgbValue.b
+        },
+        {
+            name = "Hex",
+            valueText = rgb_to_hex(rgbValue.r, rgbValue.g, rgbValue.b)
+        },
+        {
+            name = "Save",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                entries = themeBuilderEntries
+                selection = 1
+            end
+        },
+        {
+            name = "Cancel",
+            permission = PERMISSION_NONE,
+            input = INPUT_A,
+            func = function ()
+                rgbValue.r = previousRgbValue.r
+                rgbValue.g = previousRgbValue.g
+                rgbValue.b = previousRgbValue.b
+                entries = themeBuilderEntries
+                selection = 1
+            end
+        },
+    }
+
+    if resetEntries then
+        entries = rgbSliderEntries
+    else
+        rgbValue = nil
+        previousRgbValue = nil
+    end
+end
+
 local function scroll_bar_render()
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
     local height = bgHeight - 12
     for i = scrollEntry + 1, #entries do
         height = height - 30
@@ -2449,7 +2778,6 @@ local function scroll_bar_render()
 end
 
 local function hud_render()
-    djui_hud_set_color(255, 0, 0, 255)
     if not showSettings then
         entries = mainEntries
         selection = 1
@@ -2457,7 +2785,7 @@ local function hud_render()
         return
     end
 
-    local theme = tagThemes[selectedTheme]
+    local theme = get_selected_theme()
 
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
@@ -2695,6 +3023,9 @@ local function mario_update(m)
     reset_enemy_entries()
     reset_mute_entries()
     reset_theme_entries()
+    reset_theme_manager_entries()
+    reset_theme_builder_entries()
+    reset_rgb_slider_entries()
 end
 
 hook_event(HOOK_ON_HUD_RENDER, hud_render)

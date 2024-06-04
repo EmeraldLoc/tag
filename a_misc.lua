@@ -31,6 +31,21 @@ function table.pos_of_element(table, element)
 	return false
 end
 
+-- you should already know I'm too dumb to write this, chatgpt did this one!
+function table.copy(orig)
+    local copy
+    if type(orig) == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[table.copy(orig_key)] = table.copy(orig_value)
+        end
+        setmetatable(copy, table.copy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
 function tobool(v)
     local type = type(v)
     if type == "boolean" then
@@ -69,6 +84,10 @@ function hex_to_rgb(hex)
 	else
 		return 0, 0, 0
 	end
+end
+
+function rgb_to_hex(r, g, b)
+	return string.format("#%02X%02X%02X", r, g, b)
 end
 
 -- credit to agent x
@@ -1055,6 +1074,10 @@ function save_modifier_settings()
 	save_int("maxBombCooldown", gGlobalSyncTable.maxBombCooldown)
 	save_int("maxBlasterCooldown", gGlobalSyncTable.maxBlasterCooldown)
 	save_int("buttonChallenge", gGlobalSyncTable.buttonChallenge)
+end
+
+function get_selected_theme()
+	return tagThemes[selectedTheme]
 end
 
 function find_floor_steepness(x, y, z)
