@@ -1206,6 +1206,19 @@ romhacks = {
                 unwantedBhvs = { id_bhvPurpleSwitchHiddenBoxes }
             },
             {
+                name = "gog",
+                level = LEVEL_LLL,
+                painting = get_texture_info("painting_gs_gog"),
+                area = 1,
+                pipes = nil,
+                springs = {
+                    { x = 4955, y = -583, z = 260, pitch = 0, yaw = 0, strength = 145 },
+                    { x = -1245, y = -933, z = -2011, pitch = 0, yaw = 0, strength = 120 },
+                    { x = -1127, y = -583, z = 5589, pitch = 0, yaw = 0, strength = 120 },
+                },
+                unwantedBhvs = { id_bhvFirePiranhaPlant },
+            },
+            {
                 name = "seasidebay",
                 level = LEVEL_DDD,
                 painting = get_texture_info("painting_gs_seasidebay"),
