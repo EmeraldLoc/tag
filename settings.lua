@@ -2764,6 +2764,8 @@ local function scroll_bar_render()
         if entries[i].seperator ~= nil then
             height = height - 15
         end
+
+        height = clamp(height, 8, height)
     end
     local x = (djui_hud_get_screen_width() / 2) + (bgWidth / 2 - 8) - 4
     local y = djui_hud_get_screen_height() / 2 - bgHeight / 2 + 6

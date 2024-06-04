@@ -984,13 +984,6 @@ local function update()
         -- set levels var to romhack override
         levels = romhack.levels
 
-        -- check level reg stages
-        if romhacks[3].levels ~= {} then
-            for _, level in pairs(romhacks[3].levels) do
-                table.insert(levels, level)
-            end
-        end
-
         -- popup
         djui_popup_create("Set romhack to\n" .. romhack.name, 3)
 
