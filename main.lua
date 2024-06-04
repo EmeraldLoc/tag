@@ -392,6 +392,7 @@ playersNeeded = {
     [SARDINES] = 3,
     [HUNT] = 2,
     [DEATHMATCH] = 2,
+    [TERMINATOR] = 2,
     [ODDBALL] = 2,
     [SEARCH] = 2,
 }
@@ -451,7 +452,7 @@ local function server_update()
     end
 
     if (not gGlobalSyncTable.randomGamemode and numPlayers < playersNeeded[gGlobalSyncTable.gamemode])
-    or numPlayers < 1 then
+    or numPlayers < 2 then
         gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS -- set round state to waiting for players
     elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
         -- if we aren't in auto mode, then don't run this code, and run designated code in the if statemnt

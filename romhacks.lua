@@ -1271,7 +1271,7 @@ romhacks = {
                     { x = -3885, y = 281, z = -1902, pitch = -4000, yaw = -17000, strength = 90 },
                     { x = 7014, y = -2144, z = 5971, pitch = 0, yaw = 0, strength = 700 },
                  },
-                 unwantedBhvs = { id_bhvChuckya }, 
+                 unwantedBhvs = { id_bhvChuckya },
             },
             {
                 name = "cq",
