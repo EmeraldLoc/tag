@@ -1738,6 +1738,7 @@ local function reset_romhack_entries()
             func = function ()
                 -- set override level var
                 gGlobalSyncTable.romhackOverride = i
+                gGlobalSyncTable.selectedLevel = 1
                 gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
             end}
         )

@@ -31,7 +31,7 @@ local function pipe_loop(o)
     if m.playerIndex ~= 0 then return end
 
     -- check to see if the pipe should even exist
-    if levels[o.oPipesLevel].level ~= gNetworkPlayers[0].currLevelNum then
+    if levels[o.oPipesLevel] == nil or levels[o.oPipesLevel].level ~= gNetworkPlayers[0].currLevelNum then
         obj_mark_for_deletion(o)
         return
     end
