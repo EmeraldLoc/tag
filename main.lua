@@ -1296,7 +1296,6 @@ local function mario_update(m)
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvMetalCap))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvVanishCap))
         obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvFireSpitter))
 
         -- water level diamond breaks water being disabled, so just get rid of it
         if levels[gGlobalSyncTable.selectedLevel].overrideWater ~= true
@@ -1444,9 +1443,7 @@ local function before_set_mario_action(m, action)
         or action == ACT_READING_SIGN
         or action == ACT_READING_AUTOMATIC_DIALOG
         or action == ACT_READING_NPC_DIALOG
-        or action == ACT_JUMBO_STAR_CUTSCENE
-        or action == ACT_BURNING_FALL
-        or action == ACT_BURNING_JUMP then
+        or action == ACT_JUMBO_STAR_CUTSCENE then
             return 1
         end
     end
