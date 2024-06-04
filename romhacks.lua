@@ -1193,19 +1193,6 @@ romhacks = {
                 unwantedBhvs = { id_bhvCapSwitch, id_bhvCapSwitchBase }
             },
             {
-                name = "gog",
-                level = LEVEL_LLL,
-                painting = get_texture_info("painting_gs_gog"),
-                area = 1,
-                pipes = nil,
-                springs = {
-                    { x = 4955, y = -583, z = 260, pitch = 0, yaw = 0, strength = 145 },
-                    { x = -1245, y = -933, z = -2011, pitch = 0, yaw = 0, strength = 120 },
-                    { x = -1127, y = -583, z = 5589, pitch = 0, yaw = 0, strength = 120 },
-                },
-                unwantedBhvs = { id_bhvFirePiranhaPlant },
-            },
-            {
                 name = "sd",
                 level = LEVEL_SSL,
                 painting = get_texture_info("painting_gs_sd"),
@@ -1238,6 +1225,24 @@ romhacks = {
                 area = 1,
                 pipes = nil,
                 unwantedBhvs = { id_bhvBigBullyWithMinions },
+            },
+            {
+                name = "pc",
+                level = LEVEL_TTM,
+                painting = get_texture_info("painting_gs_pc"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -5942, y = 281, z = -2224 },
+                        { x = -4740, y = 5009, z = 4794 }
+                    }
+                },
+                springs = {
+                    { x = 562, y = 293, z = -1026, pitch = -4500, yaw = 13000, strength = 90 },
+                    { x = 2080, y = -712, z = -5417, pitch = -6000, yaw = 5000, strength = 80 },
+                    { x = -3885, y = 281, z = -1902, pitch = -4000, yaw = -17000, strength = 90 },
+                    { x = 7014, y = -2144, z = 5971, pitch = 0, yaw = 0, strength = 700 },
+                 },
             },
             {
                 name = "cq",
