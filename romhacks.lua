@@ -1240,6 +1240,21 @@ romhacks = {
                 unwantedBhvs = { id_bhvBigBullyWithMinions },
             },
             {
+                name = "blazing",
+                level = LEVEL_BITFS,
+                painting = get_texture_info("painting_gs_blazing"),
+                area = 1,
+                pipes =  {
+                    {
+                        { x = 3991, y = -3442, z = -839 },
+                        { x = 223, y = 3891, z = 118 }
+                    }
+                },
+                springs = {
+                    { x = -3751, y = -6669, z = 72, pitch = 0, yaw = 0, strength = 185 },
+                },
+            },
+            {
                 name = "pc",
                 level = LEVEL_TTM,
                 painting = get_texture_info("painting_gs_pc"),
@@ -1256,6 +1271,7 @@ romhacks = {
                     { x = -3885, y = 281, z = -1902, pitch = -4000, yaw = -17000, strength = 90 },
                     { x = 7014, y = -2144, z = 5971, pitch = 0, yaw = 0, strength = 700 },
                  },
+                 unwantedBhvs = { id_bhvChuckya }, 
             },
             {
                 name = "cq",
