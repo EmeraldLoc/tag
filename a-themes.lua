@@ -37,6 +37,21 @@ tagThemes = {
         disabledText = color(20, 20, 20),
         builtin = true,
     },
+    {
+        name = "Midnight",
+        background = color(0, 0, 0),
+        backgroundOutline = color(30, 30, 30),
+        rect = color(20, 20, 20),
+        rectOutline = color(30, 30, 30),
+        hoverRect = color(30, 30, 30),
+        hoverRectOutline = color(40, 40, 40),
+        confirmedRect = color(83, 153, 77),
+        confirmedRectOutline = color(113, 183, 107),
+        text = color(170, 170, 170),
+        selectedText = color(200, 200, 200),
+        disabledText = color(100, 100, 100),
+        builtin = true,
+    },
 }
 
 function save_theme(themeIndex)
