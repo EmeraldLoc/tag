@@ -14,7 +14,7 @@ function start_command(msg)
 
                     djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area, level))
 
-                    if network_player_connected_count() < PLAYERS_NEEDED then
+                    if network_player_connected_count() < playersNeeded[gGlobalSyncTable.gamemode] then
                         warp_to_tag_level(gGlobalSyncTable.selectedLevel)
                     end
 
@@ -33,7 +33,7 @@ function start_command(msg)
 
                     djui_chat_message_create("Starting game in level " .. name_of_level(level.level, level.area, level))
 
-                    if network_player_connected_count() < PLAYERS_NEEDED then
+                    if network_player_connected_count() < playersNeeded[gGlobalSyncTable.gamemode] then
                         warp_to_tag_level(gGlobalSyncTable.selectedLevel)
                     end
 
@@ -63,7 +63,7 @@ function start_command(msg)
 
     djui_chat_message_create("Starting round")
 
-    if network_player_connected_count() < PLAYERS_NEEDED then
+    if network_player_connected_count() < playersNeeded[gGlobalSyncTable.gamemode] then
         warp_to_tag_level(gGlobalSyncTable.selectedLevel)
     end
 

@@ -23,6 +23,25 @@ GAMEMODE_3       = 3
 MAX_GAMEMODE     = 3
 ```
 
+Next, you'll need to set the players required to start this gamemode. To do this, find where the `playersNeeded` variable is initialized. From there, add your gamemode to the list. Example:
+
+Old:
+```
+playersNeeded = {
+    [GAMEMODE_1] = 2,
+    [GAMEMODE_2] = 3,
+}
+```
+
+New:
+```
+playersNeeded = {
+    [GAMEMODE_1] = 2,
+    [GAMEMODE_2] = 3,
+    [GAMEMODE_3] = 2,
+}
+```
+
 Once you do that, head to the `get_gamemode` function in `a-misc.lua`. Scroll to the bottom of the function, and add your gamemode entry there. Example:
 
 Old:

@@ -73,12 +73,6 @@ local function set_gamemode()
             end
         end
 
-        if gGlobalSyncTable.gamemode == 1 then
-            PLAYERS_NEEDED = 2
-        else
-            PLAYERS_NEEDED = 3
-        end
-
         if not gGlobalSyncTable.randomGamemode and gGlobalSyncTable.roundState == ROUND_ACTIVE and gGlobalSyncTable.gamemode ~= prevGamemode then
             gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS
         end
@@ -94,12 +88,6 @@ local function set_gamemode()
             else
                 gGlobalSyncTable.gamemode = gGlobalSyncTable.gamemode - 1
             end
-        end
-
-        if gGlobalSyncTable.gamemode == 1 then
-            PLAYERS_NEEDED = 2
-        else
-            PLAYERS_NEEDED = 3
         end
 
         if not gGlobalSyncTable.randomGamemode and gGlobalSyncTable.roundState == ROUND_ACTIVE and gGlobalSyncTable.gamemode ~= prevGamemode then

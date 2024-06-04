@@ -61,9 +61,6 @@ SPECTATOR_STATE_MARIO                  = 0
 SPECTATOR_STATE_FREECAM                = 1
 SPECTATOR_STATE_FOLLOW                 = 2
 
--- players needed (it's only 2 if your on the tag gamemode, otherwise this variable is 3)
-PLAYERS_NEEDED                         = 2
-
 -- modifiers
 MODIFIER_MIN                           = 0
 MODIFIER_NONE                          = 0
@@ -385,6 +382,20 @@ remoteStats = {
     taggerVictories = 0,
 }
 
+playersNeeded = {
+    [TAG] = 2,
+    [FREEZE_TAG] = 3,
+    [INFECTION] = 3,
+    [HOT_POTATO] = 3,
+    [JUGGERNAUT] = 2,
+    [ASSASSINS] = 2,
+    [SARDINES] = 3,
+    [HUNT] = 2,
+    [DEATHMATCH] = 2,
+    [ODDBALL] = 2,
+    [SEARCH] = 2,
+}
+
 -- selected theme
 selectedTheme = 1
 
@@ -439,19 +450,9 @@ local function server_update()
         end
     end
 
-    if numPlayers < PLAYERS_NEEDED then
+    if (not gGlobalSyncTable.randomGamemode and numPlayers < playersNeeded[gGlobalSyncTable.gamemode])
+    or numPlayers < 1 then
         gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS -- set round state to waiting for players
-
-        if gGlobalSyncTable.randomGamemode and PLAYERS_NEEDED > 2 then
-            -- set gamemode to tag so the game keeps going
-            gGlobalSyncTable.gamemode = TAG
-
-            -- default tag timer
-            gGlobalSyncTable.amountOfTime = gGlobalSyncTable.activeTimers[TAG]
-
-            PLAYERS_NEEDED = 2
-            log_to_console("Tag: Attempted to keep tag going by setting the gamemode to tag")
-        end
     elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
         -- if we aren't in auto mode, then don't run this code, and run designated code in the if statemnt
         if not gGlobalSyncTable.autoMode then
@@ -543,40 +544,31 @@ local function server_update()
 
             -- if we select a random gamemode, select that random gamemode now
             if gGlobalSyncTable.randomGamemode then
-                if numPlayers >= 3 then -- 3 is the minimum player count for random gamemodes
-                    -- check if we have all gamemodes blacklisted
-                    local gamemodesBlacklisted = MIN_GAMEMODE - 1
-                    for i = MIN_GAMEMODE, MAX_GAMEMODE do
-                        if gGlobalSyncTable.blacklistedGamemodes[i] == true then
-                            gamemodesBlacklisted = gamemodesBlacklisted + 1
-                        end
+                -- check if we have all gamemodes blacklisted
+                local gamemodesBlacklisted = MIN_GAMEMODE - 1
+                for i = MIN_GAMEMODE, MAX_GAMEMODE do
+                    if gGlobalSyncTable.blacklistedGamemodes[i] == true then
+                        gamemodesBlacklisted = gamemodesBlacklisted + 1
                     end
+                end
 
-                    -- if they all are, skip setting gamemode
-                    if gamemodesBlacklisted == MAX_GAMEMODE then
-                        goto amountoftime
-                    end
+                -- if they all are, skip setting gamemode
+                if gamemodesBlacklisted == MAX_GAMEMODE then
+                    goto amountoftime
+                end
 
-                    ::selectgamemode::
-                    gGlobalSyncTable.gamemode = math.random(MIN_GAMEMODE, MAX_GAMEMODE)
+                ::selectgamemode::
+                gGlobalSyncTable.gamemode = math.random(MIN_GAMEMODE, MAX_GAMEMODE)
 
-                    if gGlobalSyncTable.blacklistedGamemodes[gGlobalSyncTable.gamemode] == true then
-                        goto selectgamemode
-                    end
-                else
-                    gGlobalSyncTable.gamemode = TAG -- set to tag explicitly
+                if gGlobalSyncTable.blacklistedGamemodes[gGlobalSyncTable.gamemode] == true
+                or playersNeeded[gGlobalSyncTable.gamemode] > numPlayers then
+                    goto selectgamemode
                 end
             end
 
             -- set the amount of time var and players needed var
             ::amountoftime::
             gGlobalSyncTable.amountOfTime = gGlobalSyncTable.activeTimers[gGlobalSyncTable.gamemode]
-            if gGlobalSyncTable.gamemode == TAG then
-                PLAYERS_NEEDED = 2
-            else
-                PLAYERS_NEEDED = 3
-            end
-
             log_to_console("Tag: Modifier is set to " .. strip_hex(get_modifier_text()) .. " and the gamemode is set to " .. strip_hex(get_gamemode(gGlobalSyncTable.gamemode)))
         end
 
@@ -621,7 +613,7 @@ local function server_update()
                 end
             end
 
-            local amountOfTaggersNeeded = math.floor(numPlayers / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
+            local amountOfTaggersNeeded = math.floor(numPlayers / playersNeeded[gGlobalSyncTable.gamemode]) -- always have the amount of the players needed, rounding down, be taggers
 
             -- set tag max lives for gamemodes like juggernaut, hunt, and deathmatch
             gGlobalSyncTable.tagMaxLives = gGlobalSyncTable.maxLives[gGlobalSyncTable.gamemode]
@@ -885,7 +877,7 @@ local function server_update()
                 end
             end
 
-            local amountOfTaggersNeeded = math.floor(currentConnectedCount / PLAYERS_NEEDED) -- always have the amount of the players needed, rounding down, be taggers
+            local amountOfTaggersNeeded = math.floor(currentConnectedCount / playersNeeded[gGlobalSyncTable.gamemode]) -- always have the amount of the players needed, rounding down, be taggers
             if amountOfTaggersNeeded < 1 then amountOfTaggersNeeded = 1 end
             if gGlobalSyncTable.modifier == MODIFIER_ONE_TAGGER then
                 amountOfTaggersNeeded = 1
