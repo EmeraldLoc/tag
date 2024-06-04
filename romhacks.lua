@@ -1287,6 +1287,22 @@ romhacks = {
                 unwantedBhvs = { id_bhvThwomp, id_bhvThwomp2, id_bhvExclamationBox },
             },
             {
+                name = "ns",
+                level = LEVEL_PSS,
+                painting = get_texture_info("painting_gs_ns"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -8752, y = 6304, z = 12219 },
+                        { x = 4317, y = -4545, z = 7889 }
+                    },
+                },
+                springs = {
+                    { x = -8719, y = -1745, z = 13389, pitch = 0, yaw = 0, strength = -770 },
+                    { x = 4196, y = -4545, z = 8441, pitch = 0, yaw = 0, strength = 140 },
+                 },
+            },
+            {
                 name = "bc",
                 level = LEVEL_CASTLE,
                 painting = get_texture_info("painting_gs_bc"),
