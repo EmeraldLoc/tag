@@ -830,7 +830,7 @@ end
 
 function get_general_rules()
 	-- ack, long text
-	return "Tag is a set of 6 gamemodes, Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, Sardines, and Hunt. These gamemodes are selected randomly, or selected by the server. Modifiers are, well, modifiers that modify parts of a game. These are either selected by the server, or selected by random. During a round, you may have special abilities (indicated by a ui element at the bottom of your screen), hit whatever button is binded to Y to use these ablities. At the end of a round, you can see what placement you got via the leaderboards, this is pretty self explanitory. The voting system is a way to vote for a map to play on.\n\nThat's the general \"rules\" of Tag, enjoy!"
+	return "Tag is a set of " .. MAX_GAMEMODE .. " gamemodes, Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, Sardines, Hunt, Deathmatch, and more! These gamemodes are selected randomly, or selected by the server. Modifiers modify parts of a game, this can be movement related changes, or toggling certain features on or off. These are either selected by the server, or selected by random. During a round, you may have special abilities (indicated by a ui element at the bottom of your screen). The button needed to use these abilities is shown on the ui. You can change these binds in the settings menu in Tag. At the end of a round, you can see what placement you got via the leaderboards, if you get 1st, you get a victory added to your stats. The voting system is a way to vote for a map to play on.\n\nThat's the general \"rules\" of Tag, enjoy!"
 end
 
 -- thanks for this one chatgpt, my knowledge ain't even close to getting that right
