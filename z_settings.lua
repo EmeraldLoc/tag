@@ -914,7 +914,7 @@ local function background()
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     local y = djui_hud_get_screen_height() - bgHeight
     djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, 250)
-    djui_hud_render_rect_rounded_outlined(x, y / 2, bgWidth, bgHeight, theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 10)
+    djui_hud_render_rect_rounded_outlined(x, y / 2, bgWidth, bgHeight, theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 10, 250)
 end
 
 local function settings_text()
@@ -2876,13 +2876,13 @@ local function hud_render()
         end
 
         if entries[i].progressBar ~= nil then
-            djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor.r, outlineColor.g, outlineColor.b, 3)
+            djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor.r, outlineColor.g, outlineColor.b, 3, 215)
 
             local rectWidth = linear_interpolation(entries[i].progressBar.value, 0, bgWidth - 40, entries[i].progressBar.minLimit, entries[i].progressBar.maxLimit)
 
             djui_hud_render_rect(x + 20, y + height - scrollOffset, rectWidth, 40)
         else
-            djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor.r, outlineColor.g, outlineColor.b, 3)
+            djui_hud_render_rect_rounded_outlined(x + 20, y + height - scrollOffset, bgWidth - 40, 40, outlineColor.r, outlineColor.g, outlineColor.b, 3, 215)
         end
 
         if not has_permission(entries[i].permission)

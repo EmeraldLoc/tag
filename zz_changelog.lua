@@ -259,7 +259,7 @@ local function hud_render()
     local x = (djui_hud_get_screen_width() / 2) - (bgWidth / 2)
     local y = djui_hud_get_screen_height() - bgHeight
     djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, 250)
-    djui_hud_render_rect_rounded_outlined(x, y / 2, bgWidth, bgHeight, theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 10)
+    djui_hud_render_rect_rounded_outlined(x, y / 2, bgWidth, bgHeight, theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 10, 250)
 
     local changelog = changelogs[selectedChangelog]
     local text = ""
