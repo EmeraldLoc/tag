@@ -2480,7 +2480,7 @@ local function reset_theme_manager_entries()
                 entries = themeBuilderEntries
                 selection = 1
             end,
-            disabled = not usingCoopDX or #tagThemes - builtinThemes > 5
+            disabled = not usingCoopDX or #tagThemes - builtinThemes >= 5
         },
     }
 
