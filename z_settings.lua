@@ -2628,13 +2628,19 @@ local function reset_theme_builder_entries()
             input = INPUT_A,
             func = function ()
                 local builtinThemes = 0
-                for _, v in ipairs(tagThemes) do
+                for k, v in ipairs(tagThemes) do
                     if v.builtin then
                         builtinThemes = builtinThemes + 1
+                    else
+                        mod_storage_remove("theme_" .. k - builtinThemes)
                     end
                 end
-                mod_storage_remove("theme_" .. selectedTheme - builtinThemes)
                 table.remove(tagThemes, selectedTheme)
+                for k, v in ipairs(tagThemes) do
+                    if not v.builtin then
+                        save_theme(k)
+                    end
+                end
                 if load_int("theme") ~= nil then
                     selectedTheme = load_int("theme")
                 else

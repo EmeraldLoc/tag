@@ -122,6 +122,7 @@ function load_theme(themeIndex)
     theme.text = str_to_rgb(get_three_from_1(25))
     theme.selectedText = str_to_rgb(get_three_from_1(28))
     theme.disabledText = str_to_rgb(get_three_from_1(31))
+    theme.builtin = false
 end
 
 local function validate_theme()
