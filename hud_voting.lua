@@ -213,7 +213,8 @@ local function mario_update(m)
 
     if joystickCooldown <= 0 and gPlayerSyncTable[0].votingNumber == 0 then
         -- check where our stick is
-        if m.controller.stickX > 0.5 then
+        if m.controller.stickX > 0.5
+        or m.controller.buttonPressed & R_JPAD ~= 0 then
             -- moving right, move our selection right
             selectedLevel = selectedLevel + 1
             if selectedLevel > 4 then selectedLevel = 4 end
@@ -221,7 +222,8 @@ local function mario_update(m)
             play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
         end
 
-        if m.controller.stickX < -0.5 then
+        if m.controller.stickX < -0.5
+        or m.controller.buttonPressed & L_JPAD ~= 0 then
             -- moving left, move our selection left
             selectedLevel = selectedLevel - 1
             if selectedLevel < 1 then selectedLevel = 1 end
