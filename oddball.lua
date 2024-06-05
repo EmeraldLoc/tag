@@ -14,6 +14,8 @@ local function hud_side_panel_render()
 
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
 
+    local theme = get_selected_theme()
+
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
@@ -42,7 +44,7 @@ local function hud_side_panel_render()
     djui_hud_set_color(20, 20, 22, 255 / 1.4)
     djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, height, 35, 35, 35, 4, 255 / 1.4)
 
-    djui_hud_set_color(255, 255, 255, 255)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_text("Scores:", x + 10, y, 1)
 
     for _, i in ipairs(runners) do
@@ -57,11 +59,11 @@ local function hud_side_panel_render()
                 name = name:sub(1, #name - 1)
             end
         end
-        local text = name .. "\\#FFFFFF\\: " .. math.floor(gPlayerSyncTable[i].oddballTimer / 30)
+        local text = name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": " .. math.floor(gPlayerSyncTable[i].oddballTimer / 30)
         if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
-            text = name .. "\\#FFFFFF\\: ???"
+            text = name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": ???"
         end
-        djui_hud_set_color(255, 255, 255, 255)
+        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
         djui_hud_print_colored_text(text, x + 10, y, 1)
     end
 end

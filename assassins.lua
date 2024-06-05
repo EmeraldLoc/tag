@@ -64,6 +64,7 @@ local function mario_update(m)
 end
 
 local function hud_side_panel_render()
+    local theme = get_selected_theme()
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
@@ -73,10 +74,10 @@ local function hud_side_panel_render()
     local x = djui_hud_get_screen_width() - textMaxWidth + 3
     local y = djui_hud_get_screen_height() / 2 - 30
 
-    djui_hud_set_color(20, 20, 22, 255 / 1.4)
-    djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, 60, 35, 35, 35, 4, 255 / 1.4)
+    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, 255 / 1.4)
+    djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, 60, theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 4, 255 / 1.4)
 
-    djui_hud_set_color(255, 255, 255, 255)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_text("Target:", x + 10, y, 1)
 
     local targetIndex = network_local_index_from_global(gPlayerSyncTable[0].assassinTarget)

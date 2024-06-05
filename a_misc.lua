@@ -1076,6 +1076,7 @@ function save_modifier_settings()
 	save_int("buttonChallenge", gGlobalSyncTable.buttonChallenge)
 end
 
+---@return table
 function get_selected_theme()
 	return tagThemes[selectedTheme]
 end
