@@ -1180,6 +1180,22 @@ romhacks = {
                 unwantedBhvs = { id_bhvExclamationBox }
              },
              {
+                name = "btt",
+                level = LEVEL_HMC,
+                painting = get_texture_info("painting_gs_btt"),
+                area = 1,
+                pipes = {
+                    {
+                        { x = -2669, y = -3479, z = 353 },
+                        { x = 1839, y = 6824, z = -715 }
+                    }
+                },
+                springs = {
+                    { x = 4400, y = -4179, z = -663, pitch = -4000, yaw = 16000, strength = 100 },
+                },
+                unwantedBhvs = { id_bhvBalconyBigBoo },
+             },
+             {
                 name = "wcp",
                 level = LEVEL_TOTWC,
                 painting = get_texture_info("painting_gs_wcp"),
