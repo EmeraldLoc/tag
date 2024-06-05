@@ -808,7 +808,7 @@ romhacks = {
                         { x = 3299, y = 125, z = -2633 }
                     }
                 },
-                overrideName = "The Final Hub"
+                overrideName = "Star Road"
             },
             {
                 name = "boi",

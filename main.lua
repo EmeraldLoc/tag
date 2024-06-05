@@ -1437,10 +1437,7 @@ end
 local function before_set_mario_action(m, action)
     if m.playerIndex == 0 then
         -- cancel any unwanted action
-        if action == ACT_WAITING_FOR_DIALOG
-        or action == ACT_READING_SIGN
-        or action == ACT_READING_AUTOMATIC_DIALOG
-        or action == ACT_READING_NPC_DIALOG
+        if action == ACT_READING_AUTOMATIC_DIALOG
         or action == ACT_JUMBO_STAR_CUTSCENE then
             return 1
         end
@@ -1878,8 +1875,6 @@ hook_event(HOOK_ALLOW_HAZARD_SURFACE, function (m)
     if gPlayerSyncTable[0].state == SPECTATOR or gPlayerSyncTable[0].state == WILDCARD_ROLE then return end
     return gGlobalSyncTable.hazardSurfaces
 end)
--- disables dialogs
-hook_event(HOOK_ON_DIALOG, function () return false end)
 
 -- make ACT_NOTHING do something, wild ain't it
 hook_mario_action(ACT_NOTHING, act_nothing)
