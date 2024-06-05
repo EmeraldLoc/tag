@@ -80,7 +80,11 @@ local function mario_update(m)
     end
 
     if not isPaused then return end
+
+    m.freeze = 1
+
     if showSettings then return end
+
 
     if m.controller.buttonPressed & R_TRIG ~= 0 then
         djui_open_pause_menu()

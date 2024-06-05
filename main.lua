@@ -1397,15 +1397,13 @@ local function mario_update(m)
         end
 
         -- handle leaderboard and desync timer
-        if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
-            m.freeze = 1
-            set_mario_action(m, ACT_NOTHING, 0)
-        elseif desyncTimer > 0 or network_is_server() then
-            if showSettings or isPaused then
-                m.freeze = 1
-            else
-                m.freeze = 0
-            end
+        if gGlobalSyncTable.roundState == ROUND_TOURNAMENT_LEADERBOARD
+        or gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
+        or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
+        or gGlobalSyncTable.roundState == ROUND_VOTING then
+            enable_time_stop_including_mario()
+        else
+            disable_time_stop_including_mario()
         end
 
         -- sync tick tock clock speed
