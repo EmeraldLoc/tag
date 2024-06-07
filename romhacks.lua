@@ -80,7 +80,7 @@ romhacks = {
                 unwantedBhvs = { id_bhvBooCage }
             },
             {
-                -- ported by Murioz
+                -- ported by Murioz, painting by Nintendo
                 name = "bbh",
                 level = LEVEL_BBH,
                 painting = get_texture_info("bbh_painting"),
@@ -90,10 +90,10 @@ romhacks = {
                         { x = -3291, y = -204, z = 4997 },
                         { x = 946, y = -2457, z = 1799 }
                     },
-                    {
-                        { x = -403, y = -204, z = 2436 },
-                        { x = 657, y = 2867, z = 1568 }
-                    }
+                },
+                springs = {
+                    { x = -403, y = -204, z = 2436, pitch = 0, yaw = 0, strength = 140 },
+                    { x = 1735, y = -204, z = 2436, pitch = 0, yaw = 0, strength = 140 },
                 }
             },
             {
