@@ -917,11 +917,12 @@ romhacks = {
                 pipes = nil
             },
             {
-                name = "b3",
+                name = "srs",
                 level = LEVEL_BOWSER_3,
                 painting = get_texture_info("painting_sr_b3"),
                 area = 1,
-                pipes = nil
+                pipes = nil,
+                overrideName = "Star Road Showdown"
             },
             {
                 name = "kc",
