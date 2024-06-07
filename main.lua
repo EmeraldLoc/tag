@@ -1115,6 +1115,42 @@ local function mario_update(m)
                 if load_int("tournamentPointSystem") ~= nil then gGlobalSyncTable.tournamentPointSystem = load_int("tournamentPointSystem") end
                 if load_int("tournamentPointsReq") ~= nil then gGlobalSyncTable.tournamentPointsReq = load_int("tournamentPointsReq") end
                 if load_int("tournamentRoundLimit") ~= nil then gGlobalSyncTable.tournamentRoundLimit = load_int("tournamentRoundLimit") end
+                -- gamemode settings
+                -- active timers and max lives
+                for i = MIN_GAMEMODE, MAX_GAMEMODE do
+                    if load_int("activeTimers_" .. i) ~= nil then
+                        gGlobalSyncTable.activeTimers[i] = load_int("activeTimers_" .. i)
+                    end
+
+                    if load_int("maxLives_" .. i) ~= nil then
+                        gGlobalSyncTable.maxLives[i] = load_int("maxLives_" .. i)
+                    end
+                end
+                -- freeze tag frozen health drain
+                if load_int("freezeHealthDrain") ~= nil then
+                    gGlobalSyncTable.freezeHealthDrain = load_int("freezeHealthDrain")
+                end
+                -- sardine hiding timer
+                if load_int("hidingTimer_" .. SARDINES) ~= nil then
+                    gGlobalSyncTable.hidingTimer[SARDINES] = load_int("hidingTimer_" .. SARDINES)
+                end
+                -- search hiding timer
+                if load_int("hidingTimer_" .. SEARCH) ~= nil then
+                    gGlobalSyncTable.hidingTimer[SEARCH] = load_int("hidingTimer_" .. SEARCH)
+                end
+                -- modifier settings
+                -- max bomb cooldown
+                if load_int("maxBombCooldown") ~= nil then
+                    gGlobalSyncTable.maxBombCooldown = load_int("maxBombCooldown")
+                end
+                -- max blaster cooldown
+                if load_int("maxBlasterCooldown") ~= nil then
+                    gGlobalSyncTable.maxBlasterCooldown = load_int("maxBlasterCooldown")
+                end
+                -- button challenge
+                if load_int("buttonChallenge") ~= nil then
+                    gGlobalSyncTable.buttonChallenge = load_int("buttonChallenge")
+                end
             end
             if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
             if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
@@ -1136,42 +1172,6 @@ local function mario_update(m)
                 if load_int("bind_" .. tostring(i)) ~= nil then
                     binds[i].btn = load_int("bind_" .. tostring(i))
                 end
-            end
-            -- gamemode settings
-            -- active timers and max lives
-            for i = MIN_GAMEMODE, MAX_GAMEMODE do
-                if load_int("activeTimers_" .. i) ~= nil then
-                    gGlobalSyncTable.activeTimers[i] = load_int("activeTimers_" .. i)
-                end
-
-                if load_int("maxLives_" .. i) ~= nil then
-                    gGlobalSyncTable.maxLives[i] = load_int("maxLives_" .. i)
-                end
-            end
-            -- freeze tag frozen health drain
-            if load_int("freezeHealthDrain") ~= nil then
-                gGlobalSyncTable.freezeHealthDrain = load_int("freezeHealthDrain")
-            end
-            -- sardine hiding timer
-            if load_int("hidingTimer_" .. SARDINES) ~= nil then
-                gGlobalSyncTable.hidingTimer[SARDINES] = load_int("hidingTimer_" .. SARDINES)
-            end
-            -- search hiding timer
-            if load_int("hidingTimer_" .. SEARCH) ~= nil then
-                gGlobalSyncTable.hidingTimer[SEARCH] = load_int("hidingTimer_" .. SEARCH)
-            end
-            -- modifier settings
-            -- max bomb cooldown
-            if load_int("maxBombCooldown") ~= nil then
-                gGlobalSyncTable.maxBombCooldown = load_int("maxBombCooldown")
-            end
-            -- max blaster cooldown
-            if load_int("maxBlasterCooldown") ~= nil then
-                gGlobalSyncTable.maxBlasterCooldown = load_int("maxBlasterCooldown")
-            end
-            -- button challenge
-            if load_int("buttonChallenge") ~= nil then
-                gGlobalSyncTable.buttonChallenge = load_int("buttonChallenge")
             end
             -- stats
             -- load global stats
