@@ -3,7 +3,7 @@
 local function mario_update(m)
     if gGlobalSyncTable.modifier ~= MODIFIER_SAND then return end
 
-    if m.floor.type ~= SURFACE_DEATH_PLANE
+    if m.floor and m.floor.type ~= SURFACE_DEATH_PLANE
     and (m.floor.type ~= SURFACE_BURNING or not gGlobalSyncTable.hazardSurfaces) then
         m.floor.type = SURFACE_DEEP_QUICKSAND
     end

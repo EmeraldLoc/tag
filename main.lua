@@ -728,8 +728,12 @@ local function server_update()
         end
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
         if timer > 0 and gGlobalSyncTable.gamemode ~= ODDBALL then
-            timer = timer - (1 * hotPotatoTimerMultiplier) -- subtract timer by one multiplied by hot potato multiplyer
-            gGlobalSyncTable.displayTimer = clamp(timer, 0, timer)          -- set display timer to timer
+            if is_slow_motion_on() then
+                timer = timer - (1/3) * hotPotatoTimerMultiplier
+            else
+                timer = timer - 1 * hotPotatoTimerMultiplier
+            end
+            gGlobalSyncTable.displayTimer = clamp(timer, 0, timer) -- set display timer to timer
         end
 
         for i = 0, MAX_PLAYERS - 1 do
@@ -1397,13 +1401,15 @@ local function mario_update(m)
         end
 
         -- handle leaderboard and desync timer
-        if gGlobalSyncTable.roundState == ROUND_TOURNAMENT_LEADERBOARD
-        or gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
-        or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
-        or gGlobalSyncTable.roundState == ROUND_VOTING then
-            enable_time_stop_including_mario()
-        else
-            disable_time_stop_including_mario()
+        if not is_slow_motion_on() then
+            if gGlobalSyncTable.roundState == ROUND_TOURNAMENT_LEADERBOARD
+            or gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
+            or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
+            or gGlobalSyncTable.roundState == ROUND_VOTING then
+                enable_time_stop_including_mario()
+            else
+                disable_time_stop_including_mario()
+            end
         end
 
         -- sync tick tock clock speed
@@ -1430,6 +1436,14 @@ local function mario_update(m)
         else
             -- reset boost state
             boostState = BOOST_STATE_READY
+        end
+
+        -- handle slow motion
+        if  gGlobalSyncTable.roundState == ROUND_ACTIVE
+        and gGlobalSyncTable.displayTimer <= 0.5 * 30 then
+            enable_slow_motion()
+        else
+            disable_slow_motion()
         end
     end
 end
