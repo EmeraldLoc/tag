@@ -31,6 +31,7 @@ A `levels` table contains the following fields:
 | `painting` |`texture/nil`|A painting for the level.
 | `area`|`integer`|The area for a level.
 | `pipes`|`table/nil`|A table of pairs of 2 pipes.
+| `springs`|`table/nil`|A table of springs. Each entry containing an x, y, and z coordinate, the pitch, yaw, and strength.
 | `spawnLocation`|`Vec3/nilf`|A spawn location.
 | `overrideName`|`string/nil`|A override name, typically used for subareas.
 | `room`|`integer/nil`|A specific room to be forced. You have 5 seconds to re-enter a room if you leave it, shown with buzzing.

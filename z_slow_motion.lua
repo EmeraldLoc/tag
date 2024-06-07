@@ -2,15 +2,12 @@
 local timer = 0
 local slowMotion = false
 
-function enable_slow_motion()
+function slow_motion()
     slowMotion = true
+    timer = 3
 end
 
-function disable_slow_motion()
-    slowMotion = false
-end
-
-function is_slow_motion_on()
+function in_slow_motion()
     return slowMotion
 end
 
@@ -21,10 +18,8 @@ local function update()
             timer = timer - 1
         else
             disable_time_stop_including_mario()
-            timer = 3
+            slowMotion = false
         end
-    else
-        disable_time_stop_including_mario()
     end
 end
 
