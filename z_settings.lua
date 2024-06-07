@@ -549,7 +549,7 @@ local function set_player_role(i)
     end
 
     if gPlayerSyncTable[i].state == RUNNER then
-        gPlayerSyncTable[i].tagLives = gGlobalSyncTable.maxLives[gGlobalSyncTable.gamemode]
+        gPlayerSyncTable[i].tagLives = gGlobalSyncTable.tagMaxLives
     end
 end
 

@@ -41,7 +41,7 @@ local function on_warp()
     if not gGlobalSyncTable.eliminateOnDeath then return end
     if m.playerIndex ~= 0 then return end
 
-    -- subtract lives bh 1
+    -- subtract lives by 1
     if gPlayerSyncTable[0].state == RUNNER then
         gPlayerSyncTable[0].tagLives = gPlayerSyncTable[0].tagLives - 1
     end
@@ -77,7 +77,7 @@ function hunt_handle_pvp(aI, vI)
             a.state = RUNNER
             a.invincTimer = 1 * 30
             -- set attacker lives
-            a.tagLives = 3
+            a.tagLives = gGlobalSyncTable.tagMaxLives
             -- create popup
             tagged_popup(aI, vI)
         end
