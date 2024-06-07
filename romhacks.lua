@@ -80,7 +80,7 @@ romhacks = {
                 unwantedBhvs = { id_bhvBooCage }
             },
             {
-                -- ported by Murioz, painting by jzzle
+                -- ported by Murioz
                 name = "bbh",
                 level = LEVEL_BBH,
                 painting = get_texture_info("bbh_painting"),
