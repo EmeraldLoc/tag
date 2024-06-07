@@ -1110,7 +1110,7 @@ romhacks = {
                 },
                 unwantedBhvs = { id_bhvToadMessage },
                 spawnLocation = { x = -1500, y = -509, z = 2102 },
-                overrideName = "Overworld"
+                overrideName = "Overworld 1"
             },
             {
                 name = "bop",
@@ -1207,6 +1207,19 @@ romhacks = {
                     },
                 },
                 unwantedBhvs = { id_bhvCapSwitch, id_bhvCapSwitchBase }
+            },
+            {
+                name = "ow2",
+                level = LEVEL_CASTLE_COURTYARD,
+                painting = get_texture_info("painting_gs_ow2"),
+                area = 1,
+                pipes = nil,
+                springs = {
+                    { x = 2255, y = 16, z = 591, pitch = -7500, yaw = -50000, strength = 83 },
+                },
+                unwantedBhvs = { id_bhvToadMessage },
+                spawnLocation = { x = 3714, y = 310, z = 2194 },
+                overrideName = "Overworld 2"
             },
             {
                 name = "sd",
