@@ -36,6 +36,8 @@ local function pipe_loop(o)
         return
     end
 
+    obj_set_model_extended(o, smlua_model_util_get_id("pipe_" .. o.oPipesIndex .. "_geo"))
+
     -- if mario is within range, and we aren't frozen, initiate the pipe
     if  dist_between_objects(o, m.marioObj) <= 50
     and (gGlobalSyncTable.gamemode ~= FREEZE_TAG
