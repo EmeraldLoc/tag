@@ -950,6 +950,7 @@ romhacks = {
                         { x = 654, y = -751, z = 893 }
                     }
                 },
+                overrideSurfaceType = {[SURFACE_DEFAULT] = SURFACE_HARD_NOT_SLIPPERY}
             },
             {
                 name = "mmm",
