@@ -1775,6 +1775,13 @@ local function calculate_romhack_levels()
             table.remove(levels, i)
         end
     end
+
+    -- level reg override
+    if romhacks[3].levels ~= {} then
+        for _, level in pairs(romhacks[3].levels) do
+            table.insert(levels, level)
+        end
+    end
 end
 
 function configure_romhacks(mod)
@@ -1812,13 +1819,6 @@ function configure_romhacks(mod)
             djui_popup_create("Found romhack " .. romhack.name, 3)
 
             return
-        end
-    end
-
-    -- level reg override
-    if romhacks[3].levels ~= {} then
-        for _, level in pairs(romhacks[3].levels) do
-            table.insert(levels, level)
         end
     end
 
