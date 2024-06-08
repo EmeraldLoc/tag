@@ -18,7 +18,7 @@ local function mario_update(m)
 
     local s = gPlayerSyncTable[0]
 
-    if s.tagLives <= 0 and s.state == TAGGER then
+    if s.tagLives and s.tagLives <= 0 and s.state == TAGGER then
         s.state = ELIMINATED
     end
 end

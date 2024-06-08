@@ -57,7 +57,7 @@ local function mario_update(m)
     end
 
     -- handle being stunned
-    if gPlayerSyncTable[0].assassinStunTimer > 0 and m.playerIndex == 0 then
+    if gPlayerSyncTable[0].assassinStunTimer and gPlayerSyncTable[0].assassinStunTimer > 0 and m.playerIndex == 0 then
         gPlayerSyncTable[0].assassinStunTimer = gPlayerSyncTable[0].assassinStunTimer - 1
         set_mario_action(m, ACT_SHOCKED, 0)
     end

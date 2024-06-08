@@ -421,9 +421,6 @@ local waterRegions = {}
 -- just some global variables, honestly idk why the second one is there but it is so, uh, enjoy?
 _G.tag = {}
 
--- just a action we can use, used for when the round ends and mario freezes
-ACT_NOTHING = allocate_mario_action(ACT_FLAG_IDLE)
-
 local function server_update()
     -- set some basic sync table vars
     for i = 0, MAX_PLAYERS - 1 do
@@ -579,10 +576,6 @@ local function server_update()
             end
 
             local m = gMarioStates[i]
-
-            if m.action == ACT_NOTHING then
-                set_mario_action(m, ACT_IDLE, 0)
-            end
 
             gPlayerSyncTable[i].tagLives = 0             -- reset tag lives
             gPlayerSyncTable[i].assassinTarget = -1      -- reset assassin target
@@ -1005,6 +998,18 @@ local function update()
         end
         network_player_set_description(np, text, 220, 220, 220, 255)
     end
+
+    -- handle time stop
+    if not in_slow_motion() then
+        if gGlobalSyncTable.roundState == ROUND_TOURNAMENT_LEADERBOARD
+        or gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
+        or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
+        or gGlobalSyncTable.roundState == ROUND_VOTING then
+            enable_time_stop_including_mario()
+        else
+            disable_time_stop_including_mario()
+        end
+    end
 end
 
 ---@param m MarioState
@@ -1398,18 +1403,6 @@ local function mario_update(m)
         -- desync timer
         if desyncTimer <= 0 then
             m.freeze = 1
-        end
-
-        -- handle leaderboard and desync timer
-        if not in_slow_motion() then
-            if gGlobalSyncTable.roundState == ROUND_TOURNAMENT_LEADERBOARD
-            or gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
-            or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
-            or gGlobalSyncTable.roundState == ROUND_VOTING then
-                enable_time_stop_including_mario()
-            else
-                disable_time_stop_including_mario()
-            end
         end
 
         -- sync tick tock clock speed
@@ -1838,27 +1831,6 @@ local function on_chat_message(m, msg)
     return false
 end
 
----@param m MarioState
-local function act_nothing(m)
-    -- great action am I right
-    m.forwardVel = 0
-    m.vel.x = 0
-    m.vel.y = 0
-    m.vel.z = 0
-    m.slideVelX = 0
-    m.slideVelZ = 0
-    -- this is to freeze mario's animation
-    m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - (m.marioObj.header.gfx.animInfo.animAccel + 1)
-
-    -- get out of the action if round state is wait or wait players
-    if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS
-    or gGlobalSyncTable.roundState == ROUND_WAIT then
-        return set_mario_action(m, ACT_FREEFALL, 0)
-    end
-
-    return 0
-end
-
 -- runs once per frame (all game logic runs at 30fps)
 hook_event(HOOK_UPDATE, update)
 -- runs when the hud is rendered
@@ -1887,8 +1859,5 @@ hook_event(HOOK_ALLOW_HAZARD_SURFACE, function (m)
     if gPlayerSyncTable[0].state == SPECTATOR or gPlayerSyncTable[0].state == WILDCARD_ROLE then return end
     return gGlobalSyncTable.hazardSurfaces
 end)
-
--- make ACT_NOTHING do something, wild ain't it
-hook_mario_action(ACT_NOTHING, act_nothing)
 
 -- Good job, you made it to the end of your file. I'd suggest heading over to tag.lua next!
