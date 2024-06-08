@@ -1088,6 +1088,25 @@ function find_floor_steepness(x, y, z)
 	return math.sqrt(floor.normal.x * floor.normal.x + floor.normal.z * floor.normal.z) -- credit to nintendo
 end
 
+function select_new_level()
+	local level = levels[gGlobalSyncTable.selectedLevel]
+
+	-- this long while loop is just to select a random level, ik, extremely hard to read
+	while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+		gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
+
+		if level.level == LEVEL_TTC and not isRomhack then
+			gGlobalSyncTable.ttcSpeed = math.random(0, 3)
+		end
+	end
+
+	prevLevel = gGlobalSyncTable.selectedLevel
+	if #levels - #gGlobalSyncTable.blacklistedCourses <= 1 then
+		prevLevel = -1
+	end
+	gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+end
+
 function warp_to_tag_level(levelIndex)
 	local selectedLevel = levels[levelIndex]
 	-- attempt to warp to stage

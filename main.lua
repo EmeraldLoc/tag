@@ -467,19 +467,7 @@ local function server_update()
 
         timer = 15 * 30 -- 15 seconds
 
-        local level = levels[gGlobalSyncTable.selectedLevel]
-
-        -- this long while loop is just to select a random level, ik, extremely hard to read
-        while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
-            gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
-
-            if level.level == LEVEL_TTC and not isRomhack then
-                gGlobalSyncTable.ttcSpeed = math.random(0, 3)
-            end
-        end
-
-        prevLevel = gGlobalSyncTable.selectedLevel
-        gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+        select_new_level()
 
         log_to_console("Tag: Round State is now ROUND_WAIT")
 
@@ -781,7 +769,7 @@ local function server_update()
                     timer = 10 * 30
                 end
                 log_to_console("Tag: Setting round state to ROUND_TOURNAMENT_LEADERBOARD...")
-            elseif gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
+            elseif gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode and #levels - #gGlobalSyncTable.blacklistedCourses >= 4 then
                 gGlobalSyncTable.roundState = ROUND_VOTING
                 timer = 11 * 30 -- 11 seconds
                 log_to_console("Tag: Setting round state to ROUND_VOTING...")
@@ -800,17 +788,8 @@ local function server_update()
 
                 timer = 15 * 30 -- 15 seconds
 
-                local level = levels[gGlobalSyncTable.selectedLevel]
+                select_new_level()
 
-                while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
-                    gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
-
-                    if level.level == LEVEL_TTC and isRomhack then
-                        gGlobalSyncTable.ttcSpeed = math.random(0, 3)
-                    end
-                end
-
-                prevLevel = gGlobalSyncTable.selectedLevel
                 gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
 
                 log_to_console("Tag: Settings round state to ROUND_WAIT...")
@@ -823,7 +802,7 @@ local function server_update()
         gGlobalSyncTable.displayTimer = timer
 
         if timer <= 0 then
-            if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode then
+            if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode and #levels - #gGlobalSyncTable.blacklistedCourses >= 4 then
                 gGlobalSyncTable.roundState = ROUND_VOTING
                 timer = 11 * 30 -- 11 seconds
                 log_to_console("Tag: Settings round state to ROUND_VOTING...")
@@ -842,18 +821,7 @@ local function server_update()
 
                 timer = 15 * 30 -- 15 seconds
 
-                local level = levels[gGlobalSyncTable.selectedLevel]
-
-                while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
-                    gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
-
-                    if level.level == LEVEL_TTC and isRomhack then
-                        gGlobalSyncTable.ttcSpeed = math.random(0, 3)
-                    end
-                end
-
-                prevLevel = gGlobalSyncTable.selectedLevel
-                gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+                select_new_level()
 
                 log_to_console("Tag: Settings round state to ROUND_WAIT...")
 
@@ -939,18 +907,7 @@ local function server_update()
                 gGlobalSyncTable.selectedLevel = voteRandomLevels[voteResult]
             end
 
-            local level = levels[gGlobalSyncTable.selectedLevel]
-
-            while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
-                gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
-
-                if level.level == LEVEL_TTC and isRomhack then
-                    gGlobalSyncTable.ttcSpeed = math.random(0, 3)
-                end
-            end
-
-            prevLevel = gGlobalSyncTable.selectedLevel
-            gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+            select_new_level()
         end
     end
 end
