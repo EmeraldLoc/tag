@@ -1105,6 +1105,12 @@ function select_new_level()
 		prevLevel = -1
 	end
 	gGlobalSyncTable.roundState = ROUND_WAIT -- set round state to the intermission state
+
+	for i = 0, MAX_PLAYERS - 1 do
+        if gNetworkPlayers[i].connected then
+            gPlayerSyncTable[i].state = RUNNER
+        end
+    end
 end
 
 function warp_to_tag_level(levelIndex)
