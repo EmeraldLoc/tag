@@ -205,9 +205,8 @@ for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we a
         gPlayerSyncTable[i].amountOfTimeAsRunner = 0
         -- amount of tags till death (used for multiple gamemodes)
         gPlayerSyncTable[i].tagLives = 0
-        -- the assassins's target and stun timer (stun as the shock action)
+        -- the assassins's target
         gPlayerSyncTable[i].assassinTarget = -1
-        gPlayerSyncTable[i].assassinStunTimer = -1
         -- what number you voted for in the level voting system
         gPlayerSyncTable[i].votingNumber = 0
         -- whether or not you're boosting

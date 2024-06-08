@@ -16,12 +16,9 @@ local function packet_recieve(p)
         -- increase amount of tags and set assassinTarget to -1 (none)
         s.amountOfTags = s.amountOfTags + 1
         s.assassinTarget = -1
-        -- stop
-        return
+    else
+        set_mario_action(gMarioStates[0], ACT_SHOCKED, 0)
     end
-
-    -- set the assassin's stun timer
-    s.assassinStunTimer = 1 * 30
 end
 
 hook_event(HOOK_ON_PACKET_RECEIVE, packet_recieve)

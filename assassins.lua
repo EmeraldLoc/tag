@@ -55,12 +55,6 @@ local function mario_update(m)
         m.flags = m.flags | MARIO_VANISH_CAP
         m.flags = m.flags | MARIO_WING_CAP
     end
-
-    -- handle being stunned
-    if gPlayerSyncTable[0].assassinStunTimer and gPlayerSyncTable[0].assassinStunTimer > 0 and m.playerIndex == 0 then
-        gPlayerSyncTable[0].assassinStunTimer = gPlayerSyncTable[0].assassinStunTimer - 1
-        set_mario_action(m, ACT_SHOCKED, 0)
-    end
 end
 
 local function hud_side_panel_render()
@@ -139,8 +133,8 @@ function assassins_handle_pvp(aI, vI)
     local v = gPlayerSyncTable[vI]
 
     -- check if tagger tagged runner
-    if v.state == TAGGER and a.state == TAGGER
-        and gGlobalSyncTable.roundState == ROUND_ACTIVE then
+    if  v.state == TAGGER and a.state == TAGGER
+    and gGlobalSyncTable.roundState == ROUND_ACTIVE then
         -- send packet to attacker, since he has the target
         local p = create_packet(PACKET_TYPE_ASSASSINS_TARGET, network_global_index_from_local(vI))
         send_packet(network_global_index_from_local(aI), p)
