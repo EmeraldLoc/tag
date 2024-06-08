@@ -816,8 +816,18 @@ function get_rules_for_gamemode(gamemode)
 	elseif gamemode == ODDBALL then
 		return "In this gamemode, there is 1 runner, and everyone else is a tagger. You have to be the runner for a certain amount of time to win. When you die as a runner, another player becomes a runner randomly."
 	elseif gamemode == SEARCH then
-		-- TODO: Build rules for gamemode
+		-- TODO: Build rule for gamemode
 	end
+
+	return "No rules exists for this gamemode."
+end
+
+function get_rules_for_modifier(modifier)
+	if modifier == MODIFIER_BOMBS then
+		return "Bombs are throwable items that Taggers get. It is replaced with the boost, so boosts are disabled when this modifier is on. Use the " .. button_to_text(binds[BIND_BOMBS]) .. " button to use a Bomb."
+	end
+
+	return "No rules exists for this modifier."
 end
 
 function get_spectator_help()

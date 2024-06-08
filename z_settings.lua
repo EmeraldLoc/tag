@@ -621,26 +621,56 @@ local function get_rules(gamemode)
     if gamemode ~= nil then
         local text = get_rules_for_gamemode(gamemode)
         entries = {
-            {text = text},
-            {name = "Back",
-            permission = PERMISSION_NONE,
-            input = INPUT_A,
-            func = function ()
-                entries = helpEntries
-                selection = 1
-            end}}
-        selection = 1
+            {
+                text = text
+            },
+            {
+                name = "Back",
+                permission = PERMISSION_NONE,
+                input = INPUT_A,
+                func = function ()
+                    entries = gamemodeHelpEntries
+                    selection = 1
+                end
+            }
+        }
     else
         local text = get_general_rules()
         entries = {
-            {text = text},
-            {name = "Back",
-            permission = PERMISSION_NONE,
-            input = INPUT_A,
-            func = function ()
-                entries = helpEntries
-                selection = 1
-            end}}
+            {
+                text = text
+            },
+            {
+                name = "Back",
+                permission = PERMISSION_NONE,
+                input = INPUT_A,
+                func = function ()
+                    entries = helpEntries
+                    selection = 1
+                end
+            }
+        }
+    end
+    selection = 1
+end
+
+local function get_modifier_rules(modifier)
+    if modifier ~= nil then
+        local text = get_rules_for_modifier(modifier)
+        entries = {
+            {
+                text = text
+            },
+            {
+                name = "Back",
+                permission = PERMISSION_NONE,
+                input = INPUT_A,
+                func = function ()
+                    entries = modifierHelpEntries
+                    selection = 1
+                end
+            }
+        }
         selection = 1
     end
 end
@@ -674,34 +704,42 @@ blacklistModifierEntries = {}
 -- blacklisted entries
 -- generate it here as it is never changed
 blacklistEntries = {
-    {name = "Levels",
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        entries = blacklistLevelEntries
-        selection = 1
-    end,},
-    {name = "Gamemodes",
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        entries = blacklistGamemodeEntries
-        selection = 1
-    end,},
-    {name = "Modifiers",
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        entries = blacklistModifierEntries
-        selection = 1
-    end,},
-    {name = "Back",
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        entries = settingEntries
-        selection = 1
-    end,},
+    {
+        name = "Levels",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = blacklistLevelEntries
+            selection = 1
+        end,
+    },
+    {
+        name = "Gamemodes",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = blacklistGamemodeEntries
+            selection = 1
+        end,
+    },
+    {
+        name = "Modifiers",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = blacklistModifierEntries
+            selection = 1
+        end,
+    },
+    {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = settingEntries
+            selection = 1
+        end,
+    },
 }
 -- binds
 bindsEntries = {}
@@ -712,98 +750,85 @@ tournamentEntries = {}
 
 -- help entries
 -- generate it here as it is never changed
+gamemodeHelpEntries = {}
+for i = MIN_GAMEMODE, MAX_GAMEMODE do
+    table.insert(gamemodeHelpEntries, {
+        name = get_gamemode(i),
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            get_rules(i)
+        end
+    })
+end
+
+table.insert(gamemodeHelpEntries, {
+    name = "Back",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        entries = helpEntries
+        selection = 1
+    end
+})
+
+modifierHelpEntries = {}
+for i = MODIFIER_MIN + 1, MODIFIER_MAX do
+    table.insert(modifierHelpEntries, {
+        name = get_modifier_text(i),
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            get_modifier_rules(i)
+        end
+    })
+end
+
+table.insert(modifierHelpEntries, {
+    name = "Back",
+    permission = PERMISSION_NONE,
+    input = INPUT_A,
+    func = function ()
+        entries = helpEntries
+        selection = 1
+    end
+})
+
 helpEntries = {
-    {name = "General",
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(nil)
-    end,},
-
-    {name = get_gamemode(TAG),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(TAG)
-    end},
-
-    {name = get_gamemode(FREEZE_TAG),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(FREEZE_TAG)
-    end},
-
-    {name = get_gamemode(INFECTION),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(INFECTION)
-    end},
-
-    {name = get_gamemode(HOT_POTATO),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(HOT_POTATO)
-    end},
-
-    {name = get_gamemode(JUGGERNAUT),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(JUGGERNAUT)
-    end},
-
-    {name = get_gamemode(ASSASSINS),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(ASSASSINS)
-    end},
-
-    {name = get_gamemode(SARDINES),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(SARDINES)
-    end},
-
-    {name = get_gamemode(HUNT),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(HUNT)
-    end},
-
-    {name = get_gamemode(DEATHMATCH),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(DEATHMATCH)
-    end},
-
-    {name = get_gamemode(TERMINATOR),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(TERMINATOR)
-    end},
-
-    {name = get_gamemode(ODDBALL),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(ODDBALL)
-    end},
-
-    {name = get_gamemode(SEARCH),
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        get_rules(SEARCH)
-    end},
-
+    {
+        name = "General",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            get_rules(nil)
+        end,
+    },
+    {
+        name = "Gamemodes",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = gamemodeHelpEntries
+            selection = 1
+        end,
+    },
+    {
+        name = "Modifiers",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = modifierHelpEntries
+            selection = 1
+        end,
+    },
+    {
+        name = "Modifiers",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = modifierHelpEntries
+        end,
+    },
     {
         name = "Spectating",
         permission = PERMISSION_NONE,
@@ -848,13 +873,15 @@ helpEntries = {
             selection = 1
         end
     },
-    {name = "Back",
-    permission = PERMISSION_NONE,
-    input = INPUT_A,
-    func = function ()
-        entries = mainEntries
-        selection = 1
-    end,}
+    {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = mainEntries
+            selection = 1
+        end,
+    }
 }
 
 -- stat entries
