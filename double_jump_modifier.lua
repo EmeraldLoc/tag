@@ -28,8 +28,13 @@ local function mario_update(m)
         set_mario_action(m, ACT_TRIPLE_JUMP, 0)
         m.vel.y = 65
         spawn_mist_particles_variable(5, 0, 15)
+        interactedWithSpring = false
     elseif m.action & ACT_GROUP_MASK == ACT_GROUP_AIRBORNE then
         airTimer = airTimer + 1
+
+        if interactedWithSpring then
+            usedDoubleJump = false
+        end
     elseif m.action & ACT_GROUP_MASK ~= ACT_GROUP_AIRBORNE
     and (find_floor_steepness(m.pos.x, m.pos.y, m.pos.z) <= 45
     or m.floor.type ~= SURFACE_DEFAULT) then
