@@ -1764,8 +1764,8 @@ local function on_chat_message(m, msg)
 
     if gGlobalSyncTable.roundState == ROUND_ACTIVE
     and gGlobalSyncTable.gamemode == SARDINES then
-        if  (s.state  == WILDCARD_ROLE or s.state  == RUNNER or s.state  == SPECTATOR)
-        and (rS.state == WILDCARD_ROLE or rS.state == RUNNER or rS.state == SPECTATOR) then
+        if ((s.state  == WILDCARD_ROLE or s.state  == RUNNER or s.state  == SPECTATOR)
+        and (rS.state == WILDCARD_ROLE or rS.state == RUNNER or rS.state == SPECTATOR)) then
             djui_chat_message_create("\\#BBBEA1\\Sardine Chat: " .. get_player_name(m.playerIndex) .. ": \\#dcdcdc\\" .. msg)
             if m.playerIndex == 0 then
                 play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
@@ -1773,7 +1773,8 @@ local function on_chat_message(m, msg)
                 play_sound(SOUND_MENU_MESSAGE_APPEAR, gGlobalSoundSource)
             end
             return false
-        elseif s.state ~= TAGGER or rS.state ~= TAGGER then
+        elseif (s.state ~= TAGGER and s.state ~= WILDCARD_ROLE and s.state ~= SPECTATOR)
+        or rS.state ~= TAGGER then
             return false
         end
     end
