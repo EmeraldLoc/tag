@@ -222,11 +222,11 @@ local function set_bomb_cooldown()
     local direction = get_controller_dir()
 
     -- get speed
-    local speed = 1 * 30
+    local speed = 0.1 * 30
 
     if m.controller.buttonPressed & R_JPAD ~= 0
     or m.controller.buttonPressed & L_JPAD ~= 0 then
-        speed = 5 * 30
+        speed = 1 * 30
     end
 
     if direction == CONT_LEFT then
