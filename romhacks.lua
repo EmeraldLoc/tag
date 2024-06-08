@@ -910,11 +910,12 @@ romhacks = {
                 }
             },
             {
-                name = "b1",
+                name = "tph",
                 level = LEVEL_BOWSER_1,
                 painting = get_texture_info("painting_sr_b1"),
                 area = 1,
-                pipes = nil
+                pipes = nil,
+                overrideName = "The Piranha Hideout"
             },
             {
                 name = "srs",
