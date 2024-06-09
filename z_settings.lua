@@ -822,14 +822,6 @@ helpEntries = {
         end,
     },
     {
-        name = "Modifiers",
-        permission = PERMISSION_NONE,
-        input = INPUT_A,
-        func = function ()
-            entries = modifierHelpEntries
-        end,
-    },
-    {
         name = "Spectating",
         permission = PERMISSION_NONE,
         input = INPUT_A,
