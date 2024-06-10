@@ -644,7 +644,7 @@ function get_role_name(role)
 		elseif gGlobalSyncTable.gamemode == ODDBALL then
 			return "\\#919AA1\\Oddball"
 		elseif gGlobalSyncTable.gamemode == SEARCH then
-			return "\\#FF0000\\Hider"
+			return "\\#316BE8\\Hider"
 		end
 
 		return "\\#316BE8\\Runner"
@@ -655,6 +655,8 @@ function get_role_name(role)
 			return "\\#FF0000\\Assassin"
 		elseif gGlobalSyncTable.gamemode == HUNT then
 			return "\\#C74444\\Hunter"
+		elseif gGlobalSyncTable.gamemode == SEARCH then
+			return "\\#FF0000\\Seeker"
 		end
 
 		return "\\#E82E2E\\Tagger"
