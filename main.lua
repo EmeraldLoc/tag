@@ -1388,9 +1388,9 @@ local function mario_update(m)
         end
 
         -- handle slow motion
-        if gGlobalSyncTable.roundState == ROUND_ACTIVE
-        and (gGlobalSyncTable.displayTimer <= 0.5 * 30
-        and gGlobalSyncTable.gamemode ~= ODDBALL) then
+        if  gGlobalSyncTable.roundState == ROUND_ACTIVE
+        and gGlobalSyncTable.displayTimer <= 0.5 * 30
+        and gGlobalSyncTable.gamemode ~= ODDBALL then
             slow_motion()
         end
     end
