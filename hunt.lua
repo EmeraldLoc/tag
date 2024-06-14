@@ -80,10 +80,11 @@ function hunt_handle_pvp(aI, vI)
             a.tagLives = gGlobalSyncTable.tagMaxLives
             -- create popup
             tagged_popup(aI, vI)
+        else
+            v.invincTimer = 3 * 30
         end
         -- increase amount of tags and set invincibility timer to 1 second
         a.amountOfTags = a.amountOfTags + 1
-        v.invincTimer = 3 * 30
     end
 end
 
