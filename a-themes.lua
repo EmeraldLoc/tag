@@ -92,6 +92,7 @@ function load_theme(themeIndex)
     end
 
     local savedTheme = load_string("theme_" .. themeIndex)
+    if savedTheme == nil or savedTheme == "" then return end
     local builtinThemes = 0
     for _, v in ipairs(tagThemes) do
         if v.builtin then
