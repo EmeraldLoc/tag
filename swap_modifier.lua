@@ -42,6 +42,9 @@ local function mario_update(m)
 
             -- set the current pos to the last safe coordinates
             vec3f_copy(m.pos, lastSafeCoords)
+
+            -- set peak height to avoid fall damage
+            m.peakHeight = m.pos.y
         end
     else
         randomMarioIndex = nil
