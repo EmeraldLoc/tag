@@ -111,6 +111,7 @@ local function bhv_arena_spring_launch(obj)
         set_mario_animation(m, MARIO_ANIM_BACKFLIP)
         set_mario_action(m, ACT_TRIPLE_JUMP, 0)
         m.vel.y = vel.y
+        m.forwardVel = 0
         interactedWithSpring = true
     end
     obj.oArenaSpringSprung = 15
