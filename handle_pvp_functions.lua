@@ -22,8 +22,6 @@ function handle_pvp(aI, vI)
         terminator_handle_pvp(aI, vI)
     elseif gGlobalSyncTable.gamemode == ODDBALL then
         oddball_handle_pvp(aI, vI)
-    elseif gGlobalSyncTable.gamemode == SEARCH then
-        search_handle_pvp(aI, vI)
     end
 end
 

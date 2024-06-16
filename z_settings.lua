@@ -1402,19 +1402,6 @@ local function reset_gamemode_selection()
         valueText = tostring(math.floor(get_active_timer(ODDBALL) / 30)) .. "s",
         seperator = get_gamemode(ODDBALL)},
 
-        {name = "Time Limit",
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_JOYSTICK,
-        func = function () set_time_limit(SEARCH) end,
-        valueText = tostring(math.floor(get_active_timer(SEARCH) / 30)) .. "s",
-        seperator = get_gamemode(SEARCH)},
-
-        {name = "Hide Time Limit",
-        permission = PERMISSION_MODERATORS,
-        input = INPUT_JOYSTICK,
-        func = function () set_hide_time(SEARCH) end,
-        valueText = tostring(math.floor(gGlobalSyncTable.hidingTimer[SEARCH] / 30)) .. "s",},
-
         {name = "Reset Gamemode Settings",
         permission = PERMISSION_MODERATORS,
         input = INPUT_A,
@@ -2013,7 +2000,6 @@ local function reset_stat_entries()
         if scopeStats.totalTimeAsRunner ~= nil then
             local name = "Total Time As Runner"
             if statGroupIndex == SARDINES then name = "Total Time As Sardine" end
-            if statGroupIndex == SEARCH then name = "Total Time as Hider" end
             table.insert(statEntries, {
                 name = name,
                 permission = PERMISSION_NONE,

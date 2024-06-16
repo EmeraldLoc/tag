@@ -62,8 +62,7 @@ function hud_did_you_know(fade)
         text = "In the game code, the index of this random did you know is 13, I don't know why you need"
         text2 = "to know that, but now you do"
     elseif randomDidYouKnow == 14 then
-        text = "Wanna contribute? Search \"tag mod sm64 github,\" it'll be like the 3rd result. Help get it"
-        text2 = "to the top, or no cookie for you >:("
+        text = "Wanna contribute? Search \"tag sm64,\" and it should be the 1st result!"
     elseif randomDidYouKnow == 15 then
         text = "As of January 23 2024, 6:11 pm CT, I'm having good fun writing these."
     elseif randomDidYouKnow == 16 then
@@ -140,7 +139,7 @@ function hud_did_you_know(fade)
     elseif randomDidYouKnow == 37 then
         text = "If there is an issue, or you want to suggest something, report it"
         text2 = "to me at https://github.com/EmeraldLoc/tag/issues/."
-    elseif randomDidYouKnow == 38 then 
+    elseif randomDidYouKnow == 38 then
         text = "You can color your name however you'd like with {backslash}RRGGBB{backslash}."
         text2 =  "You can even add a star to your name with the unicode id U+007F."
     elseif randomDidYouKnow == 39 then

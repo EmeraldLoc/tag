@@ -9,8 +9,7 @@ local function mario_update(m)
     and gGlobalSyncTable.roundState ~= ROUND_WAIT
     and gGlobalSyncTable.roundState ~= ROUND_WAIT_PLAYERS
     and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION
-    and gGlobalSyncTable.roundState ~= ROUND_SARDINE_HIDING
-    and gGlobalSyncTable.roundState ~= ROUND_SEARCH_HIDING)
+    and gGlobalSyncTable.roundState ~= ROUND_SARDINE_HIDING)
     or  gPlayerSyncTable[0].state == WILDCARD_ROLE
     or  gPlayerSyncTable[0].state == SPECTATOR then
         if m.action & ACT_FLAG_RIDING_SHELL ~= 0 then

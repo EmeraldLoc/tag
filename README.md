@@ -6,7 +6,7 @@ This mod is a collection of multiple gamemodes all in one mod! The mod contains 
 
 ### Gamemodes
 
-Tag contains multiple tag-related gamemodes! All gamemodes involve "tagging" another player. There are as of right now 12 different gamemodes. These gamemodes are Tag, Freeze Tag, Infection, Hot Potato, Juggernaut (meh), Assassins, Sardines, Hunt, Deathmatch, Terminator, Oddball, and Search! Each gamemode gives it's own fun to the mod!
+Tag contains multiple tag-related gamemodes! All gamemodes involve "tagging" another player. There are as of right now 12 different gamemodes. These gamemodes are Tag, Freeze Tag, Infection, Hot Potato, Juggernaut (meh), Assassins, Sardines, Hunt, Deathmatch, Terminator, and Oddball! Each gamemode gives it's own fun to the mod!
 
 ### Modifiers
 
