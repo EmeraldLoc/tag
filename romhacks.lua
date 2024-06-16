@@ -1887,7 +1887,7 @@ _G.Arena.add_level = function(level, name)
 end
 
 -- tag map api
-_G.tag.add_level = function (level, name, painting, area, pipes, spawnLocation)
+_G.tag.add_level = function (level, name, painting, area, pipes, spawnLocation, springs)
     -- insert level into the level reg stages
     table.insert(romhacks[3].levels, {
         name = name,
@@ -1896,6 +1896,7 @@ _G.tag.add_level = function (level, name, painting, area, pipes, spawnLocation)
         area = area,
         pipes = pipes,
         spawnLocation = spawnLocation,
+        springs = springs,
     })
     if initializedRomhacks then
         table.insert(levels, {
@@ -1905,6 +1906,7 @@ _G.tag.add_level = function (level, name, painting, area, pipes, spawnLocation)
             area = area,
             pipes = pipes,
             spawnLocation = spawnLocation,
+            springs = springs,
         })
     end
 end

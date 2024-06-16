@@ -54,8 +54,8 @@ function render_radar(m, hudIcon, isObj)
 	elseif dX < 0 then
 		dX = 0
 	end
-	if dY > (screenHeight - 20) then
-        dY = (screenHeight - 20)
+	if dY > screenHeight - 20 then
+        dY = screenHeight - 20
 	elseif dY < 0 then
 		dY = 0
 	end
