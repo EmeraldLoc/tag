@@ -1,7 +1,7 @@
 # Documentation
 
-- [Gamemode Documentation](GAMEMODES.md)
-- [Modifier Documentation](MODIFIERS.md)
-- [Romhack Documentation](ROMHACKS.md)
-- [Addon Documentation](ADDONS.md)
-- [Achievements Documentation](ACHIEVEMENTS.md)
+- [Gamemodes](GAMEMODES.md)
+- [Modifiers](MODIFIERS.md)
+- [Romhacks](ROMHACKS.md)
+- [Addons](ADDONS.md)
+- [Achievements](ACHIEVEMENTS.md)
