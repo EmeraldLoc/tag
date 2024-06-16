@@ -32,7 +32,7 @@ A `levels` table contains the following fields:
 | `area`|`integer`|The area for a level.
 | `pipes`|`table/nil`|A table of pairs of 2 pipes.
 | `springs`|`table/nil`|A table of springs. Each entry containing an x, y, and z coordinate, the pitch, yaw, and strength.
-| `spawnLocation`|`Vec3/nilf`|A spawn location.
+| `spawnLocation`|`Vec3f/nil`|A spawn location.
 | `overrideName`|`string/nil`|A override name, typically used for subareas.
 | `room`|`integer/nil`|A specific room to be forced. You have 5 seconds to re-enter a room if you leave it, shown with buzzing.
 | `unwantedBhvs`|`table/nil`|A table of unwanted behavior id's.
@@ -96,17 +96,3 @@ Now get a mod that renders mario's position (I recommend Pos Display), and go to
 Once you do all this, fork the tag repo, put your changes into that repo, and make a pull request. Put in the name you would like to be credited with and I will make sure to credit you.
 
 That's it!
-
-# Adding Your Level to Tag
-
-Firstly, if your level already works in Arena, then it should work in tag as well, however no painting will exist. Pipes are placed in the position of the team flags, and the spawn is set via the flag tag pos. If the floor is invalid however, it'll set your spawn point to an actual spawn point specified in the level. If you want to add a level to tag using the official way, to get paintings, here's what that looks like:
-
-```
-_G.tag.add_level(level, name, painting, area, pipes, spawnLocation)
-```
-
-The arena benefits will still apply when you use the tag api, so there isn't really a need to specify a spawn or pipes.
-
-If you read the guide above, it should be clear what needs to be done.
-
-To check if tag is enabled, just check if `_G.tag` is nil or not.
