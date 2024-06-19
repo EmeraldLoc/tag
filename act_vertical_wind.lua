@@ -8,7 +8,19 @@ local function act_vertical_wind(m)
     local intendedMag = m.intendedMag / 32
 
     play_character_sound_if_no_flag(m, CHAR_SOUND_HERE_WE_GO, MARIO_MARIO_SOUND_PLAYED)
-    set_character_animation(m, CHAR_ANIM_AIRBORNE_ON_STOMACH)
+    if m.actionState == 0 then
+        set_character_animation(m, CHAR_ANIM_FORWARD_SPINNING_FLIP)
+        if m.marioObj.header.gfx.animInfo.animFrame == 1 then
+            play_sound(SOUND_ACTION_SPIN, m.marioObj.header.gfx.cameraToObject)
+            queue_rumble_data_mario(m, 8, 80)
+        end
+
+        if m.marioObj.header.gfx.animInfo.animFrame >= m.marioObj.header.gfx.animInfo.curAnim.loopEnd - 2 then
+            m.actionState = 1
+        end
+    else
+        set_character_animation(m, CHAR_ANIM_AIRBORNE_ON_STOMACH)
+    end
 
     update_air_without_turn(m)
 
@@ -28,7 +40,7 @@ end
 ---@param m MarioState
 local function on_set_mario_action(m)
     if m.action == ACT_VERTICAL_WIND then
-        set_mario_action(m, ACT_CUSTOM_WIND, m.actionArg)
+        set_mario_action(m, ACT_CUSTOM_WIND, 0)
     end
 end
 
