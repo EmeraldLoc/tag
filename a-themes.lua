@@ -126,7 +126,7 @@ function load_theme(themeIndex)
     theme.builtin = false
 end
 
-local function validate_theme()
+function validate_theme()
     if tagThemes[selectedTheme] == nil then
         if load_int("theme") ~= nil then selectedTheme = load_int("theme") end
         if tagThemes[selectedTheme] == nil then
@@ -134,5 +134,3 @@ local function validate_theme()
         end
     end
 end
-
-hook_event(HOOK_ON_HUD_RENDER_BEHIND, validate_theme)

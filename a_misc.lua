@@ -1073,6 +1073,7 @@ end
 
 ---@return table
 function get_selected_theme()
+	validate_theme()
 	return tagThemes[selectedTheme]
 end
 
