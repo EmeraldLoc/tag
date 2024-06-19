@@ -23,11 +23,13 @@ local function mario_update(m)
     and m.action ~= ACT_IN_CANNON
     and m.action ~= ACT_SHOT_FROM_CANNON
     and m.action ~= ACT_GRABBED
+    and m.action ~= ACT_TOP_OF_POLE_JUMP
     and m.action & ACT_FLAG_ON_POLE == 0
     and m.squishTimer <= 0
     and not interactedWithSpring then
         set_mario_action(m, ACT_RIDING_SHELL_GROUND, 0)
-    elseif m.action & ACT_FLAG_RIDING_SHELL == 0 then
+    elseif m.action & ACT_FLAG_RIDING_SHELL == 0
+    and m.action & ACT_FLAG_ON_POLE == 0 then
         shellTimer = shellTimer + 1
     else
         shellTimer = 0

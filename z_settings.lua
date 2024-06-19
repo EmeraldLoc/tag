@@ -925,6 +925,7 @@ themeEntries = {}
 themeBuilderEntries = {}
 themeManagerEntries = {}
 rgbSliderEntries = {}
+creditEntries = {}
 
 entries = mainEntries
 
@@ -1053,6 +1054,15 @@ local function reset_main_selections()
          input = INPUT_A,
          func = function ()
              entries = themeEntries
+             selection = 1
+         end,
+         valueText = ">",},
+         -- credits selection
+         {name = "Credits",
+         permission = PERMISSION_NONE,
+         input = INPUT_A,
+         func = function ()
+             entries = creditEntries
              selection = 1
          end,
          valueText = ">",},
@@ -2754,6 +2764,118 @@ local function reset_rgb_slider_entries()
     end
 end
 
+local function reset_credit_entries()
+    local AUTHOR = 1
+    local LEAD_DEV = 2
+    local DEV = 3
+    local ROMHACK_PORTERS = 4
+    local categories = {
+        [AUTHOR] = "Author",
+        [LEAD_DEV] = "Lead Developer",
+        [DEV] = "Developer",
+        [ROMHACK_PORTERS] = "Romhack Porters",
+    }
+    local players = {
+        {
+            name = "EmeraldLockdown",
+            categories = { AUTHOR, LEAD_DEV, ROMHACK_PORTERS },
+            discordHandle = nil,
+            modsiteUsername = "EmeraldLockdown",
+            githubHandle = "EmeraldLoc"
+        },
+        {
+            name = "Murioz",
+            categories = { ROMHACK_PORTERS },
+            discordHandle = "Murioz",
+            modsiteUsername = "Murioz",
+            githubHandle = "Murioz"
+        },
+        {
+            name = "Bear",
+            categories = { ROMHACK_PORTERS },
+            discordHandle = nil,
+            modsiteUsername = "Bear",
+            githubHandle = "Bear64DX"
+        },
+        {
+            name = "jzzle",
+            categories = { ROMHACK_PORTERS },
+            discordHandle = "jzzle",
+            modsiteUsername = "jzzle",
+            githubHandle = nil
+        },
+        {
+            name = "TheMan",
+            categories = { ROMHACK_PORTERS },
+            discordHandle = nil,
+            modsiteUsername = "TheMan",
+            githubHandle = "TheMan6900"
+        },
+    }
+
+    creditEntries = {}
+
+    for categoryIndex, categoryName in ipairs(categories) do
+        local seperatorAddedForCategory = false
+        for _, player in ipairs(players) do
+            if table.contains(player.categories, categoryIndex) then
+                local seperator = nil
+                if not seperatorAddedForCategory then
+                    seperatorAddedForCategory = true
+                    seperator = categoryName
+                end
+                table.insert(creditEntries, {
+                    name = player.name,
+                    permission = PERMISSION_NONE,
+                    input = INPUT_A,
+                    func = function ()
+                        entries = {
+                            {
+                                name = "Name",
+                                valueText = player.name
+                            },
+                            {
+                                name = "Discord Handle",
+                                valueText = player.discordHandle and player.discordHandle or "None"
+                            },
+                            {
+                                name = "Modsite Username",
+                                valueText = player.modsiteUsername and player.modsiteUsername or "None"
+                            },
+                            {
+                                name = "Github Handle",
+                                valueText = player.githubHandle and player.githubHandle or "None"
+                            },
+                            {
+                                name = "Back",
+                                permission = PERMISSION_NONE,
+                                input = INPUT_A,
+                                func = function ()
+                                    entries = creditEntries
+                                    selection = 1
+                                end
+                            }
+                        }
+                        selection = 1
+                    end,
+                    seperator = seperator
+                })
+            end
+        end
+    end
+
+    table.insert(creditEntries, {
+        name = "Back",
+        permission = PERMISSION_NONE,
+        input = INPUT_A,
+        func = function ()
+            entries = mainEntries
+            selection = 1
+        end,
+        seperator = ""
+    })
+end
+
 local function scroll_bar_render()
     local theme = get_selected_theme()
     local height = bgHeight - 12
@@ -3028,6 +3150,7 @@ local function mario_update(m)
     reset_theme_manager_entries()
     reset_theme_builder_entries()
     reset_rgb_slider_entries()
+    reset_credit_entries()
 end
 
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
