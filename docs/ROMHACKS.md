@@ -38,6 +38,7 @@ A `levels` table contains the following fields:
 | `unwantedBhvs`|`table/nil`|A table of unwanted behavior id's.
 | `disabledBhvs`|`table/nil`|A table of disabled behavior id's, disabled meaning disabling interaction's for that behavior.
 | `levelLoop`|`function`|A function that runs every frame when the level is in play.
+| `act`|`integer/nil`|The act the level takes place in. Nil means it's every act combined
 
 Anything with /nil in it means it's optional, and you don't have to include it. Pipes and paintings should be set to nil, whereas anything after pipes doesn't have to be included in the table (for no good reason, this needs to be update, here's a TODO for me). Begin constructing the table, keep painting and pipes as nil for now.
 

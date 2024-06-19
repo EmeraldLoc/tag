@@ -1087,7 +1087,9 @@ function select_new_level()
 	local level = levels[gGlobalSyncTable.selectedLevel]
 
 	-- this long while loop is just to select a random level, ik, extremely hard to read
-	while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+	while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true
+	or table.contains(badLevels, level.level)
+	or gGlobalSyncTable.selectedLevel == prevLevel do
 		gGlobalSyncTable.selectedLevel = math.random(1, #levels) -- select a random level
 
 		if level.level == LEVEL_TTC and not isRomhack then
@@ -1105,8 +1107,11 @@ end
 
 function warp_to_tag_level(levelIndex)
 	local selectedLevel = levels[levelIndex]
+	local act = selectedLevel.act
+	if act ~= nil then gLevelValues.disableActs = false
+	else gLevelValues.disableActs = true; act = 0 end
 	-- attempt to warp to stage
-	local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, 0)
+	local warpSuccesful = warp_to_level(selectedLevel.level, selectedLevel.area, act)
 
 	if not warpSuccesful then
 		-- warping failed, so try a few common warp nodes
@@ -1131,7 +1136,9 @@ function warp_to_tag_level(levelIndex)
 
 			local level = levels[gGlobalSyncTable.selectedLevel]
 
-			while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true or table.contains(badLevels, level.level) or gGlobalSyncTable.selectedLevel == prevLevel do
+			while gGlobalSyncTable.blacklistedCourses[gGlobalSyncTable.selectedLevel] == true
+			or table.contains(badLevels, level.level)
+			or gGlobalSyncTable.selectedLevel == prevLevel do
 				gGlobalSyncTable.selectedLevel = course_to_level(math.random(COURSE_MIN, COURSE_MAX)) -- select a random level
 			end
 
