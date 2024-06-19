@@ -24,7 +24,7 @@ local function can_hold_bomb(i)
     -- check modifier
     if gGlobalSyncTable.modifier ~= MODIFIER_BOMBS then return false end
 
-    -- check if we can hold a bomb
+    -- check if we are a tagger
     if s.state ~= TAGGER then return false end
 
     -- check round state

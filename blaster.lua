@@ -7,6 +7,9 @@ local function mario_update(m)
     if gGlobalSyncTable.modifier ~= MODIFIER_BLASTER then return end
     if gPlayerSyncTable[0].state == WILDCARD_ROLE then return end
     if gPlayerSyncTable[0].state == SPECTATOR then return end
+    if  gGlobalSyncTable.roundState == ROUND_ACTIVE
+    and gGlobalSyncTable.gamemode == SARDINES
+    and gPlayerSyncTable[0].state == RUNNER then return end
 
     if  m.controller.buttonPressed & binds[BIND_GUN].btn ~= 0
     and gunCooldown >= gGlobalSyncTable.maxBlasterCooldown then
