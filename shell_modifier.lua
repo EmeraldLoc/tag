@@ -22,6 +22,7 @@ local function mario_update(m)
     and shellTimer >= 1 * 30
     and m.action ~= ACT_IN_CANNON
     and m.action ~= ACT_SHOT_FROM_CANNON
+    and m.action ~= ACT_GRABBED
     and m.action & ACT_FLAG_ON_POLE == 0
     and m.squishTimer <= 0
     and not interactedWithSpring then
