@@ -92,7 +92,7 @@ local function on_hud_render()
             scale = 0.5
             scale = scale + dist / 7000
             scale = clampf(1 - scale, 0, 0.32)
-            local text = tostring(gPlayerSyncTable[i].tagLives) .. " Lives Remaining"
+            local text = math.floor(gPlayerSyncTable[i].tagLives) .. " Lives Remaining"
             local color = { r = 162, g = 202, b = 234 }
             network_player_palette_to_color(gNetworkPlayers[i], SHIRT, color)
             color.r = color.r + 20
