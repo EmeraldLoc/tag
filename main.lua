@@ -1396,7 +1396,8 @@ local function before_phys(m)
         and m.action ~= ACT_HARD_BACKWARD_AIR_KB
         and m.action ~= ACT_HARD_FORWARD_AIR_KB
         and m.action ~= ACT_BACKWARD_AIR_KB
-        and m.action ~= ACT_FORWARD_AIR_KB then
+        and m.action ~= ACT_FORWARD_AIR_KB
+        and m.action ~= ACT_WATER_JUMP then
             m.vel.x = m.vel.x * 1.25
             m.vel.z = m.vel.z * 1.25
         end
