@@ -31,7 +31,9 @@ local function mario_update(m)
         m.freeze = 1
     elseif gGlobalSyncTable.roundState == ROUND_SARDINE_HIDING
     and gPlayerSyncTable[0].state == RUNNER then
-        vec3f_copy(hidingPos, m.pos)
+        if m.action & ACT_FLAG_AIR == 0 then
+            vec3f_copy(hidingPos, m.pos)
+        end
     end
 
     if gGlobalSyncTable.roundState == ROUND_ACTIVE
