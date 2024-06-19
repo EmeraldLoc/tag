@@ -4,6 +4,7 @@ ACT_CUSTOM_LAVA_BOOST = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_ATTACKING)
 ---@param m MarioState
 local function act_lava_boost(m)
     if m.flags & MARIO_MARIO_SOUND_PLAYED == 0 then
+        play_character_sound(m, CHAR_SOUND_ON_FIRE)
         queue_rumble_data_mario(m, 5, 80)
     end
 
