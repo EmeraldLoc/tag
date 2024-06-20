@@ -80,9 +80,7 @@ local function mario_update(m)
     end
 
     if not isPaused then return end
-
     m.freeze = 1
-
     if showSettings then return end
 
 

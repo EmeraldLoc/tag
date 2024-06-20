@@ -211,6 +211,8 @@ local function mario_update(m)
     if showSettings then return end
     if isPaused then return end
 
+    m.freeze = 1
+
     if joystickCooldown <= 0 and gPlayerSyncTable[0].votingNumber == 0 then
         -- check where our stick is
         if m.controller.stickX > 0.5

@@ -208,6 +208,7 @@ local function mario_update(m)
     if firstLaunch == nil then firstLaunch = true end
     if firstLaunch then return end
     if m.playerIndex ~= 0 then return end
+    if not isPaused then showingChangelog = false end
 
     if changelogVer ~= versions[1] then
         showingChangelog = true

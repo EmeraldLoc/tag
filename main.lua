@@ -437,8 +437,8 @@ local function server_update()
         end
     end
 
-    if (not gGlobalSyncTable.randomGamemode and numPlayers < playersNeeded[gGlobalSyncTable.gamemode])
-    or numPlayers < 2 then
+    if ((not gGlobalSyncTable.randomGamemode and numPlayers < playersNeeded[gGlobalSyncTable.gamemode])
+    or numPlayers < 2) and gGlobalSyncTable.roundState ~= ROUND_VOTING then
         gGlobalSyncTable.roundState = ROUND_WAIT_PLAYERS -- set round state to waiting for players
     elseif gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then
         -- if we aren't in auto mode, then don't run this code, and run designated code in the if statemnt
@@ -789,7 +789,7 @@ local function server_update()
             if gGlobalSyncTable.doVoting and gGlobalSyncTable.autoMode and #levels - #gGlobalSyncTable.blacklistedCourses >= 4 then
                 gGlobalSyncTable.roundState = ROUND_VOTING
                 timer = 11 * 30 -- 11 seconds
-                log_to_console("Tag: Settings round state to ROUND_VOTING...")
+                log_to_console("Tag: Setting round state to ROUND_VOTING...")
             else
                 if not gGlobalSyncTable.autoMode then
                     for i = 0, MAX_PLAYERS - 1 do
@@ -946,9 +946,9 @@ local function update()
         or gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
         or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
         or gGlobalSyncTable.roundState == ROUND_VOTING then
-            enable_time_stop_including_mario()
+            enable_time_stop()
         else
-            disable_time_stop_including_mario()
+            disable_time_stop()
         end
     end
 end
@@ -1395,8 +1395,6 @@ local function before_phys(m)
         and m.action ~= ACT_FORWARD_AIR_KB
         and m.action ~= ACT_HARD_BACKWARD_AIR_KB
         and m.action ~= ACT_HARD_FORWARD_AIR_KB
-        and m.action ~= ACT_BACKWARD_AIR_KB
-        and m.action ~= ACT_FORWARD_AIR_KB
         and m.action ~= ACT_WATER_JUMP then
             m.vel.x = m.vel.x * 1.25
             m.vel.z = m.vel.z * 1.25

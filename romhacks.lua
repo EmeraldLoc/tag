@@ -1091,7 +1091,14 @@ romhacks = {
                         { x = 4994, y = 3989, z = 701 }
                     }
                 }
-            }
+            },
+            {
+                name = "zl",
+                level = smlua_level_util_get_info_from_short_name("zl") and smlua_level_util_get_info_from_short_name("zl").levelNum or 0,
+                painting = get_texture_info("painting_sr_zl"),
+                area = 1,
+                pipes = nil
+            },
         }
     },
     {

@@ -1515,13 +1515,24 @@ local function reset_start_selection()
         end
     end
 
-    table.insert(startEntries,
-    {
+    table.insert(startEntries, {
         name = "Stop Round",
         permission = PERMISSION_MODERATORS,
         input = INPUT_A,
         disabled = stop_round_disabled(),
         func = stop_round,
+    })
+
+    table.insert(startEntries, {
+        name = "Go to Voting",
+        permission = PERMISSION_MODERATORS,
+        input = INPUT_A,
+        disabled = gGlobalSyncTable.roundState == ROUND_VOTING,
+        func = function ()
+            gGlobalSyncTable.roundState = ROUND_VOTING
+            timer = 11 * 30 -- 11 seconds
+            log_to_console("Tag: Setting round state to ROUND_VOTING...")
+        end
     })
 
     table.insert(startEntries, {
