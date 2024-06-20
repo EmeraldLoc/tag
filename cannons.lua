@@ -15,6 +15,11 @@ local function before_mario_update(m)
     if timeSpentInCannon >= 5 * 30 then
         m.controller.buttonPressed = m.controller.buttonPressed | A_BUTTON
     end
+
+    if m.action == ACT_SHOT_FROM_CANNON and (m.controller.buttonDown & Z_TRIG ~= 0
+    or m.controller.buttonPressed & Z_TRIG ~= 0) then
+        set_mario_action(m, ACT_GROUND_POUND, 0)
+    end
 end
 
 local function allow_interact(m, o, intee, interacted)
