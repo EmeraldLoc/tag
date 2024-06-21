@@ -591,6 +591,8 @@ function get_gamemode(g)
 		return "\\#7D2A24\\Terminator\\#DCDCDC\\"
 	elseif g == ODDBALL then
 		return "\\#919AA1\\Oddball\\#DCDCDC\\"
+	elseif g == ROYALE then
+		return "\\#FC3D03\\Royale\\#DCDCDC\\"
 	end
 
 	return "Uhhhhhhhhhh"
@@ -1071,7 +1073,6 @@ function save_modifier_settings()
 	save_int("buttonChallenge", gGlobalSyncTable.buttonChallenge)
 end
 
----@return table
 function get_selected_theme()
 	validate_theme()
 	return tagThemes[selectedTheme]

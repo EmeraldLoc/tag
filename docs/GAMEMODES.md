@@ -154,7 +154,7 @@ end
 ...
 ```
 
-Now, for the hard part, making the logic for the gamemode. Create a lua file for your gamemode (i.e `gamemode_3.lua`). Then, I'd recommend copying the `tag.lua` file into your lua file. From there, go through each and every function, and update/remove anything that doesn't need to exist. At the beginning of each file, be sure to have:
+Now, for the hard part, making the logic for the gamemode. Create a lua file for your gamemode (i.e `gamemode_3.lua`). Then, I'd recommend copying the `tag.lua` file into your lua file. From there, go through each and every function, and update/remove anything that doesn't need to exist. At the beginning of each function, be sure to have:
 ```
 if gGlobalSyncTable.gamemode ~= GAMEMODE then return end
 ```

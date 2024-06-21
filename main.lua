@@ -52,7 +52,8 @@ HUNT                                   = 8
 DEATHMATCH                             = 9
 TERMINATOR                             = 10
 ODDBALL                                = 11
-MAX_GAMEMODE                           = 11
+ROYALE                                 = 12
+MAX_GAMEMODE                           = 12
 
 -- spectator states
 SPECTATOR_STATE_MARIO                  = 0
@@ -384,6 +385,7 @@ playersNeeded = {
     [DEATHMATCH] = 2,
     [TERMINATOR] = 2,
     [ODDBALL] = 2,
+    [ROYALE] = 2,
 }
 
 -- selected theme
