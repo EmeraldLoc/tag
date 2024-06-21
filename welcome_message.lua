@@ -10,7 +10,7 @@ local function mario_update(m)
     if firstLaunch then
         m.freeze = 1
 
-        if m.controller.buttonPressed & X_BUTTON ~= 0 then
+        if m.controller.buttonPressed & X_BUTTON ~= 0 or m.controller.buttonPressed & START_BUTTON ~= 0 then
             firstLaunch = false
             save_bool("firstLaunch", false)
             play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource)
