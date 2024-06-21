@@ -545,7 +545,7 @@ function get_modifier_text(m)
 	elseif m == MODIFIER_SWAP then
 		text = "\\#FF0000\\Sw\\#48AD16\\ap"
 	elseif m == MODIFIER_Z_BUTTON_CHALLENGE then
-		hexCode = "\\#C1BED1\\Z Button Challenge"
+		text = "\\#C1BED1\\Z Button Challenge"
 	elseif m == MODIFIER_ONLY_FIRSTIES then
 		text = "\\#EDB834\\Only Firsties"
 	elseif m == MODIFIER_NONE

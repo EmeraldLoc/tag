@@ -98,11 +98,6 @@ BOOST_STATE_RECHARGING                 = 0
 BOOST_STATE_READY                      = 1
 BOOST_STATE_BOOSTING                   = 2
 
--- button challenge buttons
-BUTTON_CHALLENGE_A                     = 0
-BUTTON_CHALLENGE_Z                     = 1
-BUTTON_CHALLENGE_RANDOM                = 2
-
 -- tournament point systems
 TOURNAMENT_SYSTEM_MIN                  = 0
 TOURNAMENT_SYSTEM_POINT_LIMIT          = 0

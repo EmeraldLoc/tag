@@ -12,7 +12,7 @@ changelogs = {
             "Added " .. get_modifier_text(MODIFIER_HARD_SURFACE),
             "Added " .. get_modifier_text(MODIFIER_SAND),
             "Readded " .. get_modifier_text(MODIFIER_SWAP),
-            "Added " .. get_modifier_text(MODIFIER_BUTTON_CHALLENGE),
+            "Added " .. get_modifier_text(MODIFIER_Z_BUTTON_CHALLENGE),
             "Added " .. get_modifier_text(MODIFIER_ONLY_FIRSTIES),
         },
         romhacks = {
