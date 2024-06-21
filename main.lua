@@ -82,7 +82,7 @@ MODIFIER_FRIENDLY_FIRE                 = 16
 MODIFIER_HARD_SURFACE                  = 17
 MODIFIER_SAND                          = 18
 MODIFIER_SWAP                          = 19
-MODIFIER_BUTTON_CHALLENGE              = 20
+MODIFIER_Z_BUTTON_CHALLENGE            = 20
 MODIFIER_ONLY_FIRSTIES                 = 21
 MODIFIER_MAX                           = 21
 
@@ -176,8 +176,6 @@ gGlobalSyncTable.tournamentRoundLimit  = 5
 gGlobalSyncTable.tournamentPointsReq   = 50
 -- swap timer
 gGlobalSyncTable.swapTimer = 0
--- current button challenge button
-gGlobalSyncTable.buttonChallengeButton = A_BUTTON
 -- init modifier settings
 init_modifier_settings()
 -- blacklisted courses, gamemodes, and modifiers
@@ -509,13 +507,6 @@ local function server_update()
                 else
                     gGlobalSyncTable.modifier = MODIFIER_NONE -- set the modifier to none
                 end
-            end
-
-            -- if the modifier is set to the button challenge, select random button
-            if  gGlobalSyncTable.buttonChallenge == BUTTON_CHALLENGE_RANDOM
-            and gGlobalSyncTable.modifier == MODIFIER_BUTTON_CHALLENGE then
-                -- terenary operator
-                gGlobalSyncTable.buttonChallengeButton = math.random(0, 1) == 0 and A_BUTTON or Z_TRIG
             end
 
             -- if we select a random gamemode, select that random gamemode now
@@ -1090,10 +1081,6 @@ local function mario_update(m)
                 -- max blaster cooldown
                 if load_int("maxBlasterCooldown") ~= nil then
                     gGlobalSyncTable.maxBlasterCooldown = load_int("maxBlasterCooldown")
-                end
-                -- button challenge
-                if load_int("buttonChallenge") ~= nil then
-                    gGlobalSyncTable.buttonChallenge = load_int("buttonChallenge")
                 end
             end
             if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end

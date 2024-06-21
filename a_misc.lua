@@ -544,12 +544,8 @@ function get_modifier_text(m)
 		text = "\\#E7C496\\Sandy Floor"
 	elseif m == MODIFIER_SWAP then
 		text = "\\#FF0000\\Sw\\#48AD16\\ap"
-	elseif m == MODIFIER_BUTTON_CHALLENGE then
-		local hexCode = "\\#2A4DFA\\"
-		if gGlobalSyncTable.buttonChallengeButton == Z_TRIG then
-			hexCode = "\\#C1BED1\\"
-		end
-		text = hexCode .. button_to_text(gGlobalSyncTable.buttonChallengeButton) .. " Button Challenge"
+	elseif m == MODIFIER_Z_BUTTON_CHALLENGE then
+		hexCode = "\\#C1BED1\\Z Button Challenge"
 	elseif m == MODIFIER_ONLY_FIRSTIES then
 		text = "\\#EDB834\\Only Firsties"
 	elseif m == MODIFIER_NONE
@@ -1063,14 +1059,11 @@ function reset_modifier_settings()
 	gGlobalSyncTable.maxBombCooldown = 2 * 30
 	-- blaster cooldown
 	gGlobalSyncTable.maxBlasterCooldown = 0.8 * 30
-	--  button challenge
-	gGlobalSyncTable.buttonChallenge = BUTTON_CHALLENGE_RANDOM
 end
 
 function save_modifier_settings()
 	save_int("maxBombCooldown", gGlobalSyncTable.maxBombCooldown)
 	save_int("maxBlasterCooldown", gGlobalSyncTable.maxBlasterCooldown)
-	save_int("buttonChallenge", gGlobalSyncTable.buttonChallenge)
 end
 
 function get_selected_theme()
