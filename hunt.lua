@@ -44,6 +44,24 @@ local function on_warp()
     -- subtract lives by 1
     if gPlayerSyncTable[0].state == RUNNER then
         gPlayerSyncTable[0].tagLives = gPlayerSyncTable[0].tagLives - 1
+
+        if gPlayerSyncTable[0].tagLives <= 0 then
+            -- select random runner
+            local randomIndex = math.random(0, MAX_PLAYERS - 1) -- select random index
+            local infinityLoopPreventer = 0
+
+            while gPlayerSyncTable[randomIndex].state == RUNNER or gPlayerSyncTable[randomIndex].state == SPECTATOR or gPlayerSyncTable[randomIndex].state == -1 or not gNetworkPlayers[randomIndex].connected do
+                randomIndex = math.random(0, MAX_PLAYERS - 1)
+                infinityLoopPreventer = infinityLoopPreventer + 1
+
+                if infinityLoopPreventer > 200 then break end
+            end
+
+            if infinityLoopPreventer <= 200 then gPlayerSyncTable[randomIndex].state = RUNNER end
+
+            gPlayerSyncTable[0].state = TAGGER
+            djui_popup_create_global(get_player_name(0) .. " \\#dcdcdc\\died\n" .. get_player_name(randomIndex).. " is a " .. get_role_name(RUNNER), 3)
+        end
     end
 end
 

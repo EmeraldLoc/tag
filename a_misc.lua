@@ -192,11 +192,12 @@ function check_round_status()
 				-- select random runner
 				local randomIndex = math.random(0, MAX_PLAYERS - 1) -- select random index
 
-				if gPlayerSyncTable[randomIndex].state ~= RUNNER and gPlayerSyncTable[randomIndex].state ~= SPECTATOR and gPlayerSyncTable[randomIndex].state ~= -1 and gNetworkPlayers[randomIndex].connected then
-					gPlayerSyncTable[randomIndex].state = RUNNER
-
-					log_to_console("Tag: " .. get_role_name(RUNNER) .. " disconnected. Assigned " .. gNetworkPlayers[randomIndex].name .. " as " .. get_role_name(RUNNER))
+				while gPlayerSyncTable[randomIndex].state == RUNNER or gPlayerSyncTable[randomIndex].state == SPECTATOR or gPlayerSyncTable[randomIndex].state == -1 or not gNetworkPlayers[randomIndex].connected do
+					randomIndex = math.random(0, MAX_PLAYERS - 1)
 				end
+
+				gPlayerSyncTable[randomIndex].state = RUNNER
+				log_to_console("Tag: " .. get_role_name(RUNNER) .. " disconnected. Assigned " .. gNetworkPlayers[randomIndex].name .. " as " .. get_role_name(RUNNER))
 			else
 				roundStatusTimer = roundStatusTimer - 1
 			end
