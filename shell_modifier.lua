@@ -64,8 +64,13 @@ local function act_riding_shell_ground(m)
 
     if step == GROUND_STEP_LEFT_GROUND then
         set_mario_action(m, ACT_RIDING_SHELL_FALL, 0)
-    elseif step == GROUND_STEP_HIT_WALL then
-        m.forwardVel = 0
+    elseif step == GROUND_STEP_HIT_WALL and m.actionState == 0 then
+        m.actionState = 1
+        m.forwardVel = -20
+        play_sound(SOUND_ACTION_BONK, gGlobalSoundSource)
+        m.particleFlags = m.particleFlags | PARTICLE_VERTICAL_STAR
+    elseif step ~= GROUND_STEP_HIT_WALL then
+        m.actionState = 0
     end
 
     tilt_body_ground_shell(m, startYaw)
