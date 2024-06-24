@@ -61,7 +61,7 @@ local function hud_side_panel_render()
         end
         local text = name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": " .. clamp(math.floor(gPlayerSyncTable[i].oddballTimer / 30), 0, math.floor(gPlayerSyncTable[i].oddballTimer / 30))
         if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
-            text = name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": ???"
+            text = "???" .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": ???"
         end
         djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
         djui_hud_print_colored_text(text, x + 10, y, 1)
