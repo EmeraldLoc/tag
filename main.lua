@@ -1437,7 +1437,7 @@ local function hud_round_status()
             if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
                 text = "???"
             else
-                text = get_player_name(runner) .. "\\#FFFFFF\\: " .. math.floor(time / 30) + 1
+                text = get_player_name(runner) .. "\\#FFFFFF\\: " .. clamp(math.floor(time / 30), 0, math.floor(time / 30))
             end
 
             -- if auto hide hud is on, and we are less than 20 seconds away from the round ending, make fade hud peek
