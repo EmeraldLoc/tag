@@ -1037,7 +1037,6 @@ local function mario_update(m)
     if m.playerIndex == 0 then
         -- load save data if we haven't
         if not initializedSaveData then
-            initializedSaveData = true
             -- booleans
             if network_is_server() then
                 if load_bool("bljs") ~= nil then gGlobalSyncTable.bljs = load_bool("bljs") end
@@ -1152,6 +1151,8 @@ local function mario_update(m)
                     stats[i].totalTags = load_int("stats_" .. i .. "_totalTags")
                 end
             end
+
+            initializedSaveData = true
         end
 
         ---@type NetworkPlayer
