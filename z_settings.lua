@@ -2096,12 +2096,17 @@ local function reset_achievement_entries()
         end
     end
 
+    local amountOfOtherTitles = 0
+    for i = -10, -1 do
+        if achievements[i] ~= nil then amountOfOtherTitles = amountOfOtherTitles + 1 end
+    end
+
     table.insert(achievementEntries, {
-        name = "(" .. #completedAchievements .. "/" .. #achievements .. ")",
+        name = "(" .. #completedAchievements + amountOfOtherTitles .. "/" .. #achievements + amountOfOtherTitles .. ")",
         progressBar = {
             minLimit = 0,
-            maxLimit = #achievements,
-            value = #completedAchievements
+            maxLimit = #achievements + amountOfOtherTitles,
+            value = #completedAchievements + amountOfOtherTitles
         },
         seperator = "Completed Achievements"
     })
