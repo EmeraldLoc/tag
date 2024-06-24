@@ -107,7 +107,7 @@ local function on_warp()
         local newRunner = math.random(1, 16)
         local np = gNetworkPlayers[0]
         local s = gPlayerSyncTable[newRunner]
-        while not np.connected or s.state ~= TAGGER do
+        while not np.connected or (s and s.state ~= TAGGER) do
             newRunner = math.random(1, 16)
             s = gPlayerSyncTable[newRunner]
         end
