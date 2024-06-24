@@ -356,6 +356,11 @@ stats = {
         totalTimeAsRunner = 0,
         runnerVictories = 0,
     },
+    [ROYALE] = {
+        playTime = 0,
+        totalTags = 0,
+        taggerVictories = 0,
+    },
 }
 
 remoteStats = {
