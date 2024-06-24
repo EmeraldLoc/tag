@@ -1,7 +1,15 @@
 
 TAG_DIALOGS = {
     "You can boost as a Tagger using the button shown on the boost hud element. This allows you to run faster than the runners!",
-    "Hey, why are you reading this? Go play the game instead."
+    "Hey, why are you reading this? Go play the game instead.",
+    "This mod was made by EmeraldLockdown.",
+    "MarioHunt was really the first mod I saw that edited vanilla stuff within a gamemode, so be sure to check that mod out!",
+    "Achievement titles and trails are a great way to show off how far you are in Tag! Also, that's probably not something to be proud of >:)",
+    "sm64.us.f3dex2e. The reason why many exectutables in the pc port is named this is cuz, idk some guy thought of it. The reason that guy thought of it is because sm64 is the game, us is the region, and f3dex2e is the grucode.",
+    "Hey " .. strip_hex(get_player_name_without_title(0)) .. ", how do you do today? Also, if you changed your name I'm not gonna be happy, cuz this sign will be outdated :(",
+    "I will never sellout to any sponser, you can trust me on that!",
+    "Have you heard of our sponser, Raid Shadow Legends?",
+    "Have you heard of our sponser, NordVPN?",
 }
 
 local function on_dialog(dialogID)
