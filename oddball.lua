@@ -59,7 +59,7 @@ local function hud_side_panel_render()
                 name = name:sub(1, #name - 1)
             end
         end
-        local text = name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": " .. math.floor(gPlayerSyncTable[i].oddballTimer / 30) + 1
+        local text = name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": " .. clamp(math.floor(gPlayerSyncTable[i].oddballTimer / 30), 0, math.floor(gPlayerSyncTable[i].oddballTimer / 30))
         if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
             text = name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": ???"
         end
