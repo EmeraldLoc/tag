@@ -266,5 +266,14 @@ local function hud_render()
     hud_modifier()
 end
 
+---@param m MarioState
+local function mario_update(m)
+    if m.playerIndex ~= 0 then return end
+    if gGlobalSyncTable.roundState ~= ROUND_TOURNAMENT_LEADERBOARD then return end
+
+    m.freeze = 1
+end
+
 hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
+hook_event(HOOK_MARIO_UPDATE, mario_update)
