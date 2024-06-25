@@ -28,7 +28,8 @@ local function hud_side_panel_render()
     -- get list of runners
     local runners = {}
     for i = 0, MAX_PLAYERS - 1 do
-        if gNetworkPlayers[i].connected then
+        if gNetworkPlayers[i].connected and (gPlayerSyncTable[i].state == RUNNER
+        or gPlayerSyncTable[i].state == TAGGER) then
             table.insert(runners, i)
         end
     end
