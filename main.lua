@@ -679,7 +679,7 @@ local function server_update()
             timer = gGlobalSyncTable.hidingTimer[gGlobalSyncTable.gamemode]
         end
 
-        if timer <= 0 then
+        if timer <= 0 or gGlobalSyncTable.gamemode ~= SARDINES then
             timer = gGlobalSyncTable.amountOfTime
 
             gGlobalSyncTable.roundState = ROUND_ACTIVE

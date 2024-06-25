@@ -70,11 +70,7 @@ function hud_did_you_know(fade)
     elseif randomDidYouKnow == 17 then
         text = "When next tag version?!?!?!?"
     elseif randomDidYouKnow == 18 then
-        if usingCoopDX then
-            text = "When coopdx v" .. SM64COOPDX_VERSION + 0.1
-        else
-            text = "When coop v" .. VERSION_NUMBER + 1
-        end
+        text = "When coop v" .. VERSION_NUMBER + 1
     elseif randomDidYouKnow == 19 then
         text = "Ya know what, a great mod you should download is MarioHunt. Really good mod, made by EmilyEmmi."
     elseif randomDidYouKnow == 20 then
