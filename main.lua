@@ -686,11 +686,7 @@ local function server_update()
         end
     elseif gGlobalSyncTable.roundState == ROUND_ACTIVE then
         if timer > 0 and gGlobalSyncTable.gamemode ~= ODDBALL then
-            if in_slow_motion() then
-                timer = timer - (1/3) * hotPotatoTimerMultiplier
-            else
-                timer = timer - 1 * hotPotatoTimerMultiplier
-            end
+            timer = timer - 1 * hotPotatoTimerMultiplier
             gGlobalSyncTable.displayTimer = clamp(timer, 0, timer) -- set display timer to timer
         end
 
@@ -934,15 +930,13 @@ local function update()
     end
 
     -- handle time stop
-    if not in_slow_motion() then
-        if gGlobalSyncTable.roundState == ROUND_TOURNAMENT_LEADERBOARD
-        or gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
-        or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
-        or gGlobalSyncTable.roundState == ROUND_VOTING then
-            enable_time_stop()
-        else
-            disable_time_stop()
-        end
+    if gGlobalSyncTable.roundState == ROUND_TOURNAMENT_LEADERBOARD
+    or gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN
+    or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN
+    or gGlobalSyncTable.roundState == ROUND_VOTING then
+        enable_time_stop()
+    else
+        disable_time_stop()
     end
 end
 
@@ -1353,13 +1347,6 @@ local function mario_update(m)
         else
             -- reset boost state
             boostState = BOOST_STATE_READY
-        end
-
-        -- handle slow motion
-        if  gGlobalSyncTable.roundState == ROUND_ACTIVE
-        and gGlobalSyncTable.displayTimer <= 0.5 * 30
-        and gGlobalSyncTable.gamemode ~= ODDBALL then
-            slow_motion()
         end
     end
 end
