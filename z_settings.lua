@@ -2776,8 +2776,8 @@ local function reset_credit_entries()
         {
             name = "Bear",
             categories = { ROMHACK_PORTERS },
-            discordHandle = nil,
-            modsiteUsername = "Bear",
+            discordHandle = "Bear64DX",
+            modsiteUsername = nil,
             githubHandle = "Bear64DX"
         },
         {

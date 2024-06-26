@@ -143,18 +143,18 @@ function hud_did_you_know(fade)
     elseif randomDidYouKnow == 40 then
         text = "You can contribute to Tag by opening a Pull Request!"
     elseif randomDidYouKnow == 41 then
-        text = "if you've ever wanted to port a hack to Coop, then Sunk and Isaac have made a great guide on that."
+        text = "If you've ever wanted to port a hack to Coop, then Sunk and Isaac have made a great guide on that."
         text2 = "It's somewhere on the modsite."
     elseif randomDidYouKnow == 42 then
         text = "Remember when I said there were 26 tips? There's more, just a little bit more."
     elseif randomDidYouKnow == 43 then
         text = "Did you know that these tips are actually stored in a file named hud_utils.lua?"
         text2 = "I know, it's pretty poorly named, I threw a bunch of other crap in there aswell."
-	text3 = "One of these days, I'll redo the system. Ideally it's been redone by now."
+	    text3 = "One of these days, I'll redo the system. Ideally it's been redone by now."
     elseif randomDidYouKnow == 44 then
         text = "Have you ever wanted to play out GeoGuessr in SM64? Well now you can!"
         text2 = "Released on the modding site, this is a great mod to test your knowledge of all the levels!"
-	text3 = "Made by EmilyEmmi."
+	    text3 = "Made by EmilyEmmi."
     elseif randomDidYouKnow == 45 then
         text = "Did you know there's an entire repo just dedicated to arena stages being ported to Tag?"
         text2 = "You can find it on https://github.com/EmeraldLoc/tag-arena-maps."
