@@ -15,6 +15,12 @@ romhacks = {
                 level = LEVEL_CASTLE_GROUNDS,
                 painting = get_texture_info("cg_painting"),
                 area = 1,
+                pipes = {
+                    {
+                        { x = -5979, y = 363, z = -1371 },
+                        { x = 1043, y = 3174, z = -5546 }
+                    }
+                },
                 springs = {
                     { x = 4701, y = 545, z = -7549, pitch = 0, yaw = 0, strength = 140 },
                 }
