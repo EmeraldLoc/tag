@@ -127,9 +127,9 @@ Old:
 local text = "What the heck is happening."
 
 if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
-    text = "Runners Win"
+    text = "Runners Win!"
 elseif gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
-    text = "Taggers Win"
+    text = "Taggers Win!"
 end
 ...
 ```
@@ -139,16 +139,16 @@ New:
 local text = "What the heck is happening."
 
 if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
-    text = "Runners Win"
+    text = "Runners Win!"
 
     if gGlobalSyncTable.gamemode == GAMEMODE_3 then
-        text = "Blue Men Win"
+        text = "Blue Men Win!"
     end
 elseif gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
-    text = "Taggers Win"
+    text = "Taggers Win!"
 
     if gGlobalSyncTable.gamemode == GAMEMODE_3 then
-        text = "Red Men Win"
+        text = "Red Men Win!"
     end
 end
 ...

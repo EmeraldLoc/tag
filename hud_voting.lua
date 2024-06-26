@@ -35,7 +35,7 @@ local function hud_map_vote()
     end
 
     -- render top text
-    local text = "Vote for a Map"
+    local text = "Vote for a Map!"
     djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
     djui_hud_print_text(text, (screenWidth - djui_hud_measure_text(text)) / 2, 50, 1)
 
