@@ -1536,7 +1536,7 @@ local function reset_player_selection()
             permission = PERMISSION_MODERATORS,
             input = INPUT_JOYSTICK,
             func = function() set_player_role(i) end,
-            valueText = get_role_name(gPlayerSyncTable[i].state)})
+            valueText = get_role_name(gPlayerSyncTable[i].state, true)})
         end
     end
 

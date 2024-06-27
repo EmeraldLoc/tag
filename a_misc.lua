@@ -621,7 +621,7 @@ end
 
 ---@param role integer
 ---@return string
-function get_role_name(role)
+function get_role_name(role, ignoreIncognito)
 	if  gGlobalSyncTable.modifier == MODIFIER_INCOGNITO
 	and gPlayerSyncTable[0].state ~= SPECTATOR
 	and (gPlayerSyncTable[0].state ~= WILDCARD_ROLE
@@ -629,7 +629,9 @@ function get_role_name(role)
 	and gGlobalSyncTable.roundState ~= ROUND_RUNNERS_WIN
 	and gGlobalSyncTable.roundState ~= ROUND_TAGGERS_WIN
 	and gGlobalSyncTable.roundState ~= ROUND_TOURNAMENT_LEADERBOARD
-	and gGlobalSyncTable.roundState ~= ROUND_VOTING then
+	and gGlobalSyncTable.roundState ~= ROUND_VOTING
+	and (ignoreIncognito or network_is_moderator()
+	or network_is_server() or isOwner or isDeveloper) then
 		return "\\#4A4A4A\\Incognito"
 	end
 
