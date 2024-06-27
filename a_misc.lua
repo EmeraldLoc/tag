@@ -811,6 +811,46 @@ end
 function get_rules_for_modifier(modifier)
 	if modifier == MODIFIER_BOMBS then
 		return "Bombs are throwable items that Taggers get. It is replaced with the boost, so boosts are disabled when this modifier is on. Use the " .. button_to_text(binds[BIND_BOMBS]) .. " button to use a Bomb."
+	elseif modifier == MODIFIER_LOW_GRAVITY then
+		return "Low Gravity changes the gravity to a more moon-like feel. Have fun jumping all over the place!"
+	elseif modifier == MODIFIER_NO_RADAR then
+		return "This disables the Radar. It's like mini hide and seek!"
+	elseif modifier == MODIFIER_NO_BOOST then
+		return "This disables the Boost. This changes depending on your General Settings."
+	elseif modifier == MODIFIER_ONE_TAGGER then
+		return "This makes it so that there is only one tagger at the start of the match. I salute to that tagger and wish them the best of luck."
+	elseif modifier == MODIFIER_FOG then
+		return "Ever wanted to not see the map? Well fog does just this! It makes it so that the map is covered in fog, which makes it hard to see."
+	elseif modifier == MODIFIER_SPEED then
+		return "This simple modifier changes the speed of your player, by making them slightly faster."
+	elseif modifier == MODIFIER_INCOGNITO then
+		return "This modifier makes it so you cannot see who is who, so it makes it harder to tell who's a tagger, and who's not."
+	elseif modifier == MODIFIER_HIGH_GRAVITY then
+		return "Opposite to the Low Gravity modifier, this changes the gravity to literally be a 1:1 recreation of Jupiter... ok maybe not 1:1, but still!"
+	elseif modifier == MODIFIER_FLY then
+		return "Fly makes it so you have the Wing Cap on at all times. It has some better controls than the vanilla WC, by being able to control your speed and has a built in blaster!"
+	elseif modifier == MODIFIER_BLASTER then
+		return "Ever wanted to have a gun? Now you do! This modifier makes it so that you have a gun at all times. The blaster changes based off of your trail, and can even shoot backwards using DPAD Down!"
+	elseif modifier == MODIFIER_ONE_RUNNER then
+		return "Opposite to the one Tagger modifier, this makes it so that there is only one runner at all costs. It's like juggernaut but you don't have abilities, and it's for most gamemodes... so not really like juggernaut lol."
+	elseif modifier == MODIFIER_DOUBLE_JUMP then
+		return "This makes it so you can perform a neat little jump in the air! This is very useful for getting around places and escaping."
+	elseif modifier == MODIFIER_SHELL then
+		return "Shells makes it so that you are always on a koopa shell! You'll get recoiled when trying to bump a wall."
+	elseif modifier == MODIFIER_BLJS then
+		return "BLJs makes it so that you can perform a BLJ as long as you're in a spot where you can do it. This changes based on your General Settings."
+	elseif modifier == MODIFIER_FRIENDLY_FIRE then
+		return "This makes it so that you can hit other people if they're your teammates. Absolutely nothing can go wrong with this!"
+	elseif modifier == MODIFIER_HARD_SURFACE then
+		return "This makes it so that you can climb any slippery hill in the game."
+	elseif modifier == MODIFIER_SAND then
+		return "This modifier makes it so that every surface type is sandy!"
+	elseif modifier == MODIFIER_SWAP then
+		return "Swap makes it so that you'll randomly teleport to a player on the map."
+	elseif modifier == MODIFIER_Z_BUTTON_CHALLENGE then
+		return "This modifier disables the Z button so that you can no longer long jump or do any action that involves crouching."
+	elseif modifier == MODIFIER_ONLY_FIRSTIES then
+		return "This makes it so that you can only perform First Frame Wallkicks. This definitely might not be easy to the average beginner, but is a good challenge for pros."
 	end
 
 	return "No rules exists for this modifier."
