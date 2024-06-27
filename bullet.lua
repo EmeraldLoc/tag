@@ -12,7 +12,8 @@ local function bullet_init(o)
     obj_set_billboard(o)
     local localOwner = network_local_index_from_global(o.oBulletOwner)
     local m = gMarioStates[localOwner]
-    if gGlobalSyncTable.modifier == MODIFIER_FLY then
+    if gGlobalSyncTable.modifier == MODIFIER_FLY
+    or m.action & ACT_GROUP_MASK == ACT_GROUP_SUBMERGED then
         o.oMoveAnglePitch = m.faceAngle.x
     end
     o.oMoveAngleYaw = m.faceAngle.y

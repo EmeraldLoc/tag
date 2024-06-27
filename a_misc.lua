@@ -988,6 +988,8 @@ function player_count_no_spectators()
             numPlayers = numPlayers + 1
         end
     end
+
+	return numPlayers
 end
 
 ---@param msg string
