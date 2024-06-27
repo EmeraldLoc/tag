@@ -28,7 +28,8 @@ local function bullet_init(o)
         speed = -speed
     end
     o.oVelX = speed * coss(o.oFaceAnglePitch) * sins(o.oFaceAngleYaw)
-    if gGlobalSyncTable.modifier == MODIFIER_FLY then
+    if gGlobalSyncTable.modifier == MODIFIER_FLY
+    or m.action & ACT_GROUP_MASK == ACT_GROUP_SUBMERGED then
         o.oVelY = speed * sins(o.oFaceAnglePitch)
         o.oVelY = -o.oVelY
     end
