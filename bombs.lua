@@ -16,15 +16,16 @@ define_custom_obj_fields({
 local function can_hold_bomb(i)
     local s = gPlayerSyncTable[i]
 
-    if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then return true end
-
-    if  gGlobalSyncTable.roundState ~= ROUND_ACTIVE
+    if  gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS
+    and gGlobalSyncTable.roundState ~= ROUND_ACTIVE
     and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then return false end
     -- check juggernaut
     if s.state == RUNNER and gGlobalSyncTable.gamemode == JUGGERNAUT then return true end
 
     -- check modifier
     if gGlobalSyncTable.modifier ~= MODIFIER_BOMBS then return false end
+
+    if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS then return true end
 
     -- check if we are a tagger
     if s.state ~= TAGGER then return false end
