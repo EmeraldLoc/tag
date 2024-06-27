@@ -16,7 +16,7 @@ define_custom_obj_fields({
 local function can_hold_bomb(i)
     local s = gPlayerSyncTable[i]
 
-    if  gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS
+    if  gGlobalSyncTable.roundState ~= ROUND_WAIT_PLAYERS
     and gGlobalSyncTable.roundState ~= ROUND_ACTIVE
     and gGlobalSyncTable.roundState ~= ROUND_HOT_POTATO_INTERMISSION then return false end
     -- check juggernaut
