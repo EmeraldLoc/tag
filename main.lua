@@ -428,14 +428,7 @@ local function server_update()
     end
 
     -- get number of players
-    local numPlayers = 0
-
-    for i = 0, MAX_PLAYERS - 1 do
-        -- don't include spectators
-        if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state ~= SPECTATOR then
-            numPlayers = numPlayers + 1
-        end
-    end
+    local numPlayers = player_count_no_spectators()
 
     if ((not gGlobalSyncTable.randomGamemode and numPlayers < playersNeeded[gGlobalSyncTable.gamemode])
     or numPlayers < 2) and gGlobalSyncTable.roundState ~= ROUND_VOTING then

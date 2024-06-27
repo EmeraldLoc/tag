@@ -980,6 +980,16 @@ function toggle_spectator()
     end
 end
 
+function player_count_no_spectators()
+	local numPlayers = 0
+	for i = 0, MAX_PLAYERS - 1 do
+        -- don't include spectators
+        if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state ~= SPECTATOR and gPlayerSyncTable[i].state ~= -1 then
+            numPlayers = numPlayers + 1
+        end
+    end
+end
+
 ---@param msg string
 function djui_chat_message_create_global(msg)
 	if type(msg) ~= "string" then
