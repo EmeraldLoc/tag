@@ -3031,13 +3031,10 @@ local function mario_update(m)
     -- if our stick is at 0, then set joystickCooldown to 0
     if m.controller.stickX == 0 and m.controller.stickY == 0 then joystickCooldown = 0 end
 
-    -- TODO: Make this a lot cleaner. We do this to fix a bug where you hit A in the pause menu before the selection's reset, before the entries reset, but when inputs are registered. This fixes this bug
-    reset_main_selections()
-
     if m.controller.buttonPressed & U_JPAD ~= 0
     or (m.controller.stickY > 0.5 and joystickCooldown <= 0) then
         selection = selection - 1
-        if selection < 1 then selection = #entries end
+        if selection < 1 then selection = clamp(#entries, 1,  #entries + 1) end
         play_sound(SOUND_MENU_MESSAGE_DISAPPEAR, gGlobalSoundSource)
         joystickCooldown = 0.2 * 30
         awaitingInput = nil
