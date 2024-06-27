@@ -729,6 +729,7 @@ end
 
 ---@param eliminatedIndex integer
 function eliminated_popup(eliminatedIndex)
+	if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
 	djui_popup_create_global(get_player_name(eliminatedIndex) .. " \\#FFFFFF\\became\n\\#BF3636\\Eliminated", 3)
 end
 
