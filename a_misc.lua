@@ -46,6 +46,17 @@ function table.copy(orig)
     return copy
 end
 
+---@param table table
+---@return integer
+function table.sizeof(table)
+	local tableSize = 0
+	for _, _ in pairs(table) do
+		tableSize = tableSize + 1
+	end
+
+	return tableSize
+end
+
 function tobool(v)
     local type = type(v)
     if type == "boolean" then
