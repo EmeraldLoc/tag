@@ -2751,48 +2751,57 @@ local function reset_credit_entries()
     local AUTHOR = 1
     local LEAD_DEV = 2
     local DEV = 3
-    local ROMHACK_PORTERS = 4
+    local ROMHACK_PORTER = 4
+    local TESTER = 5
     local categories = {
         [AUTHOR] = "Author",
-        [LEAD_DEV] = "Lead Developer",
-        [DEV] = "Developer",
-        [ROMHACK_PORTERS] = "Romhack Porters",
+        [LEAD_DEV] = "Lead Developers",
+        [DEV] = "Developers",
+        [ROMHACK_PORTER] = "Romhack Porters",
+        [TESTER] = "Testers",
     }
     local players = {
         {
             name = "EmeraldLockdown",
-            categories = { AUTHOR, LEAD_DEV, ROMHACK_PORTERS },
+            categories = { AUTHOR, LEAD_DEV, ROMHACK_PORTER },
             discordHandle = nil,
             modsiteUsername = "EmeraldLockdown",
             githubHandle = "EmeraldLoc"
         },
         {
             name = "Murioz",
-            categories = { ROMHACK_PORTERS },
+            categories = { ROMHACK_PORTER },
             discordHandle = "Murioz",
             modsiteUsername = "Murioz",
             githubHandle = "Murioz"
         },
         {
             name = "Bear",
-            categories = { ROMHACK_PORTERS },
+            categories = { ROMHACK_PORTER, TESTER },
             discordHandle = "Bear64DX",
             modsiteUsername = nil,
-            githubHandle = "Bear64DX"
+            githubHandle = "PolarBear32"
         },
         {
             name = "jzzle",
-            categories = { ROMHACK_PORTERS },
+            categories = { ROMHACK_PORTER },
             discordHandle = "jzzle",
             modsiteUsername = "jzzle",
             githubHandle = nil
         },
         {
             name = "TheMan",
-            categories = { ROMHACK_PORTERS },
+            categories = { ROMHACK_PORTER, TESTER },
             discordHandle = nil,
             modsiteUsername = "TheMan",
             githubHandle = "TheMan6900"
+        },
+        {
+            name = "SausRelicsSSJ2",
+            categories = { TESTER },
+            discordHandle = nil,
+            modsiteUsername = nil,
+            githubHandle = "SausRelicsSSJ2"
         },
     }
 
