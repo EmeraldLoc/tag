@@ -221,6 +221,12 @@ romhacks = {
                 level = LEVEL_WDW,
                 painting = get_texture_info("wdw_painting"),
                 area = 1,
+                pipes = {
+                    {
+                        { x = 3346, y = 154, z = 2918 },
+                        { x = -3342, y = 3584, z = -3353 }
+                    }
+                },
                 springs = {
                     { x = 925, y = 384, z = -200, pitch = 0, yaw = 0, strength = 140 },
                 }
@@ -271,7 +277,8 @@ romhacks = {
                 level = LEVEL_SL,
                 painting = get_texture_info("sl_painting"),
                 area = 1,
-                pipes = nil
+                pipes = nil,
+                unwantedBhvs = { id_bhvSLSnowmanWind }
             },
             {
                 name = "ttc",

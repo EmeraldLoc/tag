@@ -32,14 +32,14 @@ local function hud_side_panel_render()
 
     -- sort table
     table.sort(taggers, function (a, b)
-        return gPlayerSyncTable[a].amountOfTags < gPlayerSyncTable[b].amountOfTags
+        return gPlayerSyncTable[a].amountOfTags > gPlayerSyncTable[b].amountOfTags
     end)
 
     -- get height
     local height = 30 * #taggers + 30 + 10
 
-    djui_hud_set_color(20, 20, 22, 255 / 1.4)
-    djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, height, 35, 35, 35, 4, 255 / 1.4)
+    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, 255 / 1.4)
+    djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, height, theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 4, 255 / 1.4)
 
     djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_text("Scores:", x + 10, y, 1)
@@ -64,7 +64,7 @@ local function hud_side_panel_render()
         elseif position == 3 then
             text = "\\#CD7F32\\#3"
         else
-            text = rgb_to_hex(theme.text.r, theme.text.b, theme.text.g) .. position
+            text = "\\" .. rgb_to_hex(theme.text.r, theme.text.b, theme.text.g) .. "\\#" .. position
         end
         text = text .. " " .. name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": " .. gPlayerSyncTable[i].amountOfTags
         if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
@@ -137,7 +137,7 @@ function royale_handle_pvp(aI, vI)
     and v.state == TAGGER and a.state == TAGGER then
         -- increase amount of tags and set victim's invincibility timer to 1 second
         a.amountOfTags = a.amountOfTags + 1
-        v.invincTimer = 1 * 30
+        v.invincTimer = 3 * 30
     end
 end
 

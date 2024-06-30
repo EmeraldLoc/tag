@@ -696,7 +696,8 @@ local function server_update()
                 timer = 5 * 30 -- 5 seconds
 
                 if gGlobalSyncTable.gamemode == ASSASSINS
-                or gGlobalSyncTable.gamemode == DEATHMATCH then
+                or gGlobalSyncTable.gamemode == DEATHMATCH
+                or gGlobalSyncTable.gamemode == ROYALE then
                     gGlobalSyncTable.roundState = ROUND_TAGGERS_WIN -- end round
                 else
                     gGlobalSyncTable.roundState = ROUND_RUNNERS_WIN -- end round
@@ -1003,6 +1004,7 @@ local function mario_update(m)
     if gPlayerSyncTable[m.playerIndex].state == TAGGER
     and gGlobalSyncTable.gamemode ~= ASSASSINS
     and gGlobalSyncTable.gamemode ~= DEATHMATCH
+    and gGlobalSyncTable.gamemode ~= ROYALE
     and ((gGlobalSyncTable.modifier ~= MODIFIER_INCOGNITO
     or gPlayerSyncTable[0].state == TAGGER)
     or m.playerIndex == 0) then
@@ -1625,7 +1627,7 @@ local function allow_pvp(a, v)
     if gPlayerSyncTable[v.playerIndex].state == RUNNER and gPlayerSyncTable[a.playerIndex].state == RUNNER then return false end
     -- check if 2 taggers are trying to attack eachother
     if gPlayerSyncTable[v.playerIndex].state == TAGGER and gPlayerSyncTable[a.playerIndex].state == TAGGER
-    and gGlobalSyncTable.gamemode ~= ASSASSINS and gGlobalSyncTable.gamemode ~= DEATHMATCH then return false end
+    and gGlobalSyncTable.gamemode ~= ASSASSINS and gGlobalSyncTable.gamemode ~= DEATHMATCH and gGlobalSyncTable.gamemode ~= ROYALE then return false end
 end
 
 ---@param m MarioState
@@ -1758,7 +1760,7 @@ hook_event(HOOK_ON_PAUSE_EXIT, function() return false end)
 -- this hook allows us to walk on lava and quicksand
 hook_event(HOOK_ALLOW_HAZARD_SURFACE, function (m)
     if gGlobalSyncTable.modifier == MODIFIER_SAND and m.floor.type == SURFACE_DEEP_QUICKSAND then return end
-    if gPlayerSyncTable[0].state == SPECTATOR or gPlayerSyncTable[0].state == WILDCARD_ROLE then return end
+    if gPlayerSyncTable[0].state == SPECTATOR or gPlayerSyncTable[0].state == WILDCARD_ROLE then return false end
     return gGlobalSyncTable.hazardSurfaces
 end)
 

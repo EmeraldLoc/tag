@@ -2792,14 +2792,14 @@ local function reset_credit_entries()
         {
             name = "TheMan",
             categories = { ROMHACK_PORTER, TESTER },
-            discordHandle = nil,
+            discordHandle = "coolestfellow",
             modsiteUsername = "TheMan",
             githubHandle = "TheMan6900"
         },
         {
-            name = "SausRelicsSSJ2",
+            name = "SausRelics",
             categories = { TESTER },
-            discordHandle = nil,
+            discordHandle = "SausRelics",
             modsiteUsername = nil,
             githubHandle = "SausRelicsSSJ2"
         },

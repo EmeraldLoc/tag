@@ -5,7 +5,7 @@ local function mario_update(m)
 
     m.health = 0x880 -- set mario's health to full
 
-    if gPlayerSyncTable[0].state == RUNNER and m.playerIndex == 0 then
+    if gPlayerSyncTable[0].state == RUNNER and m.playerIndex == 0 and gGlobalSyncTable.roundState == ROUND_ACTIVE then
         gPlayerSyncTable[0].oddballTimer = gPlayerSyncTable[0].oddballTimer - 1
     end
 end
@@ -42,8 +42,8 @@ local function hud_side_panel_render()
     -- get height
     local height = 30 * #runners + 30 + 10
 
-    djui_hud_set_color(20, 20, 22, 255 / 1.4)
-    djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, height, 35, 35, 35, 4, 255 / 1.4)
+    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, 255 / 1.4)
+    djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, height, theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 4, 255 / 1.4)
 
     djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_text("Scores:", x + 10, y, 1)
@@ -68,7 +68,7 @@ local function hud_side_panel_render()
         elseif position == 3 then
             text = "\\#CD7F32\\#3"
         else
-            text = rgb_to_hex(theme.text.r, theme.text.b, theme.text.g) .. position
+            text = "\\" .. rgb_to_hex(theme.text.r, theme.text.b, theme.text.g) .. "\\#" .. position
         end
         text = text .. " " .. name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": " .. clamp(math.floor(gPlayerSyncTable[i].oddballTimer / 30), 0, math.floor(gPlayerSyncTable[i].oddballTimer / 30))
         if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
@@ -118,8 +118,9 @@ local function on_warp()
         local newRunner = math.random(1, 16)
         local np = gNetworkPlayers[0]
         local s = gPlayerSyncTable[newRunner]
-        while not np.connected or (s and s.state ~= TAGGER) do
+        while not np.connected or not s or s.state ~= TAGGER do
             newRunner = math.random(1, 16)
+
             s = gPlayerSyncTable[newRunner]
         end
         s.state = RUNNER

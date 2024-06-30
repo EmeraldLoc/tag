@@ -197,7 +197,8 @@ function check_round_status()
 
 	if  not hasRunner
 	and gGlobalSyncTable.gamemode ~= ASSASSINS
-	and gGlobalSyncTable.gamemode ~= DEATHMATCH then
+	and gGlobalSyncTable.gamemode ~= DEATHMATCH
+	and gGlobalSyncTable.gamemode ~= ROYALE then
 		if gGlobalSyncTable.gamemode == ODDBALL then
 			if roundStatusTimer < 0 then
 				-- select random runner
@@ -227,7 +228,8 @@ function check_round_status()
 
 	if  taggerCount == 1
 	and (gGlobalSyncTable.gamemode == ASSASSINS
-	or  gGlobalSyncTable.gamemode == DEATHMATCH) then
+	or  gGlobalSyncTable.gamemode == DEATHMATCH
+	or  gGlobalSyncTable.gamemode == ROYALE) then
 		if roundStatusTimer < 0 then
 			timer = 5 * 30 -- 5 seconds
 

@@ -75,11 +75,10 @@ local function hud_leaderboard()
             end
         end
 
-        while #winners > removeAllIndexesAt - 1 do
+        while #winners >= removeAllIndexesAt and removeAllIndexesAt > 0 do
             table.remove(winners, removeAllIndexesAt)
         end
 
-        if true then return end
         local winnerText = ""
 
         for w = 1, #winners do
@@ -99,7 +98,7 @@ local function hud_leaderboard()
 
         winnerText = winnerText:sub(1, #winnerText - 6) .. " won the Tournament!"
 
-        local textWidth = djui_hud_measure_text(winnerText) / 2
+        local textWidth = djui_hud_measure_text(strip_hex(winnerText)) / 2
 
         djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, fade)
         djui_hud_print_colored_text(winnerText, djui_hud_get_screen_width() / 2 - textWidth, djui_hud_get_screen_height() / 2, 1.5, fade)
@@ -133,7 +132,7 @@ local function hud_leaderboard()
             local width = 550
 
             local x = (screenWidth - width) / 2
-            local y = 80 + (renderedIndex * 50)
+            local y = 110 + (renderedIndex * 50)
 
             djui_hud_set_color(theme.rect.r, theme.rect.g, theme.rect.b, fade)
             djui_hud_render_rect_rounded_outlined(x, y - 5, width + 15, 42, theme.rectOutline.r, theme.rectOutline.g, theme.rectOutline.b, 3, fade)
