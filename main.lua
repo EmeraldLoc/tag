@@ -1201,24 +1201,7 @@ local function mario_update(m)
         end
 
         -- get rid of unwated behaviors (no better way to do it other than this block of text)
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhv1Up))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvOneCoin))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvRedCoin))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvRedCoinStarMarker))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvYoshi))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvHoot))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvTweester))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowser))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowserBodyAnchor))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowserTailAnchor))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStar))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStarSpawnCoordinates))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvSpawnedStar))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvKoopaShell))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWingCap))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvMetalCap))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvVanishCap))
-        obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
+        delete_useless_behaviors()
 
         -- water level diamond breaks water being disabled, so just get rid of it
         if levels[gGlobalSyncTable.selectedLevel].overrideWater ~= true
@@ -1663,6 +1646,7 @@ local function allow_interact(m, o, intee)
 end
 
 local function on_warp()
+    delete_useless_behaviors()
     local m = gMarioStates[0]
     local level = levels[gGlobalSyncTable.selectedLevel]
 

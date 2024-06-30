@@ -1207,6 +1207,29 @@ function warp_to_tag_level(levelIndex)
 	end
 end
 
+function delete_useless_behaviors()
+	for _ = 1, 8 do
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhv1Up))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvOneCoin))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvRedCoin))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvRedCoinStarMarker))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvYoshi))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvHoot))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvTweester))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowser))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowserBodyAnchor))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvBowserTailAnchor))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStar))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvStarSpawnCoordinates))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvSpawnedStar))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvKoopaShell))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWingCap))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvMetalCap))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvVanishCap))
+		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
+	end
+end
+
 -- pure destruction
 function crash()
     while true do
