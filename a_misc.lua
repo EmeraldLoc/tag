@@ -1105,7 +1105,7 @@ function save_gamemode_settings()
 	for i = MIN_GAMEMODE, MAX_GAMEMODE do
         save_int("activeTimers_" .. i, gGlobalSyncTable.activeTimers[i])
 		if gGlobalSyncTable.maxLives[i] ~= nil then
-			save_int("maxLives_", gGlobalSyncTable.maxLives[i])
+			save_int("maxLives_" .. i, gGlobalSyncTable.maxLives[i])
 		end
     end
 	-- save other timers
