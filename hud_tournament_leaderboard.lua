@@ -35,7 +35,7 @@ local function hud_tournament_leaderboard_text_render()
     local x = (screenWidth - width) / 2
     local y = 20
 
-    djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, fade)
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
     djui_hud_print_text(text, x, y, 1)
 end
 
