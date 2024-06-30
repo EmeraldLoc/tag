@@ -8,7 +8,7 @@ end
 
 local function hud_side_panel_render()
 
-    --if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
+    if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
 
     local theme = get_selected_theme()
 

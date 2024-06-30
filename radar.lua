@@ -63,6 +63,7 @@ function render_radar(m, hudIcon, isObj)
 	djui_hud_set_color(r, g, b, alpha)
 
 	djui_hud_render_texture_interpolated(hudIcon.tex, hudIcon.prevX, hudIcon.prevY, 0.6, 0.6, dX, dY, 0.6, 0.6)
+	--djui_hud_render_texture(hudIcon.tex, dX, dY, 0.6, 0.6)
 	hudIcon.prevX = dX
 	hudIcon.prevY = dY
 end
