@@ -266,7 +266,7 @@ achievements = {
                 speedingTimer = 0
             end
 
-            if s.amountOfTags > speederPrevAmountOfTags then
+            if s.amountOfTags and s.amountOfTags > speederPrevAmountOfTags then
                 speedingTimer = speedingTimer + 1
 
                 if s.amountOfTags - speederPrevAmountOfTags >= 5 then
