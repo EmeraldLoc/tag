@@ -537,8 +537,6 @@ local function server_update()
                 gPlayerSyncTable[i].state = RUNNER -- set everyone's state to runner
             end
 
-            local m = gMarioStates[i]
-
             gPlayerSyncTable[i].tagLives = 0             -- reset tag lives
             gPlayerSyncTable[i].assassinTarget = -1      -- reset assassin target
             gPlayerSyncTable[i].amountOfTags = 0         -- reset amount of tags
@@ -631,7 +629,8 @@ local function server_update()
             end
 
             if gGlobalSyncTable.gamemode == ASSASSINS
-            or gGlobalSyncTable.gamemode == DEATHMATCH then
+            or gGlobalSyncTable.gamemode == DEATHMATCH
+            or gGlobalSyncTable.gamemode == ROYALE then
                 for i = 0, MAX_PLAYERS - 1 do
                     if gPlayerSyncTable[i].state ~= SPECTATOR then
                         gPlayerSyncTable[i].state = TAGGER

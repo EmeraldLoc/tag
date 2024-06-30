@@ -6,28 +6,82 @@ local function mario_update(m)
     m.health = 0x880 -- set mario's health to full
 end
 
-local function hud_render()
+local function hud_side_panel_render()
 
-    if gGlobalSyncTable.gamemode ~= ROYALE then return end
+    --if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
+
+    local theme = get_selected_theme()
 
     -- set djui font and resolution
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
-    if gPlayerSyncTable[0].state == TAGGER then
-        local theme = get_selected_theme()
-        local text = gPlayerSyncTable[0].amountOfTags .. " Tag"
-        if gPlayerSyncTable[0].amountOfTags ~= 1 then text = text .. "s" end
-        local width = djui_hud_measure_text(text) * 1.5 + 20
-        local height = 40 * 1.5
-        local x = djui_hud_get_screen_width() / 2 - width / 2
-        local y = djui_hud_get_screen_height() - height - 20
-        djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, 255/1.4)
-        djui_hud_render_rect_rounded_outlined(x, y, width, height, theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 4, 255 / 1.4)
-        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
-        djui_hud_print_text(text, x + width / 12, y + 5, 1.5)
+    local textMaxWidth = djui_hud_measure_text("--------------------------")
+
+    local x = djui_hud_get_screen_width() - textMaxWidth + 3
+    local y = djui_hud_get_screen_height() / 2 - 30
+
+    -- get list of runners
+    local taggers = {}
+    for i = 0, MAX_PLAYERS - 1 do
+        if gNetworkPlayers[i].connected and (gPlayerSyncTable[i].state == RUNNER
+        or gPlayerSyncTable[i].state == TAGGER) then
+            table.insert(taggers, i)
+        end
     end
 
+    -- sort table
+    table.sort(taggers, function (a, b)
+        return gPlayerSyncTable[a].amountOfTags < gPlayerSyncTable[b].amountOfTags
+    end)
+
+    -- get height
+    local height = 30 * #taggers + 30 + 10
+
+    djui_hud_set_color(20, 20, 22, 255 / 1.4)
+    djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, height, 35, 35, 35, 4, 255 / 1.4)
+
+    djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
+    djui_hud_print_text("Scores:", x + 10, y, 1)
+
+    for position, i in ipairs(taggers) do
+        y = y + 30
+        local name = get_player_name(i)
+        local hasStrippedTitle = false
+        while djui_hud_measure_text(strip_hex(name)) > 180 do
+            if not hasStrippedTitle then
+                hasStrippedTitle = true
+                name = get_player_name_without_title(i)
+            else
+                name = name:sub(1, #name - 1)
+            end
+        end
+        local text = ""
+        if position == 1 then
+            text = "\\#FFD700\\#1"
+        elseif position == 2 then
+            text = "\\#A9A9A9\\#2"
+        elseif position == 3 then
+            text = "\\#CD7F32\\#3"
+        else
+            text = rgb_to_hex(theme.text.r, theme.text.b, theme.text.g) .. position
+        end
+        text = text .. " " .. name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": " .. gPlayerSyncTable[i].amountOfTags
+        if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
+            text = "???" .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": ???"
+        end
+        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
+        djui_hud_print_colored_text(text, x + 10, y, 1)
+    end
+end
+
+local function hud_render()
+
+    if gGlobalSyncTable.gamemode ~= ROYALE then return end
+
+    hud_side_panel_render()
+
+    djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_N64)
 
     -- check that we dont have the modifier MODIFIER_NO_RADAR enabled
@@ -57,6 +111,7 @@ local function on_warp()
     -- lose a tag
     if gPlayerSyncTable[0].state == TAGGER then
         gPlayerSyncTable[0].amountOfTags = gPlayerSyncTable[0].amountOfTags - 1
+        if gPlayerSyncTable[0].amountOfTags < 0 then gPlayerSyncTable[0].amountOfTags = 0 end
     end
 end
 

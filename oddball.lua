@@ -20,7 +20,7 @@ local function hud_side_panel_render()
     djui_hud_set_font(FONT_NORMAL)
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
-    local textMaxWidth = djui_hud_measure_text("---------------------")
+    local textMaxWidth = djui_hud_measure_text("--------------------------")
 
     local x = djui_hud_get_screen_width() - textMaxWidth + 3
     local y = djui_hud_get_screen_height() / 2 - 30
@@ -48,7 +48,7 @@ local function hud_side_panel_render()
     djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, 255)
     djui_hud_print_text("Scores:", x + 10, y, 1)
 
-    for _, i in ipairs(runners) do
+    for position, i in ipairs(runners) do
         y = y + 30
         local name = get_player_name(i)
         local hasStrippedTitle = false
@@ -60,7 +60,17 @@ local function hud_side_panel_render()
                 name = name:sub(1, #name - 1)
             end
         end
-        local text = name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": " .. clamp(math.floor(gPlayerSyncTable[i].oddballTimer / 30), 0, math.floor(gPlayerSyncTable[i].oddballTimer / 30))
+        local text = ""
+        if position == 1 then
+            text = "\\#FFD700\\#1"
+        elseif position == 2 then
+            text = "\\#A9A9A9\\#2"
+        elseif position == 3 then
+            text = "\\#CD7F32\\#3"
+        else
+            text = rgb_to_hex(theme.text.r, theme.text.b, theme.text.g) .. position
+        end
+        text = text .. " " .. name .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": " .. clamp(math.floor(gPlayerSyncTable[i].oddballTimer / 30), 0, math.floor(gPlayerSyncTable[i].oddballTimer / 30))
         if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then
             text = "???" .. "\\" .. rgb_to_hex(theme.text.r, theme.text.g, theme.text.b) .. "\\" .. ": ???"
         end
