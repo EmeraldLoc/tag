@@ -213,8 +213,6 @@ for i = 0, MAX_PLAYERS - 1 do -- set all states for every player on init if we a
         gPlayerSyncTable[i].oddballTimer = 0
         -- tournament points
         gPlayerSyncTable[i].tournamentPoints = 0
-        -- whether or not you're muted
-        gPlayerSyncTable[i].muted = false
     end
 end
 
@@ -1671,14 +1669,6 @@ local function level_init()
 end
 
 local function on_chat_message(m, msg)
-    if gPlayerSyncTable[m.playerIndex].muted then
-        if m.playerIndex == 0 then
-            djui_chat_message_create("\\#FF0000\\You are muted!")
-            play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        end
-        return false
-    end
-
     -- use mariohunt api, since Emily did all the work already
     if _G.mhApi.chatValidFunction and _G.mhApi.chatValidFunction(m, msg) == false then
         return false
