@@ -708,6 +708,16 @@ blacklistEntries = {
         end,
     },
     {
+        name = "Enemies",
+        permission = PERMISSION_SERVER,
+        input = INPUT_A,
+        func = function ()
+            entries = enemyEntries
+            selection = 1
+        end,
+        valueText = ">",
+    },
+    {
         name = "Back",
         permission = PERMISSION_NONE,
         input = INPUT_A,
@@ -1118,14 +1128,6 @@ local function reset_setting_selections()
         input = INPUT_A,
         func = function ()
             entries = romhackEntries
-            selection = 1
-        end,
-        valueText = ">",},
-        {name = "Enemies",
-        permission = PERMISSION_SERVER,
-        input = INPUT_A,
-        func = function ()
-            entries = enemyEntries
             selection = 1
         end,
         valueText = ">",},
@@ -2357,7 +2359,7 @@ local function reset_enemy_entries()
         permission = PERMISSION_NONE,
         input = INPUT_A,
         func = function ()
-            entries = settingEntries
+            entries = blacklistEntries
             selection = 1
         end
     })
