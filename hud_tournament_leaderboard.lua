@@ -43,40 +43,24 @@ local function hud_leaderboard()
     local theme = get_selected_theme()
     if hudTimer > 5 * 30 then
         local winners = {}
+        local topPoints = 0
 
         for i = 0, MAX_PLAYERS - 1 do
             local np = gNetworkPlayers[i]
             local s = gPlayerSyncTable[i]
             if np.connected then
-                if  gGlobalSyncTable.tournamentPointSystem == TOURNAMENT_SYSTEM_POINT_LIMIT
-                and s.tournamentPoints >= gGlobalSyncTable.tournamentPointsReq then
-                    table.insert(winners, i)
-                elseif gGlobalSyncTable.tournamentPointSystem == TOURNAMENT_SYSTEM_ROUND_LIMIT then
-                    table.insert(winners, i)
+                if s.tournamentPoints >= topPoints then
+                    topPoints = s.tournamentPoints
                 end
             end
         end
 
-        -- sort winners
-        table.sort(winners, function (a, b)
-            return gPlayerSyncTable[a].tournamentPoints > gPlayerSyncTable[b].tournamentPoints
-        end)
-
-        -- remove any winners that didnt get the highest points
-        local topPoints = 0
-        local removeAllIndexesAt = 0
-        for w = 1, #winners do
-            local i = winners[w]
-            if gPlayerSyncTable[i].tournamentPoints > topPoints then
-                topPoints = i
-            elseif gPlayerSyncTable[i].tournamentPoints < topPoints then
-                removeAllIndexesAt = w
-                break
+        for i = 0, MAX_PLAYERS - 1 do
+            local np = gNetworkPlayers[i]
+            local s = gPlayerSyncTable[i]
+            if np.connected and s.tournamentPoints >= topPoints then
+                table.insert(winners, i)
             end
-        end
-
-        while #winners >= removeAllIndexesAt and removeAllIndexesAt > 0 do
-            table.remove(winners, removeAllIndexesAt)
         end
 
         local winnerText = ""
@@ -98,10 +82,10 @@ local function hud_leaderboard()
 
         winnerText = winnerText:sub(1, #winnerText - 6) .. " won the Tournament!"
 
-        local textWidth = djui_hud_measure_text(strip_hex(winnerText)) / 2
+        local textWidth = djui_hud_measure_text(strip_hex(winnerText))
 
         djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, fade)
-        djui_hud_print_colored_text(winnerText, djui_hud_get_screen_width() / 2 - textWidth, djui_hud_get_screen_height() / 2, 1.5, fade)
+        djui_hud_print_colored_text(winnerText, (djui_hud_get_screen_width() - textWidth) / 2 / 1.5, djui_hud_get_screen_height() / 2, 1.5, fade)
 
         return
     end

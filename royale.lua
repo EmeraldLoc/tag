@@ -106,6 +106,7 @@ local function on_warp()
     if gGlobalSyncTable.gamemode ~= ROYALE then return end
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
     if not gGlobalSyncTable.eliminateOnDeath then return end
+    if gNetworkPlayers[0].currLevelNum ~= levels[gGlobalSyncTable.selectedLevel].level then return end
     if m.playerIndex ~= 0 then return end
 
     -- lose a tag
