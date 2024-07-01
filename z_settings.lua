@@ -1596,6 +1596,7 @@ local function reset_blacklist_gamemode_entries()
             valueText = on_off_text(not gGlobalSyncTable.blacklistedGamemodes[i]),
             func = function ()
                 gGlobalSyncTable.blacklistedGamemodes[i] = not gGlobalSyncTable.blacklistedGamemodes[i]
+                save_bool("blacklist_gamemode_" .. i, gGlobalSyncTable.blacklistedGamemodes[i])
             end,
         })
     end
@@ -1628,6 +1629,7 @@ local function reset_blacklist_modifier_entries()
             valueText = on_off_text(not gGlobalSyncTable.blacklistedModifiers[i]),
             func = function ()
                 gGlobalSyncTable.blacklistedModifiers[i] = not gGlobalSyncTable.blacklistedModifiers[i]
+                save_bool("blacklist_modifier_" .. i, gGlobalSyncTable.blacklistedModifiers[i])
             end,
         })
     end

@@ -1076,6 +1076,17 @@ local function mario_update(m)
                 if load_int("maxBlasterCooldown") ~= nil then
                     gGlobalSyncTable.maxBlasterCooldown = load_int("maxBlasterCooldown")
                 end
+                -- blacklist stuff
+                for i = MIN_GAMEMODE, MAX_GAMEMODE do
+                    if load_bool("blacklist_gamemode_" .. i) ~= nil then
+                        gGlobalSyncTable.blacklistedGamemodes[i] = load_bool("blacklist_gamemode_" .. i)
+                    end
+                end
+                for i = MODIFIER_MIN, MODIFIER_MAX do
+                    if load_bool("blacklist_modifier_" .. i) ~= nil then
+                        gGlobalSyncTable.blacklistedModifiers[i] = load_bool("blacklist_modifier_" .. i)
+                    end
+                end
             end
             if load_bool("useRomhackCam") ~= nil then useRomhackCam = load_bool("useRomhackCam") end
             if load_bool("autoHideHud") ~= nil then autoHideHud = load_bool("autoHideHud") end
