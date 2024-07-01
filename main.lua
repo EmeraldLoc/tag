@@ -408,6 +408,9 @@ local waterRegions = {}
 -- just some global variables, honestly idk why the second one is there but it is so, uh, enjoy?
 _G.tag = {}
 
+-- just a action we can use, used for when the round ends and mario freezes
+ACT_NOTHING = allocate_mario_action(ACT_FLAG_IDLE)
+
 local function server_update()
     -- set some basic sync table vars
     for i = 0, MAX_PLAYERS - 1 do
@@ -533,6 +536,12 @@ local function server_update()
         for i = 0, MAX_PLAYERS - 1 do
             if gPlayerSyncTable[i].state ~= SPECTATOR and gGlobalSyncTable.autoMode then
                 gPlayerSyncTable[i].state = RUNNER -- set everyone's state to runner
+            end
+
+            local m = gMarioStates[0]
+
+            if m.action == ACT_NOTHING then
+                set_mario_action(m, ACT_IDLE, 0)
             end
 
             gPlayerSyncTable[i].tagLives = 0             -- reset tag lives
@@ -1709,6 +1718,28 @@ local function on_chat_message(m, msg)
     return false
 end
 
+---@param m MarioState
+local function act_nothing(m)
+    -- great action am I right
+    m.forwardVel = 0
+    m.vel.x = 0
+    m.vel.y = 0
+    m.vel.z = 0
+    m.slideVelX = 0
+    m.slideVelZ = 0
+    -- this is to freeze mario's animation
+    m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - (m.marioObj.header.gfx.animInfo.animAccel + 1)
+
+    -- get out of the action if round state is wait or wait players
+    if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS
+    or gGlobalSyncTable.roundState == ROUND_ACTIVE
+    or gGlobalSyncTable.roundState == ROUND_WAIT then
+        return set_mario_action(m, ACT_FREEFALL, 0)
+    end
+
+    return 0
+end
+
 -- runs once per frame (all game logic runs at 30fps)
 hook_event(HOOK_UPDATE, update)
 -- runs when the hud is rendered
@@ -1737,5 +1768,8 @@ hook_event(HOOK_ALLOW_HAZARD_SURFACE, function (m)
     if gPlayerSyncTable[0].state == SPECTATOR or gPlayerSyncTable[0].state == WILDCARD_ROLE then return false end
     return gGlobalSyncTable.hazardSurfaces
 end)
+
+-- hooks the nothing act, which just freezes mario in place, including animations
+hook_mario_action(ACT_NOTHING, act_nothing)
 
 -- Good job, you made it to the end of your file. I'd suggest heading over to tag.lua next!

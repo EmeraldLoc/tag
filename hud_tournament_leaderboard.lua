@@ -255,6 +255,7 @@ local function mario_update(m)
     if gGlobalSyncTable.roundState ~= ROUND_TOURNAMENT_LEADERBOARD then return end
 
     m.freeze = 1
+    set_mario_action(m, ACT_NOTHING, 0)
 end
 
 hook_event(HOOK_UPDATE, update)
