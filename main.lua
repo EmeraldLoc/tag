@@ -1342,6 +1342,12 @@ local function before_set_mario_action(m, action)
         or action == ACT_JUMBO_STAR_CUTSCENE then
             return 1
         end
+
+        if (action == ACT_BURNING_FALL
+        or action == ACT_BURNING_JUMP)
+        and not gGlobalSyncTable.hazardSurfaces then
+            return 1
+        end
     end
 end
 
