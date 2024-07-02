@@ -164,39 +164,24 @@ local function hud_leaderboard()
     end
 
     local position = 1
-    local offsetX = 0
-
-    if #winners > 16 then offsetX = -300 end
 
     for w = 1, #winners do
-        if w > 16 and offsetX ~= 300 then
-            offsetX = 300
-            renderedIndex = 0
-        end
         local i = winners[w]
         if gNetworkPlayers[i].connected then
-            local text = get_player_name(i)
-
             local screenWidth = djui_hud_get_screen_width()
-            local width = 550
+            local width = 1000
 
             local x = (screenWidth - width) / 2
             local y = 110 + (renderedIndex * 50)
 
             djui_hud_set_color(theme.rect.r, theme.rect.g, theme.rect.b, fade)
-            djui_hud_render_rect_rounded_outlined(x + offsetX, y - 5, width + 15, 42, theme.rectOutline.r, theme.rectOutline.g, theme.rectOutline.b, 3, fade)
+            djui_hud_render_rect_rounded_outlined(x, y - 5, width, 42, theme.rectOutline.r, theme.rectOutline.g, theme.rectOutline.b, 3, fade)
 
-            width = djui_hud_measure_text(text)
-            x = (screenWidth - 390) / 2
+            x = screenWidth / 2 - width / 2 + 10
 
-            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
-            djui_hud_print_colored_text(text, x + offsetX, y, 1, fade)
+            render_player_head(i, x, y, 1.9, 1.9, fade)
 
-            x = (screenWidth - 470) / 2
-
-            render_player_head(i, x + offsetX, y, 1.9, 1.9, fade)
-
-            x = (screenWidth - 530) / 2
+            x = x + 40
 
             -- decide what position this player should be at. Don't use w variable to allow for ties as shown below
             if (gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN or gGlobalSyncTable.gamemode == FREEZE_TAG) and w > 1 then
@@ -211,7 +196,7 @@ local function hud_leaderboard()
                 end
             end
 
-            text = "#" .. position
+            local text = "#" .. position
             if position == 1 then
                 djui_hud_set_color(255, 215, 0, fade)
             elseif position == 2 then
@@ -222,7 +207,14 @@ local function hud_leaderboard()
                 djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
             end
 
-            djui_hud_print_text(text, x + offsetX, y, 1)
+            djui_hud_print_text(text, x, y, 1)
+
+            x = x + djui_hud_measure_text(text) + 10
+
+            text = get_player_name(i)
+
+            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
+            djui_hud_print_colored_text(text, x, y, 1, fade)
 
             if gGlobalSyncTable.roundState == ROUND_RUNNERS_WIN then
                 if gGlobalSyncTable.gamemode ~= FREEZE_TAG then
@@ -238,8 +230,8 @@ local function hud_leaderboard()
                 end
             end
 
-            width = djui_hud_measure_text(text)
-            x = ((screenWidth + 550 - ((width * 2))) / 2)
+            local textWidth = djui_hud_measure_text(text)
+            x = screenWidth / 2 + width / 2 - textWidth - 10
 
             if gPlayerSyncTable[i].amountOfTimeAsRunner / 30 < gGlobalSyncTable.amountOfTime / 30 or gGlobalSyncTable.roundState == ROUND_TAGGERS_WIN then
                 djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
@@ -250,66 +242,10 @@ local function hud_leaderboard()
                 djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
             end
 
-            djui_hud_print_text(text, x + offsetX, y, 1)
+            djui_hud_print_text(text, x, y, 1)
 
             renderedIndex = renderedIndex + 1
         end
-    end
-
-    -- get sardine if our gamemode is set to sardines
-    if gGlobalSyncTable.gamemode == SARDINES then
-        local sardine = nil
-        for i = 0, MAX_PLAYERS - 1 do
-            if gNetworkPlayers[i].connected and gPlayerSyncTable[i].state == RUNNER then
-                sardine = i
-            end
-        end
-
-        if sardine == nil then goto continue end
-
-        renderedIndex = renderedIndex + 1
-
-        local screenWidth = djui_hud_get_screen_width()
-        local width = 550
-
-        local x = (screenWidth - 530) / 2
-        local y = 80 + (renderedIndex * 47)
-
-        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
-        djui_hud_print_text("Sardine", x + offsetX, y, 1)
-
-        renderedIndex = renderedIndex + 1
-
-        local text = get_player_name(sardine)
-
-        screenWidth = djui_hud_get_screen_width()
-        width = 550
-
-        x = (screenWidth - width) / 2
-        y = 80 + (renderedIndex * 47)
-
-        djui_hud_set_color(theme.rect.r, theme.rect.g, theme.rect.b, fade)
-        djui_hud_render_rect_rounded_outlined(x + offsetX, y - 5, width + 15, 42, theme.rectOutline.r, theme.rectOutline.g, theme.rectOutline.b, 3, fade)
-
-        width = djui_hud_measure_text(text)
-        x = (screenWidth - 450) / 2
-
-        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
-        djui_hud_print_colored_text(text, x + offsetX, y, 1, fade)
-
-        x = (screenWidth - 530) / 2
-
-        render_player_head(sardine, x + offsetX, y, 1.9, 1.9)
-
-        text = "Time as runner: " .. math.floor(gPlayerSyncTable[sardine].amountOfTimeAsRunner / 30) .. "s"
-
-        width = djui_hud_measure_text(text)
-        x = ((screenWidth + 550 - ((width * 2))) / 2)
-
-        djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
-        djui_hud_print_text(text, x + offsetX, y, 1)
-
-        ::continue::
     end
 
     if renderedIndex == 0 then
@@ -402,9 +338,10 @@ local function hud_render()
         hudTimer = 5 * 30
         addedStats = false
 
-        return
+        --return
     end
-
+    fade = 255
+    addedStats = true
     -- set djui font and resolution
     djui_hud_set_font(djui_menu_get_font())
     djui_hud_set_resolution(RESOLUTION_DJUI)
