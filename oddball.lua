@@ -11,7 +11,6 @@ local function mario_update(m)
 end
 
 local function hud_side_panel_render()
-
     if gGlobalSyncTable.roundState ~= ROUND_ACTIVE then return end
 
     local theme = get_selected_theme()
@@ -23,7 +22,7 @@ local function hud_side_panel_render()
     local textMaxWidth = djui_hud_measure_text("--------------------------")
 
     local x = djui_hud_get_screen_width() - textMaxWidth + 3
-    local y = djui_hud_get_screen_height() / 2 - 30
+    local y = djui_hud_get_screen_height() / 2
 
     -- get list of runners
     local runners = {}
@@ -41,6 +40,8 @@ local function hud_side_panel_render()
 
     -- get height
     local height = 30 * #runners + 30 + 10
+
+    y = y - height / 2
 
     djui_hud_set_color(theme.background.r, theme.background.g, theme.background.b, 255 / 1.4)
     djui_hud_render_rect_rounded_outlined(x, y + 1, textMaxWidth + 3, height, theme.backgroundOutline.r, theme.backgroundOutline.g, theme.backgroundOutline.b, 4, 255 / 1.4)
