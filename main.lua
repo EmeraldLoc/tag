@@ -1737,8 +1737,13 @@ local function act_nothing(m)
     m.vel.z = 0
     m.slideVelX = 0
     m.slideVelZ = 0
+    local animInfo = m.marioObj.header.gfx.animInfo
     -- this is to freeze mario's animation
-    m.marioObj.header.gfx.animInfo.animFrame = m.marioObj.header.gfx.animInfo.animFrame - (m.marioObj.header.gfx.animInfo.animAccel + 1)
+    if animInfo.animAccel < 0 then
+        animInfo.animFrame = animInfo.animFrame + (animInfo.animAccel - 1)
+    else
+        animInfo.animFrame = animInfo.animFrame - (animInfo.animAccel + 1)
+    end
 
     -- get out of the action if round state is wait or wait players
     if gGlobalSyncTable.roundState == ROUND_WAIT_PLAYERS
