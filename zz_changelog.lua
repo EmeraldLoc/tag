@@ -6,6 +6,7 @@ changelogs = {
         title = "\\#316BE8\\Tag v2.4: Major Update",
         gamemodes = {
             "Added " .. get_gamemode(ODDBALL),
+            "Added " .. get_gamemode(ROYALE),
             "Revamped " .. get_gamemode(JUGGERNAUT),
         },
         modifiers = {
@@ -17,7 +18,6 @@ changelogs = {
         },
         romhacks = {
             "Added Lug's Delightful Dioramas (jzzle and TheMan)",
-            "Added Super Mario Rainbow Road (Murioz)",
             "Added SM64: The Green Stars (Bear)",
             "Improved Star Road",
         },
@@ -33,7 +33,7 @@ changelogs = {
         },
         newFeatures = {
             "Added achievements, and rewards. Rewards includes titles and trails",
-            "Added a Tournament system (more information in the help menu)",
+            "Added a Tournament system",
             "Added hud themes",
             "Reorganized settings for the 1000th time",
             "Save gamemode settings",
