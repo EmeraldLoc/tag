@@ -67,9 +67,6 @@ local function bhv_arena_spring_init(obj)
         c.oFaceAngleYaw = obj.oFaceAngleYaw
         c.oFaceAngleRoll = obj.oFaceAngleRoll
     end)
-    network_init_object(obj, false, {
-        'oArenaSpringSprung'
-    })
 end
 
 local function bhv_arena_spring_launch(obj)

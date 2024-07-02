@@ -1,7 +1,7 @@
 
 -- the way fog works in sm64 is not reproducable with lua mods, so instead opt for models.
 -- this uses a fog model, whih uses anim states to decide the color and transparency.
--- there are 5 transparent sphere's in this model for a smooth "opaquining" (thats not a word) effect
+-- there are 5 transparent sphere's in this model for a smooth "opaquining" (thats not a word) effect (its not smooth, but ok)
 -- spawn in an opaque object as some objects ignore transparent objects opacity being solid
 
 local E_MODEL_FOG = smlua_model_util_get_id("fog_geo")
@@ -72,7 +72,7 @@ local function mario_update(m)
     end
 end
 
-local function hud_render()
+local function on_render()
     if not obj_get_first_with_behavior_id(id_bhvFog) then return end
 
     ---@type MarioState
@@ -110,5 +110,5 @@ end
 
 id_bhvFog = hook_behavior(nil, OBJ_LIST_DEFAULT, false, fog_init, fog_loop)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
-hook_event(HOOK_ON_HUD_RENDER, hud_render)
+hook_event(HOOK_ON_HUD_RENDER, on_render)
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)

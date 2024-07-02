@@ -1,5 +1,5 @@
 -- name: \\#316BE8\\Tag (v2.4 R.C 1)\\#dcdcdc\\
--- description: All Tag Related Gamemodes!\n\nThis mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and more, with modifiers, and full romhack support!\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\, \\#ff7f00\\ Agent X\\#dcdcdc\\, Sunk, and \\#F2F3AE\\B\\#EDD382\\l\\#FC9E4F\\o\\#F4442E\\c\\#9B1D20\\ky\n\n\\#dcdcdc\\Painting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi\n\n\\#dcdcdc\\More credits can be found inside the mod.
+-- description: All Tag Related Gamemodes!\n\nThis mod contains Tag, Freeze Tag, Infection, Hot Potato, Juggernaut, Assassins, and more, with modifiers, and full romhack support!\n\nHave fun playing Tag!\n\nDeveloped by \\#a5ae8f\\EmeraldLockdown\\#dcdcdc\\\n\nSnippets of code taken from \\#f7b2f3\\EmilyEmmi\\#dcdcdc\\,\\#ff7f00\\ Agent X\\#dcdcdc\\, Sunk, and \\#F2F3AE\\B\\#EDD382\\l\\#FC9E4F\\o\\#F4442E\\c\\#9B1D20\\ky\n\n\\#dcdcdc\\Painting textures taken from Shine Thief, by \\#f7b2f3\\EmilyEmmi\n\n\\#dcdcdc\\More credits can be found inside the mod.
 -- incompatible: gamemode tag
 
 -- if your trying to learn this code, I hope I've done a good job.
@@ -945,14 +945,14 @@ local function mario_update(m)
     if levels[gGlobalSyncTable.selectedLevel].overrideWater ~= true
     and not gGlobalSyncTable.water then
         -- get rid of water
-        for i = 1, 10 do
-            set_environment_region(i, -10000)
+        for i = 0, 10 do
+            set_water_level(i, -10000, false)
         end
     else
         -- bring back water
-        for i = 1, 10 do
+        for i = 0, 10 do
             if waterRegions[i] ~= nil then
-                set_environment_region(i, waterRegions[i])
+                set_water_level(i, waterRegions[i], false)
             end
         end
     end
@@ -1200,11 +1200,10 @@ local function mario_update(m)
         -- spawn arena springs
         if  selectedLevel.springs ~= nil
         and obj_get_first_with_behavior_id(id_bhvArenaSpring) == nil
-        and np.currLevelNum == selectedLevel.level
-        and network_is_server() then
+        and np.currLevelNum == selectedLevel.level then
             -- spawn springs
             for _, spring in ipairs(selectedLevel.springs) do
-                spawn_sync_object(id_bhvArenaSpring, E_MODEL_SPRING_BOTTOM, spring.x, spring.y, spring.z, function (o)
+                spawn_non_sync_object(id_bhvArenaSpring, E_MODEL_SPRING_BOTTOM, spring.x, spring.y, spring.z, function (o)
                     o.oBehParams = spring.strength
                     o.oFaceAnglePitch = spring.pitch
                     o.oFaceAngleYaw = spring.yaw
@@ -1257,7 +1256,7 @@ local function mario_update(m)
             roomTimer = 0
         end
 
-        if m.pos.y <= -10000 then
+        if m.pos.y <= -20000 then -- I pray there isn't a level this low
             warp_to_tag_level(gGlobalSyncTable.selectedLevel)
         end
 
@@ -1595,11 +1594,12 @@ local function hud_render()
     if spectatorHideHud then return end
 
     -- set djui font and resolution
-    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_font(djui_menu_get_font())
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
     -- fade
     if (is_standing_still()
+    or djui_is_playerlist_open()
     or not autoHideHud)
     and gGlobalSyncTable.roundState ~= ROUND_VOTING then
         hudFade = hudFade + 40
@@ -1684,12 +1684,12 @@ end
 
 local function level_init()
     -- get rid of water
-    for i = 1, 10 do
-        waterRegions[i] = get_environment_region(i)
+    for i = 0, 10 do
+        waterRegions[i] = get_water_level(i)
         if levels[gGlobalSyncTable.selectedLevel] and
         levels[gGlobalSyncTable.selectedLevel].overrideWater ~= true
         and not gGlobalSyncTable.water then
-            set_environment_region(i, -10000)
+            set_water_level(i, -10000, false)
         end
     end
 end

@@ -10,7 +10,7 @@ local yOffset = 0
 ---@param b integer
 function render_bar(text, input, minInput, maxInput, r, g, b)
 
-    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_font(djui_menu_get_font())
     djui_hud_set_resolution(RESOLUTION_N64)
 
     local screenWidth  = djui_hud_get_screen_width()

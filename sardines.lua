@@ -152,7 +152,7 @@ local function hud_render()
     if gGlobalSyncTable.gamemode ~= SARDINES then return end
 
     -- set djui font and resolution
-    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_font(djui_menu_get_font())
     djui_hud_set_resolution(RESOLUTION_N64)
 
     -- check that we dont have the modifier MODIFIER_NO_RADAR enabled
@@ -177,7 +177,7 @@ local function hud_render()
 
     fade = clampf(fade, 0, 255)
 
-    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_font(djui_menu_get_font())
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
     hud_black_bg()

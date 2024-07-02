@@ -715,7 +715,6 @@ blacklistEntries = {
             entries = enemyEntries
             selection = 1
         end,
-        valueText = ">",
     },
     {
         name = "Back",
@@ -2855,7 +2854,7 @@ local function hud_render()
 
     local theme = get_selected_theme()
 
-    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_font(djui_menu_get_font())
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
     scrollOffset = 0

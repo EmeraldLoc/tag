@@ -192,7 +192,7 @@ local function hud_render()
     screenHeight = djui_hud_get_screen_height()
 
     djui_hud_set_resolution(RESOLUTION_DJUI)
-    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_font(djui_menu_get_font())
     hud_black_bg()
     hud_map_vote()
     hud_modifier()

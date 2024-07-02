@@ -57,9 +57,9 @@ function send_packet_to_server(p)
         network_send_to(1, true, p) -- 1 is always the server
         log_to_console("Tag: Sent packet to the server with packet type " .. p.packetType)
     elseif network_is_server() then
-        log_to_console("Tag: Tried to send packet to the server when we are the server")
+        log_to_console("Tag: Tried to send packet to the server when we are the server", CONSOLE_MESSAGE_ERROR)
     else
-        log_to_console("Tag: Tried to send a invalid packet to the server")
+        log_to_console("Tag: Tried to send a invalid packet to the server", CONSOLE_MESSAGE_ERROR)
 	end
 end
 
@@ -70,8 +70,8 @@ function send_packet(globalIndex, p)
         -- send the packet
         network_send_to(network_local_index_from_global(globalIndex), true, p)
     elseif network_local_index_from_global(globalIndex) == 0 then
-        log_to_console("Tag: Tried to send packet to the same player")
+        log_to_console("Tag: Tried to send packet to the same player", CONSOLE_MESSAGE_ERROR)
     else
-        log_to_console("Tag: Tried to send a invalid packet")
+        log_to_console("Tag: Tried to send a invalid packet", CONSOLE_MESSAGE_ERROR)
     end
 end

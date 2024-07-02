@@ -372,7 +372,7 @@ function render_player_head(index, x, y, scaleX, scaleY, opacity)
     for i = 1, #PART_ORDER do
         local color = {r = 255, g = 255, b = 255}
 		if m.marioBodyState.modelState & MODEL_STATE_METAL ~= 0 then -- metal
-			color = network_player_palette_to_color(np, METAL, color)
+			color = network_player_get_override_palette_color(np, METAL)
             if color == nil then break end
 			djui_hud_set_color(color.r, color.g, color.b, alpha)
 			djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, 5 * 16, tileY * 16, 16, 16)
@@ -386,7 +386,7 @@ function render_player_head(index, x, y, scaleX, scaleY, opacity)
 			part = GLOVES
 		end
 
-		network_player_palette_to_color(np, part, color)
+		color = network_player_get_override_palette_color(np, part)
 
         djui_hud_set_color(color.r, color.g, color.b, alpha)
         djui_hud_render_texture_tile(HEAD_HUD, x, y, scaleX, scaleY, (i-1)*16, tileY*16, 16, 16)

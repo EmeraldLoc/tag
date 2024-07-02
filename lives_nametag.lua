@@ -70,7 +70,7 @@ local function on_hud_render()
     if gGlobalSyncTable.modifier == MODIFIER_INCOGNITO then return end
 
     djui_hud_set_resolution(RESOLUTION_N64)
-    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_font(djui_menu_get_font())
 
     for i = 1, MAX_PLAYERS - 1 do
         if  gPlayerSyncTable[i].state ~= RUNNER
@@ -94,7 +94,7 @@ local function on_hud_render()
             scale = clampf(1 - scale, 0, 0.32)
             local text = math.floor(gPlayerSyncTable[i].tagLives) .. " Lives Remaining"
             local color = { r = 162, g = 202, b = 234 }
-            network_player_palette_to_color(gNetworkPlayers[i], SHIRT, color)
+            network_player_get_override_palette_color(gNetworkPlayers[i], SHIRT)
             color.r = color.r + 20
             color.g = color.g + 20
             color.b = color.b + 20

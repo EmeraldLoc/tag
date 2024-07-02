@@ -123,7 +123,7 @@ romhacks = {
                 level = LEVEL_SSL,
                 painting = get_texture_info("ssl_painting"),
                 area = 1,
-                pipes = nil
+                pipes = nil,
             },
             {
                 name = "itp",
@@ -160,6 +160,7 @@ romhacks = {
                 room = 3,
                 unwantedBhvs = { id_bhvHmcElevatorPlatform },
                 disabledBhvs = { id_bhvDoor },
+                overrideWater = true
             },
             {
                 name = "dd",

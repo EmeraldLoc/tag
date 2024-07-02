@@ -33,6 +33,9 @@ local function hud_render()
         return
     end
 
+    djui_hud_set_font(djui_menu_get_font())
+    djui_hud_set_resolution(RESOLUTION_DJUI)
+
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 

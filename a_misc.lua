@@ -1011,7 +1011,7 @@ end
 ---@param msg string
 function djui_chat_message_create_global(msg)
 	if type(msg) ~= "string" then
-		log_to_console("Tag: djui_chat_message_create_global: \\#FF0000\\Error: Received Invalid Type: " .. type(msg))
+		log_to_console("Tag: djui_chat_message_create_global: \\#FF0000\\Error: Received Invalid Type: " .. type(msg), CONSOLE_MESSAGE_ERROR)
 		return
 	end
 
@@ -1203,6 +1203,8 @@ function warp_to_tag_level(levelIndex)
 			end
 
 			prevLevel = gGlobalSyncTable.selectedLevel
+
+			log_to_console("Tag: Bad level found, removed level " .. level.level .. ", named " .. name_of_level(level.level, level.area), CONSOLE_MESSAGE_WARNING)
 		end
 	end
 end

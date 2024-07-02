@@ -78,7 +78,7 @@ local function hud_render()
     if gMarioStates[0].action ~= ACT_FLYING then return end
 
     djui_hud_set_resolution(RESOLUTION_DJUI)
-    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_font(djui_menu_get_font())
 
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()

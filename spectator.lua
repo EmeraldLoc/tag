@@ -280,7 +280,7 @@ local function hud_render()
     or gGlobalSyncTable.roundState == ROUND_VOTING
     or gGlobalSyncTable.roundState == ROUND_TOURNAMENT_LEADERBOARD then return end
 
-    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_font(djui_menu_get_font())
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
     hud_bottom_render()
