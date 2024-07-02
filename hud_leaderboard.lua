@@ -338,10 +338,9 @@ local function hud_render()
         hudTimer = 5 * 30
         addedStats = false
 
-        --return
+        return
     end
-    fade = 255
-    addedStats = true
+
     -- set djui font and resolution
     djui_hud_set_font(djui_menu_get_font())
     djui_hud_set_resolution(RESOLUTION_DJUI)

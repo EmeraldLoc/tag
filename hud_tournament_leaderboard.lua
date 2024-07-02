@@ -110,35 +110,27 @@ local function hud_leaderboard()
         local i = sortedPlayers[sp]
         if gNetworkPlayers[i].connected then
 
-            local text = get_player_name(i)
-
             local screenWidth = djui_hud_get_screen_width()
-            local width = 550
+            local width = 1000
 
             local x = (screenWidth - width) / 2
             local y = 110 + (renderedIndex * 50)
 
             djui_hud_set_color(theme.rect.r, theme.rect.g, theme.rect.b, fade)
-            djui_hud_render_rect_rounded_outlined(x, y - 5, width + 15, 42, theme.rectOutline.r, theme.rectOutline.g, theme.rectOutline.b, 3, fade)
+            djui_hud_render_rect_rounded_outlined(x, y - 5, width, 42, theme.rectOutline.r, theme.rectOutline.g, theme.rectOutline.b, 3, fade)
 
-            width = djui_hud_measure_text(text)
-            x = (screenWidth - 390) / 2
-
-            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
-            djui_hud_print_colored_text(text, x, y, 1, fade)
-
-            x = (screenWidth - 470) / 2
+            x = screenWidth / 2 - width / 2 + 10
 
             render_player_head(i, x, y, 1.9, 1.9, fade)
 
-            x = (screenWidth - 530) / 2
+            x = x + 40
 
             -- check the previous index and see if they tie, if they don't, increase position
             if sortedPlayers[sp - 1] ~= nil and gPlayerSyncTable[i].tournamentPoints ~= gPlayerSyncTable[sortedPlayers[sp - 1]].tournamentPoints then
                 position = position + 1
             end
 
-            text = "#" .. position
+            local text = "#" .. position
             if position == 1 then
                 djui_hud_set_color(255, 215, 0, fade)
             elseif position == 2 then
@@ -151,10 +143,17 @@ local function hud_leaderboard()
 
             djui_hud_print_text(text, x, y, 1)
 
+            x = x + djui_hud_measure_text(text) + 10
+
+            text = get_player_name(i)
+
+            djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
+            djui_hud_print_colored_text(text, x, y, 1, fade)
+
             text = "Points: " .. gPlayerSyncTable[i].tournamentPoints
 
-            width = djui_hud_measure_text(text)
-            x = ((screenWidth + 550 - ((width * 2))) / 2)
+            local textWidth = djui_hud_measure_text(text)
+            x = screenWidth / 2 + width / 2 - textWidth - 10
 
             djui_hud_set_color(theme.text.r, theme.text.g, theme.text.b, fade)
             djui_hud_print_text(text, x, y, 1)
@@ -221,6 +220,7 @@ local function hud_render()
         end
         return
     end
+
     -- set djui font and resolution
     djui_hud_set_font(djui_menu_get_font())
     djui_hud_set_resolution(RESOLUTION_DJUI)
