@@ -27,7 +27,7 @@ pauseEntries = {
 }
 
 local function hud_render()
-    if not isPaused then
+    if not isPaused or (_G.charSelect and _G.charSelect.is_menu_open()) then
         joystickCooldown = 0
         selection = 1
         return
@@ -39,10 +39,20 @@ local function hud_render()
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 
+    if _G.charSelect then
+        local curTable = _G.charSelect.character_get_current_table()
+        local characterName = curTable.name
+        local text = "Current Character: " .. "\\" .. rgb_to_hex(curTable.color.r, curTable.color.g, curTable.color.b) .. "\\" .. characterName
+        local x = screenWidth - djui_hud_measure_text(strip_hex(text)) - 20
+        local y = 50
+
+        djui_hud_print_colored_text(text, x, y, 1)
+    end
+
     --- @type NetworkPlayer
     local np = gNetworkPlayers[0]
     local x = screenWidth / 2
-    local y = screenHeight / 2.5
+    local y = screenHeight / 2 - (#pauseEntries * 100) / 2 + 100
 
     -- background
     djui_hud_set_color(0, 0, 0, 64)
@@ -69,7 +79,7 @@ end
 
 ---@param m MarioState
 local function mario_update(m)
-    if m.playerIndex ~= 0 then return end
+    if m.playerIndex ~= 0 or (_G.charSelect and _G.charSelect.is_menu_open()) then return end
 
     if joystickCooldown > 0 then
         joystickCooldown = joystickCooldown - 1
@@ -118,5 +128,19 @@ local function mario_update(m)
     end
 end
 
+local function mods_loaded()
+    -- character select support
+    if _G.charSelect then
+        table.insert(pauseEntries, {
+            name = "Character Select",
+            permission = PERMISSION_NONE,
+            func = function ()
+                _G.charSelect.set_menu_open(true)
+            end
+        })
+    end
+end
+
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
 hook_event(HOOK_MARIO_UPDATE, mario_update)
+hook_event(HOOK_ON_MODS_LOADED, mods_loaded)
