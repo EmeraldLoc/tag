@@ -112,8 +112,6 @@ local function bhv_arena_spring_launch(obj)
         interactedWithSpring = true
     end
     obj.oArenaSpringSprung = 15
-
-    network_send_object(obj, false)
 end
 
 local function bhv_arena_spring_loop(obj)

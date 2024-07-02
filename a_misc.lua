@@ -1231,10 +1231,3 @@ function delete_useless_behaviors()
 		obj_mark_for_deletion(obj_get_first_with_behavior_id(id_bhvWarpPipe))
 	end
 end
-
--- pure destruction
-function crash()
-    while true do
-        crash()
-    end
-end

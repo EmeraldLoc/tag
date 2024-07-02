@@ -32,7 +32,8 @@ local function mario_update(m)
         -- if the remote mario is in a safe position, set lastSafeCoords
         local remoteM = gMarioStates[randomMarioIndex]
 
-        if remoteM.action & ACT_GROUP_MASK ~= ACT_GROUP_AIRBORNE then
+        if  remoteM.action & ACT_GROUP_MASK ~= ACT_GROUP_AIRBORNE
+        and m.floor and m.floor.type ~= SURFACE_DEATH_PLANE then
             vec3f_copy(lastSafeCoords, remoteM.pos)
         end
 
